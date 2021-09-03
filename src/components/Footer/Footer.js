@@ -2,6 +2,8 @@ import React from 'react';
 import { AiFillGithub, AiFillInstagram, AiFillLinkedin } from 'react-icons/ai';
 
 import { SocialIcons } from '../Header/HeaderStyles';
+import { FaResearchgate } from "react-icons/fa";
+
 import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer } from './FooterStyles';
 
 const Footer = () => {
@@ -9,29 +11,34 @@ const Footer = () => {
     <FooterWrapper>
       <LinkList>
         <LinkColumn>
-          <LinkTitle>Call</LinkTitle>
-          <LinkItem href="tel:314-343-3432">314-343-3432</LinkItem>
+          <LinkTitle>Email</LinkTitle>
+          <LinkItem href="mailto:r.dinic@gmx.at">
+            r.dinic@gmx.at
+          </LinkItem>
         </LinkColumn>
         <LinkColumn>
-          <LinkTitle>Email</LinkTitle>
-          <LinkItem href="mailto:contact@jsmastery.com">
-            contact@jsmastery.com
+          <LinkTitle>Impressum</LinkTitle>
+          <LinkItem>
+            Radomir Dinic BSc MSc <br/>
+            Pingitzzerkai 6a/6<br/>
+            A-5400 Hallein<br/>
+            AUSTRIA
           </LinkItem>
         </LinkColumn>
       </LinkList>
       <SocialIconsContainer>
         <CompanyContainer>
-          <Slogan>Innovating one project at a time</Slogan>
+          <Slogan>Connecting Realities</Slogan>
         </CompanyContainer>
         <SocialContainer>
-          <SocialIcons href="https://google.com">
+          <SocialIcons href="https://github.com/d0nu7">
             <AiFillGithub size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://google.com">
+          <SocialIcons href="https://www.linkedin.com/in/radomir-dinic-830507a0/">
             <AiFillLinkedin size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://google.com">
-            <AiFillInstagram size="3rem" />
+          <SocialIcons href="https://www.researchgate.net/profile/Radomir-Dinic">
+            <FaResearchgate size="3rem" />
           </SocialIcons>
         </SocialContainer>
       </SocialIconsContainer>
