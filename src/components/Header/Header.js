@@ -11,9 +11,9 @@ const Header = () =>  (
   <Container>
     <Div1>
       <Link href="/">
-        <a style={{ display: 'flex', alignItems: 'center', color:"white" }}>
-          <SvgRadiFace  height="6rem"  /> <span style={{marginLeft: "1rem"}}>Radomir Dinic</span>
-        </a>
+        <span style={{ display: 'flex', alignItems: 'center', color:"white" }}>
+          <SvgRadiFace  height="6rem"  /> <span style={{marginLeft: "1rem"} } ><b>Ra</b>domir<br/><b>Di</b>nic</span>
+        </span>
       </Link>
     </Div1>
     <Div2>

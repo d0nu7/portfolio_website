@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ResearchTitle,ResearchAuthors } from './ResearchStyles';
+import { ResearchTitle,ResearchAuthors, ResearchYear } from './ResearchStyles';
 import { Section, SectionDivider, SectionTitle } from '../../styles/GlobalComponents';
 import { projects } from '../../constants/constants';
 import { Table } from "../Table/Table.js";
@@ -21,10 +21,10 @@ const Research = () => (
       <Table.Body>
         <Table.TR>
           <Table.TH>
-            <ResearchTitle>
+            <ResearchYear>
             2021
 
-            </ResearchTitle>
+            </ResearchYear>
             </Table.TH>
           <Table.TH>
           <ResearchTitle>
@@ -33,7 +33,7 @@ const Research = () => (
             Awsome Research 
             </ResearchTitle>
             <ResearchAuthors>
-              Radi
+              Radi, Radi, Radi
             </ResearchAuthors>
 
             </Table.TH>

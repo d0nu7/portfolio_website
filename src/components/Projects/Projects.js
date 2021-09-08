@@ -11,11 +11,11 @@ const Projects = () => (
     <GridContainer>
       {projects.map((p, i) => {
         return (
-          <a href={p.source}>
-          <BlogCard key={i} >
+          <a href={p.source}  key={i}>
+          <BlogCard >
           <Img src={p.image} />
             <TitleContent>
-              <HeaderThree isTSitle>{p.title}</HeaderThree>
+              <HeaderThree isTitle>{p.title}</HeaderThree>
               <Hr />
             </TitleContent>
             <CardInfo className="card-info">{p.description}</CardInfo>
