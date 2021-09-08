@@ -1,29 +1,52 @@
 import styled from 'styled-components';
 
 export const StyledTable = styled.table`
-  // custom css goes here
+  width: auto;
+  flex: 1;
+  display: grid;
+  border-collapse: collapse;
+
 `;
 
 export const THead = styled.thead`
- // custom css goes here
+
 `;
 
 export const TFoot = styled.tfoot`
-  // custom css goes here
+
 `;
 
 export const TBody = styled.tbody`
- // custom css goes here
+
 `;
 
 export const TR = styled.tr`
-  // custom css goes here
+
 `;
 
 export const TH = styled.th`
-  // custom css goes here
+text-align: left;
+
+
+
 `;
 
 export const TD = styled.td`
-  // custom css goes here
+
+`;
+
+// Navigation Links
+export const NavLink = styled.a`
+  font-size: 1.5rem;
+  line-height: 32px;
+  color: rgba(255, 255, 255, 0.75);
+  transition: 0.4s ease;
+  &:hover {
+    color: #fff;
+    opacity: 1;
+    cursor: pointer;
+  }
+  @media ${(props) => props.theme.breakpoints.sm} {
+    padding: 0.5rem;
+  }
 `;

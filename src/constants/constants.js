@@ -70,13 +70,13 @@ export const Publications = [// done
   {
     year: 2021,
     title:
-      "Assessment of approach-avoidance tendencies in body image using a novel touchscreen paradigm. Journal of Behavior Therapy and Experimental Psychiatry",
+      "Assessment of approach-avoidance tendencies in body image using a novel touchscreen paradigm.",
     authors:
-      "Dondzilo, L., Basanovic, J., Bell, J., Mills, C., Dinic, R., & Blechert, J.",
+      "Dondzilo L., Basanovic J., Bell J., Mills C., Dinic R., Blechert J.",
     webref:
       "https://www.sciencedirect.com/science/article/abs/pii/S0005791620301385?via%3Dihub",
     apaCite:
-      "Dondzilo, L., Basanovic, J., Bell, J., Mills, C., Dinic, R., & Blechert, J. (2021). Assessment of approach-avoidance tendencies in body image using a novel touchscreen paradigm. Journal of Behavior Therapy and Experimental Psychiatry, 70, 101612.",
+      "Dondzilo, L., Basanovic, J., Bell, J., Mills, C., Dinic, R., Blechert, J. (2021). Assessment of approach-avoidance tendencies in body image using a novel touchscreen paradigm. Journal of Behavior Therapy and Experimental Psychiatry, 70, 101612.",
     doi: "https://doi.org/10.1016/j.jbtep.2020.101612",
   },
   {
@@ -84,7 +84,7 @@ export const Publications = [// done
     title:
       "Measuring approach–avoidance tendencies towards food with touchscreen-based arm movements.",
     authors:
-      "Meule, A., Richard, A., Lender, A., Dinic, R., Brockmeyer, T., Rinck, M., & Blechert, J.",
+      "Meule A., Richard A., Lender A., Dinic R., Brockmeyer T., Rinck M., Blechert J.",
     webref: "https://link.springer.com/article/10.1007/s00426-019-01195-1",
     apaCite:
       "Meule, A., Richard, A., Lender, A., Dinic, R., Brockmeyer, T., Rinck, M., & Blechert, J. (2020). Measuring approach–avoidance tendencies towards food with touchscreen-based arm movements. Psychological research, 84(7), 1789-1800.",
@@ -94,18 +94,18 @@ export const Publications = [// done
     year: 2019,
     title:
       "Approach–avoidance tendencies towards food: Measurement on a touchscreen and the role of attention and food craving.",
-    authors: "Meule, A., Lender, A., Richard, A., Dinic, R., & Blechert, J.",
+    authors: "Meule A., Lender A., Richard A., Dinic R., Blechert J.",
     webref:
       "https://www.sciencedirect.com/science/article/abs/pii/S0195666318314326",
     apaCite:
-      "Meule, A., Lender, A., Richard, A., Dinic, R., & Blechert, J. (2019). Approach–avoidance tendencies towards food: Measurement on a touchscreen and the role of attention and food craving. Appetite, 137, 145-151.",
+      "Meule, A., Lender, A., Richard, A., Dinic, R., Blechert, J. (2019). Approach–avoidance tendencies towards food: Measurement on a touchscreen and the role of attention and food craving. Appetite, 137, 145-151.",
     doi: "https://doi.org/10.1016/j.appet.2019.03.002",
   },
   {
     year: 2019,
     title:
-      "Effects of a smartphone-based approach-avoidance intervention on chocolate craving and consumption: Randomized controlled trial",
-    authors: "Meule, A., Richard, A., Dinic, R., & Blechert, J.",
+      "Effects of a smartphone-based approach-avoidance intervention on chocolate craving and consumption: Randomized controlled trial.",
+    authors: "Meule A., Richard A., Dinic R., Blechert J.",
     webref: "https://mhealth.jmir.org/2019/11/e12298",
     apaCite:
       "Meule, A., Richard, A., Dinic, R., & Blechert, J. (2019). Effects of a smartphone-based approach-avoidance intervention on chocolate craving and consumption: Randomized controlled trial. JMIR mHealth and uHealth, 7(11), e12298.",
@@ -114,7 +114,7 @@ export const Publications = [// done
   {
     year: 2017,
     title: "EatAR tango: results on the accuracy of portion estimation.",
-    authors: "Dinic, R., & Stütz, T.",
+    authors: "Dinic R., Stütz T.",
     webref: "https://ieeexplore.ieee.org/abstract/document/8088506",
     apaCite:
       "Dinic, R., & Stütz, T. (2017, October). EatAR tango: results on the accuracy of portion estimation. In 2017 IEEE International Symposium on Mixed and Augmented Reality (ISMAR-Adjunct) (pp. 284-287). IEEE.",
@@ -123,8 +123,8 @@ export const Publications = [// done
   {
     year: 2017,
     title:
-      "EatAR tango: portion estimation on mobile devices with a depth sensor. In Proceedings of the 19th International Conference on Human-Computer Interaction with Mobile Devices and Services",
-    authors: "Dinic, R., Domhardt, M., Ginzinger, S., & Stütz, T.",
+      "EatAR tango: portion estimation on mobile devices with a depth sensor.",
+    authors: "Dinic R., Domhardt M., Ginzinger S., Stütz T.",
     webref: "https://dl.acm.org/doi/abs/10.1145/3098279.3125434",
     apaCite:
       "Dinic, R., Domhardt, M., Ginzinger, S., & Stütz, T. (2017, September). EatAR tango: portion estimation on mobile devices with a depth sensor. In Proceedings of the 19th International Conference on Human-Computer Interaction with Mobile Devices and Services (pp. 1-7).",
@@ -133,9 +133,9 @@ export const Publications = [// done
   {
     year: 2015,
     title:
-      "Training of carbohydrate estimation for people with diabetes using mobile augmented reality. Journal of diabetes science and technology",
+      "Training of carbohydrate estimation for people with diabetes using mobile augmented reality.",
     authors:
-      "Domhardt, M., Tiefengrabner, M., Dinic, R., Fötschl, U., Oostingh, G. J., Stütz, T.",
+      "Domhardt M., Tiefengrabner M., Dinic R., Fötschl U., Oostingh G. J., Stütz T.",
     webref: "https://journals.sagepub.com/doi/full/10.1177/1932296815578880",
     apaCite:
       "Domhardt, M., Tiefengrabner, M., Dinic, R., Fötschl, U., Oostingh, G. J., Stütz, T., ... & Ginzinger, S. W. (2015). Training of carbohydrate estimation for people with diabetes using mobile augmented reality. Journal of diabetes science and technology, 9(3), 516-524.",
@@ -144,7 +144,7 @@ export const Publications = [// done
   {
     year: 2014,
     title: "Evaluation der Interaktion mit einer AR-basierten Smartphone-App.",
-    authors: "Domhardt, M., Dinic, R., Stütz, T., & Ginzinger, S.",
+    authors: "Domhardt M., Dinic R., Stütz T., Ginzinger S.",
     webref:
       "https://www.degruyter.com/document/doi/10.1524/9783110344486.165/html",
     apaCite:
@@ -154,7 +154,7 @@ export const Publications = [// done
   {
     year: 2014,
     title: "A mobile augmented reality system for portion estimation.",
-    authors: "Stütz, T., Dinic, R., Domhardt, M., & Ginzinger, S.",
+    authors: "Stütz T., Dinic R., Domhardt M., Ginzinger S.",
     webref: "https://ieeexplore.ieee.org/abstract/document/6948496",
     apaCite:
       "Stütz, T., Dinic, R., Domhardt, M., & Ginzinger, S. (2014, September). A mobile augmented reality system for portion estimation. In 2014 IEEE International Symposium on Mixed and Augmented Reality (ISMAR) (pp. 375-376). IEEE.",
@@ -163,8 +163,8 @@ export const Publications = [// done
   {
     year: 2014,
     title:
-      "Can mobile augmented reality systems assist in portion estimation? A user study",
-    authors: "Stütz, T., Dinic, R., Domhardt, M., & Ginzinger, S.",
+      "Can mobile augmented reality systems assist in portion estimation? A user study.",
+    authors: "Stütz T., Dinic R., Domhardt M., Ginzinger S.",
     webref: "https://ieeexplore.ieee.org/abstract/document/6935438",
     apaCite:
       "Stütz, T., Dinic, R., Domhardt, M., & Ginzinger, S. (2014, September). Can mobile augmented reality systems assist in portion estimation? A user study. In 2014 IEEE international symposium on mixed and augmented reality-media, art, social science, humanities and design (ISMAR-MASH'D) (pp. 51-57). IEEE.",
