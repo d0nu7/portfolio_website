@@ -1,4 +1,5 @@
-export const projects = [ // wip
+export const projects = [
+  // wip
   {
     title: "Yokaisho",
     description:
@@ -66,7 +67,8 @@ export const projects = [ // wip
   },
 ];
 
-export const Publications = [// done
+export const Publications = [
+  // done
   {
     year: 2021,
     title:
@@ -172,7 +174,8 @@ export const Publications = [// done
   },
 ];
 
-export const TeachingExperience = [ //done
+export const TeachingExperience = [
+  //done
   {
     category: "Master Classes",
     events: [
@@ -200,25 +203,25 @@ export const TeachingExperience = [ //done
   },
   {
     category: "Bachelor Classes",
-    content: [
+    events: [
       {
-        events: "Introduction programming",
+        title: "Introduction programming",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
       {
-        events: "Algorithms and data structures (Lab)",
+        title: "Algorithms and data structures (Lab)",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
       {
-        events: "Computer graphics 1 (Lab)",
+        title: "Computer graphics 1 (Lab)",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
       {
-        events: "Multimedia project (all)",
+        title: "Multimedia project (all)",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
       {
-        events: "Game Development 1 (co-teacher)",
+        title: "Game Development 1 (co-teacher)",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
     ],

@@ -20,6 +20,7 @@ import {
   SectionTitle,
 } from "../../styles/GlobalComponents";
 import { TeachingExperience } from "../../constants/constants";
+import styled from "styled-components";
 
 const Teaching = () => (
   <Section nopadding id="teaching">
@@ -30,12 +31,14 @@ const Teaching = () => (
         return (
           <TeachingCard key={i}>
             <span>{e.category}</span>
-            {/* {e.events.map((ev, i2) => {
-              <span>0</span>;
+
+            {e.events.map((ev, ei) => {
+              return (
+                <a href={ev.ref} key={ei}>
+              <div> {ev.title}</div>
+              </a>
+              );
             })}
-            { e.events.map((ev, i) => {
-              <span>ev.title</span>;
-            })}  */}
           </TeachingCard>
         );
       })}
