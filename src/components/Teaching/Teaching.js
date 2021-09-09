@@ -13,6 +13,8 @@ import {
   UtilityList,
   Img,
   TeachingCard,
+  ClassLink,
+  ClassTitle,
 } from "./TeachingStyles";
 import {
   Section,
@@ -30,15 +32,21 @@ const Teaching = () => (
       {TeachingExperience.map((e, i) => {
         return (
           <TeachingCard key={i}>
-            <span>{e.category}</span>
-
-            {e.events.map((ev, ei) => {
-              return (
-                <a href={ev.ref} key={ei}>
-              <div> {ev.title}</div>
-              </a>
-              );
-            })}
+            <TitleContent>
+              <HeaderThree isTitle>{e.category}</HeaderThree>
+              <Hr />
+            </TitleContent>
+            <ul>
+              {e.events.map((ev, ei) => {
+                return (
+                  <li>
+                    <ClassLink href={ev.ref} key={ei}>
+                      <ClassTitle> {ev.title}</ClassTitle>
+                    </ClassLink>
+                  </li>
+                );
+              })}
+            </ul>
           </TeachingCard>
         );
       })}

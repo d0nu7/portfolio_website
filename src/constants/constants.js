@@ -184,19 +184,19 @@ export const TeachingExperience = [
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/master-multimediatechnology/curriculum",
       },
       {
-        title: "Multimedia Master's Project: Development & Presentation",
+        title: "Master's Project: Development & Presentation",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/master-multimediatechnology/curriculum",
       },
       {
-        title: "Multimedia Master's Project: Substantiation",
+        title: "Master's Project: Substantiation",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/master-multimediatechnology/curriculum",
       },
       {
-        title: "Multimedia Master's Project: Realization",
+        title: "Master's Project: Realization",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/master-multimediatechnology/curriculum",
       },
       {
-        title: "Master's Project 3: Release & Presentation",
+        title: "Master's Project: Release & Presentation",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/master-multimediatechnology/curriculum",
       },
     ],

@@ -1,15 +1,15 @@
 import React from 'react';
 import { DiFirebase, DiReact, DiZend } from 'react-icons/di';
 import { Section, SectionDivider, SectionText, SectionTitle } from '../../styles/GlobalComponents';
-import { List, ListContainer, ListItem, ListParagraph, ListTitle } from './TechnologiesStyles';
+import { List, ListContainer, ListItem, ListParagraph, ListTitle } from './SkillsStyles';
 
-const Technologies = () =>  (
+const Skills = () =>  (
   <Section id="tech">
     <SectionDivider divider />
-    <SectionTitle>Technologies</SectionTitle>
+    <SectionTitle>Skills</SectionTitle>
     <SectionText>
-      I've worked with a range a technologies in the web development world.
-      From Back-end To Design
+      I've worked with a range a technologies.
+      From Game Development to Data Analysis. 
     </SectionText>
     <List>
       <ListItem>
@@ -17,10 +17,9 @@ const Technologies = () =>  (
           <DiReact size="3rem" />
         </picture>
         <ListContainer>
-          <ListTitle>Front-End</ListTitle>
+          <ListTitle>Mixed Reality</ListTitle>
           <ListParagraph>
-            Experiece with <br />
-            React.js
+            AR and VR...
           </ListParagraph>
         </ListContainer>
       </ListItem>
@@ -29,10 +28,9 @@ const Technologies = () =>  (
           <DiFirebase size="3rem" />
         </picture>
         <ListContainer>
-          <ListTitle>Back-End</ListTitle>
+          <ListTitle>Game Development</ListTitle>
           <ListParagraph>
-            Experience with <br />
-            Node and Databases
+            Unity...
           </ListParagraph>
         </ListContainer>
       </ListItem>
@@ -41,16 +39,14 @@ const Technologies = () =>  (
           <DiZend size="3rem" />
         </picture>
         <ListContainer>
-          <ListTitle>UI/UX</ListTitle>
+          <ListTitle>Web</ListTitle>
           <ListParagraph>
-            Experience with <br />
-            tools like Figma
+            Front / Back
           </ListParagraph>
         </ListContainer>
       </ListItem>
     </List>
-    <SectionDivider colorAlt />
   </Section>
 );
 
-export default Technologies;
+export default Skills;
