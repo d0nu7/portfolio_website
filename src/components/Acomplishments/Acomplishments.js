@@ -16,7 +16,7 @@ const iconSize = "8rem";
 
 const Acomplishments = () => (
   
-  <Section>
+  <Section  id="acomplishments">
     <SectionTitle>Achievements</SectionTitle>
     <Boxes>
       <Box>

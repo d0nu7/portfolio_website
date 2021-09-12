@@ -40,7 +40,7 @@ export const HeaderThree = styled.h3`
   letter-spacing: 2px;
   color: #9cc9e3;
   padding: .5rem 0;
-  font-size: ${(props) => props.title ? '3rem' : '2rem'};
+  font-size: ${(props) => props.title ? '4rem' : '3rem'};
 `;
 
 export const Hr = styled.hr`
@@ -53,6 +53,8 @@ export const Hr = styled.hr`
 
 export const ClassTitle = styled.div`
 text-align: center;
+font-size: ${(props) => props.title ? '3rem' : '2rem'};
+
 `;
 
 export const ClassLink = styled.a`
