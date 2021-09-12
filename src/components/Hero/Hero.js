@@ -13,7 +13,7 @@ const Hero = (props) => (
           Developer
         </SectionTitle>
         <SectionText>
-          I am a passionate developer and lecturer with a research background. I'm offering custom digital solutions and consulting in many technology-related fields.
+          I am a passionate developer and lecturer with a research background. Check out my site to find out more about me and my projects or contact me for a custom offer.
         </SectionText>
         <Button onClick={
           (e) => {

@@ -20,7 +20,7 @@ export const projects = [
   },
   {
     title: "EatAR",
-    description: "The accurate assessment of nutrition information is a challenging task, but crucial for people with certain diseases, such as diabetes. This app for mobile devices with a depth sensor assists the users in portion estimation using augumented reality technologies. This app is a sideproduct of my master-thesis. ",
+    description: "The accurate assessment of nutrition information is a challenging task, but crucial for people with certain diseases, such as diabetes. This app for mobile devices with a depth sensor assists the users in portion estimation using augumented reality technologies. This Project was part of my master thesis.",
     image: "/images/eat_ar.png",
     tags: [ "Tango", "Android"],
     source: "https://realities.mediacube.at/eat-ar/",
@@ -28,7 +28,7 @@ export const projects = [
   },
   {
     title: "SmartSignCapture",
-    description: "The research project “SmartSignCapture” relies on the transfer of signs to 3D avatars. Hand and arm movements are entered in detail using the personal smartphone and used as input for animating an online 3D avatar. Additional components of the sign, such as the Facial expressions can be adjusted. Sign language is finding its way onto the internet.",
+    description: "The NetIdee-sponsored research project “SmartSignCapture” relies on the transfer of signs to 3D avatars. Hand and arm movements are entered in detail using the personal smartphone and used as input for animating an online 3D avatar. Additional components of the sign, such as the Facial expressions can be adjusted. Sign language is finding its way onto the internet.",
     image: "/images/smartsigncapture.jpg",
     tags: [ "Android", "Web"],
     source: "https://multimediatechnology.at/smartsigncapture/",
@@ -36,7 +36,7 @@ export const projects = [
   },
   {
     title: "Ecomedicine VR",
-    description: "This exergame, which was developed as part of a joint research project between the PMU and the FHS, tries to reproduce the positive effects of the Krimml Waterfall on the respiratory tract using VR technology.",
+    description: "This exergame, which was developed as part of a joint research project between the Paracelsus Medical University and the salzburg university of applied sciences, tries to reproduce the positive effects of the Krimml Waterfall on the respiratory tract using virtual reality technology.",
     image: "/images/ecovr.jpg",
     tags: [ "VR", "Photogrammetry"],
     source: "https://www.digitalsalzburg.at/vr-atemcoach/",

@@ -90,6 +90,9 @@ class Nav extends React.Component {
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >
+        <Link href="#header">
+          <StyledAnchor onClick={() => this.closeMenu()}><b>Radomir Dinic</b></StyledAnchor>
+        </Link>        
         <Link href="#about">
           <StyledAnchor onClick={() => this.closeMenu()}>About</StyledAnchor>
         </Link>

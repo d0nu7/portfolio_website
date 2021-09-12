@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 import {
   Section,
@@ -19,14 +20,14 @@ import {
 import { Publications } from "../../constants/constants";
 
 const Research = () => (
-  <Section nopadding id="research">
+  <Section id="research">
     <SectionDivider />
     <SectionTitle main>Publications</SectionTitle>
 
     <Table>
       {Publications.map((p, i) => {
         return (
-          <DoiLink key={i} href={p.doi}>
+          <Link key={i} href={p.doi}>
             <TableRow>
               <TableCell>
                 <ResearchYear>{p.year}</ResearchYear>
@@ -36,7 +37,7 @@ const Research = () => (
                 <ResearchAuthors>{p.authors}</ResearchAuthors>
               </TableCell>
             </TableRow>
-          </DoiLink>
+          </Link>
         );
       })}
     </Table>

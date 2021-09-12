@@ -42,13 +42,16 @@ export const TableRow = styled.div`
     opacity: 1;
     cursor: pointer;
   }
+
   @media ${(props) => props.theme.breakpoints.sm} {
     padding: 0.5rem;
   }
 `;
 
-export const TableCell = styled.div``;
+export const TableCell = styled.div`
+`;
 
-export const DoiLink = styled.a`
+export const DoiLink = styled.span`
   color: #5165ff;
+
 `;

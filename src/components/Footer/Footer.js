@@ -4,27 +4,27 @@ import { AiFillGithub, AiFillInstagram, AiFillLinkedin } from 'react-icons/ai';
 import { SocialIcons } from '../Header/HeaderStyles';
 import { FaResearchgate } from "react-icons/fa";
 
-import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer } from './FooterStyles';
+import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer, SpanItem } from './FooterStyles';
 
 const Footer = () => {
   return (
     <FooterWrapper>
       <LinkList>
         <LinkColumn>
-          <LinkTitle>Email</LinkTitle>
-          <LinkItem href="mailto:r.dinic@gmx.at">
-            r.dinic@gmx.at
-          </LinkItem>
-        </LinkColumn>
-        <LinkColumn>
           <LinkTitle>Impressum</LinkTitle>
-          <LinkItem>
+          <SpanItem>
             Radomir Dinic BSc MSc <br/>
             Pingitzzerkai 6a/6<br/>
             A-5400 Hallein<br/>
             AUSTRIA
+          </SpanItem>
+        </LinkColumn>    
+        <LinkColumn>
+          <LinkTitle>Email</LinkTitle>
+          <LinkItem href="mailto:r.dinic@gmx.at">
+            r.dinic@gmx.at
           </LinkItem>
-        </LinkColumn>
+        </LinkColumn>    
       </LinkList>
       <SocialIconsContainer>
         <CompanyContainer>

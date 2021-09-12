@@ -1,19 +1,35 @@
-import React from 'react';
-import {GiSmartphone, GiVrHeadset, GiGamepad ,GiLevelThree, GiWireframeGlobe} from 'react-icons/gi';
-import {BiVideoRecording } from 'react-icons/bi';
-import { Section, SectionDivider, SectionText, SectionTitle } from '../../styles/GlobalComponents';
-import { List, ListContainer, ListItem, ListParagraph, ListTitle } from './SkillsStyles';
+import React from "react";
+import {
+  GiSmartphone,
+  GiVrHeadset,
+  GiGamepad,
+  GiLevelThree,
+  GiWireframeGlobe,
+} from "react-icons/gi";
+import { BiVideoRecording } from "react-icons/bi";
+import {
+  Section,
+  SectionDivider,
+  SectionText,
+  SectionTitle,
+} from "../../styles/GlobalComponents";
+import {
+  List,
+  ListContainer,
+  ListItem,
+  ListParagraph,
+  ListTitle,
+} from "./SkillsStyles";
 
-const Skills = () =>  (
+const Skills = () => (
   <Section id="tech">
     <SectionDivider divider />
     <SectionTitle>Skills</SectionTitle>
-    <SectionText>
+    {/* <SectionText>
       I've worked with a range a technologies.
       From Game Development to Data Analysis. 
-    </SectionText>
+    </SectionText> */}
     <List>
-
       <ListItem>
         <picture>
           <GiVrHeadset size="4rem" />
@@ -21,7 +37,10 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>Mixed Reality</ListTitle>
           <ListParagraph>
-            AR and VR...
+            Augumented Reality <br />
+            Virtual Reality <br />
+            Tracking Techniques<br />
+            ...
           </ListParagraph>
         </ListContainer>
       </ListItem>
@@ -33,7 +52,10 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>Game</ListTitle>
           <ListParagraph>
-            Unity...
+            Unity <br />
+            OGRE <br />
+            PyGame <br />
+            ...
           </ListParagraph>
         </ListContainer>
       </ListItem>
@@ -45,9 +67,11 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>Web</ListTitle>
           <ListParagraph>
-            Front / Back
-          </ListParagraph>
-        </ListContainer>
+            .NET 5 <br />
+            React.js <br />
+            Databases <br />
+            ...
+          </ListParagraph>        </ListContainer>
       </ListItem>
 
       <ListItem>
@@ -57,10 +81,11 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>Prototyping</ListTitle>
           <ListParagraph>
-            Arduino
-            3D-Print
-          </ListParagraph>
-        </ListContainer>
+            3D-Printing <br />
+            Electronics <br />
+            CAD <br />
+            ...
+          </ListParagraph>        </ListContainer>
       </ListItem>
 
       <ListItem>
@@ -70,13 +95,12 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>Mobile</ListTitle>
           <ListParagraph>
-            Arduino
-            3D-Print
-          </ListParagraph>
-        </ListContainer>
+            Android <br />
+            .NET 5 MAUI <br />
+            ...
+          </ListParagraph>        </ListContainer>
       </ListItem>
 
-      
       <ListItem>
         <picture>
           <BiVideoRecording size="4rem" />
@@ -84,11 +108,12 @@ const Skills = () =>  (
         <ListContainer>
           <ListTitle>AV</ListTitle>
           <ListParagraph>
-            Audio and Video Production
-          </ListParagraph>
-        </ListContainer>
+            Photogrammetry <br />
+            Streaming <br />
+            Recording <br />
+            ...
+          </ListParagraph>        </ListContainer>
       </ListItem>
-
     </List>
   </Section>
 );
