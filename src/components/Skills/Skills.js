@@ -1,5 +1,6 @@
 import React from 'react';
-import { DiFirebase, DiReact, DiZend } from 'react-icons/di';
+import {GiSmartphone, GiVrHeadset, GiGamepad ,GiLevelThree, GiWireframeGlobe} from 'react-icons/gi';
+import {BiVideoRecording } from 'react-icons/bi';
 import { Section, SectionDivider, SectionText, SectionTitle } from '../../styles/GlobalComponents';
 import { List, ListContainer, ListItem, ListParagraph, ListTitle } from './SkillsStyles';
 
@@ -12,9 +13,10 @@ const Skills = () =>  (
       From Game Development to Data Analysis. 
     </SectionText>
     <List>
+
       <ListItem>
         <picture>
-          <DiReact size="3rem" />
+          <GiVrHeadset size="4rem" />
         </picture>
         <ListContainer>
           <ListTitle>Mixed Reality</ListTitle>
@@ -23,20 +25,22 @@ const Skills = () =>  (
           </ListParagraph>
         </ListContainer>
       </ListItem>
+
       <ListItem>
         <picture>
-          <DiFirebase size="3rem" />
+          <GiGamepad size="4rem" />
         </picture>
         <ListContainer>
-          <ListTitle>Game Development</ListTitle>
+          <ListTitle>Game</ListTitle>
           <ListParagraph>
             Unity...
           </ListParagraph>
         </ListContainer>
       </ListItem>
+
       <ListItem>
         <picture>
-          <DiZend size="3rem" />
+          <GiWireframeGlobe size="4rem" />
         </picture>
         <ListContainer>
           <ListTitle>Web</ListTitle>
@@ -45,6 +49,46 @@ const Skills = () =>  (
           </ListParagraph>
         </ListContainer>
       </ListItem>
+
+      <ListItem>
+        <picture>
+          <GiLevelThree size="4rem" />
+        </picture>
+        <ListContainer>
+          <ListTitle>Prototyping</ListTitle>
+          <ListParagraph>
+            Arduino
+            3D-Print
+          </ListParagraph>
+        </ListContainer>
+      </ListItem>
+
+      <ListItem>
+        <picture>
+          <GiSmartphone size="4rem" />
+        </picture>
+        <ListContainer>
+          <ListTitle>Mobile</ListTitle>
+          <ListParagraph>
+            Arduino
+            3D-Print
+          </ListParagraph>
+        </ListContainer>
+      </ListItem>
+
+      
+      <ListItem>
+        <picture>
+          <BiVideoRecording size="4rem" />
+        </picture>
+        <ListContainer>
+          <ListTitle>AV</ListTitle>
+          <ListParagraph>
+            Audio and Video Production
+          </ListParagraph>
+        </ListContainer>
+      </ListItem>
+
     </List>
   </Section>
 );

@@ -39,8 +39,8 @@ const Teaching = () => (
             <ul>
               {e.events.map((ev, ei) => {
                 return (
-                  <li>
-                    <ClassLink href={ev.ref} key={ei}>
+                  <li key={ei}>
+                    <ClassLink href={ev.ref} >
                       <ClassTitle> {ev.title}</ClassTitle>
                     </ClassLink>
                   </li>

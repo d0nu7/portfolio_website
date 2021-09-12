@@ -3,19 +3,19 @@ import styled from "styled-components"
 export const Boxes = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   margin: 24px 0 40px;
 
   @media ${props => props.theme.breakpoints.md}{
     gap: 16px;
     margin: 20px 0 32px;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(2, 1fr));
   }
 
   @media ${props => props.theme.breakpoints.sm}{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, 1fr);
     gap: 10px;
     max-width: 500px;
     margin: 24px auto;
@@ -23,29 +23,35 @@ export const Boxes = styled.div`
 `
 
 export const Box = styled.div`
+display: flex;
+flex-flow: row ;
+ justify-content: start;
+ margin-bottom:auto;
   background: #212D45;
   border-radius: 12px;
-  height: 144px;
+  height: 180px;
   padding: 24px;
   @media ${props => props.theme.breakpoints.lg} {
-    height: 210px;
+    height: 190px;
+    padding: 16px;
 
   }
 
   @media ${props => props.theme.breakpoints.md} {
-    height: 135px;
+    height: 155px;
     padding: 16px;
   }
 
   @media ${props => props.theme.breakpoints.sm} {
-    height: 110px;
-    padding: 12px;
-    
-    &:nth-child(2n){
-      grid-row:2;
-    }
+    height: 210px;
+    padding: 10px;
+    flex-flow: column ;
+    align-items: center; 
+    justify-content: center;
   }
 `
+
+
 export const BoxNum = styled.h5`
   font-style: normal;
   font-weight: 600;

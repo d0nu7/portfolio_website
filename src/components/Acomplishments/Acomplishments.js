@@ -1,27 +1,65 @@
-import React from 'react';
+import React from "react";
 
-import { Section, SectionDivider, SectionTitle } from '../../styles/GlobalComponents';
-import { Box, Boxes, BoxNum, BoxText } from './AcomplishmentsStyles';
+import {
+  Section,
+  SectionDivider,
+  SectionTitle,
+} from "../../styles/GlobalComponents";
+import { Box, Boxes, BoxNum, BoxText } from "./AcomplishmentsStyles";
 
-const data = [
-  { number: 20, text: 'Open Source Projects'},
-  { number: 1000, text: 'Students', },
-  { number: 1900, text: 'Github Followers', },
-  { number: 5000, text: 'Github Stars', }
-];
+import { RiMedalLine } from "react-icons/ri";
+import { GiGamepad } from "react-icons/gi";
+import { HiAcademicCap } from "react-icons/hi";
+
+const iconStyles = { marginTop: "auto"};
+const iconSize = "8rem";
 
 const Acomplishments = () => (
+  
   <Section>
-    <SectionTitle>Personal Achievements</SectionTitle>
+    <SectionTitle>Achievements</SectionTitle>
     <Boxes>
-      {data.map((card, index) => (
-        <Box key={index}>
-          <BoxNum>{`${card.number}+`}</BoxNum>
-          <BoxText>{card.text}</BoxText>
-        </Box>
-      ))}
+      <Box>
+        <div>
+          <BoxNum>Austrian CG Award 2015</BoxNum>
+          <BoxText>
+            Best Game
+            <br />
+            Project Yokaisho
+          </BoxText>
+        </div>
+        <GiGamepad size={iconSize} style={iconStyles} />
+      </Box>
+
+      <Box>
+        <div>
+          <BoxNum>Austrian CG Award 2016</BoxNum>
+          <BoxText>
+            Best Game, Best Student Project
+            <br />
+            Projekt NIVA
+          </BoxText>
+        </div>
+        <GiGamepad size={iconSize}  style={iconStyles} />
+      </Box>
+
+      <Box>
+        <div>
+          <BoxNum>Order for Disaster Relief</BoxNum>
+          <BoxText>State of Salzburg</BoxText>
+        </div>
+        <RiMedalLine size={iconSize}  style={iconStyles} />
+      </Box>
+
+      <Box>
+        <div>
+          <BoxNum>Science Award 2017</BoxNum>
+          <BoxText>AK Salzburg</BoxText>
+        </div>
+        <HiAcademicCap size={iconSize}  style={iconStyles} />
+      </Box>
     </Boxes>
-    <SectionDivider/>
+    <SectionDivider />
   </Section>
 );
 
