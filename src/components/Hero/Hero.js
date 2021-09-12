@@ -17,7 +17,7 @@ const Hero = (props) => (
         </SectionText>
         <Button onClick={
           (e) => {
-            window.location = "mailto:r.dinic@gmx.at";
+            window.location = "mailto:contact@radi.solutions";
             e.preventDefault();
           }}>Contact Me</Button>
       </LeftSection>
