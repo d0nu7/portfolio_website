@@ -17,6 +17,8 @@ const iconSize = "8rem";
 const Acomplishments = () => (
   
   <Section  id="acomplishments">
+        <SectionDivider divider />
+
     <SectionTitle>Achievements</SectionTitle>
     <Boxes>
       <Box>

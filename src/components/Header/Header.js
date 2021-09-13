@@ -10,7 +10,7 @@ import Nav from "../Nav/Nav";
 const Header = () => (
   <>
     <Head>
-      <meta charset="utf-8" />
+      <meta charSet="utf-8" />
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, 
@@ -23,7 +23,7 @@ const Header = () => (
       />
       <meta
         name="keyword"
-        content="Portfolio, Freelancer, Unity, Salzburg, MultiMediaTechnology, Software, Programming, Development, Virtual Reality, Augumented Reality, Medical Product"
+        content="Portfolio, Freelancer, Unity, Salzburg, MultiMediaTechnology, Software, Programming, Development, Virtual Reality, Augumented Reality, Medical Product, Radomir Dinic"
       />
 
       <meta
