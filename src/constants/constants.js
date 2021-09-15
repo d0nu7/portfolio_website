@@ -106,7 +106,7 @@ export const Publications = [
     webref: "https://ieeexplore.ieee.org/abstract/document/8088506",
     apaCite:
       "Dinic, R., & Stütz, T. (2017, October). EatAR tango: results on the accuracy of portion estimation. In 2017 IEEE International Symposium on Mixed and Augmented Reality (ISMAR-Adjunct) (pp. 284-287). IEEE.",
-    doi: "10.1109/ISMAR-Adjunct.2017.90",
+    doi: "https://doi.org/10.1109/ISMAR-Adjunct.2017.90",
   },
   {
     year: 2017,
@@ -146,7 +146,7 @@ export const Publications = [
     webref: "https://ieeexplore.ieee.org/abstract/document/6948496",
     apaCite:
       "Stütz, T., Dinic, R., Domhardt, M., & Ginzinger, S. (2014, September). A mobile augmented reality system for portion estimation. In 2014 IEEE International Symposium on Mixed and Augmented Reality (ISMAR) (pp. 375-376). IEEE.",
-    doi: "10.1109/ISMAR.2014.6948496",
+    doi: "https://doi.org/10.1109/ISMAR.2014.6948496",
   },
   {
     year: 2014,
