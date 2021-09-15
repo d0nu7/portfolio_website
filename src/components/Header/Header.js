@@ -36,6 +36,7 @@ const Header = () => (
       />
       {/* <meta property="og:url" content="https://example.com" /> */}
       <meta property="og:type" content="website" />
+      <link rel="canonical" href="https://radi.solutions" />
     </Head>
 
     <Container id="header">

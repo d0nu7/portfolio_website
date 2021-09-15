@@ -39,7 +39,7 @@ const Skills = () => (
           <ListParagraph>
             Augumented Reality <br />
             Virtual Reality <br />
-            Tracking Techniques<br />
+            Tracking Techniques 
             ...
           </ListParagraph>
         </ListContainer>
@@ -54,7 +54,7 @@ const Skills = () => (
           <ListParagraph>
             Unity <br />
             OGRE <br />
-            PyGame <br />
+            PyGame 
             ...
           </ListParagraph>
         </ListContainer>
@@ -69,7 +69,7 @@ const Skills = () => (
           <ListParagraph>
             .NET 5 <br />
             React.js <br />
-            Databases <br />
+            Databases 
             ...
           </ListParagraph>        </ListContainer>
       </ListItem>
@@ -83,7 +83,7 @@ const Skills = () => (
           <ListParagraph>
             3D-Printing <br />
             Electronics <br />
-            CAD <br />
+            CAD 
             ...
           </ListParagraph>        </ListContainer>
       </ListItem>
@@ -96,7 +96,7 @@ const Skills = () => (
           <ListTitle>Mobile</ListTitle>
           <ListParagraph>
             Android <br />
-            .NET 5 MAUI <br />
+            .NET 5 MAUI 
             ...
           </ListParagraph>        </ListContainer>
       </ListItem>
@@ -110,7 +110,7 @@ const Skills = () => (
           <ListParagraph>
             Photogrammetry <br />
             Streaming <br />
-            Recording <br />
+            Recording 
             ...
           </ListParagraph>        </ListContainer>
       </ListItem>
