@@ -8,8 +8,8 @@ justify-content: center;
 grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 padding: 3rem;
 place-items: center;
-column-gap: 2rem;
-row-gap: 3rem;
+column-gap: 3rem;
+row-gap: 6rem;
 @media ${(props) => props.theme.breakpoints.sm} {
   display: flex;
   flex-direction: column;
@@ -53,7 +53,10 @@ export const Hr = styled.hr`
 
 export const ClassTitle = styled.div`
 text-align: center;
-font-size: ${(props) => props.title ? '3rem' : '1.5rem'};
+font-size:  2rem;
+@media ${(props) => props.theme.breakpoints.sm} {
+  font-size:1.5rem
+}
 `;
 
 export const ClassLink = styled.a`
