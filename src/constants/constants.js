@@ -217,19 +217,19 @@ export const TeachingExperience = [
     events: [
       {
         title: "Coding for kids",
-        ref: "",
+        ref: "#teaching",
       },
       {
         title: "Agile workflows",
-        ref: "",
+        ref: "#teaching",
       },
       {
         title: "Game-development with Unity",
-        ref: "",
+        ref: "#teaching",
       },
       {
         title: "Mixed Reality (VR/AR)",
-        ref: "",
+        ref: "#teaching",
       },
     ],
   },
