@@ -9,15 +9,16 @@
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons"
   },
   "dependencies": {
-    "next": "^11.1.2",
-    "react": "^17.0.2",
-    "react-burger-menu": "^3.0.6",
-    "react-dom": "^17.0.2",
+    "eslint-config-next": "^13.0.5",
+    "next": "^13.0.5",
+    "react": "^18.2.0",
+    "react-burger-menu": "^3.0.8",
+    "react-dom": "^18.2.0",
     "react-icons": "^4.2.0",
     "styled-components": "^5.3.1",
     "styled-normalize": "^8.0.7"
   },
   "devDependencies": {
-    "@svgr/cli": "^5.5.0"
+    "@svgr/cli": "^6.5.1"
   }
 }

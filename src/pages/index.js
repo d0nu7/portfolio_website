@@ -22,8 +22,8 @@ const Home = () => {
       <Skills />
       <Teaching />
       <Acomplishments />
-      <Projects />
-      <Research />
+      <Projects /> 
+       <Research />
     </Layout>
   );
 };

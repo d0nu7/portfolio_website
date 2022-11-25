@@ -56,6 +56,18 @@ export const projects = [
 export const Publications = [
   // done
   {
+    year: 2022,
+    title:
+      "AirRes Mask: A Precise and Robust Virtual Reality Breathing Interface Utilizing Breathing Resistance as Output Modality.",
+    authors:
+      "Tatzgern, M., Domhardt, M., Wolf, M., Cenger, M., Emsenhuber, G., Dinic, R., Gerner, N. & Hartl, A.",
+    webref:
+      "https://dl.acm.org/doi/abs/10.1145/3491102.3502090",
+    apaCite:
+      "Tatzgern, M., Domhardt, M., Wolf, M., Cenger, M., Emsenhuber, G., Dinic, R., Gerner, N. & Hartl, A. (2022). AirRes Mask: A Precise and Robust Virtual Reality Breathing Interface Utilizing Breathing Resistance as Output Modality. In S. Barbosa, C. Lampe, C. Appert, D. A. Shamma, S. Drucker, J. Williamson & K. Yatani (eds.), Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems (p./pp. 1-14), New York: ACM. ISBN: 9781450391573",
+    doi: "https://doi.org/10.1145/3491102.3502090",
+  },  
+  {
     year: 2021,
     title:
       "Assessment of approach-avoidance tendencies in body image using a novel touchscreen paradigm.",

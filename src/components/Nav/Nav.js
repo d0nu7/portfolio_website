@@ -5,7 +5,8 @@ import React from "react";
 
 const StyledAnchor = styled.a`
   padding: 1rem 1rem;
-  display: flex;
+  display: block;
+  width:100%;
   align-items: center;
   position: relative;
   //text-transform: uppercase;
@@ -13,6 +14,8 @@ const StyledAnchor = styled.a`
   font-size: 1em;
   border: 0;
   cursor: pointer;
+  text-decoration: none;
+  color: #b8b7ad;
   &:hover {
     color: #fff;
     opacity: 1;
@@ -90,27 +93,13 @@ class Nav extends React.Component {
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >
-        <Link href="#header">
-          <StyledAnchor onClick={() => this.closeMenu()}><b>Radomir Dinic</b></StyledAnchor>
-        </Link>        
-        <Link href="#about">
-          <StyledAnchor onClick={() => this.closeMenu()}>About</StyledAnchor>
-        </Link>
-        <Link href="#tech">
-          <StyledAnchor onClick={() => this.closeMenu()}>Skills</StyledAnchor>
-        </Link>
-        <Link href="#teaching">
-          <StyledAnchor onClick={() => this.closeMenu()}>Teaching</StyledAnchor>
-        </Link>
-        <Link href="#acomplishments">
-          <StyledAnchor onClick={() => this.closeMenu()}>Acomplishments</StyledAnchor>
-        </Link>
-        <Link href="#projects">
-          <StyledAnchor onClick={() => this.closeMenu()}>Projects</StyledAnchor>
-        </Link>        
-        <Link href="#research">
-          <StyledAnchor onClick={() => this.closeMenu()}>Publications</StyledAnchor>
-        </Link>
+          <StyledAnchor key="0" href="#header" onClick={() => this.closeMenu()}><span><b>Radomir Dinic</b></span></StyledAnchor>
+          <StyledAnchor key="1" href="#about" onClick={() => this.closeMenu()}><span>About</span></StyledAnchor>
+          <StyledAnchor key="2" href="#tech" onClick={() => this.closeMenu()}><span>Skills</span></StyledAnchor>
+          <StyledAnchor key="3" href="#teaching" onClick={() => this.closeMenu()}><span>Teaching</span></StyledAnchor>
+          <StyledAnchor key="4" href="#acomplishments" onClick={() => this.closeMenu()}><span>Acomplishments</span></StyledAnchor>
+          <StyledAnchor key="5" href="#projects" onClick={() => this.closeMenu()}><span>Projects</span></StyledAnchor>
+          <StyledAnchor key="6" href="#research" onClick={() => this.closeMenu()}><span>Publications</span></StyledAnchor>
       </Menu>
     );
   }
