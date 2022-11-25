@@ -219,7 +219,15 @@ export const TeachingExperience = [
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
       {
+        title: "Basics Game Development",
+        ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
+      },      
+      {
         title: "Game Development 1 (co-teacher)",
+        ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
+      },
+      {
+        title: "Computer Networks",
         ref: "https://www.fh-salzburg.ac.at/en/studium/design-medien-und-kunst/bachelor-multimediatechnology/curriculum",
       },
     ],
@@ -241,6 +249,14 @@ export const TeachingExperience = [
       },
       {
         title: "Mixed Reality (VR/AR)",
+        ref: "#teaching",
+      },
+      {
+        title: "AI Content Creation",
+        ref: "#teaching",
+      },
+      {
+        title: "Music ❤️ Code - SonicPI",
         ref: "#teaching",
       },
     ],
