@@ -179,23 +179,23 @@ export const TeachingExperience = [
     events: [
       {
         title: "Rapid Prototyping",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/master-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
       },
       {
         title: "Master's Project: Development & Presentation",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/master-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
       },
       {
         title: "Master's Project: Substantiation",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/master-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
       },
       {
         title: "Master's Project: Realization",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/master-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
       },
       {
         title: "Master's Project: Release & Presentation",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/master-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
       },
     ],
   },
@@ -204,31 +204,31 @@ export const TeachingExperience = [
     events: [
       {
         title: "Introduction programming",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
         title: "Algorithms and data structures (Lab)",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
         title: "Computer graphics 1 (Lab)",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
         title: "Multimedia project (all)",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
         title: "Basics Game Development",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },      
       {
         title: "Game Development 1 (co-teacher)",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
         title: "Computer Networks",
-        ref: "https://www.fh-salzburg.ac.at/en/studium/ct/bachelor-multimediatechnology/curriculum",
+        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
     ],
   },
