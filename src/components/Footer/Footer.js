@@ -24,7 +24,13 @@ const Footer = () => {
           <LinkItem href="mailto:contact@radi.solutions">
             contact@radi.solutions
           </LinkItem>
-        </LinkColumn>    
+        </LinkColumn>
+        <LinkColumn>
+          <LinkTitle>Angebot</LinkTitle>
+          <LinkItem href="/ki-schulungen/">
+            KI-Schulungen
+          </LinkItem>
+        </LinkColumn>
       </LinkList>
       <SocialIconsContainer>
         <CompanyContainer>

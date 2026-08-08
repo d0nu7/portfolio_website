@@ -28,8 +28,10 @@ export default class MyDocument extends Document {
     }
   }
   render() {
+    const page = this.props.__NEXT_DATA__?.page;
+    const language = page === '/ki-schulungen' ? 'de' : 'en-GB';
     return (
-      <Html lang='en-GB'>
+      <Html lang={language}>
          <Head>
           <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
         </Head> 

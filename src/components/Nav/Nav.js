@@ -93,13 +93,14 @@ class Nav extends React.Component {
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >
-          <StyledAnchor key="0" href="#header" onClick={() => this.closeMenu()}><span><b>Radomir Dinic</b></span></StyledAnchor>
-          <StyledAnchor key="1" href="#about" onClick={() => this.closeMenu()}><span>About</span></StyledAnchor>
-          <StyledAnchor key="2" href="#tech" onClick={() => this.closeMenu()}><span>Skills</span></StyledAnchor>
-          <StyledAnchor key="3" href="#teaching" onClick={() => this.closeMenu()}><span>Teaching</span></StyledAnchor>
-          <StyledAnchor key="4" href="#acomplishments" onClick={() => this.closeMenu()}><span>Acomplishments</span></StyledAnchor>
-          <StyledAnchor key="5" href="#projects" onClick={() => this.closeMenu()}><span>Projects</span></StyledAnchor>
-          <StyledAnchor key="6" href="#research" onClick={() => this.closeMenu()}><span>Publications</span></StyledAnchor>
+          <StyledAnchor key="0" href="/" onClick={() => this.closeMenu()}><span><b>Radomir Dinic</b></span></StyledAnchor>
+          <StyledAnchor key="1" href="/#about" onClick={() => this.closeMenu()}><span>About</span></StyledAnchor>
+          <StyledAnchor key="2" href="/#tech" onClick={() => this.closeMenu()}><span>Skills</span></StyledAnchor>
+          <StyledAnchor key="3" href="/#teaching" onClick={() => this.closeMenu()}><span>Teaching</span></StyledAnchor>
+          <StyledAnchor key="4" href="/#acomplishments" onClick={() => this.closeMenu()}><span>Acomplishments</span></StyledAnchor>
+          <StyledAnchor key="5" href="/#projects" onClick={() => this.closeMenu()}><span>Projects</span></StyledAnchor>
+          <StyledAnchor key="6" href="/#research" onClick={() => this.closeMenu()}><span>Publications</span></StyledAnchor>
+          <StyledAnchor key="7" href="/ki-schulungen/" onClick={() => this.closeMenu()}><span>KI-Schulungen</span></StyledAnchor>
       </Menu>
     );
   }

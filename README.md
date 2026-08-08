@@ -1,12 +1,23 @@
-## Personal Portfolio
+# radi.solutions portfolio
 
-### [Live Site](https://jsmasterypro.com)
+Personal portfolio of Radomir Dinic and a focused, shareable landing page for AI training offers.
 
-![Portfolio Website](https://i.ibb.co/WgPMpts/image.png)
+## Routes
 
-This is a code repository for the corresponding video tutorial. Your portfolio is your resume and your business card.
+- `/` – portfolio
+- `/ki-schulungen/` – modular AI training, pricing and Article 4 EU AI Act information
 
-In this video, we will create a full Personal Development Portfolio. We're going to use React and Next.js.
+The training page defaults to German, detects non-German browser languages on first visit and offers a persistent DE/EN switch. It is linked subtly from the menu and footer so the portfolio remains the primary homepage.
 
-Setup:
-- run ```npm i && npm start```
+## Local development
+
+```text
+npm install
+npm run dev
+```
+
+Production export:
+
+```text
+npm run build
+```
