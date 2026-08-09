@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiFillGithub, AiFillInstagram, AiFillLinkedin } from 'react-icons/ai';
+import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
 
 import { SocialIcons } from '../Header/HeaderStyles';
 import { FaResearchgate } from "react-icons/fa";
@@ -37,13 +37,13 @@ const Footer = () => {
           <Slogan>Connecting Realities...</Slogan>
         </CompanyContainer>
         <SocialContainer>
-          <SocialIcons href="https://github.com/d0nu7">
+          <SocialIcons href="https://github.com/d0nu7" aria-label="GitHub">
             <AiFillGithub size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://www.linkedin.com/in/radomir-dinic-830507a0/">
+          <SocialIcons href="https://www.linkedin.com/in/radomir-dinic-830507a0/" aria-label="LinkedIn">
             <AiFillLinkedin size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://www.researchgate.net/profile/Radomir-Dinic">
+          <SocialIcons href="https://www.researchgate.net/profile/Radomir-Dinic" aria-label="ResearchGate">
             <FaResearchgate size="3rem" />
           </SocialIcons>
         </SocialContainer>

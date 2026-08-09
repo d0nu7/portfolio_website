@@ -221,13 +221,13 @@ export default function KiSchulungen() {
     <Layout>
       <Head>
         <title>{t.title} | radi.solutions</title>
-        <meta name="description" content={t.description} />
-        <meta name="keywords" content="KI Schulung, generative KI, AI Act, KI Kompetenz, Inhouse Workshop, Salzburg, ChatGPT Training" />
+        <meta key="description" name="description" content={t.description} />
+        <meta key="keywords" name="keywords" content="KI Schulung, generative KI, AI Act, KI Kompetenz, Inhouse Workshop, Salzburg, ChatGPT Training" />
         <link key="canonical" rel="canonical" href="https://radi.solutions/ki-schulungen/" />
-        <meta property="og:title" content={`${t.title} | radi.solutions`} />
-        <meta property="og:description" content={t.description} />
-        <meta property="og:url" content="https://radi.solutions/ki-schulungen/" />
-        <meta property="og:type" content="website" />
+        <meta key="og-title" property="og:title" content={`${t.title} | radi.solutions`} />
+        <meta key="og-description" property="og:description" content={t.description} />
+        <meta key="og-url" property="og:url" content="https://radi.solutions/ki-schulungen/" />
+        <meta key="og-type" property="og:type" content="website" />
       </Head>
 
       <Page>
