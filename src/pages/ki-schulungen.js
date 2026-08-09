@@ -52,8 +52,8 @@ const copy = {
     priceIntro: "Briefing, Modulauswahl und eine leichte Anpassung vorhandener Beispiele sind bereits enthalten. Zusätzliche Recherche und eigene Use Cases werden transparent ergänzt.",
     recommended: "Beliebtestes Format",
     from: "Fixpreis",
-    net: "netto · bis 15 Personen",
-    pricingNote: "Alle Preise sind Orientierungswerte für geschlossene Gruppen. Raum, besondere Reisekosten und Nächtigung sind nicht enthalten. Ein verbindliches Angebot folgt nach einem kurzen Briefing.",
+    net: "umsatzsteuerfrei · bis 15 Personen",
+    pricingNote: "Alle Preise sind Orientierungswerte für geschlossene Gruppen. Gemäß § 6 Abs. 1 Z 27 UStG wird aufgrund der Kleinunternehmerregelung keine Umsatzsteuer berechnet. Raum, besondere Reisekosten und Nächtigung sind nicht enthalten. Ein verbindliches Angebot folgt nach einem kurzen Briefing.",
     packages: [
       { name: "KI-Impuls", price: "790 €", description: "Kompakter Einstieg für Teams und Entscheider:innen.", features: ["bis 2 Stunden", "Grundlagen und Einordnung", "Live-Demos und Fragerunde"] },
       { name: "Halbtags-Workshop", price: "1.290 €", description: "Praxisnaher Einstieg mit ersten eigenen Aufgaben.", features: ["bis 4 Stunden", "Prompting und Qualität", "Übungen und Teilnahmebestätigung"] },
@@ -129,8 +129,8 @@ const copy = {
     priceIntro: "The briefing, module selection and light adaptation of existing examples are already included. Additional research and custom use cases are priced transparently.",
     recommended: "Most popular",
     from: "Fixed price",
-    net: "net · up to 15 people",
-    pricingNote: "All prices are indicative for closed groups. Venue, exceptional travel expenses and accommodation are not included. A binding quote follows a short briefing.",
+    net: "VAT-exempt · up to 15 people",
+    pricingNote: "All prices are indicative for closed groups. No Austrian VAT is charged under the small-business exemption in Section 6(1)(27) UStG 1994. Venue, exceptional travel expenses and accommodation are not included. A binding quote follows a short briefing.",
     packages: [
       { name: "AI impulse", price: "€790", description: "A focused introduction for teams and decision-makers.", features: ["up to 2 hours", "foundations and context", "live demos and Q&A"] },
       { name: "Half-day workshop", price: "€1,290", description: "A practical introduction using first real tasks.", features: ["up to 4 hours", "prompting and quality", "exercises and attendance confirmation"] },
