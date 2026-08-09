@@ -216,7 +216,7 @@ export const PriceGrid = styled.div`
 
 export const PriceCard = styled.article`
   position: relative;
-  min-height: 360px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
   border: 1px solid ${({ featured }) => featured ? "rgba(19,173,199,.55)" : "rgba(255,255,255,.1)"};
@@ -234,8 +234,10 @@ export const PriceCard = styled.article`
 
 export const Recommended = styled.span`
   position: absolute;
-  top: 17px;
+  top: -14px;
   right: 17px;
+  z-index: 2;
+  border: 4px solid var(--radi-navy);
   border-radius: 999px;
   padding: 6px 9px;
   color: #08232a;
@@ -298,34 +300,82 @@ export const ModuleCard = styled.article`
 `;
 
 export const ActPanel = styled.div`
+  position: relative;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(300px, .75fr);
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  border: 1px solid rgba(255,255,255,.5);
   border-radius: 28px;
   padding: clamp(28px, 6vw, 60px);
   color: var(--radi-navy);
   background:
-    radial-gradient(circle at 100% 0%, rgba(148,93,214,.17), transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(148,93,214,.15), transparent 36%),
+    radial-gradient(circle at 0% 100%, rgba(19,173,199,.1), transparent 34%),
     var(--radi-cream);
+  box-shadow: 0 28px 80px rgba(0,0,0,.14);
 
-  h2 { max-width: 690px; margin: 0; font-size: clamp(34px, 5vw, 54px); line-height: 1.04; letter-spacing: -.05em; }
-  p { max-width: 730px; margin: 22px 0 0; color: #52606f; font-size: 16px; line-height: 1.68; }
+  &::after {
+    content: "";
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    right: -125px;
+    bottom: -135px;
+    border: 38px solid rgba(244,103,55,.08);
+    border-radius: 50%;
+  }
 
-  @media ${(props) => props.theme.breakpoints.md} { grid-template-columns: 1fr; }
+  > div:first-child {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, .75fr);
+    gap: 12px 54px;
+    align-items: end;
+  }
+
+  > div:first-child > p:first-child {
+    grid-column: 1 / -1;
+    margin: 0 0 3px;
+    color: #24788a;
+  }
+
+  h2 { max-width: 690px; margin: 0; font-size: clamp(34px, 4.6vw, 52px); line-height: 1.04; letter-spacing: -.05em; }
+  > div:first-child > p:last-child { max-width: 520px; margin: 0 0 2px; color: #52606f; font-size: 15px; line-height: 1.68; }
+
+  @media ${(props) => props.theme.breakpoints.md} {
+    > div:first-child { grid-template-columns: 1fr; gap: 12px; }
+    > div:first-child > p:first-child { grid-column: auto; }
+    > div:first-child > p:last-child { margin-top: 8px; }
+  }
+
+  @media ${(props) => props.theme.breakpoints.sm} {
+    border-radius: 23px;
+    padding: 34px 22px;
+  }
 `;
 
 export const ActChecklist = styled.div`
-  align-self: stretch;
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 9px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
 
-  div { border: 1px solid rgba(15,22,36,.09); border-radius: 13px; padding: 14px 15px; background: rgba(255,255,255,.64); }
-  strong { display: block; color: #17202c; font-size: 13px; }
-  span { display: block; margin-top: 4px; color: #687486; font-size: 11px; line-height: 1.45; }
+  div { min-height: 126px; border: 1px solid rgba(15,22,36,.09); border-radius: 16px; padding: 18px; background: rgba(255,255,255,.7); box-shadow: 0 8px 24px rgba(30,46,61,.05); }
+  strong { display: block; color: #17202c; font-size: 14px; line-height: 1.25; }
+  span { display: block; margin-top: 7px; color: #687486; font-size: 12px; line-height: 1.5; }
+
+  @media ${(props) => props.theme.breakpoints.lg} { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media ${(props) => props.theme.breakpoints.sm} { grid-template-columns: 1fr; }
 `;
 
 export const LegalNote = styled.p`
+  position: relative;
+  z-index: 1;
   grid-column: 1 / -1;
+  margin: -2px 0 0 !important;
   border-top: 1px solid rgba(15,22,36,.1);
   padding-top: 17px;
   font-size: 11px !important;
