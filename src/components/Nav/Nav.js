@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { slide as Menu } from "react-burger-menu";
 import styled from "styled-components";
 import React from "react";
@@ -6,10 +5,9 @@ import React from "react";
 const StyledAnchor = styled.a`
   padding: 1rem 1rem;
   display: block;
-  width:100%;
+  width: 100%;
   align-items: center;
   position: relative;
-  //text-transform: uppercase;
   font-weight: 900;
   font-size: 1em;
   border: 0;
@@ -21,18 +19,13 @@ const StyledAnchor = styled.a`
     opacity: 1;
     cursor: pointer;
     transition: 0.4s ease;
-
   }
 `;
 
+// Position and size of the burger button are set in CSS (src/styles/globals.js)
+// so they can respond to breakpoints -- inline styles cannot carry media
+// queries. Everything below is purely cosmetic.
 const styles = {
-  bmBurgerButton: {
-    position: 'fixed',
-    width: '36px',
-    height: '30px',
-    right: '36px',
-    top: '36px'
-  },
   bmBurgerBars: {
     background: 'rgba(255, 255, 255, 0.75)'
   },
@@ -48,6 +41,9 @@ const styles = {
   },
   bmMenuWrap: {
     position: 'fixed',
+    // Without an explicit top the panel starts at its static position inside
+    // the header, so it sat ~36px down and ran the same amount off the bottom.
+    top: 0,
     height: '100%'
   },
   bmMenu: {
@@ -89,7 +85,8 @@ class Nav extends React.Component {
     return (
       <Menu right styles={styles}
         noOverlay
-        width={280}
+        // A fixed 280px panel leaves almost nothing visible on a 320px screen.
+        width="min(280px, 85vw)"
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >

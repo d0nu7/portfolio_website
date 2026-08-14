@@ -35,11 +35,12 @@ export const LinkItem = styled.a`
 	}
 
 	@media ${props => props.theme.breakpoints.sm} {
-		font-size: 8px;
-		line-height: 14px;
+		font-size: 14px;
+		line-height: 22px;
 		margin-bottom: 8px;
 		display: flex;
 		align-items: center;
+		overflow-wrap: anywhere;
 	}
 `
 export const SpanItem = styled.span`
@@ -60,8 +61,8 @@ export const SpanItem = styled.span`
 	}
 
 	@media ${props => props.theme.breakpoints.sm} {
-		font-size: 8px;
-		line-height: 14px;
+		font-size: 14px;
+		line-height: 22px;
 		margin-bottom: 8px;
 		display: flex;
 		align-items: center;
@@ -154,10 +155,13 @@ export const LinkList = styled.ul`
 		padding: 32px 0 16px;
 		gap: 16px;
 	}
+	/* Three fixed columns squeezed "contact@radi.solutions" into ~90px on a
+	   phone. Let the track count follow the available width instead. */
 	@media ${props => props.theme.breakpoints.sm} {
 		width: 100%;
-		padding: 32px 4px 16px;
-		gap: 5px;
+		padding: 32px 0 16px;
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: 20px 16px;
 	}
 `
 

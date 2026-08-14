@@ -37,13 +37,13 @@ const Footer = () => {
           <Slogan>Connecting Realities...</Slogan>
         </CompanyContainer>
         <SocialContainer>
-          <SocialIcons href="https://github.com/d0nu7" aria-label="GitHub">
+          <SocialIcons href="https://github.com/d0nu7" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <AiFillGithub size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://www.linkedin.com/in/radomir-dinic-830507a0/" aria-label="LinkedIn">
+          <SocialIcons href="https://www.linkedin.com/in/radomir-dinic-830507a0/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <AiFillLinkedin size="3rem" />
           </SocialIcons>
-          <SocialIcons href="https://www.researchgate.net/profile/Radomir-Dinic" aria-label="ResearchGate">
+          <SocialIcons href="https://www.researchgate.net/profile/Radomir-Dinic" target="_blank" rel="noopener noreferrer" aria-label="ResearchGate">
             <FaResearchgate size="3rem" />
           </SocialIcons>
         </SocialContainer>

@@ -12,8 +12,11 @@ export default {
     button: "hsl(205.1,100%,36.1%)",
     background2: "hsl(232.7,27.3%,23.7%)",
   },
-  // Breakpoints for responsive design
+  // Breakpoints for responsive design.
+  // Declare them in descending order (xl -> xs) inside a component so the
+  // narrower query always wins the cascade.
   breakpoints: {
+    xs: 'screen and (max-width: 480px)',
     sm: 'screen and (max-width: 640px)',
     md: 'screen and (max-width: 768px)',
     lg: 'screen and (max-width: 1024px)',
