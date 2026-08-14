@@ -375,6 +375,32 @@ export const TextButton = styled.button`
   }
 `;
 
+/*
+ * The optional narration control. It reads as a small, quiet text button --
+ * not an icon, not a waveform -- so it sits in the same register as the
+ * twist labels rather than looking like a media player bolted onto the
+ * question. It only ever appears when voice is turned on and the audio file
+ * for the current question actually loaded.
+ */
+export const SpeakerButton = styled.button`
+  ${base};
+  align-self: flex-start;
+  border: 1px solid rgba(242, 243, 245, 0.16);
+  background: transparent;
+  color: rgba(242, 243, 245, 0.5);
+  padding: 0.9rem 1.6rem;
+  margin-bottom: 2.8rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  &[data-playing='true'] {
+    color: ${({ $accent }) => $accent};
+    border-color: ${({ $accent }) => $accent};
+  }
+`;
+
 export const Row = styled.div`
   display: flex;
   gap: 1rem;

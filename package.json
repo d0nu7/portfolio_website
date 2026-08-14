@@ -9,7 +9,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "svgr": "svgr -d  src/CustomIcons public/CustomIcons"
+    "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
+    "voice:closer": "node scripts/generate-closer-voice.js"
   },
   "dependencies": {
     "eslint-config-next": "^13.0.5",

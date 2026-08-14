@@ -14,6 +14,7 @@ import {
   questionAt,
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
+import { voiceSrc } from '../../constants/closerVoice';
 import {
   ActNumeral,
   ActTitle,
@@ -38,6 +39,7 @@ import {
   Sheet,
   SheetPanel,
   Small,
+  SpeakerButton,
   Stay,
   StayDot,
   TextButton,
@@ -66,6 +68,7 @@ const initialState = {
   players: ['', ''],
   modeId: MODES[0].id,
   timerEnabled: true,
+  voiceEnabled: false,
   qIndex: 0,
   pending: 0,
   breakAct: 0,
@@ -122,6 +125,8 @@ export default function CloserGame() {
   const [confirmReset, setConfirmReset] = useState(false);
   const [beat, setBeat] = useState(0);
   const [now, setNow] = useState(0);
+  const [voicePlaying, setVoicePlaying] = useState(false);
+  const [voiceMissing, setVoiceMissing] = useState(false);
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
 
@@ -171,6 +176,60 @@ export default function CloserGame() {
     setNow(Date.now());
     return () => clearInterval(id);
   }, [s.timerEnabled, s.actStartedAt]);
+
+  /*
+   * Voice-over. Audio is pre-generated per question (see
+   * scripts/generate-closer-voice.js) -- nothing is synthesised at runtime
+   * and nothing is sent anywhere. A missing file just fails quietly: the
+   * control disappears rather than showing a broken state, since voice is
+   * always optional and the game has to work the same without it.
+   */
+  const audioRef = useRef(null);
+
+  const stopVoice = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setVoicePlaying(false);
+  }, []);
+
+  const playVoice = useCallback(
+    (index) => {
+      if (typeof window === 'undefined') return;
+      const audio = new window.Audio(voiceSrc(lang, index));
+      audioRef.current = audio;
+      setVoiceMissing(false);
+      audio.onended = () => setVoicePlaying(false);
+      audio.onerror = () => {
+        setVoicePlaying(false);
+        setVoiceMissing(true);
+        audioRef.current = null;
+      };
+      audio
+        .play()
+        .then(() => setVoicePlaying(true))
+        .catch(() => setVoicePlaying(false)); // autoplay was blocked -- the Listen button still works
+    },
+    [lang]
+  );
+
+  // A new question -- narrate it automatically if voice is on. This also
+  // covers the moment a NO THINKING countdown hands off into the question:
+  // 'ask' is the same step either way, so the question gets read the instant
+  // it actually appears, rather than the player answering before they have
+  // heard it.
+  useEffect(() => {
+    stopVoice();
+    setVoiceMissing(false);
+    if (s.phase === 'q' && step === 'ask' && s.voiceEnabled) {
+      playVoice(s.qIndex);
+    }
+    return stopVoice;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s.phase, step, s.qIndex, s.voiceEnabled, lang]);
 
   const mode = useMemo(
     () => MODES.find((m) => m.id === s.modeId) || MODES[0],
@@ -465,6 +524,15 @@ export default function CloserGame() {
           >
             {t('timer')}
             <b>{s.timerEnabled ? t('on') : t('off')}</b>
+          </Toggle>
+          <Toggle
+            $on={s.voiceEnabled}
+            $accent={A0}
+            aria-pressed={s.voiceEnabled}
+            onClick={() => set({ voiceEnabled: !s.voiceEnabled })}
+          >
+            {t('voice')}
+            <b>{s.voiceEnabled ? t('on') : t('off')}</b>
           </Toggle>
         </Body>
         <Foot>
@@ -929,6 +997,16 @@ export default function CloserGame() {
     inner = (
       <>
         <Body $center>
+          {s.voiceEnabled && !voiceMissing && (
+            <SpeakerButton
+              type="button"
+              $accent={style.accent}
+              data-playing={voicePlaying}
+              onClick={() => (voicePlaying ? stopVoice() : playVoice(s.qIndex))}
+            >
+              {voicePlaying ? t('voiceStop') : t('voiceListen')}
+            </SpeakerButton>
+          )}
           {!isLast && badge}
           <Question>{questionText}</Question>
           {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
@@ -936,7 +1014,14 @@ export default function CloserGame() {
         <Foot>
           {canStay ? (
             <Row>
-              <GhostButton onClick={() => setStaying(true)}>{t('stay')}</GhostButton>
+              <GhostButton
+                onClick={() => {
+                  stopVoice();
+                  setStaying(true);
+                }}
+              >
+                {t('stay')}
+              </GhostButton>
               <Button $accent={style.accent} onClick={leaveQuestion}>
                 {t('next')}
               </Button>
@@ -948,7 +1033,14 @@ export default function CloserGame() {
           )}
           {/* At zero the control simply goes away -- no "no skips left". */}
           {!isLast && s.skipsRemaining > 0 && (
-            <TextButton onClick={() => setSkipAsking(true)}>{t('skip')}</TextButton>
+            <TextButton
+              onClick={() => {
+                stopVoice();
+                setSkipAsking(true);
+              }}
+            >
+              {t('skip')}
+            </TextButton>
           )}
         </Foot>
       </>

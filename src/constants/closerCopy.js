@@ -40,6 +40,7 @@ const COPY = {
   timer: { de: 'Timer', en: 'Timer' },
   on: { de: 'An', en: 'On' },
   off: { de: 'Aus', en: 'Off' },
+  voice: { de: 'Vorlesen', en: 'Read aloud' },
 
   /* intro ---------------------------------------------------------------- */
   introLines: {
@@ -68,6 +69,8 @@ const COPY = {
   stay: { de: 'Bleiben', en: 'Stay' },
   takeYourTime: { de: 'Lasst euch Zeit.', en: 'Take your time.' },
   done: { de: 'Fertig', en: 'Done' },
+  voiceListen: { de: 'Anhören', en: 'Listen' },
+  voiceStop: { de: 'Stopp', en: 'Stop' },
 
   /* skip ------------------------------------------------------------------ */
   skipConfirmTitle: { de: 'Diese Frage überspringen?', en: 'Skip this question?' },
