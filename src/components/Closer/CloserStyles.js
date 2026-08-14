@@ -4,6 +4,10 @@ import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
  * CLOSER lives outside the portfolio's look: near-black, editorial, mostly
  * type and empty space. It does not use the site Layout, so no header, no
  * footer and no burger menu.
+ *
+ * Two rules from the spec shape most of what is below. Buttons sit in the
+ * lower third so the whole thing works one-handed, and no piece of
+ * information is carried by colour alone.
  */
 
 export const CloserGlobal = createGlobalStyle`
@@ -13,10 +17,18 @@ export const CloserGlobal = createGlobalStyle`
     overscroll-behavior: none;
   }
   body {
-    /* The phone is passed around; text selection just gets in the way. */
+    /* The phone gets passed around; text selection just gets in the way. */
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
   }
 `;
 
@@ -31,8 +43,13 @@ const fade = keyframes`
 `;
 
 const pulse = keyframes`
-  0%, 100% { opacity: .35; }
-  50%      { opacity: .9; }
+  0%, 100% { opacity: .3; }
+  50%      { opacity: .85; }
+`;
+
+const riseIn = keyframes`
+  from { transform: translateY(100%); }
+  to   { transform: none; }
 `;
 
 export const Screen = styled.main`
@@ -63,7 +80,7 @@ export const Screen = styled.main`
     );
     opacity: ${({ $glow }) => ($glow === undefined ? 0.2 : $glow)};
     filter: blur(40px);
-    transition: opacity 1.2s ease;
+    transition: opacity 1.4s ease;
   }
 
   @media ${(props) => props.theme.breakpoints.xs} {
@@ -81,12 +98,13 @@ export const Body = styled.div`
   animation: ${fadeUp} 0.55s ease both;
 `;
 
+/* Buttons live down here, within thumb reach. */
 export const Foot = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
   padding-top: 2.4rem;
 `;
 
@@ -101,7 +119,7 @@ export const TopBar = styled.header`
   gap: 1.6rem;
   min-height: 2.4rem;
   opacity: ${({ $chrome }) => ($chrome === undefined ? 1 : $chrome)};
-  transition: opacity 1s ease;
+  transition: opacity 1.2s ease;
 `;
 
 export const Count = styled.span`
@@ -112,32 +130,31 @@ export const Count = styled.span`
 `;
 
 export const Tokens = styled.span`
+  display: inline-flex;
+  gap: 0.5rem;
   font-size: 1.4rem;
-  letter-spacing: 0.3em;
   color: ${({ $accent }) => $accent};
-  opacity: 0.8;
 
-  span {
-    opacity: 0.18;
+  b {
+    font-weight: 400;
+  }
+
+  /* A spent token stays in place, hollowed out, so the count is legible
+     without having to compare against a remembered state. */
+  s {
+    text-decoration: none;
+    opacity: 0.22;
   }
 `;
 
-/*
- * The only progress CLOSER shows. It moves with the questions, never with the
- * answers -- there is deliberately nothing here that could read as a score.
- */
 export const Bar = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 1.2rem;
   margin-top: 1.6rem;
-  font-size: 0.95rem;
-  letter-spacing: 0.22em;
-  color: rgba(242, 243, 245, 0.3);
   opacity: ${({ $chrome }) => ($chrome === undefined ? 1 : $chrome)};
-  transition: opacity 1s ease;
+  transition: opacity 1.2s ease;
 `;
 
 export const Track = styled.div`
@@ -156,21 +173,8 @@ export const Track = styled.div`
     border-radius: 50%;
     background: ${({ $accent }) => $accent};
     transform: translate(-50%, -50%);
-    transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1);
   }
-`;
-
-export const Hairline = styled.div`
-  position: relative;
-  z-index: 1;
-  margin-top: 1.6rem;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    rgba(242, 243, 245, 0.22) ${({ $pct }) => $pct}%,
-    rgba(242, 243, 245, 0.05) ${({ $pct }) => $pct}%
-  );
-  transition: background 0.8s ease;
 `;
 
 /* ---------- type ---------- */
@@ -180,16 +184,18 @@ export const Kicker = styled.p`
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: ${({ $accent }) => $accent || 'rgba(242,243,245,.4)'};
-  margin-bottom: 2rem;
+  margin: 0 0 2rem;
+  white-space: pre-line;
   animation: ${fade} 0.6s ease both;
 `;
 
 export const Question = styled.h1`
-  font-size: clamp(2.8rem, 7.4vw, 4.6rem);
-  line-height: 1.16;
+  font-size: clamp(2.8rem, 7.2vw, 4.4rem);
+  line-height: 1.18;
   letter-spacing: -0.025em;
   font-weight: 500;
   margin: 0;
+  white-space: pre-line;
   text-wrap: balance;
 `;
 
@@ -198,26 +204,28 @@ export const Wordmark = styled.h1`
   line-height: 1;
   letter-spacing: 0.02em;
   font-weight: 700;
-  margin: 0 0 2.4rem;
+  margin: 0 0 2.8rem;
 `;
 
 export const Lede = styled.p`
   font-size: 1.8rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: rgba(242, 243, 245, 0.55);
   margin: 0;
   max-width: 34ch;
+  white-space: pre-line;
 
   & + & {
-    margin-top: 1.6rem;
+    margin-top: 2rem;
   }
 `;
 
 export const Small = styled.p`
   font-size: 1.3rem;
   line-height: 1.6;
-  color: rgba(242, 243, 245, 0.35);
+  color: rgba(242, 243, 245, 0.32);
   margin: 0;
+  white-space: pre-line;
 `;
 
 export const ActNumeral = styled.p`
@@ -232,58 +240,53 @@ export const ActTitle = styled.h1`
   line-height: 1;
   letter-spacing: -0.03em;
   font-weight: 600;
-  margin: 0 0 2rem;
+  margin: 0 0 2.4rem;
   color: ${({ $accent }) => $accent};
 `;
 
-/* ---------- the twist banner ---------- */
+/* ---------- whose turn it is ---------- */
 
-export const Twist = styled.div`
-  border-left: 2px solid ${({ $accent }) => $accent};
-  padding: 0.2rem 0 0.2rem 1.6rem;
-  margin-bottom: 2.8rem;
+/*
+ * This is the second most important thing on a question screen after the
+ * question, and it used to read as a caption. It is now a block: a rule down
+ * the side, a caret, and the name at display size. The caret and the size
+ * jump carry the meaning without relying on the accent colour.
+ */
+export const TurnBadge = styled.div`
+  align-self: flex-start;
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+  max-width: 100%;
+  border-left: 3px solid ${({ $accent }) => $accent};
+  padding: 0.4rem 0 0.4rem 1.6rem;
+  margin-bottom: 3rem;
   animation: ${fadeUp} 0.5s ease both;
 
-  strong {
-    display: block;
-    font-size: 1.1rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
+  &::before {
+    content: '▸';
     color: ${({ $accent }) => $accent};
-    margin-bottom: 0.6rem;
-  }
-
-  span {
-    font-size: 1.6rem;
-    line-height: 1.45;
-    color: rgba(242, 243, 245, 0.7);
+    font-size: 2rem;
+    line-height: 1;
+    align-self: center;
   }
 `;
 
-export const Turn = styled.p`
-  font-size: 1.6rem;
-  color: rgba(242, 243, 245, 0.5);
-  margin: 0 0 2.4rem;
-
-  b {
-    color: #f2f3f5;
-    font-weight: 600;
-  }
-
-  em {
-    font-style: normal;
-    font-weight: 600;
-    color: ${({ $accent }) => $accent};
-    font-variant-numeric: tabular-nums;
-  }
+export const TurnName = styled.span`
+  font-size: clamp(2.2rem, 6.4vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: ${({ $accent }) => $accent};
+  overflow-wrap: anywhere;
 `;
 
-export const CounterQuestion = styled.p`
-  font-size: 1.8rem;
-  line-height: 1.4;
-  text-align: center;
-  color: rgba(242, 243, 245, 0.4);
-  margin: 3.2rem 0 0;
+export const TurnVerb = styled.span`
+  font-size: 1.3rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(242, 243, 245, 0.45);
+  white-space: nowrap;
 `;
 
 export const Counter = styled.div`
@@ -294,6 +297,15 @@ export const Counter = styled.div`
   color: ${({ $accent }) => $accent};
   font-variant-numeric: tabular-nums;
   animation: ${fade} 0.3s ease both;
+`;
+
+/* ---------- twist banner ---------- */
+
+export const TwistLabel = styled.p`
+  font-size: 1.3rem;
+  letter-spacing: 0.34em;
+  color: ${({ $accent }) => $accent};
+  margin: 0 0 2.4rem;
 `;
 
 /* ---------- controls ---------- */
@@ -316,10 +328,11 @@ const base = css`
   }
 `;
 
+/* 60px+ tall, full width: a comfortable one-handed target. */
 export const Button = styled.button`
   ${base};
   width: 100%;
-  padding: 1.9rem 2.4rem;
+  padding: 2rem 2.4rem;
   border: 1px solid transparent;
   background: ${({ $accent }) => $accent};
   color: #08090c;
@@ -332,7 +345,7 @@ export const Button = styled.button`
 export const GhostButton = styled.button`
   ${base};
   width: 100%;
-  padding: 1.9rem 2.4rem;
+  padding: 2rem 2.4rem;
   border: 1px solid rgba(242, 243, 245, 0.18);
   background: transparent;
   color: rgba(242, 243, 245, 0.85);
@@ -350,21 +363,21 @@ export const TextButton = styled.button`
   ${base};
   border: none;
   background: none;
-  padding: 1.2rem 0;
-  color: rgba(242, 243, 245, 0.35);
+  padding: 1.4rem 0;
+  color: rgba(242, 243, 245, 0.38);
   font-size: 1.3rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   align-self: center;
 
   &:hover:not(:disabled) {
-    color: rgba(242, 243, 245, 0.7);
+    color: rgba(242, 243, 245, 0.75);
   }
 `;
 
 export const Row = styled.div`
   display: flex;
-  gap: 1.2rem;
+  gap: 1rem;
 
   > * {
     flex: 1;
@@ -375,7 +388,7 @@ export const Field = styled.label`
   display: block;
 
   & + & {
-    margin-top: 2.4rem;
+    margin-top: 2.8rem;
   }
 
   span {
@@ -435,6 +448,12 @@ export const Choice = styled.button`
     font-weight: 600;
     letter-spacing: 0.02em;
     margin-bottom: 0.4rem;
+
+    /* Selection is marked with a glyph as well as a border colour. */
+    &::after {
+      content: ${({ $on }) => ($on ? "' ✓'" : "''")};
+      color: ${({ $accent }) => $accent};
+    }
   }
 
   em {
@@ -463,7 +482,7 @@ export const Toggle = styled.button`
   width: 100%;
   border-radius: 999px;
   margin-top: 2rem;
-  padding: 1.4rem 2rem;
+  padding: 1.6rem 2rem;
   border: 1px solid rgba(242, 243, 245, 0.14);
   background: transparent;
   color: rgba(242, 243, 245, 0.6);
@@ -492,7 +511,7 @@ export const LangSwitch = styled.div`
     border: none;
     background: ${({ $accent }) => $accent};
     color: #08090c;
-    padding: 0.7rem 1.5rem;
+    padding: 0.8rem 1.6rem;
     font-family: inherit;
     font-size: 1.2rem;
     font-weight: 600;
@@ -506,7 +525,36 @@ export const LangSwitch = styled.div`
   }
 `;
 
-/* ---------- STAY takeover ---------- */
+/* ---------- overlays ---------- */
+
+export const Sheet = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(8, 9, 12, 0.82);
+  animation: ${fade} 0.25s ease both;
+`;
+
+export const SheetPanel = styled.div`
+  background: #12141b;
+  border-top: 1px solid rgba(242, 243, 245, 0.1);
+  border-radius: 24px 24px 0 0;
+  padding: 3.2rem 2.4rem calc(2.4rem + env(safe-area-inset-bottom));
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  animation: ${riseIn} 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  h2 {
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+  }
+`;
 
 export const Stay = styled.div`
   position: fixed;
@@ -517,10 +565,16 @@ export const Stay = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2.4rem;
+  gap: 2.8rem;
   padding: 3.2rem;
   text-align: center;
-  animation: ${fade} 0.8s ease both;
+  animation: ${fade} 0.9s ease both;
+`;
+
+/* Same takeover, but it is only on screen for a moment, so it arrives fast. */
+export const Flash = styled(Stay)`
+  gap: 2rem;
+  animation-duration: 0.22s;
 `;
 
 export const StayDot = styled.div`
@@ -528,13 +582,13 @@ export const StayDot = styled.div`
   height: 6px;
   border-radius: 50%;
   background: ${({ $accent }) => $accent};
-  animation: ${pulse} 3.4s ease-in-out infinite;
+  animation: ${pulse} 3.6s ease-in-out infinite;
 `;
 
 export const Elapsed = styled.p`
   font-size: 1.2rem;
   letter-spacing: 0.2em;
-  color: rgba(242, 243, 245, 0.28);
+  color: rgba(242, 243, 245, 0.26);
   margin: 0;
   font-variant-numeric: tabular-nums;
 `;

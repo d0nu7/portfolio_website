@@ -5,7 +5,7 @@ import {
   ACT_STYLE,
   LANGS,
   MODES,
-  QUESTION_37,
+  Q37,
   SECRET_AT_INDEX,
   SKIP_TOKENS,
   TOTAL_QUESTIONS,
@@ -24,18 +24,19 @@ import {
   Choice,
   Count,
   Counter,
-  CounterQuestion,
   Elapsed,
   Field,
+  Flash,
   Foot,
   GhostButton,
-  Hairline,
   Kicker,
   LangSwitch,
   Lede,
   Question,
   Row,
   Screen,
+  Sheet,
+  SheetPanel,
   Small,
   Stay,
   StayDot,
@@ -44,34 +45,36 @@ import {
   Tokens,
   TopBar,
   Track,
-  Turn,
-  Twist,
+  TurnBadge,
+  TurnName,
+  TurnVerb,
+  TwistLabel,
   Wordmark,
 } from './CloserStyles';
 
 const STORAGE_KEY = 'closer:v1';
-const ACT_MINUTES = 15;
+const ACT_MS = 15 * 60 * 1000;
+const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 
 /*
- * Nothing about a conversation is stored -- answers are never typed in. What
- * persists is only enough to survive a closed tab: names, mode, language,
- * which question is up, tokens left, whether the secret question has happened.
+ * Nothing about the conversation is stored -- answers are never typed in. What
+ * persists is only enough to survive a closed tab.
  */
 const initialState = {
-  phase: 'intro',
+  phase: 'start',
   lang: 'de',
   players: ['', ''],
   modeId: MODES[0].id,
-  timerOn: false,
+  timerEnabled: true,
   qIndex: 0,
   pending: 0,
   breakAct: 0,
-  tokens: SKIP_TOKENS,
-  secretTaken: false,
-  secretAsked: null,
+  skipsRemaining: SKIP_TOKENS,
+  secretReady: [false, false],
+  secretAsked: [null, null],
   starterOffset: 0,
-  q37Pick: 0,
   actStartedAt: null,
+  completed: false,
 };
 
 function loadSaved() {
@@ -81,7 +84,7 @@ function loadSaved() {
     if (!raw) return null;
     const saved = JSON.parse(raw);
     if (!saved || typeof saved !== 'object' || !saved.phase) return null;
-    if (saved.phase === 'intro' || saved.phase === 'end') return null;
+    if (saved.phase === 'start' || saved.completed) return null;
     return { ...initialState, ...saved };
   } catch (err) {
     return null;
@@ -101,9 +104,7 @@ function buzz(pattern) {
 
 function clockOf(ms) {
   const total = Math.max(0, Math.floor(ms / 1000));
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return `${m}:${String(s).padStart(2, '0')}`;
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 }
 
 export default function CloserGame() {
@@ -111,32 +112,32 @@ export default function CloserGame() {
   const [resumable, setResumable] = useState(null);
   const [s, setS] = useState(initialState);
 
-  // Sub-step within a question: twist intro -> countdown -> the question itself.
-  const [step, setStep] = useState('ask');
+  // Screen-local state: none of this is worth persisting.
+  const [step, setStep] = useState('ask'); // twist | count | ask | deeper | deeperOpen
   const [count, setCount] = useState(0);
-  const [deeperUsed, setDeeperUsed] = useState(false);
-  const [quickLeft, setQuickLeft] = useState(0);
+  const [skipAsking, setSkipAsking] = useState(false);
+  const [justSkipped, setJustSkipped] = useState(null);
   const [staying, setStaying] = useState(false);
   const [stayReady, setStayReady] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [beat, setBeat] = useState(0);
   const [now, setNow] = useState(0);
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
 
   const lang = s.lang;
-  // t() for plain entries, t.fn() for the few lines that take a name.
   const t = useCallback((key) => pick(COPY[key], lang), [lang]);
   const tf = useCallback((key, ...args) => COPY[key](lang, ...args), [lang]);
 
-  // Render the server markup first, then look for a saved game. Keeps the
-  // static export and the first client render identical.
+  // Render the server markup first, then look for a saved game, so the static
+  // export and the first client render stay identical.
   useEffect(() => {
     setMounted(true);
     setResumable(loadSaved());
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-    if (s.phase === 'intro') return;
+    if (!mounted || s.phase === 'start') return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
     } catch (err) {
@@ -144,13 +145,32 @@ export default function CloserGame() {
     }
   }, [s, mounted]);
 
-  // One ticking clock, only while an act timer is actually on screen.
+  // Keep the screen awake while the phone is lying between two people.
+  const wakeRef = useRef(null);
   useEffect(() => {
-    if (!s.timerOn || !s.actStartedAt) return undefined;
+    const playing = mounted && s.phase !== 'start' && !s.completed;
+    if (!playing || typeof navigator === 'undefined' || !navigator.wakeLock) return undefined;
+    let cancelled = false;
+    navigator.wakeLock
+      .request('screen')
+      .then((lock) => {
+        if (cancelled) lock.release().catch(() => {});
+        else wakeRef.current = lock;
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      wakeRef.current?.release().catch(() => {});
+      wakeRef.current = null;
+    };
+  }, [mounted, s.phase, s.completed]);
+
+  useEffect(() => {
+    if (!s.timerEnabled || !s.actStartedAt) return undefined;
     const id = setInterval(() => setNow(Date.now()), 1000);
     setNow(Date.now());
     return () => clearInterval(id);
-  }, [s.timerOn, s.actStartedAt]);
+  }, [s.timerEnabled, s.actStartedAt]);
 
   const mode = useMemo(
     () => MODES.find((m) => m.id === s.modeId) || MODES[0],
@@ -162,48 +182,38 @@ export default function CloserGame() {
   const isLast = s.qIndex === TOTAL_QUESTIONS - 1;
 
   const nameOf = useCallback(
-    (i) => {
-      const given = (s.players[i] || '').trim();
-      if (given) return given;
-      if (lang === 'de') return i === 0 ? 'Spieler eins' : 'Spieler zwei';
-      return i === 0 ? 'Player one' : 'Player two';
-    },
-    [s.players, lang]
+    (i) =>
+      (s.players[i] || '').trim() || (i === 0 ? t('playerOne') : t('playerTwo')),
+    [s.players, t]
   );
+
+  // Strict alternation, so the same person never has to open twice running.
   const starter = (s.qIndex + s.starterOffset) % 2;
 
-  // Which twist this question carries, if the mode lets it through.
-  const twist = useMemo(() => {
-    if (!question) return null;
-    if (question.both && mode.twists.both) return 'both';
-    if (question.quick && mode.twists.quick) return 'quick';
-    if (question.predict && mode.twists.predict) return 'predict';
-    return null;
-  }, [question, mode]);
+  const twist = question?.twist && mode.twists[question.twist] ? question.twist : null;
+  const canStay = Boolean(question?.stayEnabled && mode.twists.stay);
 
   const enterQuestion = useCallback((index, state) => {
     const q = questionAt(index);
     const m = MODES.find((x) => x.id === state.modeId) || MODES[0];
-    let first = 'ask';
-    if (q) {
-      if (q.both && m.twists.both) first = 'both';
-      else if (q.quick && m.twists.quick) first = 'quick';
-      else if (q.predict && m.twists.predict) first = 'predict';
-    }
-    setStep(first);
-    setDeeperUsed(false);
-    setQuickLeft(0);
+    const tw = q?.twist && m.twists[q.twist] ? q.twist : null;
+    // 'deeper' is a post-answer twist; the rest open with a lead-in screen.
+    setStep(tw && tw !== 'deeper' ? 'twist' : 'ask');
+    setSkipAsking(false);
+    setJustSkipped(null);
     setStaying(false);
     setStayReady(false);
   }, []);
 
-  // Every route between questions runs through here: act breaks, the secret
-  // question and the staged finale all interrupt on their way past.
+  /*
+   * Everything between questions routes through here. Act breaks, the secret
+   * question and the staged last question all interrupt on the way past.
+   */
   const goTo = useCallback(
     (index, patch = {}) => {
       const base = { ...s, ...patch };
       if (index >= TOTAL_QUESTIONS) {
-        set({ ...patch, phase: 'after' });
+        set({ ...patch, phase: 'all36' });
         return;
       }
       if (index > 0 && index % 12 === 0) {
@@ -211,12 +221,13 @@ export default function CloserGame() {
         set({ ...patch, phase: 'break', breakAct: index / 12 - 1, pending: index });
         return;
       }
-      if (index === SECRET_AT_INDEX && !base.secretTaken) {
-        set({ ...patch, phase: 'secret1', pending: index });
+      if (index === SECRET_AT_INDEX && !base.secretReady[0]) {
+        set({ ...patch, phase: 'secretPass1', pending: index });
         return;
       }
       if (index === TOTAL_QUESTIONS - 1) {
-        set({ ...patch, phase: 'finale', pending: index });
+        buzz(20);
+        set({ ...patch, phase: 'lastIntro', pending: index });
         return;
       }
       set({ ...patch, phase: 'q', qIndex: index });
@@ -225,62 +236,68 @@ export default function CloserGame() {
     [s, set, enterQuestion]
   );
 
-  // Leaving a question: GO DEEPER first, then STAY, then the next question.
   const leaveQuestion = useCallback(() => {
-    if (question?.deeper && mode.twists.deeper && !deeperUsed) {
+    if (twist === 'deeper' && step !== 'deeper' && step !== 'deeperOpen') {
       setStep('deeper');
       return;
     }
     goTo(s.qIndex + 1);
-  }, [question, mode, deeperUsed, goTo, s.qIndex]);
+  }, [twist, step, goTo, s.qIndex]);
 
-  const skip = useCallback(() => {
-    if (s.tokens <= 0) return;
-    buzz(12);
-    goTo(s.qIndex + 1, { tokens: s.tokens - 1 });
-  }, [s.tokens, s.qIndex, goTo]);
-
-  // BOTH: the 3-2-1 before answering at the same time.
-  const countdownRef = useRef(null);
-  const runCountdown = useCallback((from, done) => {
+  // BOTH / NO THINKING lead-in count.
+  const countRef = useRef(null);
+  const runCountdown = useCallback((from) => {
     setCount(from);
     setStep('count');
-    clearInterval(countdownRef.current);
-    countdownRef.current = setInterval(() => {
+    clearInterval(countRef.current);
+    countRef.current = setInterval(() => {
       setCount((c) => {
         if (c <= 1) {
-          clearInterval(countdownRef.current);
+          clearInterval(countRef.current);
           buzz(20);
-          done();
+          setStep('ask');
           return 0;
         }
         return c - 1;
       });
     }, 1000);
   }, []);
-  useEffect(() => () => clearInterval(countdownRef.current), []);
+  useEffect(() => () => clearInterval(countRef.current), []);
 
-  // NO THINKING counts down while the question is already on screen, so the
-  // answer has to come out before it can be composed.
-  useEffect(() => {
-    if (quickLeft <= 0) return undefined;
-    const id = setTimeout(() => {
-      setQuickLeft((n) => {
-        if (n === 1) buzz(20);
-        return n - 1;
-      });
-    }, 1000);
-    return () => clearTimeout(id);
-  }, [quickLeft]);
-
-  // STAY hides the game. The CONTINUE button only appears once the two of them
-  // have had a moment -- there is deliberately no timer telling them to hurry.
+  // STAY hides the game. CONTINUE appears once, quietly, and then waits as
+  // long as it has to -- no timer, nothing counting down.
   useEffect(() => {
     if (!staying) return undefined;
     setStayReady(false);
     const id = setTimeout(() => setStayReady(true), 6000);
     return () => clearTimeout(id);
   }, [staying]);
+
+  // A skip is the one action that spends something, so it gets a beat of its
+  // own rather than silently swapping the question out.
+  useEffect(() => {
+    if (justSkipped === null) return undefined;
+    const id = setTimeout(() => {
+      setJustSkipped(null);
+      goTo(s.qIndex + 1);
+    }, 1600);
+    return () => clearTimeout(id);
+  }, [justSkipped, goTo, s.qIndex]);
+
+  // The closing sequence plays itself out, one line at a time.
+  useEffect(() => {
+    if (s.phase !== 'ending' || beat >= ENDING_BEATS.length - 1) return undefined;
+    const id = setTimeout(() => setBeat((b) => b + 1), 2000);
+    return () => clearTimeout(id);
+  }, [s.phase, beat]);
+
+  const [revealSecond, setRevealSecond] = useState(false);
+  useEffect(() => {
+    if (s.phase !== 'all36') return undefined;
+    setRevealSecond(false);
+    const id = setTimeout(() => setRevealSecond(true), 1600);
+    return () => clearTimeout(id);
+  }, [s.phase]);
 
   const restart = useCallback(() => {
     try {
@@ -289,13 +306,15 @@ export default function CloserGame() {
       /* ignore */
     }
     setResumable(null);
-    setS((prev) => ({ ...initialState, lang: prev.lang }));
+    setConfirmReset(false);
+    setBeat(0);
     setStep('ask');
+    setS((prev) => ({ ...initialState, lang: prev.lang }));
   }, []);
 
-  const pct = Math.round((s.qIndex / (TOTAL_QUESTIONS - 1)) * 100);
   const elapsed = s.actStartedAt && now ? now - s.actStartedAt : 0;
-  const overtime = elapsed > ACT_MINUTES * 60 * 1000;
+  const overtime = s.timerEnabled && s.actStartedAt && elapsed > ACT_MS;
+  const pct = Math.round((s.qIndex / (TOTAL_QUESTIONS - 1)) * 100);
 
   const frame = (content, opts = {}) => (
     <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
@@ -304,21 +323,35 @@ export default function CloserGame() {
     </Screen>
   );
 
-  /* ------------------------------------------------------------------ */
-  /* intro                                                              */
-  /* ------------------------------------------------------------------ */
+  const A0 = ACT_STYLE[0].accent;
 
-  if (!mounted || s.phase === 'intro') {
+  /* ================================================================== */
+  /* START                                                              */
+  /* ================================================================== */
+
+  if (!mounted || s.phase === 'start') {
+    if (confirmReset) {
+      return frame(
+        <>
+          <Body $center>
+            <Question>{t('startOverConfirm')}</Question>
+            <Lede style={{ marginTop: '2.4rem' }}>{t('startOverWarn')}</Lede>
+          </Body>
+          <Foot>
+            <Button $accent={A0} onClick={restart}>
+              {t('startOver')}
+            </Button>
+            <TextButton onClick={() => setConfirmReset(false)}>{t('goBack')}</TextButton>
+          </Foot>
+        </>,
+        { accent: A0, glow: 0.3 }
+      );
+    }
     return frame(
       <>
-        <LangSwitch $accent={ACT_STYLE[0].accent}>
+        <LangSwitch $accent={A0}>
           {LANGS.map((l) => (
-            <button
-              key={l}
-              type="button"
-              aria-pressed={lang === l}
-              onClick={() => set({ lang: l })}
-            >
+            <button key={l} type="button" aria-pressed={lang === l} onClick={() => set({ lang: l })}>
               {l}
             </button>
           ))}
@@ -326,13 +359,13 @@ export default function CloserGame() {
         <Body $center>
           <Wordmark>CLOSER</Wordmark>
           <Lede>{t('tagline')}</Lede>
-          <Lede>{t('introBlurb')}</Lede>
         </Body>
         <Foot>
           {mounted && resumable ? (
             <>
+              <Small style={{ textAlign: 'center' }}>{t('welcomeBack')}</Small>
               <Button
-                $accent={ACT_STYLE[0].accent}
+                $accent={A0}
                 onClick={() => {
                   const r = { ...resumable, lang };
                   setS(r);
@@ -340,91 +373,83 @@ export default function CloserGame() {
                   if (r.phase === 'q') enterQuestion(r.qIndex, r);
                 }}
               >
-                {t('continue')}
+                {t('continueGame')}
               </Button>
-              <TextButton onClick={restart}>{t('startOver')}</TextButton>
+              <TextButton onClick={() => setConfirmReset(true)}>{t('startOver')}</TextButton>
             </>
           ) : (
-            <Button
-              $accent={ACT_STYLE[0].accent}
-              onClick={() => set({ phase: 'names' })}
-            >
-              {t('begin')}
-            </Button>
+            <>
+              <Button $accent={A0} onClick={() => set({ phase: 'players' })}>
+                {t('start')}
+              </Button>
+              <Small style={{ textAlign: 'center' }}>{t('aboutMinutes')}</Small>
+            </>
           )}
-          <Small>{t('introFoot')}</Small>
         </Foot>
       </>,
-      { accent: ACT_STYLE[0].accent, glow: 0.3 }
+      { accent: A0, glow: 0.3 }
     );
   }
 
-  /* ------------------------------------------------------------------ */
-  /* names                                                              */
-  /* ------------------------------------------------------------------ */
+  /* ================================================================== */
+  /* PLAYER SETUP                                                       */
+  /* ================================================================== */
 
-  if (s.phase === 'names') {
-    const ready = s.players[0].trim() && s.players[1].trim();
+  if (s.phase === 'players') {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={ACT_STYLE[0].accent}>{t('whoIsPlaying')}</Kicker>
-          <Field $accent={ACT_STYLE[0].accent}>
-            <span>{t('firstName')}</span>
+          <Kicker $accent={A0}>{t('whosPlaying')}</Kicker>
+          <Field $accent={A0}>
+            <span>{t('yourName')}</span>
             <input
               value={s.players[0]}
               maxLength={18}
               autoComplete="off"
-              placeholder="Radi"
               onChange={(e) => set({ players: [e.target.value, s.players[1]] })}
             />
           </Field>
-          <Field $accent={ACT_STYLE[0].accent}>
-            <span>{t('secondName')}</span>
+          <Field $accent={A0}>
+            <span>{t('theirName')}</span>
             <input
               value={s.players[1]}
               maxLength={18}
               autoComplete="off"
-              placeholder={t('namePlaceholder')}
               onChange={(e) => set({ players: [s.players[0], e.target.value] })}
             />
           </Field>
         </Body>
         <Foot>
           <Button
-            $accent={ACT_STYLE[0].accent}
-            disabled={!ready}
+            $accent={A0}
             onClick={() =>
-              set({
-                phase: 'mode',
-                starterOffset: Math.random() < 0.5 ? 0 : 1,
-                q37Pick: Math.floor(Math.random() * QUESTION_37.withoutSecret.length),
-              })
+              set({ phase: 'mode', starterOffset: Math.random() < 0.5 ? 0 : 1 })
             }
           >
             {t('continue')}
           </Button>
-          <Small>{t('namesNote')}</Small>
+          <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
         </Foot>
       </>,
-      { accent: ACT_STYLE[0].accent, glow: 0.28 }
+      { accent: A0, glow: 0.28 }
     );
   }
 
-  /* ------------------------------------------------------------------ */
-  /* mode                                                               */
-  /* ------------------------------------------------------------------ */
+  /* ================================================================== */
+  /* MODE                                                               */
+  /* ================================================================== */
 
   if (s.phase === 'mode') {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={ACT_STYLE[0].accent}>{t('pickMode')}</Kicker>
+          <Kicker $accent={A0}>{t('pickMode')}</Kicker>
           {MODES.map((m) => (
             <Choice
               key={m.id}
               $on={s.modeId === m.id}
-              $accent={ACT_STYLE[0].accent}
+              $accent={A0}
+              aria-pressed={s.modeId === m.id}
               onClick={() => set({ modeId: m.id })}
             >
               <strong>{pick(m.title, lang)}</strong>
@@ -433,31 +458,55 @@ export default function CloserGame() {
             </Choice>
           ))}
           <Toggle
-            $on={s.timerOn}
-            $accent={ACT_STYLE[0].accent}
-            onClick={() => set({ timerOn: !s.timerOn })}
+            $on={s.timerEnabled}
+            $accent={A0}
+            aria-pressed={s.timerEnabled}
+            onClick={() => set({ timerEnabled: !s.timerEnabled })}
           >
-            {t('clockLabel')}
-            <b>{s.timerOn ? t('on') : t('off')}</b>
+            {t('timer')}
+            <b>{s.timerEnabled ? t('on') : t('off')}</b>
           </Toggle>
         </Body>
         <Foot>
-          <Button
-            $accent={ACT_STYLE[0].accent}
-            onClick={() => set({ phase: 'act', pending: 0, qIndex: 0 })}
-          >
-            {t('startActOne')}
+          <Button $accent={A0} onClick={() => set({ phase: 'intro' })}>
+            {t('continue')}
           </Button>
-          <Small>{t('modeNote')}</Small>
         </Foot>
       </>,
-      { accent: ACT_STYLE[0].accent, glow: 0.28 }
+      { accent: A0, glow: 0.28 }
     );
   }
 
-  /* ------------------------------------------------------------------ */
-  /* act intro                                                          */
-  /* ------------------------------------------------------------------ */
+  /* ================================================================== */
+  /* INTRO                                                              */
+  /* ================================================================== */
+
+  if (s.phase === 'intro') {
+    return frame(
+      <>
+        <Body $center>
+          <Lede>{t('introLines')}</Lede>
+          <Lede style={{ marginTop: '3.2rem' }}>{t('introSkips')}</Lede>
+          <Tokens $accent={A0} style={{ marginTop: '1.6rem', fontSize: '2rem' }}>
+            {Array.from({ length: SKIP_TOKENS }, (_, i) => (
+              <b key={i}>♥</b>
+            ))}
+          </Tokens>
+        </Body>
+        <Foot>
+          <Button $accent={A0} onClick={() => set({ phase: 'act', pending: 0, qIndex: 0 })}>
+            {t('begin')}
+          </Button>
+          <Small style={{ textAlign: 'center' }}>{t('privacy')}</Small>
+        </Foot>
+      </>,
+      { accent: A0, glow: 0.24 }
+    );
+  }
+
+  /* ================================================================== */
+  /* ACT INTRO / BREAK                                                  */
+  /* ================================================================== */
 
   if (s.phase === 'act') {
     const idx = actIndexFor(s.pending);
@@ -468,8 +517,7 @@ export default function CloserGame() {
         <Body $center>
           <ActNumeral>{pick(act.numeral, lang)}</ActNumeral>
           <ActTitle $accent={st.accent}>{pick(act.title, lang)}</ActTitle>
-          <Lede>{pick(act.subtitle, lang)}</Lede>
-          <Lede>{pick(act.note, lang)}</Lede>
+          <Lede>{pick(act.intro, lang)}</Lede>
         </Body>
         <Foot>
           <Button
@@ -477,21 +525,18 @@ export default function CloserGame() {
             onClick={() => {
               const index = s.pending;
               const next = { ...s, phase: 'q', qIndex: index, actStartedAt: Date.now() };
+              buzz(16);
               setS(next);
               enterQuestion(index, next);
             }}
           >
-            {t('begin')}
+            {t('continue')}
           </Button>
         </Foot>
       </>,
       { accent: st.accent, glow: st.glow + 0.1 }
     );
   }
-
-  /* ------------------------------------------------------------------ */
-  /* act break                                                          */
-  /* ------------------------------------------------------------------ */
 
   if (s.phase === 'break') {
     const done = ACTS[s.breakAct];
@@ -502,13 +547,96 @@ export default function CloserGame() {
           <ActNumeral>
             {pick(done.numeral, lang)} {t('complete')}
           </ActNumeral>
-          <Question>{t('breakHeadline')}</Question>
-          <Lede style={{ marginTop: '2.8rem' }}>{t('breakSip')}</Lede>
+          <ActTitle $accent={st.accent} style={{ fontSize: '3.2rem', marginBottom: '3.2rem' }}>
+            {pick(done.title, lang)}
+          </ActTitle>
+          <Lede>{pick(done.breakText, lang)}</Lede>
+          {done.breakSub && (
+            <Lede style={{ marginTop: '2rem' }}>{pick(done.breakSub, lang)}</Lede>
+          )}
+        </Body>
+        <Foot>
+          <Button $accent={st.accent} onClick={() => set({ phase: 'act', actStartedAt: null })}>
+            {t('continue')}
+          </Button>
+        </Foot>
+      </>,
+      { accent: st.accent, glow: st.glow }
+    );
+  }
+
+  /* ================================================================== */
+  /* SECRET QUESTION                                                    */
+  /* ================================================================== */
+
+  if (s.phase.startsWith('secret')) {
+    const st = ACT_STYLE[2];
+    const p = s.phase;
+
+    if (p === 'secretPass1' || p === 'secretPass2') {
+      const who = p === 'secretPass1' ? 0 : 1;
+      return frame(
+        <>
+          <Body $center>
+            <Kicker $accent={st.accent}>
+              {p === 'secretPass1' ? tf('passPhoneTo', nameOf(0)) : t('passPhone')}
+            </Kicker>
+            {p === 'secretPass2' && <Lede>{tf('passPhoneText', nameOf(1))}</Lede>}
+          </Body>
+          <Foot>
+            <Button
+              $accent={st.accent}
+              onClick={() => set({ phase: p === 'secretPass1' ? 'secret1' : 'secret2' })}
+            >
+              {p === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
+            </Button>
+          </Foot>
+        </>,
+        { accent: st.accent, glow: st.glow }
+      );
+    }
+
+    if (p === 'secret1' || p === 'secret2') {
+      const me = p === 'secret1' ? 0 : 1;
+      return frame(
+        <>
+          <Body $center>
+            <Kicker $accent={st.accent}>{tf('forOnly', nameOf(me))}</Kicker>
+            <Lede>{tf('secretTask', nameOf(1 - me))}</Lede>
+          </Body>
+          <Foot>
+            <Button
+              $accent={st.accent}
+              onClick={() => {
+                const ready = [...s.secretReady];
+                ready[me] = true;
+                set({ secretReady: ready, phase: me === 0 ? 'secretPass2' : 'secretPassBack' });
+              }}
+            >
+              {t('iHaveOne')}
+            </Button>
+          </Foot>
+        </>,
+        { accent: st.accent, glow: st.glow }
+      );
+    }
+
+    // secretPassBack
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={st.accent}>{t('passPhoneBack')}</Kicker>
+          <Lede>{t('passPhoneBackText')}</Lede>
         </Body>
         <Foot>
           <Button
             $accent={st.accent}
-            onClick={() => set({ phase: 'act', actStartedAt: null })}
+            onClick={() => {
+              const index = s.pending;
+              const next = { ...s, phase: 'q', qIndex: index };
+              setS(next);
+              enterQuestion(index, next);
+            }}
           >
             {t('continue')}
           </Button>
@@ -518,50 +646,11 @@ export default function CloserGame() {
     );
   }
 
-  /* ------------------------------------------------------------------ */
-  /* secret question                                                    */
-  /* ------------------------------------------------------------------ */
+  /* ================================================================== */
+  /* LAST QUESTION STAGING                                              */
+  /* ================================================================== */
 
-  if (s.phase === 'secret1' || s.phase === 'secret2') {
-    const first = s.phase === 'secret1';
-    const who = first ? nameOf(0) : nameOf(1);
-    const other = first ? nameOf(1) : nameOf(0);
-    const st = ACT_STYLE[1];
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={st.accent}>{tf('forOnly', who)}</Kicker>
-          <Question>{tf('secretHeadline', other)}</Question>
-          <Lede style={{ marginTop: '2.8rem' }}>{t('secretNote')}</Lede>
-        </Body>
-        <Foot>
-          <Button
-            $accent={st.accent}
-            onClick={() => {
-              if (first) {
-                set({ phase: 'secret2' });
-              } else {
-                const index = s.pending;
-                const next = { ...s, phase: 'q', qIndex: index, secretTaken: true };
-                setS(next);
-                enterQuestion(index, next);
-              }
-            }}
-          >
-            {t('secretCta')}
-          </Button>
-          <Small>{first ? tf('handPhoneTo', other) : t('putPhoneDown')}</Small>
-        </Foot>
-      </>,
-      { accent: st.accent, glow: st.glow }
-    );
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* finale staging                                                     */
-  /* ------------------------------------------------------------------ */
-
-  if (s.phase === 'finale') {
+  if (s.phase === 'lastIntro') {
     return frame(
       <>
         <Body $center>
@@ -576,112 +665,162 @@ export default function CloserGame() {
               enterQuestion(index, next);
             }}
           >
-            {t('ready')}
+            {t('reveal')}
           </GhostButton>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.04 }
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
     );
   }
 
-  /* ------------------------------------------------------------------ */
-  /* after the 36th                                                     */
-  /* ------------------------------------------------------------------ */
-
-  if (s.phase === 'after') {
+  if (s.phase === 'all36') {
     return frame(
       <>
         <Body $center>
-          <Question>{t('thatsIt')}</Question>
-          <Lede style={{ marginTop: '2.8rem' }}>{t('putAway')}</Lede>
+          <Question>{t('allThirtySix')}</Question>
+          {revealSecond && (
+            <Lede style={{ marginTop: '3.2rem' }}>{t('butYouEachHad')}</Lede>
+          )}
         </Body>
         <Foot>
-          <TextButton
-            onClick={() => set({ phase: s.secretTaken ? 'secretcheck' : 'q37' })}
-          >
-            {t('unlessOneMore')}
+          {revealSecond && (
+            <GhostButton onClick={() => set({ phase: 'check1' })}>{t('continue')}</GhostButton>
+          )}
+        </Foot>
+      </>,
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+    );
+  }
+
+  /* ================================================================== */
+  /* SECRET QUESTION RESOLUTION                                         */
+  /* ================================================================== */
+
+  if (s.phase === 'check1' || s.phase === 'check2') {
+    const me = s.phase === 'check1' ? 0 : 1;
+    const answer = (value) => {
+      const asked = [...s.secretAsked];
+      asked[me] = value;
+      set({ secretAsked: asked, phase: me === 0 ? 'check2' : 'q37intro' });
+    };
+    return frame(
+      <>
+        <Body $center>
+          <Kicker>{tf('forOnly', nameOf(me))}</Kicker>
+          <Question>{tf('didTheyAsk', nameOf(1 - me))}</Question>
+        </Body>
+        <Foot>
+          <Row>
+            <GhostButton onClick={() => answer(true)}>{t('yes')}</GhostButton>
+            <GhostButton onClick={() => answer(false)}>{t('no')}</GhostButton>
+          </Row>
+        </Foot>
+      </>,
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+    );
+  }
+
+  /* ================================================================== */
+  /* QUESTION 37                                                        */
+  /* ================================================================== */
+
+  if (s.phase === 'q37intro' || s.phase === 'q37') {
+    const [a0, a1] = s.secretAsked;
+    const neither = a0 === false && a1 === false;
+    const bothAsked = a0 === true && a1 === true;
+    // Exactly one person's question went unasked -- that person asks it now.
+    const pendingPlayer = a0 === false ? 0 : a1 === false ? 1 : null;
+
+    if (s.phase === 'q37intro') {
+      let kicker = t('q37OneMore');
+      let text = t('q37Neither');
+      if (bothAsked) {
+        kicker = t('q37AlreadyAsked');
+        text = t('q37StillWantOne');
+      } else if (!neither) {
+        kicker = t('q37OneRemains');
+        text = tf('q37OneText', nameOf(1 - pendingPlayer), nameOf(pendingPlayer));
+      }
+      return frame(
+        <>
+          <Body $center>
+            <Kicker>{kicker}</Kicker>
+            <Question>{text}</Question>
+          </Body>
+          <Foot>
+            {bothAsked ? (
+              <Row>
+                <GhostButton onClick={() => set({ phase: 'q37' })}>{t('yes')}</GhostButton>
+                <GhostButton onClick={() => set({ phase: 'ending', completed: true })}>
+                  {t('end')}
+                </GhostButton>
+              </Row>
+            ) : (
+              <GhostButton onClick={() => set({ phase: 'q37' })}>
+                {neither ? t('q37Button') : t('continue')}
+              </GhostButton>
+            )}
+          </Foot>
+        </>,
+        { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      );
+    }
+
+    let prompt = pick(Q37.neither, lang);
+    if (bothAsked) prompt = pick(Q37.both, lang);
+    else if (!neither) prompt = Q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
+
+    return frame(
+      <>
+        <Body $center>
+          <Kicker>{t('q37Label')}</Kicker>
+          <Question>{prompt}</Question>
+        </Body>
+        <Foot>
+          <TextButton onClick={() => set({ phase: 'ending', completed: true })}>
+            {t('done')}
           </TextButton>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.04 }
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
     );
   }
 
-  if (s.phase === 'secretcheck') {
+  /* ================================================================== */
+  /* ENDING                                                             */
+  /* ================================================================== */
+
+  if (s.phase === 'ending') {
+    const isFinal = beat === ENDING_BEATS.length - 1;
     return frame(
       <>
-        <Body $center>
-          <Kicker>{t('secretCheckKicker')}</Kicker>
-          <Question>{t('didTheyAsk')}</Question>
-          {s.secretAsked === false && (
-            <Lede style={{ marginTop: '2.8rem' }}>{t('maybeYouShould')}</Lede>
-          )}
+        <Body $center onClick={() => !isFinal && setBeat((b) => b + 1)}>
+          <Question key={beat}>{t(ENDING_BEATS[beat])}</Question>
         </Body>
         <Foot>
-          {s.secretAsked === null ? (
-            <Row>
-              <GhostButton onClick={() => set({ phase: 'q37', secretAsked: true })}>
-                {t('yes')}
-              </GhostButton>
-              <GhostButton onClick={() => set({ secretAsked: false })}>
-                {t('no')}
-              </GhostButton>
-            </Row>
-          ) : (
-            <GhostButton onClick={() => set({ phase: 'q37' })}>
-              {t('continue')}
-            </GhostButton>
+          {isFinal && (
+            <>
+              <Small style={{ textAlign: 'center', letterSpacing: '.3em' }}>CLOSER</Small>
+              <TextButton onClick={restart}>{t('playAgain')}</TextButton>
+            </>
           )}
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.04 }
+      { accent: ACT_STYLE[2].accent, glow: isFinal ? 0.1 : 0.02 }
     );
   }
 
-  if (s.phase === 'q37') {
-    const source = s.secretTaken
-      ? QUESTION_37.withSecret
-      : QUESTION_37.withoutSecret[s.q37Pick] || QUESTION_37.withoutSecret[0];
-    return frame(
-      <>
-        <Body $center>
-          <Kicker>{t('question37')}</Kicker>
-          <Question>{pick(source, lang)}</Question>
-        </Body>
-        <Foot>
-          <TextButton onClick={() => set({ phase: 'end' })}>{t('done')}</TextButton>
-        </Foot>
-      </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.04 }
-    );
-  }
-
-  if (s.phase === 'end') {
-    return frame(
-      <>
-        <Body $center>
-          <Wordmark>CLOSER</Wordmark>
-          <Lede>{t('endTagline')}</Lede>
-        </Body>
-        <Foot>
-          <TextButton onClick={restart}>{t('playAgain')}</TextButton>
-        </Foot>
-      </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.08 }
-    );
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* the question screen                                                */
-  /* ------------------------------------------------------------------ */
+  /* ================================================================== */
+  /* STAY                                                               */
+  /* ================================================================== */
 
   if (staying) {
     return (
-      <Screen $accent={style.accent} $glow={0.03}>
+      <Screen $accent={style.accent} $glow={0.02}>
         <CloserGlobal />
         <Stay>
           <StayDot $accent={style.accent} />
-          <Lede style={{ textAlign: 'center' }}>{t('forgetTheGame')}</Lede>
+          <Lede style={{ textAlign: 'center' }}>{t('stayTitle')}</Lede>
           {stayReady && (
             <TextButton
               onClick={() => {
@@ -697,95 +836,102 @@ export default function CloserGame() {
     );
   }
 
-  const twistCopy = {
-    predict: {
-      label: t('predictLabel'),
-      text: tf('predictText', nameOf(1 - starter), nameOf(starter)),
-      cta: t('ready'),
-    },
-    both: { label: t('bothLabel'), text: t('bothText'), cta: t('bothCta') },
-    quick: { label: t('quickLabel'), text: t('quickText'), cta: t('quickCta') },
-  };
+  /* ================================================================== */
+  /* QUESTION                                                           */
+  /* ================================================================== */
 
+  const questionText = pick(question, lang);
   let inner;
 
-  if (step === 'count') {
-    inner = (
-      <Body $center>
-        <Counter $accent={style.accent}>{count}</Counter>
-        <CounterQuestion>{pick(question, lang)}</CounterQuestion>
-      </Body>
-    );
-  } else if (step === 'predict' || step === 'both' || step === 'quick') {
-    const c = twistCopy[step];
+  if (step === 'twist') {
+    const copy = {
+      predict: {
+        label: t('predictLabel'),
+        text: tf('predictText', nameOf(1 - starter), nameOf(starter)),
+      },
+      both: { label: t('bothLabel'), text: t('bothText') },
+      nothinking: { label: t('nothinkingLabel'), text: t('nothinkingText') },
+    }[twist];
     inner = (
       <>
         <Body $center>
-          <Twist $accent={style.accent}>
-            <strong>{c.label}</strong>
-            <span>{c.text}</span>
-          </Twist>
-          <Question>{pick(question, lang)}</Question>
+          <TwistLabel $accent={style.accent}>{copy.label}</TwistLabel>
+          <Question>{copy.text}</Question>
         </Body>
         <Foot>
           <Button
             $accent={style.accent}
             onClick={() => {
-              if (step === 'predict') setStep('ask');
-              else if (step === 'quick') {
-                // The count belongs on the question, not in front of it.
-                setStep('ask');
-                setQuickLeft(8);
-              } else runCountdown(3, () => setStep('ask'));
+              if (twist === 'predict') setStep('ask');
+              else runCountdown(twist === 'nothinking' ? 5 : 3);
             }}
           >
-            {c.cta}
+            {t('ready')}
           </Button>
         </Foot>
       </>
+    );
+  } else if (step === 'count') {
+    inner = (
+      <Body $center>
+        <Counter $accent={style.accent}>{count}</Counter>
+      </Body>
     );
   } else if (step === 'deeper') {
     inner = (
       <>
         <Body $center>
-          <Kicker $accent={style.accent}>{t('deeperLabel')}</Kicker>
-          <Question>{t('deeperHeadline')}</Question>
-          <Lede style={{ marginTop: '2.8rem' }}>{t('deeperText')}</Lede>
+          <TwistLabel $accent={style.accent}>{t('deeperLabel')}</TwistLabel>
+          <Question>{t('deeperText')}</Question>
         </Body>
         <Foot>
-          <Button
-            $accent={style.accent}
-            onClick={() => {
-              setDeeperUsed(true);
-              setStep('ask');
-            }}
-          >
-            {t('deeperCta')}
+          <Button $accent={style.accent} onClick={() => setStep('deeperOpen')}>
+            {t('deeperAsk')}
           </Button>
           <TextButton onClick={() => goTo(s.qIndex + 1)}>{t('next')}</TextButton>
         </Foot>
       </>
     );
-  } else {
-    const canStay = question.stay && mode.twists.stay;
-    let turnLine = <Turn>{tf('goesFirst', nameOf(starter))}</Turn>;
-    if (twist === 'both') {
-      turnLine = <Turn>{t('answerTogether')}</Turn>;
-    } else if (twist === 'quick') {
-      turnLine =
-        quickLeft > 0 ? (
-          <Turn $accent={style.accent}>
-            {tf('dontOverthink', nameOf(starter))} <em>{quickLeft}</em>
-          </Turn>
-        ) : (
-          <Turn>{t('takeYourTime')}</Turn>
-        );
-    }
+  } else if (step === 'deeperOpen') {
     inner = (
       <>
         <Body $center>
-          {!isLast && turnLine}
-          <Question>{pick(question, lang)}</Question>
+          <Lede>{t('deeperOpen')}</Lede>
+        </Body>
+        <Foot>
+          <GhostButton onClick={() => goTo(s.qIndex + 1)}>{t('continue')}</GhostButton>
+        </Foot>
+      </>
+    );
+  } else {
+    let badge = (
+      <TurnBadge $accent={style.accent}>
+        <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
+        <TurnVerb>{t('turnFirst')}</TurnVerb>
+      </TurnBadge>
+    );
+    if (twist === 'both') {
+      badge = (
+        <TurnBadge $accent={style.accent}>
+          <TurnName $accent={style.accent}>{t('turnBoth')}</TurnName>
+          <TurnVerb>{t('turnBothVerb')}</TurnVerb>
+        </TurnBadge>
+      );
+    } else if (twist === 'predict') {
+      badge = (
+        <TurnBadge $accent={style.accent}>
+          <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
+          <TurnVerb>{t('turnAnswers')}</TurnVerb>
+        </TurnBadge>
+      );
+    }
+
+    inner = (
+      <>
+        <Body $center>
+          {!isLast && badge}
+          <Question>{questionText}</Question>
+          {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
         </Body>
         <Foot>
           {canStay ? (
@@ -797,53 +943,94 @@ export default function CloserGame() {
             </Row>
           ) : (
             <Button $accent={style.accent} onClick={leaveQuestion}>
-              {isLast ? t('weAnswered') : t('next')}
+              {isLast ? t('done') : t('next')}
             </Button>
           )}
-          {!isLast && (
-            <TextButton onClick={skip} disabled={s.tokens <= 0}>
-              {s.tokens > 0 ? t('skip') : t('noSkips')}
-            </TextButton>
+          {/* At zero the control simply goes away -- no "no skips left". */}
+          {!isLast && s.skipsRemaining > 0 && (
+            <TextButton onClick={() => setSkipAsking(true)}>{t('skip')}</TextButton>
           )}
         </Foot>
       </>
     );
   }
 
+  const progress = style.progress;
+  const showChrome = !isLast && step !== 'count';
+
   return frame(
     <>
-      {!isLast && (
-        <TopBar $chrome={style.chrome}>
-          <Count>
-            {style.showCount
-              ? `${String(s.qIndex + 1).padStart(2, '0')} / ${TOTAL_QUESTIONS}`
-              : pick(ACTS[actIdx].numeral, lang)}
-          </Count>
-          {s.timerOn && s.actStartedAt ? (
-            <Elapsed>{overtime ? t('overTime') : clockOf(elapsed)}</Elapsed>
-          ) : null}
-          <Tokens $accent={style.accent}>
-            {Array.from({ length: SKIP_TOKENS }, (_, i) =>
-              i < s.tokens ? (
-                <React.Fragment key={i}>♥</React.Fragment>
-              ) : (
-                <span key={i}>♥</span>
-              )
-            )}
-          </Tokens>
-        </TopBar>
+      {showChrome && (
+        <>
+          <TopBar $chrome={style.chrome}>
+            <Count>
+              {progress === 'number'
+                ? String(s.qIndex + 1).padStart(2, '0')
+                : `${String(s.qIndex + 1).padStart(2, '0')} / ${TOTAL_QUESTIONS}`}
+            </Count>
+            {s.timerEnabled && s.actStartedAt ? (
+              <Elapsed>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>
+            ) : null}
+            <Tokens $accent={style.accent} aria-label={`${s.skipsRemaining}/${SKIP_TOKENS}`}>
+              {Array.from({ length: SKIP_TOKENS }, (_, i) =>
+                i < s.skipsRemaining ? <b key={i}>♥</b> : <s key={i}>♡</s>
+              )}
+            </Tokens>
+          </TopBar>
+          {progress === 'full' && (
+            <Bar $chrome={style.chrome}>
+              <Track $pct={pct} $accent={style.accent} />
+            </Bar>
+          )}
+        </>
       )}
-
-      {!isLast && style.showBar && (
-        <Bar $chrome={style.chrome}>
-          {t('strangers')}
-          <Track $pct={pct} $accent={style.accent} />
-          {t('close')}
-        </Bar>
-      )}
-      {!isLast && !style.showBar && <Hairline $pct={pct} />}
 
       {inner}
+
+      {skipAsking && (
+        <Sheet onClick={() => setSkipAsking(false)}>
+          <SheetPanel onClick={(e) => e.stopPropagation()}>
+            <h2>{t('skipConfirmTitle')}</h2>
+            <Small>{t('skipConfirmSub')}</Small>
+            <Tokens
+              $accent={style.accent}
+              style={{ margin: '2.4rem 0', fontSize: '2.2rem' }}
+            >
+              {Array.from({ length: SKIP_TOKENS }, (_, i) =>
+                i < s.skipsRemaining - 1 ? <b key={i}>♥</b> : <s key={i}>♡</s>
+              )}
+            </Tokens>
+            <Small style={{ marginBottom: '2.4rem' }}>{t('skipUses')}</Small>
+            <Button
+              $accent={style.accent}
+              onClick={() => {
+                buzz(14);
+                const left = s.skipsRemaining - 1;
+                setSkipAsking(false);
+                set({ skipsRemaining: left });
+                setJustSkipped(left);
+              }}
+            >
+              {t('skip')}
+            </Button>
+            <TextButton style={{ width: '100%' }} onClick={() => setSkipAsking(false)}>
+              {t('goBack')}
+            </TextButton>
+          </SheetPanel>
+        </Sheet>
+      )}
+
+      {justSkipped !== null && (
+        <Flash>
+          <Question style={{ textAlign: 'center' }}>{t('skipped')}</Question>
+          <Tokens $accent={style.accent} style={{ fontSize: '2.4rem' }}>
+            {Array.from({ length: SKIP_TOKENS }, (_, i) =>
+              i < justSkipped ? <b key={i}>♥</b> : <s key={i}>♡</s>
+            )}
+          </Tokens>
+          {justSkipped > 0 && <Small>{tf('skipsLeft', justSkipped)}</Small>}
+        </Flash>
+      )}
     </>
   );
 }
