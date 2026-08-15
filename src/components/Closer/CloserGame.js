@@ -10,8 +10,10 @@ import {
   SKIP_TOKENS,
   TOTAL_QUESTIONS,
   actIndexFor,
+  classifySecretAsked,
   pick,
   questionAt,
+  starterFor,
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
 import CloserInstallHint from './CloserInstallHint';
@@ -50,6 +52,7 @@ import {
   TurnName,
   TurnVerb,
   TwistLabel,
+  VisuallyHidden,
   Wordmark,
 } from './CloserStyles';
 
@@ -123,6 +126,11 @@ export default function CloserGame() {
   const [confirmReset, setConfirmReset] = useState(false);
   const [beat, setBeat] = useState(0);
   const [now, setNow] = useState(0);
+  // A per-second speaking live region would be disruptive, so the countdown
+  // only ever announces twice -- once when it starts, once at zero -- via
+  // this offscreen polite region, never a per-tick aria-live on the number
+  // itself (see Counter below, which stays a plain, non-live element).
+  const [announce, setAnnounce] = useState('');
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
 
@@ -202,7 +210,7 @@ export default function CloserGame() {
   );
 
   // Strict alternation, so the same person never has to open twice running.
-  const starter = (s.qIndex + s.starterOffset) % 2;
+  const starter = starterFor(s.qIndex, s.starterOffset);
 
   const twist = question?.twist && mode.twists[question.twist] ? question.twist : null;
   const canStay = Boolean(question?.stayEnabled && mode.twists.stay);
@@ -267,6 +275,7 @@ export default function CloserGame() {
   const runCountdown = useCallback((from) => {
     setCount(from);
     setStep('counting');
+    setAnnounce(tf('countdownStart', from));
     clearInterval(countRef.current);
     countRef.current = setInterval(() => {
       setCount((c) => {
@@ -278,12 +287,13 @@ export default function CloserGame() {
           // controls (Next, Stay, Skip) become available.
           clearTimeout(flipRef.current);
           flipRef.current = setTimeout(() => setStep('ask'), 400);
+          setAnnounce(t('countdownGo'));
           return 0;
         }
         return c - 1;
       });
     }, 1000);
-  }, []);
+  }, [t, tf]);
   useEffect(() => () => {
     clearInterval(countRef.current);
     clearTimeout(flipRef.current);
@@ -791,11 +801,8 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase === 'q37intro' || s.phase === 'q37' || s.phase === 'q37a' || s.phase === 'q37b') {
-    const [a0, a1] = s.secretAsked;
-    const neither = a0 === false && a1 === false;
-    const bothAsked = a0 === true && a1 === true;
     // Exactly one person's question went unasked -- that person asks it now.
-    const pendingPlayer = a0 === false ? 0 : a1 === false ? 1 : null;
+    const { neither, bothAsked, pendingPlayer } = classifySecretAsked(s.secretAsked);
 
     if (s.phase === 'q37intro') {
       let kicker = t('q37OneMore');
@@ -837,7 +844,7 @@ export default function CloserGame() {
       // "pending player" to anchor on -- continue the same strict
       // alternation the whole game has used, one step past question 36, so
       // the order is fixed rather than a coin flip made twice.
-      const opener = (TOTAL_QUESTIONS + s.starterOffset) % 2;
+      const opener = starterFor(TOTAL_QUESTIONS, s.starterOffset);
       const asker = s.phase === 'q37a' ? opener : 1 - opener;
       return frame(
         <>
@@ -1026,7 +1033,15 @@ export default function CloserGame() {
         </TwistLabel>
         {badge}
         <Question>{questionText}</Question>
-        <Counter $accent={style.accent} style={{ marginTop: '3.2rem' }}>
+        {/* role="timer" describes what this is to assistive tech without
+            making it a live region -- see the `announce` state above for
+            the two announcements that actually get spoken. */}
+        <Counter
+          $accent={style.accent}
+          style={{ marginTop: '3.2rem' }}
+          role="timer"
+          aria-atomic="true"
+        >
           {count}
         </Counter>
       </Body>
@@ -1101,7 +1116,7 @@ export default function CloserGame() {
                 : `${String(s.qIndex + 1).padStart(2, '0')} / ${TOTAL_QUESTIONS}`}
             </Count>
             {s.timerEnabled && s.actStartedAt ? (
-              <Elapsed>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>
+              <Elapsed $long={overtime}>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>
             ) : null}
             <Tokens $accent={style.accent} aria-label={`${s.skipsRemaining}/${SKIP_TOKENS}`}>
               {Array.from({ length: SKIP_TOKENS }, (_, i) =>
@@ -1118,6 +1133,15 @@ export default function CloserGame() {
       )}
 
       {inner}
+
+      {/* One polite announcement at the start of a countdown and one at
+          zero -- never per tick. This element stays mounted across every
+          step of a question (twist/counting/ask/deeper) so its content
+          changes are picked up as live-region updates rather than a fresh
+          element appearing. */}
+      <VisuallyHidden role="status" aria-live="polite">
+        {announce}
+      </VisuallyHidden>
 
       {skipAsking && (
         <Sheet onClick={() => setSkipAsking(false)}>

@@ -508,9 +508,16 @@ export const LangSwitch = styled.div`
 
   button {
     ${base};
+    box-sizing: border-box;
     border: none;
     background: ${({ $accent }) => $accent};
     color: #08090c;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 44x44 minimum touch target (WCAG 2.5.5) -- was ~50x30. */
+    min-width: 4.4rem;
+    min-height: 4.4rem;
     padding: 0.8rem 1.6rem;
     font-family: inherit;
     font-size: 1.2rem;
@@ -585,12 +592,35 @@ export const StayDot = styled.div`
   animation: ${pulse} 3.6s ease-in-out infinite;
 `;
 
+/*
+ * $long switches from the compact clock ("3:45", wide tracking, one line)
+ * to the overtime message ("The next act is ready whenever you are."),
+ * which needs to wrap onto a couple of lines with normal tracking instead
+ * of running off the edge of the TopBar.
+ */
 export const Elapsed = styled.p`
   font-size: 1.2rem;
-  letter-spacing: 0.2em;
+  letter-spacing: ${({ $long }) => ($long ? '0.02em' : '0.2em')};
   color: rgba(242, 243, 245, 0.26);
   margin: 0;
   font-variant-numeric: tabular-nums;
+  text-align: right;
+  max-width: ${({ $long }) => ($long ? '16ch' : 'none')};
+  line-height: 1.4;
+`;
+
+/* Screen-reader-only: visually hidden but still reachable by assistive
+   tech, used for the countdown's start/zero announcements. */
+export const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `;
 
 /* ---------- install hint ---------- */

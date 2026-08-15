@@ -328,3 +328,34 @@ export function questionAt(questionIndex) {
   }
   return null;
 }
+
+/*
+ * Strict alternation: the same person never opens two questions running.
+ * starterOffset is the one coin flip (made once, at player setup) that
+ * decides who goes first overall; every question after that just walks the
+ * parity forward. Question 37, which has no qIndex of its own, reuses this
+ * with qIndex = TOTAL_QUESTIONS to continue the same sequence rather than
+ * flipping a fresh coin.
+ */
+export function starterFor(questionIndex, starterOffset) {
+  return (questionIndex + starterOffset) % 2;
+}
+
+/*
+ * Classifies the two answers from the private "did they ask your secret
+ * question?" check (secretAsked = [person0Answer, person1Answer], each
+ * true/false/null) into the three cases question 37 branches on:
+ *  - neither: nobody's question got asked -- each of you gets an explicit
+ *    turn to ask it now (spec: double-NO sequential turns).
+ *  - bothAsked: both already happened, question 37 is a pure bonus.
+ *  - pendingPlayer: exactly one is still unasked -- that person asks it.
+ * secretAsked defaults to [null, null] before either check completes, which
+ * classifies as neither/bothAsked both false and pendingPlayer null.
+ */
+export function classifySecretAsked(secretAsked) {
+  const [a0, a1] = secretAsked || [null, null];
+  const neither = a0 === false && a1 === false;
+  const bothAsked = a0 === true && a1 === true;
+  const pendingPlayer = a0 === false ? 0 : a1 === false ? 1 : null;
+  return { neither, bothAsked, pendingPlayer };
+}

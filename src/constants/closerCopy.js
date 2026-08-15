@@ -131,8 +131,20 @@ const COPY = {
     en: 'Stay here.\n\nForget the game for a moment.',
   },
 
+  // Announced once, politely, when a BOTH/NO THINKING countdown starts and
+  // once when it hits zero -- never per tick (see CloserGame's `announce`
+  // state and Counter, which is deliberately not itself a live region).
+  countdownStart: (lang, n) =>
+    lang === 'de' ? `Zähler gestartet, ${n} Sekunden.` : `Countdown started, ${n} seconds.`,
+  countdownGo: { de: 'Los.', en: 'Go.' },
+
   /* timer ------------------------------------------------------------------ */
-  timerOver: { de: 'Lasst euch Zeit', en: 'Take your time' },
+  // Restored to the fuller spec wording; Elapsed (see CloserStyles) wraps
+  // this onto a couple of lines instead of the single-line clock format.
+  timerOver: {
+    de: 'Der nächste Akt ist bereit, wenn ihr es seid.',
+    en: 'The next act is ready whenever you are.',
+  },
 
   /* acts ------------------------------------------------------------------- */
   complete: { de: 'ABGESCHLOSSEN', en: 'COMPLETE' },
