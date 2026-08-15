@@ -116,6 +116,16 @@ const initialState = {
   starterOffset: 0,
   actStartedAt: null,
   completed: false,
+  // Whether the first real question has actually begun -- distinct from
+  // "a save exists" (iteration-8 holistic review, BF8-01). Every phase
+  // before this (players/duration/mode/intro/the very first act-intro
+  // screen) still gets persisted like anything else, but loadSaved() only
+  // offers "Spiel fortsetzen" once this is true, so reloading mid-setup
+  // (no names entered, no route/style picked yet, first question not
+  // started) lands back on a normal Start, not a resume of nothing. Set
+  // once, true for the rest of the game, at the same 'act' -> 'q'
+  // transition that starts actStartedAt for real.
+  hasStarted: false,
 };
 
 // A saved value that is *present* but the wrong shape/type cannot be
@@ -148,12 +158,33 @@ function isPlausibleSaved(saved) {
   }
   if (saved.timerEnabled !== undefined && typeof saved.timerEnabled !== 'boolean') return false;
   if (saved.completed !== undefined && typeof saved.completed !== 'boolean') return false;
+  if (saved.hasStarted !== undefined && typeof saved.hasStarted !== 'boolean') return false;
   if (saved.lang !== undefined && !LANGS.includes(saved.lang)) return false;
   const isPair = (v) => Array.isArray(v) && v.length === 2;
   if (saved.players !== undefined && !isPair(saved.players)) return false;
   if (saved.secretSeen !== undefined && !isPair(saved.secretSeen)) return false;
   if (saved.secretAsked !== undefined && !isPair(saved.secretAsked)) return false;
   if (saved.hasSecretQuestion !== undefined && !isPair(saved.hasSecretQuestion)) return false;
+  return true;
+}
+
+// Phases where nothing about the actual game has happened yet -- setup
+// only, nothing worth resuming (BF8-01). 'act' is deliberately not in this
+// set: it's ambiguous on its own, since Act I's very first intro screen is
+// state-shape-identical to Act II/III's after a real act break. See
+// hasRealProgress() below for how that ambiguity is resolved.
+const SETUP_ONLY_PHASES = new Set(['players', 'duration', 'mode', 'intro']);
+
+// A save written before `hasStarted` existed has no such field -- this is
+// its migration, inferred from phase/progress rather than trusted blindly,
+// so the BF8-01 fix also takes effect for saves already sitting on a
+// device. A save that DOES carry `hasStarted` is trusted directly (it's
+// set once, at the same 'act' -> 'q' transition below, and never reset
+// except by restart()).
+function hasRealProgress(saved) {
+  if (typeof saved.hasStarted === 'boolean') return saved.hasStarted;
+  if (SETUP_ONLY_PHASES.has(saved.phase)) return false;
+  if (saved.phase === 'act') return (saved.pending || 0) > 0 || (saved.qIndex || 0) > 0;
   return true;
 }
 
@@ -170,7 +201,14 @@ function loadSaved() {
     const saved = JSON.parse(raw);
     if (!isPlausibleSaved(saved)) return null;
     if (saved.phase === 'start' || saved.completed) return null;
+    if (!hasRealProgress(saved)) return null;
     const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
+    // hasRealProgress() just proved this game is genuinely underway, so
+    // write that back explicitly rather than leaving a pre-BF8-01 save's
+    // missing field to fall through to initialState's `false` -- otherwise
+    // a resumed legacy save would (harmlessly, but incorrectly) skip the
+    // wake lock for the rest of whatever act it resumed into.
+    merged.hasStarted = true;
     // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
     // (regression-test iteration 5, P2.4): a hand-edited save, an old save
     // whose packId pointed at a pack since removed from the registry, or a
@@ -297,10 +335,13 @@ export default function CloserGame() {
     }
   }, [s, mounted]);
 
-  // Keep the screen awake while the phone is lying between two people.
+  // Keep the screen awake while the phone is lying between two people --
+  // only once a real question is actually up, not during setup (BF8-01: the
+  // old `s.phase !== 'start'` check requested a wake lock through the whole
+  // players/duration/mode/intro flow too).
   const wakeRef = useRef(null);
   useEffect(() => {
-    const playing = mounted && s.phase !== 'start' && !s.completed;
+    const playing = mounted && s.hasStarted && !s.completed;
     if (!playing || typeof navigator === 'undefined' || !navigator.wakeLock) return undefined;
     let cancelled = false;
     navigator.wakeLock
@@ -315,7 +356,7 @@ export default function CloserGame() {
       wakeRef.current?.release().catch(() => {});
       wakeRef.current = null;
     };
-  }, [mounted, s.phase, s.completed]);
+  }, [mounted, s.hasStarted, s.completed]);
 
   // CLOSER switches language within the same route, so the static lang
   // attribute _document.js sets at build time can't track it -- keep it
@@ -853,6 +894,12 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Kicker $accent={A0}>{t('pickMode')}</Kicker>
+          {/* Scope/time shown once here, straight from the route picked on
+              the previous screen (BF8-03) -- style copy itself no longer
+              claims any fixed question count or duration. */}
+          <Small style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            {pick(route.title, lang)} · {pick(route.subtitle, lang)}
+          </Small>
           {pack.modes.map((m) => (
             <Choice
               key={m.id}
@@ -934,7 +981,13 @@ export default function CloserGame() {
             $accent={st.accent}
             onClick={() => {
               const index = s.pending;
-              const next = { ...s, phase: 'q', qIndex: index, actStartedAt: Date.now() };
+              const next = {
+                ...s,
+                phase: 'q',
+                qIndex: index,
+                actStartedAt: Date.now(),
+                hasStarted: true,
+              };
               buzz(16);
               setS(next);
               enterQuestion(index, next);

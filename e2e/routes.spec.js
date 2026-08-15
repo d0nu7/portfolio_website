@@ -94,6 +94,12 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
       skipsRemaining: 3,
       secretSeen: [false, false],
     });
+    // Quick's question at index 9 is Q26 (BF8-02's corrected curation),
+    // which carries the 'deeper' twist -- the first "Weiter" only opens
+    // that question's own optional follow-up screen (still not a question
+    // navigation), so it takes a second "Weiter" (the follow-up screen's
+    // own skip-it option) to actually advance.
+    await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
     // Quick's secretAtIndexFor is 10 (see closer.test.js) -- reaching
     // question index 10 should hand off to the private secret-question

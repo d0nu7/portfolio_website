@@ -264,6 +264,38 @@ describe('routes (iteration 7, Phase 2)', () => {
   });
 
   /*
+   * BF8-02 (iteration 8 holistic review): the original Phase-2 curation
+   * put two hard Act-I questions (Q07 "how will you die", Q10 "what would
+   * you change about your upbringing") third and fourth in Quick -- too
+   * steep an intensity jump for a 12-question on-ramp. This pins the
+   * corrected selection verbatim against
+   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md's CLASSIC section, so
+   * a future edit to CLASSIC_ROUTES can't silently drift from the
+   * redactionally-reviewed catalog without a test failing.
+   */
+  it("quick and standard resolve to exactly the iteration-8 catalog's curated question IDs", () => {
+    const idsFor = (routeId) => {
+      const total = totalQuestions('classic', routeId);
+      return Array.from({ length: total }, (_, i) =>
+        questionIdFor('classic', originalIndexFor('classic', i, routeId))
+      );
+    };
+    expect(idsFor('quick')).toEqual([
+      'classic-q01', 'classic-q04', 'classic-q09', 'classic-q12',
+      'classic-q13', 'classic-q14', 'classic-q16', 'classic-q17',
+      'classic-q25', 'classic-q26', 'classic-q31', 'classic-q36',
+    ]);
+    expect(idsFor('standard')).toEqual([
+      'classic-q01', 'classic-q02', 'classic-q03', 'classic-q04',
+      'classic-q08', 'classic-q09', 'classic-q11', 'classic-q12',
+      'classic-q13', 'classic-q14', 'classic-q15', 'classic-q16',
+      'classic-q17', 'classic-q18', 'classic-q20', 'classic-q21',
+      'classic-q25', 'classic-q26', 'classic-q27', 'classic-q28',
+      'classic-q29', 'classic-q30', 'classic-q31', 'classic-q36',
+    ]);
+  });
+
+  /*
    * Every route -- current and any future one -- must keep the pack's
    * closing (`last: true`) question as its own actual last question, and
    * must place the secret-question interrupt strictly inside its own

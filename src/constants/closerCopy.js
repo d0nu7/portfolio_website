@@ -314,9 +314,14 @@ const COPY = {
     de: 'Lokale Spieldaten löschen?',
     en: 'Delete local data?',
   },
+  // "Cache leeren" alone doesn't reliably clear localStorage in most
+  // browsers, which is why this used to confuse people who'd tried exactly
+  // that and still saw their save (iteration-8 holistic review, BF8-05) --
+  // spelled out here, on the confirm step, rather than on the plain start
+  // screen, which stays free of the technical distinction.
   deleteLocalDataSub: {
-    de: 'Entfernt eure optionalen Namen, Einstellungen und den Spielfortschritt von diesem Gerät. Eure Antworten waren nie gespeichert.',
-    en: 'Removes your optional names, settings and game progress from this device. Your answers were never stored.',
+    de: 'Browser-Cache und lokaler Spielstand sind getrennt: „Cache leeren" allein entfernt euren Spielstand meist nicht. Diese Aktion entfernt eure optionalen Namen, Einstellungen und den Spielfortschritt von diesem Gerät. Eure Antworten waren nie gespeichert.',
+    en: "Browser cache and local game data are separate: clearing your cache alone usually won't remove your save. This removes your optional names, settings and game progress from this device. Your answers were never stored.",
   },
   menuClose: { de: 'Schließen', en: 'Close' },
 

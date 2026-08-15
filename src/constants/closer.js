@@ -41,29 +41,34 @@
  * -- this refactor is additive, not a content change. New packs are added by
  * inserting another entry into PACKS.
  *
- * Fixed act count, deliberately (regression-test iteration 5, P1.1/P1.3):
- * every pack MUST have exactly ACTS_PER_PACK acts, a secret question, and a
- * question 37. This is enforced by the registry-conformance tests in
+ * The current, single binding schema for any pack in PACKS (iteration 8
+ * holistic review, BF8-06 -- consolidated here after two earlier passes on
+ * this comment drifted out of sync with each other):
+ *   - Every pack has exactly ACTS_PER_PACK (3) acts. No exceptions today;
+ *     if a pack ever genuinely needs a different act count, that's the
+ *     trigger to revisit ACTS_PER_PACK itself, not to special-case around
+ *     it (regression-test iteration 5, P1.1/P1.3).
+ *   - Each act may have 1 to QUESTIONS_PER_ACT (12) master questions --
+ *     12 is a ceiling, not a mandate (iteration 7, Phase 3, per FR-01's
+ *     "bis zu zwölf Fragen pro Akt" / "up to twelve questions per act").
+ *     CLASSIC itself has exactly 12 per act, 36 total, unchanged; a newer
+ *     pack (e.g. a FIRST DATE pilot) can have fewer.
+ *   - A pack only offers the routes it actually has curated content for
+ *     (e.g. DEEP intentionally has no `quick` route) -- see getRoute()'s
+ *     fallback-to-first-defined-route behavior below. A route that IS
+ *     offered must still satisfy both invariants above CLASSIC_ROUTES'
+ *     own comment describes (ends on the real closing question; secret
+ *     interrupt lands strictly inside its own bounds).
+ *   - Every pack MUST define its own secret-question placement
+ *     (`secretAtIndex`) and its own question-37 wording (`q37`) -- these
+ *     are per-pack, never inherited or defaulted from CLASSIC.
+ *   - `full` (every question, unrouted) is only required if the pack ships
+ *     as a complete 36-question pack; a pack that's deliberately launched
+ *     smaller (e.g. a quick-route-only pilot) is not required to define it
+ *     -- see getRoute()'s fallback chain.
+ * All of this is enforced by the registry-conformance tests in
  * closer.test.js, not just assumed -- a pack that doesn't fit isn't added
- * to PACKS. The alternative (a fully variable engine with no fixed act
- * count at all) was considered and deliberately not built: every pack
- * planned so far (FIRST DATE, COUPLES, FRIENDS, OLD FRIENDS, LATE NIGHT,
- * DEEP, CHAOS -- spec 55) is a 3-act shape, and CloserGame.js's act-break
- * logic, global copy ("FRAGE 37", three skip tokens), and per-act timer all
- * rely on ACTS_PER_PACK being fixed rather than read per-pack.
- *
- * QUESTIONS_PER_ACT (12) is each act's CEILING, not a mandate every pack
- * must fill (iteration 7, Phase 3, per FR-01's own "bis zu zwölf Fragen pro
- * Akt" / "up to twelve questions per act" and its DEEP example of a pack
- * that can simply lack a `quick` route until it has content for one -- the
- * UI then just doesn't offer that choice, see getRoute() below). CLASSIC
- * itself still has exactly 12 per act, 36 total -- that content is
- * untouched and stays the full original experience. A newer, smaller pack
- * (e.g. a FIRST DATE pilot with only a hand-curated `quick` set so far) can
- * have fewer, and only defines the routes it actually has questions
- * written for. If a pack that genuinely needs more than ACTS_PER_PACK acts
- * ever comes up, that's the trigger to revisit the act count too, not
- * before.
+ * to PACKS.
  *
  * See questionAt/actIndexFor/totalQuestions/finalQuestionIndex below, all
  * of which take a packId as their first argument (kept pack-aware even
@@ -137,9 +142,14 @@ const CLASSIC_ACTS = [
       de: 'Fangt neugierig an. Einige Fragen werden schon hier persönlicher. Ihr könnt jederzeit weitergehen.',
       en: "Start with curiosity. Some questions here already get personal. You can move on whenever you're ready.",
     },
+    // Time-neutral on purpose (iteration-8 holistic review, BF8-04): "vor
+    // 15 Minuten" was always wrong for a shorter route's Act I, which is
+    // only a few minutes long, and even in Full, pacing varies enough
+    // between couples that a specific elapsed time is a claim the app
+    // can't actually back up.
     breakText: {
-      de: 'Ihr wisst jetzt wahrscheinlich Dinge voneinander, die ihr vor 15 Minuten noch nicht wusstet.',
-      en: "You probably know things about each other now that you didn't know 15 minutes ago.",
+      de: 'Ihr wisst jetzt wahrscheinlich Dinge voneinander, die ihr vor diesem Akt noch nicht wusstet.',
+      en: "You probably know things about each other now that you didn't know before this act.",
     },
     breakSub: {
       de: 'Trinkt einen Schluck. Streckt euch. Atmet.',
@@ -383,9 +393,14 @@ const CLASSIC_MODES = [
     id: 'original',
     title: { de: 'ORIGINAL', en: 'ORIGINAL' },
     meta: { de: 'Zurückhaltend', en: 'Understated' },
+    // Route-neutral on purpose (iteration-8 holistic review, BF8-03): a
+    // hardcoded "36 Fragen/45 Minuten" here contradicted whatever route
+    // (Quick/Standard/Full) was actually chosen one screen earlier. Scope
+    // and time live on the route object and are shown once from there --
+    // see route.subtitle and the Style screen in CloserGame.js.
     blurb: {
-      de: '36 Fragen · 3 Akte · etwa 45 Minuten',
-      en: '36 questions · 3 acts · about 45 minutes',
+      de: 'Zurückhaltende Inszenierung, ausgewählte Route.',
+      en: 'Understated presentation for your selected route.',
     },
     // Act I isn't twist-free any more (spec feedback 11): PREDICT is
     // restrained enough to fit ORIGINAL's tone -- it's still just reading
@@ -411,9 +426,10 @@ const CLASSIC_MODES = [
     id: 'datenight',
     title: { de: 'PLAYFUL', en: 'PLAYFUL' },
     meta: { de: 'Gleiche Tiefe', en: 'Same depth' },
+    // Same route-neutral reasoning as ORIGINAL's blurb above (BF8-03).
     blurb: {
-      de: 'Dieselben 36 tiefen Fragen – mit spielerischeren Twists.',
-      en: 'The same 36 deep questions — with more playful twists.',
+      de: 'Dieselben ausgewählten Fragen – mit spielerischeren Twists.',
+      en: 'The same selected questions — with more playful twists.',
     },
     twists: { predict: true, both: true, nothinking: true, deeper: true, stay: true },
   },
@@ -429,13 +445,25 @@ export const SKIP_TOKENS = 3;
  * the same "kuratierter Auszug, nicht algorithmisch" requirement the
  * review itself sets: each shortened route keeps a taste of all three acts
  * (curious -> closer -> open) rather than just truncating the end, keeps a
- * mix of twist types rather than dropping them all, and -- for `standard`
- * and `quick` alike -- always keeps Act III's local indices 2 and 3
- * (questions 27/28, the pair the secret question sits between) adjacent
- * and in order, and local index 11 (the closing, `last: true` question)
- * as the final entry. `full` is exactly the pre-Phase-2 game: every
- * question, unchanged order -- `actIndices: [null, null, null]` means
+ * mix of twist types rather than dropping them all, and keeps local index
+ * 11 (the closing, `last: true` question) as Act III's final entry.
+ * `standard` also keeps Act III's local indices 2 and 3 (questions 27/28,
+ * the pair the secret question sits between) adjacent and in order; `quick`
+ * is short enough that it doesn't include that pair at all, and relies on
+ * secretAtIndexFor()'s own derivation (see its comment) to place the
+ * interrupt correctly regardless. `full` is exactly the pre-Phase-2 game:
+ * every question, unchanged order -- `actIndices: [null, null, null]` means
  * "every local index of that act, in order" (see resolvedActs() below).
+ *
+ * The exact index lists below are the iteration-8 holistic review's
+ * verbatim correction (BF8-02): the original Phase-2 curation put Q07 (a
+ * premonition about one's own death) and Q10 (what you'd change about your
+ * upbringing) third and fourth in Quick's Act I -- too hard an intensity
+ * jump for a 12-question route meant as a light on-ramp. These indices are
+ * the redactionally-reviewed selection in
+ * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md and are the single
+ * source of truth for any future change to this curation -- edit the
+ * catalog first, then mirror it here.
  */
 const CLASSIC_ROUTES = {
   quick: {
@@ -446,10 +474,11 @@ const CLASSIC_ROUTES = {
       de: '12 Fragen · 3 Akte · etwa 15 Minuten',
       en: '12 questions · 3 acts · about 15 minutes',
     },
+    // Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
     actIndices: [
-      [0, 3, 6, 9],
-      [0, 4, 6, 11],
-      [0, 2, 3, 11],
+      [0, 3, 8, 11],
+      [0, 1, 3, 4],
+      [0, 1, 6, 11],
     ],
   },
   standard: {
@@ -460,10 +489,11 @@ const CLASSIC_ROUTES = {
       de: '24 Fragen · 3 Akte · etwa 30 Minuten',
       en: '24 questions · 3 acts · about 30 minutes',
     },
+    // Q01-Q04, Q08, Q09, Q11, Q12 · Q13-Q18, Q20, Q21 · Q25-Q31, Q36
     actIndices: [
-      [0, 1, 3, 5, 6, 8, 9, 10],
-      [0, 1, 3, 4, 6, 8, 10, 11],
-      [0, 1, 2, 3, 5, 8, 9, 11],
+      [0, 1, 2, 3, 7, 8, 10, 11],
+      [0, 1, 2, 3, 4, 5, 7, 8],
+      [0, 1, 2, 3, 4, 5, 6, 11],
     ],
   },
   full: {
