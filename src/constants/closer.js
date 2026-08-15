@@ -152,6 +152,22 @@ const ROUTE_NEUTRAL_BLURB = {
   en: 'Understated presentation for your selected route.',
 };
 
+/*
+ * Response Card labels (iteration 8 catalog: FRIENDS/OLD FRIENDS/DEEP each
+ * recommend one after specific questions). The four category names are
+ * identical loanwords in both languages in the catalog itself, same as
+ * ORIGINAL/CALM/PLAYFUL elsewhere in this file -- still a { de, en } pair
+ * for consistency with the file's own convention that every user-visible
+ * string is one. `question.responseCard = { label, text }` on a question
+ * object is how CloserGame.js finds these; not every question has one.
+ */
+const RESPONSE_CARD_LABEL = {
+  celebrate: { de: 'CELEBRATE', en: 'CELEBRATE' },
+  followUp: { de: 'FOLLOW UP', en: 'FOLLOW UP' },
+  validate: { de: 'VALIDATE', en: 'VALIDATE' },
+  reflect: { de: 'REFLECT', en: 'REFLECT' },
+};
+
 const CLASSIC_ACTS = [
   {
     id: 'curious',
@@ -1513,6 +1529,13 @@ const FRIENDS_ACTS = [
       {
         de: 'Welche gute Nachricht aus deinem Leben verdient gerade etwas mehr Aufmerksamkeit – und warum?',
         en: 'What good news in your life deserves a little more attention right now, and why?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.celebrate,
+          text: {
+            de: 'Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.',
+            en: 'Take a moment to celebrate with them before sharing your own story.',
+          },
+        },
       },
       {
         de: 'Bei welchem konkreten gemeinsamen Moment musstest du besonders ehrlich lachen?',
@@ -1573,6 +1596,13 @@ const FRIENDS_ACTS = [
       {
         de: 'Wann hat eine befreundete Person zuletzt genau die richtige Nachfrage gestellt – und was hat sie bewirkt?',
         en: 'When did a friend last ask exactly the right follow-up question, and what difference did it make?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.followUp,
+          text: {
+            de: 'Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.',
+            en: 'Ask for one specific detail that helps you understand the answer better.',
+          },
+        },
       },
       {
         de: 'Wann hattest du zuletzt das Gefühl, dass dir eine befreundete Person wirklich den Rücken stärkt?',
@@ -1585,6 +1615,13 @@ const FRIENDS_ACTS = [
       {
         de: 'Wenn du einen schweren Tag teilst: Was hilft zuerst – Zuhören, Trost, Ablenkung, Ideen, praktische Hilfe oder etwas anderes?',
         en: 'When you share that you have had a hard day, what helps first: listening, comfort, distraction, ideas, practical help, or something else?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.',
+            en: 'No solution is needed. First, show that you heard them.',
+          },
+        },
       },
       {
         de: 'Welche Eigenschaft der anderen Person schätzt du, die sie selbst vielleicht unterschätzt?',
@@ -1598,6 +1635,13 @@ const FRIENDS_ACTS = [
         de: 'Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen?',
         en: 'What are you dealing with right now that a friend can simply sit with you in, without having to solve it?',
         stayEnabled: true,
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.',
+            en: 'No solution is needed. First, show that you heard them.',
+          },
+        },
       },
     ],
   },
@@ -1647,6 +1691,13 @@ const FRIENDS_ACTS = [
       {
         de: 'Welchen kleinen oder großen Erfolg sollten wir als Nächstes gemeinsam feiern?',
         en: 'What small or big success should we celebrate together next?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.celebrate,
+          text: {
+            de: 'Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.',
+            en: 'Take a moment to celebrate with them before sharing your own story.',
+          },
+        },
       },
       {
         de: 'Wofür wären wir in einem Jahr dankbar, wenn wir es jetzt gemeinsam planen?',
@@ -1660,6 +1711,13 @@ const FRIENDS_ACTS = [
         de: 'Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus?',
         en: 'What would you like to thank the other person for today, and what does it say about who they are?',
         last: true,
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.reflect,
+          text: {
+            de: 'Sag in einem Satz, was du an der Antwort verstanden hast.',
+            en: 'In one sentence, say what you understood from the answer.',
+          },
+        },
       },
     ],
   },
@@ -1780,6 +1838,13 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'Welche einzelne gemeinsame Szene kannst du heute noch besonders deutlich vor dir sehen?',
         en: 'What single moment we shared can you still picture especially clearly?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.followUp,
+          text: {
+            de: 'Frag nach einem einzigen Detail aus dieser Szene.',
+            en: 'Ask for one detail from that moment.',
+          },
+        },
       },
       {
         de: 'Welcher Ort, Gegenstand, Geruch oder Klang gehört für dich zu einer Erinnerung an uns?',
@@ -1788,6 +1853,13 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'An welches kleine gemeinsame Detail habe ich vielleicht nicht mehr gedacht?',
         en: 'What small detail from something we shared might I have forgotten?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.followUp,
+          text: {
+            de: 'Frag nach einem einzigen Detail aus dieser Szene.',
+            en: 'Ask for one detail from that moment.',
+          },
+        },
       },
       {
         de: 'Bei welchem konkreten Moment haben wir einmal besonders ehrlich miteinander gelacht?',
@@ -1820,6 +1892,13 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'Welche gemeinsame Erinnerung erzählen wir unterschiedlich – und was ist an beiden Versionen interessant?',
         en: 'Which shared memory do we tell differently, and what is interesting about both versions?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.reflect,
+          text: {
+            de: 'Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.',
+            en: 'Do not look for the correct version. Name what each memory means to you.',
+          },
+        },
       },
     ],
   },
@@ -1873,6 +1952,13 @@ const OLD_FRIENDS_ACTS = [
         de: 'Gibt es etwas aus der Zeit dazwischen, das du erzählen möchtest, ohne dass es erklärt oder gelöst werden muss?',
         en: 'Is there something from the time in between you would like to share without needing it to be explained or solved?',
         stayEnabled: true,
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.',
+            en: 'You do not need to justify or repair anything. First, show that you heard them.',
+          },
+        },
       },
       {
         de: 'Welche alte Annahme über die andere Person bist du heute bereit zu überprüfen?',
@@ -1926,6 +2012,13 @@ const OLD_FRIENDS_ACTS = [
         de: 'Was brauchst du heute, um dich von mir als die Person gesehen zu fühlen, die du inzwischen bist?',
         en: 'What do you need today to feel seen by me as the person you have become?',
         twist: 'deeper',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.',
+            en: 'You do not need to justify or repair anything. First, show that you heard them.',
+          },
+        },
       },
       {
         de: 'Gibt es ein Gespräch, für das heute mehr Raum wäre als früher?',
@@ -1942,6 +2035,13 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'Wenn wir eine echte neue Erinnerung schaffen: Welche dürfte es sein?',
         en: 'If we create a genuine new memory together, what would you like it to be?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.followUp,
+          text: {
+            de: 'Was wäre ein kleiner, realistischer erster Schritt?',
+            en: 'What would be one small, realistic first step?',
+          },
+        },
       },
       {
         de: 'Welche Seite der anderen Person möchtest du heute neu kennenlernen?',
@@ -2068,6 +2168,13 @@ const DEEP_ACTS = [
       {
         de: 'Auf welchen konkreten Moment aus der letzten Zeit bist du still stolz – und warum?',
         en: 'What specific recent moment are you quietly proud of, and why?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.celebrate,
+          text: {
+            de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
+            en: 'Take a moment to honor what that moment cost the person or meant to them.',
+          },
+        },
       },
       {
         de: 'Welche Seite von dir wird selten gesehen, obwohl sie eigentlich kein Geheimnis ist?',
@@ -2137,6 +2244,13 @@ const DEEP_ACTS = [
       {
         de: 'Wann hast du dich zuletzt wirklich verstanden gefühlt – und was hat die andere Person konkret getan?',
         en: 'When did you last feel truly understood, and what did the other person specifically do?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.followUp,
+          text: {
+            de: 'Frag, welches konkrete Verhalten den Unterschied gemacht hat.',
+            en: 'Ask what specific behavior made the difference.',
+          },
+        },
       },
       {
         de: 'Welches Bedürfnis fällt dir schwer auszusprechen?',
@@ -2153,6 +2267,13 @@ const DEEP_ACTS = [
       {
         de: 'Welche Veränderung oder welcher Verlust hat dich stark geprägt?',
         en: 'What change or loss has had a powerful influence on who you are?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
+            en: 'No solution and no judgment. First, show that you heard them.',
+          },
+        },
       },
       {
         de: 'Welche schwierige Emotion kannst du besser aushalten, wenn jemand auf eine bestimmte Weise bei dir bleibt?',
@@ -2162,6 +2283,13 @@ const DEEP_ACTS = [
         de: 'Wofür lernst du gerade, dir selbst zu vergeben?',
         en: 'What are you learning to forgive yourself for?',
         stayEnabled: true,
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
+            en: 'No solution and no judgment. First, show that you heard them.',
+          },
+        },
       },
       {
         de: 'Bei welchem Thema wünschst du dir, dass Menschen erst zuhören, bevor sie nach einer Lösung suchen?',
@@ -2170,6 +2298,13 @@ const DEEP_ACTS = [
       {
         de: 'Welche schwierige Entscheidung macht dich heute stolz auf dich?',
         en: 'What difficult decision makes you proud of yourself today?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.celebrate,
+          text: {
+            de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
+            en: 'Take a moment to honor what that moment cost the person or meant to them.',
+          },
+        },
       },
       {
         de: 'Zwischen welchen zwei wichtigen Werten entsteht in deinem Leben manchmal Spannung?',
@@ -2182,6 +2317,13 @@ const DEEP_ACTS = [
       {
         de: 'Was bedeutet Unterstützung für dich, wenn es keine Lösung gibt?',
         en: 'What does support mean to you when there is no solution?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.validate,
+          text: {
+            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
+            en: 'No solution and no judgment. First, show that you heard them.',
+          },
+        },
       },
     ],
   },
@@ -2235,6 +2377,13 @@ const DEEP_ACTS = [
       {
         de: 'Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes?',
         en: 'After this conversation, how can the other person best be there for you: by listening, asking questions, giving you space, or something else?',
+        responseCard: {
+          label: RESPONSE_CARD_LABEL.reflect,
+          text: {
+            de: 'Sag in einem Satz, was du künftig beachten möchtest.',
+            en: 'In one sentence, say what you would like to keep in mind from now on.',
+          },
+        },
       },
       {
         de: 'Welchen Satz oder Gedanken möchtest du aus diesem Gespräch mitnehmen?',

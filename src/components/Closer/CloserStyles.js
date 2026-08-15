@@ -313,6 +313,26 @@ export const TwistLabel = styled.p`
   margin: 0 0 2.4rem;
 `;
 
+/* ---------- response card (iteration 8 catalog: optional listening hint) --
+ * Quiet by design -- a thin accent-colored left rule, muted body text, no
+ * button and no separate screen. It sits with the question, not between
+ * two questions, matching the catalog's own "zählen nicht als Fragen"
+ * (doesn't count as a question) framing: nothing to tap through, nothing
+ * that can be "answered wrong". */
+export const ResponseCard = styled.div`
+  margin-top: 2.4rem;
+  padding-left: 1.6rem;
+  border-left: 2px solid ${({ $accent }) => $accent}66;
+  max-width: 34ch;
+`;
+
+export const ResponseCardLabel = styled.p`
+  font-size: 1.1rem;
+  letter-spacing: 0.28em;
+  color: ${({ $accent }) => $accent};
+  margin: 0 0 0.6rem;
+`;
+
 /* ---------- controls ---------- */
 
 const base = css`

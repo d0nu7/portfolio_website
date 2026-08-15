@@ -44,6 +44,8 @@ import {
   Lede,
   MenuTrigger,
   Question,
+  ResponseCard,
+  ResponseCardLabel,
   Row,
   Screen,
   Sheet,
@@ -1665,6 +1667,18 @@ export default function CloserGame() {
             {questionText}
           </Question>
           {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
+          {/* Response Cards (iteration 8 catalog, FRIENDS/OLD FRIENDS/DEEP):
+              an optional listening hint attached to specific questions --
+              always visible when present, nothing to tap through, no
+              button of its own. See its own note in CloserStyles.js. */}
+          {question?.responseCard && (
+            <ResponseCard $accent={style.accent}>
+              <ResponseCardLabel $accent={style.accent}>
+                {pick(question.responseCard.label, lang)}
+              </ResponseCardLabel>
+              <Small>{pick(question.responseCard.text, lang)}</Small>
+            </ResponseCard>
+          )}
         </Body>
         <Foot>
           {canStay ? (

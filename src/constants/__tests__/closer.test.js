@@ -13,6 +13,7 @@ import {
   getPack,
   getRoute,
   originalIndexFor,
+  pick,
   questionAt,
   questionIdFor,
   resolvedActs,
@@ -636,5 +637,44 @@ describe('other constants', () => {
 
   it('SKIP_TOKENS is 3, per spec', () => {
     expect(SKIP_TOKENS).toBe(3);
+  });
+});
+
+/*
+ * Response Cards (iteration 8 catalog: FRIENDS/OLD FRIENDS/DEEP). Every
+ * question.responseCard, wherever one is attached, must have the shape
+ * CloserGame.js's render branch expects -- a { de, en } label and a
+ * { de, en } text, both non-empty. "Zählen nicht als Fragen" (don't
+ * count as questions) in the catalog's own words -- confirmed here by
+ * checking they never appear alone without their question's real text.
+ */
+describe('Response Cards', () => {
+  it('every responseCard across every pack has a well-formed label and text', () => {
+    Object.values(PACKS).forEach((pack) => {
+      pack.acts.forEach((act) => {
+        act.questions.forEach((q) => {
+          if (!q.responseCard) return;
+          expect(pick(q.responseCard.label, 'de')).toBeTruthy();
+          expect(pick(q.responseCard.label, 'en')).toBeTruthy();
+          expect(pick(q.responseCard.text, 'de')).toBeTruthy();
+          expect(pick(q.responseCard.text, 'en')).toBeTruthy();
+          expect(q.de).toBeTruthy();
+        });
+      });
+    });
+  });
+
+  it('FRIENDS, OLD FRIENDS and DEEP each carry at least one response card; other packs currently carry none', () => {
+    const countCards = (pack) =>
+      pack.acts.reduce(
+        (n, act) => n + act.questions.filter((q) => q.responseCard).length,
+        0
+      );
+    expect(countCards(PACKS.friends)).toBeGreaterThan(0);
+    expect(countCards(PACKS['old-friends'])).toBeGreaterThan(0);
+    expect(countCards(PACKS.deep)).toBeGreaterThan(0);
+    ['classic', 'first-date', 'date-night', 'couples', 'chaos'].forEach((id) => {
+      expect(countCards(PACKS[id])).toBe(0);
+    });
   });
 });
