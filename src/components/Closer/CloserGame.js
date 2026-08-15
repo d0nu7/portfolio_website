@@ -23,6 +23,7 @@ import {
   totalQuestions,
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
+import ClosePulse from './ClosePulse';
 import CloserInstallHint from './CloserInstallHint';
 import {
   ActNumeral,
@@ -358,6 +359,22 @@ export default function CloserGame() {
   const flashRef = useRef(null);
   const questionHeadingRef = useRef(null);
 
+  // CLOSER PULSE (iteration 8 feature requests, FR8-04): a quiet milestone
+  // overlay, never persisted (purely decorative, resets on reload same as
+  // any other transient UI state) and never announced as its own thing --
+  // it's a visual accent on top of whatever screen would render anyway.
+  const [pulseStage, setPulseStage] = useState(null);
+  const dismissPulse = useCallback(() => setPulseStage(null), []);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
 
   const lang = s.lang;
@@ -375,6 +392,34 @@ export default function CloserGame() {
     setResumable(saved);
     if (saved) set({ lang: saved.lang });
   }, [set]);
+
+  // CLOSER PULSE's trigger detection: only fires on a phase change that
+  // actually happens during this live session, never on whatever phase a
+  // resumed/reloaded game happens to land on. pulsePrevPhaseRef starts at
+  // null and is set to the current phase on the first run after mount
+  // (skipped as a trigger); only phase changes AFTER that count.
+  const pulsePrevPhaseRef = useRef(null);
+  useEffect(() => {
+    if (!mounted) return;
+    const prev = pulsePrevPhaseRef.current;
+    pulsePrevPhaseRef.current = s.phase;
+    if (prev === null || prev === s.phase) return;
+    // Geeignete Trigger (FR8-04): Start des eigentlichen Spiels; jeder
+    // Aktabschluss; die abgeschlossene Secret-Question-Übergabe;
+    // Finale. Restart and any decline/skip/end path deliberately fire
+    // nothing -- "keine negative oder enttäuschte Animation" for those.
+    if (prev === 'act' && s.phase === 'q' && s.qIndex === 0) {
+      setPulseStage('start');
+    } else if (s.phase === 'break' && s.breakAct === 0) {
+      setPulseStage('actI');
+    } else if (s.phase === 'break' && s.breakAct === 1) {
+      setPulseStage('actII');
+    } else if (prev === 'secretPassBack' && s.phase === 'q') {
+      setPulseStage('secret');
+    } else if (prev !== 'ending' && s.phase === 'ending') {
+      setPulseStage('finale');
+    }
+  }, [mounted, s.phase, s.breakAct, s.qIndex]);
 
   useEffect(() => {
     if (!mounted || s.phase === 'start') return;
@@ -768,6 +813,14 @@ export default function CloserGame() {
       <CloserGlobal />
       {content}
       {opts.menu && menuOverlay}
+      {pulseStage && (
+        <ClosePulse
+          stage={pulseStage}
+          accent={opts.accent || style.accent}
+          reducedMotion={prefersReducedMotion}
+          onDone={dismissPulse}
+        />
+      )}
     </Screen>
   );
 
