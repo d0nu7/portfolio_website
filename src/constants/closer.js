@@ -273,8 +273,12 @@ export const MODES = [
       de: '36 Fragen · 3 Akte · etwa 45 Minuten',
       en: '36 questions · 3 acts · about 45 minutes',
     },
-    // Only the two twists that hand control back to the players.
-    twists: { predict: false, both: false, nothinking: false, deeper: true, stay: true },
+    // Act I isn't twist-free any more (spec feedback 11): PREDICT is
+    // restrained enough to fit ORIGINAL's tone -- it's still just reading
+    // and guessing out loud, nothing performative -- so it stays on,
+    // giving Act I its two predict questions. BOTH and NO THINKING are
+    // more playful in character and stay DATE NIGHT-exclusive.
+    twists: { predict: true, both: false, nothinking: false, deeper: true, stay: true },
   },
   {
     id: 'datenight',

@@ -25,6 +25,13 @@ const Closer = () => (
         name="description"
         content="Two people. One phone. No small talk."
       />
+      {/* Installable as a home-screen PWA -- scoped tightly to /closer/ so it
+          never claims the rest of the site (see manifest `scope`/`id`). */}
+      <link rel="manifest" href="/closer.webmanifest" />
+      <link rel="apple-touch-icon" href="/images/closer/apple-touch-icon-180.png" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-title" content="CLOSER" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     </Head>
     <CloserGame />
   </>

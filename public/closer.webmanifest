@@ -1,0 +1,33 @@
+{
+  "id": "/closer/",
+  "name": "CLOSER",
+  "short_name": "CLOSER",
+  "description": "Two people. One phone. No small talk.",
+  "start_url": "/closer/",
+  "scope": "/closer/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08090c",
+  "theme_color": "#08090c",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/images/closer/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/closer/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/closer/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

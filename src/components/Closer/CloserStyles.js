@@ -592,3 +592,75 @@ export const Elapsed = styled.p`
   margin: 0;
   font-variant-numeric: tabular-nums;
 `;
+
+/* ---------- install hint ---------- */
+
+/*
+ * Quiet and skippable by design -- this is a suggestion, not a gate. It only
+ * ever appears ahead of a game (see CloserInstallHint), never once one is
+ * running, and never in the installed PWA itself.
+ */
+export const InstallCard = styled.div`
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
+  padding: 1.8rem 2rem;
+  border: 1px solid rgba(242, 243, 245, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  animation: ${fade} 0.6s ease both;
+
+  p {
+    margin: 0;
+  }
+`;
+
+export const InstallKicker = styled.p`
+  font-size: 1.05rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(242, 243, 245, 0.4);
+  margin: 0 0 0.8rem;
+`;
+
+export const InstallBody = styled.p`
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: rgba(242, 243, 245, 0.62);
+  white-space: pre-line;
+  margin: 0;
+`;
+
+export const InstallRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-top: 1.4rem;
+`;
+
+export const InstallButton = styled.button`
+  ${base};
+  border: none;
+  background: none;
+  padding: 0;
+  color: ${({ $accent }) => $accent};
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+`;
+
+export const InstallDismiss = styled.button`
+  ${base};
+  border: none;
+  background: none;
+  padding: 0;
+  color: rgba(242, 243, 245, 0.32);
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  &:hover {
+    color: rgba(242, 243, 245, 0.6);
+  }
+`;

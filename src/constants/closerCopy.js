@@ -13,6 +13,18 @@ const COPY = {
   },
   aboutMinutes: { de: 'Etwa 45 Minuten', en: 'About 45 minutes' },
   start: { de: 'Start', en: 'Start' },
+  installHintTitle: { de: 'VOLLBILD-ERLEBNIS', en: 'FULL-SCREEN EXPERIENCE' },
+  installHintBody: {
+    de: 'Füge CLOSER zu deinem Home-Bildschirm hinzu,\num ohne Browserleiste zu spielen.',
+    en: 'Add CLOSER to your Home Screen\nto play without the browser bar.',
+  },
+  installHintIOS: { de: 'Teilen → Zum Home-Bildschirm', en: 'Share → Add to Home Screen' },
+  installHintInstall: { de: 'Installieren', en: 'Install' },
+  installHintDismiss: { de: 'Nicht jetzt', en: 'Not now' },
+  installHintInstalled: {
+    de: 'Installiert. Startet jetzt über das neue Symbol auf deinem Home-Bildschirm.',
+    en: 'Installed. From now on, launch CLOSER from the new icon on your Home Screen.',
+  },
   welcomeBack: { de: 'Willkommen zurück.', en: 'Welcome back.' },
   continueGame: { de: 'Spiel fortsetzen', en: 'Continue game' },
   startOver: { de: 'Von vorne', en: 'Start over' },
@@ -169,14 +181,22 @@ const COPY = {
     en: "Neither of you asked it.\n\nMaybe now's the time.",
   },
   q37OneRemains: { de: 'EINE FRAGE FEHLT NOCH', en: 'ONE QUESTION REMAINS' },
-  q37OneText: (lang, asked, waiting) =>
-    lang === 'de'
-      ? `${asked} hat deine schon gestellt.\n\nAber eine Frage wartet noch.`
-      : `${asked} already asked yours.\n\nBut one question is still waiting.`,
+  // Deliberately name-free: earlier wording named a person here and, for one
+  // of the two possible cases, named the wrong one (whoever already asked
+  // vs. whoever's question was already asked are two different people).
+  // Not worth the risk a second time.
+  q37OneText: {
+    de: 'Eine deiner Fragen wurde gestellt.\n\nEine Frage wartet noch.',
+    en: 'One of your questions was asked.\n\nOne question is still waiting.',
+  },
   q37AlreadyAsked: { de: 'IHR HABT SIE SCHON GESTELLT.', en: 'YOU ALREADY ASKED THEM.' },
   q37StillWantOne: { de: 'Trotzdem noch eine?', en: 'Still want one more?' },
   q37Button: { de: 'FRAGE 37', en: 'QUESTION 37' },
   q37Label: { de: 'FRAGE 37', en: 'QUESTION 37' },
+  // Neither of you asked the other's secret question -- rather than one
+  // shared prompt, each of you gets an explicit, ordered turn.
+  q37AskSecret: (lang, who) =>
+    lang === 'de' ? `${who} stellt die Geheimfrage.` : `${who} asks the secret question.`,
   end: { de: 'Ende', en: 'End' },
 
   /* ending ------------------------------------------------------------------ */

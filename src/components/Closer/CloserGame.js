@@ -14,6 +14,7 @@ import {
   questionAt,
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
+import CloserInstallHint from './CloserInstallHint';
 import {
   ActNumeral,
   ActTitle,
@@ -113,7 +114,7 @@ export default function CloserGame() {
   const [s, setS] = useState(initialState);
 
   // Screen-local state: none of this is worth persisting.
-  const [step, setStep] = useState('ask'); // twist | count | ask | deeper | deeperOpen
+  const [step, setStep] = useState('ask'); // twist | counting | ask | deeper | deeperOpen
   const [count, setCount] = useState(0);
   const [skipAsking, setSkipAsking] = useState(false);
   const [justSkipped, setJustSkipped] = useState(null);
@@ -130,11 +131,16 @@ export default function CloserGame() {
   const tf = useCallback((key, ...args) => COPY[key](lang, ...args), [lang]);
 
   // Render the server markup first, then look for a saved game, so the static
-  // export and the first client render stay identical.
+  // export and the first client render stay identical. The resume screen
+  // (and a straight "Continue game") should come back in whatever language
+  // the saved game was in, not silently fall back to German -- the language
+  // toggle on this screen still lets someone switch before continuing.
   useEffect(() => {
     setMounted(true);
-    setResumable(loadSaved());
-  }, []);
+    const saved = loadSaved();
+    setResumable(saved);
+    if (saved) set({ lang: saved.lang });
+  }, [set]);
 
   useEffect(() => {
     if (!mounted || s.phase === 'start') return;
@@ -164,6 +170,14 @@ export default function CloserGame() {
       wakeRef.current = null;
     };
   }, [mounted, s.phase, s.completed]);
+
+  // CLOSER switches language within the same route, so the static lang
+  // attribute _document.js sets at build time can't track it -- keep it
+  // honest for screen readers and translation tools.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = lang === 'de' ? 'de' : 'en';
+  }, [lang]);
 
   useEffect(() => {
     if (!s.timerEnabled || !s.actStartedAt) return undefined;
@@ -244,25 +258,36 @@ export default function CloserGame() {
     goTo(s.qIndex + 1);
   }, [twist, step, goTo, s.qIndex]);
 
-  // BOTH / NO THINKING lead-in count.
+  // BOTH / NO THINKING lead-in count. The question itself is already on
+  // screen for the whole count -- see the 'counting' step below -- so this
+  // only ever gates when answering starts, never whether the question is
+  // known yet.
   const countRef = useRef(null);
+  const flipRef = useRef(null);
   const runCountdown = useCallback((from) => {
     setCount(from);
-    setStep('count');
+    setStep('counting');
     clearInterval(countRef.current);
     countRef.current = setInterval(() => {
       setCount((c) => {
         if (c <= 1) {
           clearInterval(countRef.current);
           buzz(20);
-          setStep('ask');
+          // A beat on zero -- long enough to register as "now", short enough
+          // not to feel like a pause -- before the question screen's own
+          // controls (Next, Stay, Skip) become available.
+          clearTimeout(flipRef.current);
+          flipRef.current = setTimeout(() => setStep('ask'), 400);
           return 0;
         }
         return c - 1;
       });
     }, 1000);
   }, []);
-  useEffect(() => () => clearInterval(countRef.current), []);
+  useEffect(() => () => {
+    clearInterval(countRef.current);
+    clearTimeout(flipRef.current);
+  }, []);
 
   // STAY hides the game. CONTINUE appears once, quietly, and then waits as
   // long as it has to -- no timer, nothing counting down.
@@ -386,6 +411,7 @@ export default function CloserGame() {
             </>
           )}
         </Foot>
+        <CloserInstallHint lang={lang} accent={A0} />
       </>,
       { accent: A0, glow: 0.3 }
     );
@@ -684,7 +710,7 @@ export default function CloserGame() {
         </Body>
         <Foot>
           {revealSecond && (
-            <GhostButton onClick={() => set({ phase: 'check1' })}>{t('continue')}</GhostButton>
+            <GhostButton onClick={() => set({ phase: 'checkPass1' })}>{t('continue')}</GhostButton>
           )}
         </Foot>
       </>,
@@ -696,12 +722,52 @@ export default function CloserGame() {
   /* SECRET QUESTION RESOLUTION                                         */
   /* ================================================================== */
 
+  // The phone is lying between both of them again after "that's all 36" --
+  // each private check needs its own handoff first, same as capturing the
+  // secret questions did, or the check isn't actually private.
+  if (s.phase === 'checkPass1' || s.phase === 'checkPass2') {
+    const who = s.phase === 'checkPass1' ? 0 : 1;
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={ACT_STYLE[2].accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
+        </Body>
+        <Foot>
+          <Button
+            $accent={ACT_STYLE[2].accent}
+            onClick={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
+          >
+            {tf('iAm', nameOf(who))}
+          </Button>
+        </Foot>
+      </>,
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+    );
+  }
+
+  if (s.phase === 'checkPassBack') {
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={ACT_STYLE[2].accent}>{t('passPhoneBack')}</Kicker>
+          <Lede>{t('passPhoneBackText')}</Lede>
+        </Body>
+        <Foot>
+          <Button $accent={ACT_STYLE[2].accent} onClick={() => set({ phase: 'q37intro' })}>
+            {t('continue')}
+          </Button>
+        </Foot>
+      </>,
+      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+    );
+  }
+
   if (s.phase === 'check1' || s.phase === 'check2') {
     const me = s.phase === 'check1' ? 0 : 1;
     const answer = (value) => {
       const asked = [...s.secretAsked];
       asked[me] = value;
-      set({ secretAsked: asked, phase: me === 0 ? 'check2' : 'q37intro' });
+      set({ secretAsked: asked, phase: me === 0 ? 'checkPass2' : 'checkPassBack' });
     };
     return frame(
       <>
@@ -724,7 +790,7 @@ export default function CloserGame() {
   /* QUESTION 37                                                        */
   /* ================================================================== */
 
-  if (s.phase === 'q37intro' || s.phase === 'q37') {
+  if (s.phase === 'q37intro' || s.phase === 'q37' || s.phase === 'q37a' || s.phase === 'q37b') {
     const [a0, a1] = s.secretAsked;
     const neither = a0 === false && a1 === false;
     const bothAsked = a0 === true && a1 === true;
@@ -739,7 +805,7 @@ export default function CloserGame() {
         text = t('q37StillWantOne');
       } else if (!neither) {
         kicker = t('q37OneRemains');
-        text = tf('q37OneText', nameOf(1 - pendingPlayer), nameOf(pendingPlayer));
+        text = t('q37OneText');
       }
       return frame(
         <>
@@ -756,7 +822,7 @@ export default function CloserGame() {
                 </GhostButton>
               </Row>
             ) : (
-              <GhostButton onClick={() => set({ phase: 'q37' })}>
+              <GhostButton onClick={() => set({ phase: neither ? 'q37a' : 'q37' })}>
                 {neither ? t('q37Button') : t('continue')}
               </GhostButton>
             )}
@@ -766,9 +832,40 @@ export default function CloserGame() {
       );
     }
 
-    let prompt = pick(Q37.neither, lang);
-    if (bothAsked) prompt = pick(Q37.both, lang);
-    else if (!neither) prompt = Q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
+    if (s.phase === 'q37a' || s.phase === 'q37b') {
+      // Nobody's question got asked during the game, so there is no
+      // "pending player" to anchor on -- continue the same strict
+      // alternation the whole game has used, one step past question 36, so
+      // the order is fixed rather than a coin flip made twice.
+      const opener = (TOTAL_QUESTIONS + s.starterOffset) % 2;
+      const asker = s.phase === 'q37a' ? opener : 1 - opener;
+      return frame(
+        <>
+          <Body $center>
+            <Kicker>{t('q37Label')}</Kicker>
+            <Question>{tf('q37AskSecret', nameOf(asker))}</Question>
+          </Body>
+          <Foot>
+            {s.phase === 'q37a' ? (
+              <Button $accent={ACT_STYLE[2].accent} onClick={() => set({ phase: 'q37b' })}>
+                {t('continue')}
+              </Button>
+            ) : (
+              <TextButton onClick={() => set({ phase: 'ending', completed: true })}>
+                {t('done')}
+              </TextButton>
+            )}
+          </Foot>
+        </>,
+        { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      );
+    }
+
+    // 'one' and 'both' still land on a single shared prompt -- there is
+    // exactly one question left to ask (or, for 'both', one optional bonus),
+    // so there is nothing to sequence.
+    let prompt = pick(Q37.both, lang);
+    if (!neither && !bothAsked) prompt = Q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
 
     return frame(
       <>
@@ -841,15 +938,62 @@ export default function CloserGame() {
   /* ================================================================== */
 
   const questionText = pick(question, lang);
+
+  // Whose turn it is reads the same whether the question is still behind a
+  // twist screen, mid-countdown, or already the live question -- computed
+  // once and reused everywhere, so it never has to agree with itself.
+  let badge = (
+    <TurnBadge $accent={style.accent}>
+      <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
+      <TurnVerb>{t('turnFirst')}</TurnVerb>
+    </TurnBadge>
+  );
+  if (twist === 'both') {
+    badge = (
+      <TurnBadge $accent={style.accent}>
+        <TurnName $accent={style.accent}>{t('turnBoth')}</TurnName>
+        <TurnVerb>{t('turnBothVerb')}</TurnVerb>
+      </TurnBadge>
+    );
+  } else if (twist === 'predict') {
+    badge = (
+      <TurnBadge $accent={style.accent}>
+        <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
+        <TurnVerb>{t('turnAnswers')}</TurnVerb>
+      </TurnBadge>
+    );
+  }
+
   let inner;
 
-  if (step === 'twist') {
+  if (step === 'twist' && twist === 'both') {
+    // BOTH shows the real question right away -- there is nothing to guess
+    // and nothing to hide, only a moment to read before answering together.
+    inner = (
+      <>
+        <Body $center>
+          <TwistLabel $accent={style.accent}>{t('bothLabel')}</TwistLabel>
+          {badge}
+          <Question>{questionText}</Question>
+          <Lede style={{ marginTop: '2.4rem' }}>{t('bothText')}</Lede>
+        </Body>
+        <Foot>
+          <Button $accent={style.accent} onClick={() => runCountdown(3)}>
+            {t('ready')}
+          </Button>
+        </Foot>
+      </>
+    );
+  } else if (step === 'twist') {
+    // PREDICT and NO THINKING both still open on an explanation screen,
+    // deliberately without the question -- PREDICT because the guess has to
+    // come first, NO THINKING because the question is meant to land at the
+    // same moment the count starts, not before.
     const copy = {
       predict: {
         label: t('predictLabel'),
         text: tf('predictText', nameOf(1 - starter), nameOf(starter)),
       },
-      both: { label: t('bothLabel'), text: t('bothText') },
       nothinking: { label: t('nothinkingLabel'), text: t('nothinkingText') },
     }[twist];
     inner = (
@@ -863,7 +1007,7 @@ export default function CloserGame() {
             $accent={style.accent}
             onClick={() => {
               if (twist === 'predict') setStep('ask');
-              else runCountdown(twist === 'nothinking' ? 5 : 3);
+              else runCountdown(5);
             }}
           >
             {t('ready')}
@@ -871,10 +1015,20 @@ export default function CloserGame() {
         </Foot>
       </>
     );
-  } else if (step === 'count') {
+  } else if (step === 'counting') {
+    // The question (and, for NO THINKING, the starter) appears together
+    // with the count and stays put through to zero -- nobody answers
+    // something they have not seen.
     inner = (
       <Body $center>
-        <Counter $accent={style.accent}>{count}</Counter>
+        <TwistLabel $accent={style.accent}>
+          {twist === 'both' ? t('bothLabel') : t('nothinkingLabel')}
+        </TwistLabel>
+        {badge}
+        <Question>{questionText}</Question>
+        <Counter $accent={style.accent} style={{ marginTop: '3.2rem' }}>
+          {count}
+        </Counter>
       </Body>
     );
   } else if (step === 'deeper') {
@@ -904,28 +1058,6 @@ export default function CloserGame() {
       </>
     );
   } else {
-    let badge = (
-      <TurnBadge $accent={style.accent}>
-        <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
-        <TurnVerb>{t('turnFirst')}</TurnVerb>
-      </TurnBadge>
-    );
-    if (twist === 'both') {
-      badge = (
-        <TurnBadge $accent={style.accent}>
-          <TurnName $accent={style.accent}>{t('turnBoth')}</TurnName>
-          <TurnVerb>{t('turnBothVerb')}</TurnVerb>
-        </TurnBadge>
-      );
-    } else if (twist === 'predict') {
-      badge = (
-        <TurnBadge $accent={style.accent}>
-          <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
-          <TurnVerb>{t('turnAnswers')}</TurnVerb>
-        </TurnBadge>
-      );
-    }
-
     inner = (
       <>
         <Body $center>
@@ -956,7 +1088,7 @@ export default function CloserGame() {
   }
 
   const progress = style.progress;
-  const showChrome = !isLast && step !== 'count';
+  const showChrome = !isLast && step !== 'counting';
 
   return frame(
     <>
