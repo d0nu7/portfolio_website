@@ -82,4 +82,33 @@ test.describe('Resume-state validation (BF-12)', () => {
     await expect(page.getByText('Willkommen zurück.')).toBeVisible();
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
   });
+
+  /*
+   * FR8-06 (iteration 8 feature requests): a save that snapshotted its
+   * resolved runQuestionIds at start time must be re-checked against what
+   * the current content actually resolves to on resume -- a mismatch
+   * means the content has shifted since the save was written (a question
+   * reordered, removed, or moved between routes), and the resume should
+   * be rejected outright rather than silently continuing on stale
+   * positions. A save with no runQuestionIds at all (pre-FR8-06) skips
+   * this check entirely -- covered by the "no routeId key" case in
+   * routes.spec.js.
+   */
+  test('a save whose runQuestionIds match the current content still resumes normally', async ({
+    page,
+  }) => {
+    const runQuestionIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 1 });
+    await expect(page.getByText('Willkommen zurück.')).toBeVisible();
+    await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
+  });
+
+  test('a save whose runQuestionIds no longer match the current content falls back to a fresh start (FR8-06)', async ({
+    page,
+  }) => {
+    const staleIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
+    staleIds[10] = 'classic-q99'; // simulates content that shifted since this save was written
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds: staleIds, contentVersion: 1 });
+    await expectFreshStartScreen(page);
+  });
 });

@@ -137,6 +137,16 @@ export function pick(value, lang) {
 // than repeated eight times so a future twist added to any one pack
 // doesn't require also remembering to touch this boilerplate.
 const NO_TWISTS = { predict: false, both: false, nothinking: false, deeper: false, stay: false };
+// The two twist combinations the iteration-8 packs actually use, once
+// twists were assigned to a restrained handful of their questions: GO
+// DEEPER plus STAY (most packs) and GO DEEPER alone (CHAOS, which is
+// deliberately low-stakes enough that no question earns a "take a
+// moment" pause). PREDICT/BOTH/NO THINKING stay off everywhere outside
+// CLASSIC -- those are more elaborate interaction mechanics that would
+// need their own dedicated playful-style decision, not something to
+// default on while assigning a first, sparse pass of twists.
+const DEEPER_AND_STAY = { predict: false, both: false, nothinking: false, deeper: true, stay: true };
+const DEEPER_ONLY = { predict: false, both: false, nothinking: false, deeper: true, stay: false };
 const ROUTE_NEUTRAL_BLURB = {
   de: 'Zurückhaltende Inszenierung, ausgewählte Route.',
   en: 'Understated presentation for your selected route.',
@@ -677,6 +687,7 @@ const FIRST_DATE_ACTS = [
       {
         de: 'Welche gute Eigenschaft an dir erkennen Menschen oft erst mit der Zeit?',
         en: 'What good quality in you do people often discover only with time?',
+        twist: 'deeper',
       },
       {
         de: 'Welche Mischung aus Planung und Spontaneität passt gut zu dir?',
@@ -717,6 +728,7 @@ const FIRST_DATE_ACTS = [
       {
         de: 'Welches Tempo fühlt sich beim Kennenlernen für dich gut an?',
         en: 'What pace feels right to you when getting to know someone?',
+        stayEnabled: true,
       },
       {
         de: 'Welche Wahrheit über deinen Alltag ist wichtig, um dich gerade gut kennenzulernen?',
@@ -741,6 +753,7 @@ const FIRST_DATE_ACTS = [
       {
         de: 'Was hilft dir, ehrlich Nein zu sagen, ohne dich für die Stimmung verantwortlich zu fühlen?',
         en: 'What helps you say an honest no without feeling responsible for the mood?',
+        stayEnabled: true,
       },
       {
         de: 'Was würde diesen Abend für dich gut und druckfrei abrunden?',
@@ -766,14 +779,17 @@ const FIRST_DATE_Q37 = {
   },
 };
 
-// A single style, all twists off -- see the block comment above for why.
+// A single style. GO DEEPER and STAY are on, sparingly assigned below
+// (one follow-up question, two stayEnabled questions) -- see the block
+// comment above FIRST_DATE_ACTS for why twists started at none, and the
+// note above DEEPER_AND_STAY for why only these two.
 const FIRST_DATE_MODES = [
   {
     id: 'calm',
     title: { de: 'CALM', en: 'CALM' },
     meta: { de: 'Ruhig und ehrlich', en: 'Calm and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -969,6 +985,7 @@ const DATE_NIGHT_ACTS = [
       {
         de: 'Welche neue gemeinsame Erfahrung könnte zwischen euch einen Funken wecken?',
         en: 'What new experience together could bring out a fresh spark between you?',
+        twist: 'deeper',
       },
       {
         de: 'Welches flirtende Kompliment würdest du heute gern hören?',
@@ -1013,6 +1030,7 @@ const DATE_NIGHT_ACTS = [
       {
         de: 'Welche Form von Nähe fühlt sich gut an, auch wenn sie nirgendwohin führen muss?',
         en: 'What kind of closeness feels good even when it does not have to lead anywhere?',
+        stayEnabled: true,
       },
       {
         de: 'Welche romantische Initiative lässt dich wirklich gesehen fühlen?',
@@ -1029,6 +1047,7 @@ const DATE_NIGHT_ACTS = [
       {
         de: 'Welchen Wunsch würdest du gern teilen, wenn daraus keine Erwartung entsteht?',
         en: 'What wish would you like to share if it came with no expectation?',
+        stayEnabled: true,
       },
       {
         de: 'Wie sieht für dich ein schöner Ausklang nach einem besonders nahen Date aus?',
@@ -1068,7 +1087,7 @@ const DATE_NIGHT_MODES = [
     title: { de: 'WARM', en: 'WARM' },
     meta: { de: 'Prickelnd, nicht explizit', en: 'A spark, not explicit' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -1237,6 +1256,7 @@ const COUPLES_ACTS = [
       {
         de: 'Welches Bedürfnis bleibt hinter einem wiederkehrenden Missverständnis zwischen euch oft unsichtbar?',
         en: 'What need often goes unseen beneath a recurring misunderstanding between you?',
+        stayEnabled: true,
       },
       {
         de: 'Woran merkst du, dass eine Entschuldigung bei dir wirklich ankommt?',
@@ -1265,6 +1285,7 @@ const COUPLES_ACTS = [
       {
         de: 'Welcher frühere schwierige Moment zeigt dir, dass ihr wieder zueinanderfinden könnt?',
         en: 'What past difficult moment reminds you that the two of you can find your way back to each other?',
+        stayEnabled: true,
       },
       {
         de: 'Welche kleine Veränderung würde in eurem Alltag gerade spürbar Druck herausnehmen?',
@@ -1313,6 +1334,7 @@ const COUPLES_ACTS = [
       {
         de: 'Wie sieht ein gewöhnlicher gemeinsamer Tag aus, auf den du dich auch in einigen Jahren freuen würdest?',
         en: 'What would an ordinary day together look like if it still felt worth looking forward to years from now?',
+        twist: 'deeper',
       },
       {
         de: 'Welche Eigenschaft möchtet ihr als Team stärker entwickeln?',
@@ -1360,7 +1382,7 @@ const COUPLES_MODES = [
     title: { de: 'GROUNDED', en: 'GROUNDED' },
     meta: { de: 'Ruhig und ehrlich', en: 'Calm and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -1575,6 +1597,7 @@ const FRIENDS_ACTS = [
       {
         de: 'Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen?',
         en: 'What are you dealing with right now that a friend can simply sit with you in, without having to solve it?',
+        stayEnabled: true,
       },
     ],
   },
@@ -1611,6 +1634,7 @@ const FRIENDS_ACTS = [
       {
         de: 'Was würdest du gern von der anderen Person lernen – nicht unbedingt als Fähigkeit, sondern als Haltung?',
         en: 'What would you like to learn from the other person, not necessarily as a skill but as a way of approaching life?',
+        twist: 'deeper',
       },
       {
         de: 'Was sollten befreundete Menschen einander öfter fragen?',
@@ -1662,7 +1686,7 @@ const FRIENDS_MODES = [
     title: { de: 'EASY', en: 'EASY' },
     meta: { de: 'Locker und ehrlich', en: 'Easygoing and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -1848,6 +1872,7 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'Gibt es etwas aus der Zeit dazwischen, das du erzählen möchtest, ohne dass es erklärt oder gelöst werden muss?',
         en: 'Is there something from the time in between you would like to share without needing it to be explained or solved?',
+        stayEnabled: true,
       },
       {
         de: 'Welche alte Annahme über die andere Person bist du heute bereit zu überprüfen?',
@@ -1900,6 +1925,7 @@ const OLD_FRIENDS_ACTS = [
       {
         de: 'Was brauchst du heute, um dich von mir als die Person gesehen zu fühlen, die du inzwischen bist?',
         en: 'What do you need today to feel seen by me as the person you have become?',
+        twist: 'deeper',
       },
       {
         de: 'Gibt es ein Gespräch, für das heute mehr Raum wäre als früher?',
@@ -1951,7 +1977,7 @@ const OLD_FRIENDS_MODES = [
     title: { de: 'EASY', en: 'EASY' },
     meta: { de: 'Locker und ehrlich', en: 'Easygoing and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -2086,6 +2112,7 @@ const DEEP_ACTS = [
       {
         de: 'Welche Hoffnung beeinflusst gerade mehr deiner Entscheidungen, als andere vermutlich merken?',
         en: 'What hope is shaping more of your decisions right now than other people probably realize?',
+        twist: 'deeper',
       },
     ],
   },
@@ -2134,6 +2161,7 @@ const DEEP_ACTS = [
       {
         de: 'Wofür lernst du gerade, dir selbst zu vergeben?',
         en: 'What are you learning to forgive yourself for?',
+        stayEnabled: true,
       },
       {
         de: 'Bei welchem Thema wünschst du dir, dass Menschen erst zuhören, bevor sie nach einer Lösung suchen?',
@@ -2194,6 +2222,7 @@ const DEEP_ACTS = [
       {
         de: 'Was möchtest du über dich aussprechen dürfen, ohne dass jemand es sofort lösen oder einordnen muss?',
         en: 'What would you like to be able to say about yourself without anyone immediately trying to solve or categorize it?',
+        stayEnabled: true,
       },
       {
         de: 'Womit könntest du heute beginnen, wofür dir dein zukünftiges Ich einmal dankbar wäre?',
@@ -2241,7 +2270,7 @@ const DEEP_MODES = [
     title: { de: 'STILL', en: 'STILL' },
     meta: { de: 'Ruhig und ehrlich', en: 'Calm and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_AND_STAY,
   },
 ];
 
@@ -2483,6 +2512,7 @@ const CHAOS_ACTS = [
       {
         de: 'Welche Antwort aus diesem Gespräch würdest du gern noch genauer hören?',
         en: 'Which answer from this conversation would you like to hear more about?',
+        twist: 'deeper',
       },
       {
         de: 'Woran würdest du dich von diesem Gespräch gern erinnern?',
@@ -2518,7 +2548,7 @@ const CHAOS_MODES = [
     title: { de: 'PLAYFUL', en: 'PLAYFUL' },
     meta: { de: 'Leicht und albern', en: 'Light and silly' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: NO_TWISTS,
+    twists: DEEPER_ONLY,
   },
 ];
 
@@ -3250,6 +3280,36 @@ export function secretAtIndexFor(packId, routeId = DEFAULT_ROUTE_ID) {
  */
 export function questionIdFor(packId, questionIndex) {
   return `${packId}-q${String(questionIndex + 1).padStart(2, '0')}`;
+}
+
+/*
+ * FR8-06 (iteration 8 feature requests): once several packs with several
+ * routes are all in play, a later content edit (a question reordered,
+ * removed, or moved to a different route) must never silently re-sort a
+ * game someone already has open in a browser tab. The fix isn't a
+ * separate version *number* comparison -- it's cheaper and more direct to
+ * just snapshot the actual resolved run, once, when a game truly starts
+ * (the same moment BF8-01's hasStarted flips true), and re-derive the
+ * same list on every resume to compare against. If they no longer match,
+ * the content underneath this save has changed since it was written, and
+ * CloserGame.js's loadSaved() rejects the resume outright (the same
+ * "reject the whole save rather than guess" precedent BF-12/BF8-01 already
+ * established) instead of continuing on content that's shifted under it.
+ * CONTENT_VERSION is still stored on the save alongside the resolved IDs,
+ * per FR8-06's own spec -- useful metadata for a future migration screen,
+ * even though the ID-array comparison is what actually gates resumability
+ * today. Bump it only for a content change substantial enough to want to
+ * invalidate saves outright (a question's meaning changed, a route was
+ * recurated); a copy-only fix (spelling, a genderneutral reword) doesn't
+ * need to -- the ID it's attached to hasn't changed.
+ */
+export const CONTENT_VERSION = 1;
+
+export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const total = totalQuestions(packId, routeId);
+  return Array.from({ length: total }, (_, i) =>
+    questionIdFor(packId, originalIndexFor(packId, i, routeId))
+  );
 }
 
 /*

@@ -1,5 +1,6 @@
 import {
   ACTS_PER_PACK,
+  CONTENT_VERSION,
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   PACKS,
@@ -15,6 +16,7 @@ import {
   questionAt,
   questionIdFor,
   resolvedActs,
+  runQuestionIdsFor,
   secretAtIndexFor,
   starterFor,
   totalQuestions,
@@ -337,21 +339,62 @@ describe('routes (iteration 7, Phase 2)', () => {
     ]);
   });
 
-  it('FIRST DATE has exactly 3 acts of 12 questions each, 36 total, and no twists assigned', () => {
+  it('FIRST DATE has exactly 3 acts of 12 questions each, 36 total', () => {
     const acts = PACKS['first-date'].acts;
     expect(acts).toHaveLength(3);
     acts.forEach((act) => expect(act.questions).toHaveLength(12));
     expect(totalQuestions('first-date')).toBe(36);
-    // Deliberate for now (see the block comment above FIRST_DATE_ACTS in
-    // closer.js) -- no question carries a twist or stayEnabled until
-    // that's an explicit editorial decision, not an assumption baked into
-    // this pack's launch.
-    acts.forEach((act) =>
-      act.questions.forEach((q) => {
-        expect(q.twist).toBeUndefined();
-        expect(q.stayEnabled).toBeUndefined();
-      })
-    );
+  });
+
+  /*
+   * Twists were assigned to the iteration-8 packs in a second pass (RaDi's
+   * explicit go-ahead to make the call, same as the accent-color choices):
+   * a small, restrained set per pack, matching CLASSIC's own founding
+   * principle that the app must never be more interesting than the
+   * conversation. This guards two things generically, for every pack --
+   * including any future one -- rather than pinning exact counts per pack
+   * (which would need updating every time a pack's twists are revisited):
+   *   1. Any twist type a question uses must actually be turned on by at
+   *      least one of the pack's own modes -- a mismatch here would mean
+   *      the twist silently never fires (CloserGame.js only activates a
+   *      twist when both the question AND the active mode agree).
+   *   2. Twist-bearing questions stay sparse -- at most one per act on
+   *      average, generous enough not to fight a future deliberate
+   *      increase, tight enough to catch an accidental mass-assignment.
+   */
+  it('every pack only assigns twist types its own modes actually turn on', () => {
+    Object.values(PACKS).forEach((pack) => {
+      const enabledTwistTypes = new Set();
+      pack.modes.forEach((mode) => {
+        Object.entries(mode.twists).forEach(([type, on]) => {
+          if (on) enabledTwistTypes.add(type);
+        });
+      });
+      pack.acts.forEach((act) =>
+        act.questions.forEach((q) => {
+          if (q.twist) expect(enabledTwistTypes.has(q.twist)).toBe(true);
+        })
+      );
+    });
+  });
+
+  // CLASSIC keeps its own, larger, already-reviewed twist density (spec
+  // feedback 11: five in Act I, three in Act II, one in Act III originally)
+  // -- this sparseness bound is about the iteration-8 packs specifically,
+  // assigned in a single restrained pass rather than reviewed per-question
+  // the way CLASSIC's were.
+  it('every non-CLASSIC pack keeps its twist-bearing questions sparse (at most one per act on average)', () => {
+    Object.values(PACKS)
+      .filter((pack) => pack.id !== 'classic')
+      .forEach((pack) => {
+        let twistCount = 0;
+        pack.acts.forEach((act) =>
+          act.questions.forEach((q) => {
+            if (q.twist) twistCount += 1;
+          })
+        );
+        expect(twistCount).toBeLessThanOrEqual(ACTS_PER_PACK);
+      });
   });
 
   /*
@@ -436,6 +479,41 @@ describe('routes (iteration 7, Phase 2)', () => {
     expect(finalQuestionIndex('classic')).toBe(finalQuestionIndex('classic', 'full'));
     expect(actIndexFor('classic', 20)).toBe(actIndexFor('classic', 20, 'full'));
     expect(questionAt('classic', 20)).toBe(questionAt('classic', 20, 'full'));
+  });
+});
+
+/*
+ * FR8-06 (iteration 8 feature requests): runQuestionIdsFor() is what
+ * CloserGame.js snapshots into a save when a game starts, and re-derives
+ * on every resume to detect drift. These pin its shape rather than the
+ * resume-rejection behavior itself (that's CloserGame.js's own concern,
+ * covered by Playwright in e2e/resume-validation.spec.js).
+ */
+describe('runQuestionIdsFor (FR8-06)', () => {
+  it('CONTENT_VERSION is a number', () => {
+    expect(typeof CONTENT_VERSION).toBe('number');
+  });
+
+  it('returns one id per resolved question, in route order, for the full route', () => {
+    const ids = runQuestionIdsFor('classic', 'full');
+    expect(ids).toHaveLength(36);
+    expect(ids[0]).toBe('classic-q01');
+    expect(ids[35]).toBe('classic-q36');
+  });
+
+  it('matches the route length for a curated route', () => {
+    expect(runQuestionIdsFor('classic', 'quick')).toHaveLength(12);
+    expect(runQuestionIdsFor('first-date', 'quick')).toHaveLength(12);
+  });
+
+  it('defaults to the full route when called with one arg', () => {
+    expect(runQuestionIdsFor('classic')).toEqual(runQuestionIdsFor('classic', 'full'));
+  });
+
+  it('is stable across calls for the same pack/route (deterministic, not random)', () => {
+    expect(runQuestionIdsFor('classic', 'standard')).toEqual(
+      runQuestionIdsFor('classic', 'standard')
+    );
   });
 });
 

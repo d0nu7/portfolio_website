@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
+  CONTENT_VERSION,
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   LANGS,
@@ -16,6 +17,7 @@ import {
   pick,
   questionAt,
   resolvedActs,
+  runQuestionIdsFor,
   secretAtIndexFor,
   starterFor,
   totalQuestions,
@@ -127,6 +129,16 @@ const initialState = {
   // once, true for the rest of the game, at the same 'act' -> 'q'
   // transition that starts actStartedAt for real.
   hasStarted: false,
+  // FR8-06 (iteration 8 feature requests): snapshotted at the same moment
+  // hasStarted flips true. runQuestionIds is this specific playthrough's
+  // resolved question-ID order; loadSaved() re-derives the same list from
+  // the current pack/route and rejects the resume if they no longer
+  // match, rather than silently continuing on content that shifted under
+  // this save since it was written. See runQuestionIdsFor()'s own comment
+  // in closer.js for why this is an ID-array comparison, not just a
+  // version-number check.
+  contentVersion: CONTENT_VERSION,
+  runQuestionIds: [],
 };
 
 // A saved value that is *present* but the wrong shape/type cannot be
@@ -160,6 +172,13 @@ function isPlausibleSaved(saved) {
   if (saved.timerEnabled !== undefined && typeof saved.timerEnabled !== 'boolean') return false;
   if (saved.completed !== undefined && typeof saved.completed !== 'boolean') return false;
   if (saved.hasStarted !== undefined && typeof saved.hasStarted !== 'boolean') return false;
+  if (saved.contentVersion !== undefined && !isFiniteNumber(saved.contentVersion)) return false;
+  if (
+    saved.runQuestionIds !== undefined &&
+    !(Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.every((id) => typeof id === 'string'))
+  ) {
+    return false;
+  }
   if (saved.lang !== undefined && !LANGS.includes(saved.lang)) return false;
   const isPair = (v) => Array.isArray(v) && v.length === 2;
   if (saved.players !== undefined && !isPair(saved.players)) return false;
@@ -228,6 +247,21 @@ function loadSaved() {
     merged.routeId = getRoute(pack.id, merged.routeId).id;
     if (!pack.modes.some((m) => m.id === merged.modeId)) {
       merged.modeId = pack.modes[0].id;
+    }
+    // FR8-06: an old save (written before runQuestionIds existed) simply
+    // has no such field and skips this check entirely -- only a
+    // new-format save gets compared against what the current pack/route
+    // actually resolves to right now. A mismatch means the content
+    // underneath this save has changed since it was written (a question
+    // reordered, removed, or moved to a different route); rather than
+    // silently continuing on a shifted run, this rejects the resume the
+    // same way isPlausibleSaved() rejects any other malformed save.
+    if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
+      const expected = runQuestionIdsFor(merged.packId, merged.routeId);
+      const matchesExpected =
+        expected.length === saved.runQuestionIds.length &&
+        expected.every((id, i) => id === saved.runQuestionIds[i]);
+      if (!matchesExpected) return null;
     }
     merged.qIndex = Math.min(
       Math.max(merged.qIndex, 0),
@@ -1027,6 +1061,12 @@ export default function CloserGame() {
                 qIndex: index,
                 actStartedAt: Date.now(),
                 hasStarted: true,
+                // FR8-06: recomputed idempotently on every act's begin
+                // (same as hasStarted above) -- packId/routeId never
+                // change mid-game, so this is always the same snapshot,
+                // just written before it's needed on a resume.
+                runQuestionIds: runQuestionIdsFor(s.packId, s.routeId),
+                contentVersion: CONTENT_VERSION,
               };
               buzz(16);
               setS(next);
