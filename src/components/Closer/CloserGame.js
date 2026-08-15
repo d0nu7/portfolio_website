@@ -82,6 +82,12 @@ const VALID_PHASES = new Set([
   'lastIntro', 'all36',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
   'q37intro', 'q37', 'q37a', 'q37b', 'ending',
+  // Per-pack consent gate (see the block comment above where it's rendered):
+  // dead phases today, since no registered pack sets pack.consentGate --
+  // kept valid here so a future pack that does isn't fighting phase
+  // validation on top of everything else.
+  'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
+  'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
 ]);
 
 /*
@@ -195,7 +201,14 @@ function isPlausibleSaved(saved) {
 // set: it's ambiguous on its own, since Act I's very first intro screen is
 // state-shape-identical to Act II/III's after a real act break. See
 // hasRealProgress() below for how that ambiguity is resolved.
-const SETUP_ONLY_PHASES = new Set(['players', 'pack', 'duration', 'mode', 'intro']);
+// The pre-pack consent gate is setup-only (hasStarted is still false at
+// that point); the Act II renewed opt-in is NOT -- it happens after
+// hasStarted has already flipped true, so it's real in-progress game
+// state, same as any other mid-game phase.
+const SETUP_ONLY_PHASES = new Set([
+  'players', 'pack', 'duration', 'mode', 'intro',
+  'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
+]);
 
 // A save written before `hasStarted` existed has no such field -- this is
 // its migration, inferred from phase/progress rather than trusted blindly,
@@ -1000,9 +1013,73 @@ export default function CloserGame() {
           </Toggle>
         </Body>
         <Foot>
-          <Button $accent={A0} onClick={() => set({ phase: 'intro' })}>
+          <Button
+            $accent={A0}
+            onClick={() =>
+              set({ phase: pack.consentGate ? 'consentGatePassA' : 'intro' })
+            }
+          >
             {t('continue')}
           </Button>
+        </Foot>
+      </>,
+      { accent: A0, glow: 0.28 }
+    );
+  }
+
+  /* ================================================================== */
+  /* CONSENT GATE (dead today -- no registered pack sets consentGate;    */
+  /* see LATE_NIGHT_PACK in closer.js, deliberately not in PACKS yet)    */
+  /* ================================================================== */
+
+  if (s.phase === 'consentGatePassA' || s.phase === 'consentGatePassB') {
+    const who = s.phase === 'consentGatePassA' ? 0 : 1;
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={A0}>{tf('passPhoneTo', nameOf(who))}</Kicker>
+        </Body>
+        <Foot>
+          <Button
+            $accent={A0}
+            onClick={() =>
+              set({ phase: s.phase === 'consentGatePassA' ? 'consentGateA' : 'consentGateB' })
+            }
+          >
+            {tf('iAm', nameOf(who))}
+          </Button>
+        </Foot>
+      </>,
+      { accent: A0, glow: 0.28 }
+    );
+  }
+
+  if (s.phase === 'consentGateA' || s.phase === 'consentGateB') {
+    const me = s.phase === 'consentGateA' ? 0 : 1;
+    // Declining either gate ends the pack neutrally -- "Wird nicht zweimal
+    // aktiv zugestimmt, endet der Pack neutral" (the catalog's own words).
+    // Not a restart, not a delete -- the ordinary ending sequence, same as
+    // any other "End now" in the game.
+    const decide = (agreed) => {
+      if (!agreed) {
+        set({ phase: 'ending', completed: true });
+        return;
+      }
+      set({ phase: me === 0 ? 'consentGatePassB' : 'intro' });
+    };
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={A0}>{tf('forOnly', nameOf(me))}</Kicker>
+          <Lede>{pick(pack.consentGate.notice, lang)}</Lede>
+        </Body>
+        <Foot>
+          <Row>
+            <Button $accent={A0} onClick={() => decide(true)}>
+              {t('consentAgree')}
+            </Button>
+            <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
+          </Row>
         </Foot>
       </>,
       { accent: A0, glow: 0.28 }
@@ -1101,9 +1178,83 @@ export default function CloserGame() {
           )}
         </Body>
         <Foot>
-          <Button $accent={st.accent} onClick={() => set({ phase: 'act', actStartedAt: null })}>
+          <Button
+            $accent={st.accent}
+            onClick={() =>
+              set({
+                phase: pack.consentGate && s.breakAct === 0 ? 'consentAct2PassA' : 'act',
+                actStartedAt: null,
+              })
+            }
+          >
             {t('continue')}
           </Button>
+        </Foot>
+      </>,
+      { accent: st.accent, glow: st.glow, menu: true }
+    );
+  }
+
+  /* ================================================================== */
+  /* CONSENT GATE -- renewed opt-in before Act II (dead today, see the   */
+  /* pre-pack gate's own comment above)                                 */
+  /* ================================================================== */
+
+  if (s.phase === 'consentAct2PassA' || s.phase === 'consentAct2PassB') {
+    const who = s.phase === 'consentAct2PassA' ? 0 : 1;
+    const st = pack.actStyle[1];
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={st.accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
+        </Body>
+        <Foot>
+          <Button
+            $accent={st.accent}
+            onClick={() =>
+              set({
+                phase: s.phase === 'consentAct2PassA' ? 'consentAct2A' : 'consentAct2B',
+              })
+            }
+          >
+            {tf('iAm', nameOf(who))}
+          </Button>
+        </Foot>
+      </>,
+      { accent: st.accent, glow: st.glow, menu: true }
+    );
+  }
+
+  if (s.phase === 'consentAct2A' || s.phase === 'consentAct2B') {
+    const me = s.phase === 'consentAct2A' ? 0 : 1;
+    const st = pack.actStyle[1];
+    const decide = (agreed) => {
+      if (!agreed) {
+        set({ phase: 'ending', completed: true });
+        return;
+      }
+      // actStartedAt only needs resetting on the transition that actually
+      // lands on the act-intro screen (person 1 agreeing); person 0's own
+      // "yes" just moves on to the next handoff.
+      if (me === 0) {
+        set({ phase: 'consentAct2PassB' });
+      } else {
+        set({ phase: 'act', actStartedAt: null });
+      }
+    };
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={st.accent}>{tf('forOnly', nameOf(me))}</Kicker>
+          <Lede>{pick(pack.consentGate.act2OptIn, lang)}</Lede>
+        </Body>
+        <Foot>
+          <Row>
+            <Button $accent={st.accent} onClick={() => decide(true)}>
+              {t('consentAgree')}
+            </Button>
+            <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
+          </Row>
         </Foot>
       </>,
       { accent: st.accent, glow: st.glow, menu: true }

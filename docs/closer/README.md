@@ -18,7 +18,7 @@ Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fr
 - **BF8-01 bis BF8-06** (Bugfix-Report): geschlossen.
 - **Pack-Auswahl-Screen** (FR8-03): live, zwischen Namenseingabe und Dauer-Wahl.
 - **Live registrierte Packs** (`src/constants/closer.js`, `PACKS`): CLASSIC, FIRST DATE, DATE NIGHT, COUPLES, FRIENDS, OLD FRIENDS, DEEP, CHAOS – Inhalt jeweils wortgleich aus dem Fragenkatalog übernommen. Keine der neuen Packs hat bisher einen Twist zugewiesen (nur ein Style pro Pack); das ist eine bewusste redaktionelle Leerstelle, keine technische Einschränkung.
-- **LATE NIGHT**: Inhalt vollständig in `closer.js` vorbereitet (`LATE_NIGHT_PACK`), aber absichtlich **nicht** in `PACKS` registriert und damit im Spiel nicht erreichbar. Siehe TODOs unten für die zwei offenen Voraussetzungen.
+- **LATE NIGHT**: Inhalt vollständig in `closer.js` vorbereitet (`LATE_NIGHT_PACK`, jetzt exportiert für Tests), aber absichtlich **nicht** in `PACKS` registriert und damit im Spiel nicht erreichbar. Die Consent-Gate-UI (getrenntes 18+-Opt-in pro Person vor dem Pack, erneutes Opt-in vor Akt II) ist inzwischen gebaut und generisch über `pack.consentGate` – aber toter Code, solange kein registriertes Pack dieses Feld setzt. Siehe TODOs unten für die verbleibende Voraussetzung.
 
 ## Offene TODOs
 
@@ -29,9 +29,9 @@ Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fr
 
 ### P1 – vor der Freigabe von LATE NIGHT speziell
 
-- **Consent-Gate-UI existiert noch nicht.** `CloserGame.js` hat aktuell keinen generischen Mechanismus für ein pack-spezifisches Vorab-Gate. LATE NIGHT braucht laut Katalog zwei Stufen: (1) vor dem ersten Screen des Packs bestätigen beide Personen **getrennt** 18+ und Freiwilligkeit (`LATE_NIGHT_CONSENT_NOTICE` in `closer.js`, bereits transkribiert); (2) vor Akt II ein zweites, ebenso gleichwertig sichtbares Opt-in (`LATE_NIGHT_ACT_II_OPT_IN`), bevor Berührungs-/Fantasie-/Kink-Fragen erscheinen. Wird nicht zweimal aktiv zugestimmt, endet der Pack neutral.
+- **Consent-Gate-UI ist gebaut, aber ungetestet im echten Klickpfad.** `CloserGame.js` hat jetzt einen generischen Mechanismus (`pack.consentGate`): (1) vor dem ersten Screen des Packs bestätigen beide Personen **getrennt** 18+ und Freiwilligkeit (`consentGatePassA/A/B/B`-Phasen, Text aus `LATE_NIGHT_CONSENT_NOTICE`); (2) vor Akt II ein zweites, ebenso gleichwertig sichtbares Opt-in (`consentAct2Pass...`-Phasen, Text aus `LATE_NIGHT_ACT_II_OPT_IN`), bevor Berührungs-/Fantasie-/Kink-Fragen erscheinen. Wird nicht zweimal aktiv zugestimmt, endet der Pack neutral. **Aber:** Da kein registriertes Pack `consentGate` setzt, ist dieser gesamte Codepfad tote, ungetestete Logik – kein E2E-Test kann ihn erreichen, ohne den Pack selbst zu registrieren (was genau das ist, was noch nicht passieren soll). Ein echter Klickpfad-Test kommt erst, wenn LATE NIGHT tatsächlich aktiviert wird.
 - **Gesonderte österreichische Jugend-/Medien-/Datenschutzprüfung steht aus.** Der Fragenkatalog selbst sagt es explizit: "dieser Fragenkatalog ist keine rechtliche Freigabe." Das ist RaDis zu beauftragen, nicht etwas, das eine Coding-Session abhaken kann.
-- Erst wenn beide Punkte erledigt sind: `'late-night': LATE_NIGHT_PACK` in `PACKS` (in `closer.js`) eintragen. Ein Test in `closer.test.js` schlägt aktuell bewusst fehl, falls das versehentlich vorher passiert, ohne dass jemand diesen Kommentar liest.
+- Erst wenn das erledigt ist: `'late-night': LATE_NIGHT_PACK` in `PACKS` (in `closer.js`) eintragen. Ein Test in `closer.test.js` schlägt aktuell bewusst fehl, falls das versehentlich vorher passiert, ohne dass jemand diesen Kommentar liest.
 
 ### P2 – nächste Feature-Arbeit (aus den Feature Requests, iteration 8)
 

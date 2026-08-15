@@ -3092,12 +3092,14 @@ const LATE_NIGHT_ACT_STYLE = [
   { accent: '#3A2E44', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
-// Deliberately NOT exported and NOT added to PACKS -- see the block
-// comment above. A future session builds the consent-gate UI (reading
-// LATE_NIGHT_CONSENT_NOTICE and LATE_NIGHT_ACT_II_OPT_IN, both already
-// transcribed above), confirms the outstanding legal review is done, and
-// only then adds `'late-night': LATE_NIGHT_PACK` to the registry below.
-const LATE_NIGHT_PACK = {
+// Deliberately NOT added to PACKS -- see the block comment above.
+// CloserGame.js's consent-gate UI is built and reads pack.consentGate
+// generically (so it's ready for this pack or any future one that needs
+// it), but this pack itself stays unregistered until the outstanding
+// legal review is actually done. Exported (unlike the rest of this
+// file's per-pack constants) only so closer.test.js can pin its shape
+// without duplicating it into the test file.
+export const LATE_NIGHT_PACK = {
   id: 'late-night',
   title: { de: 'LATE NIGHT', en: 'LATE NIGHT' },
   meta: { de: '18+ · Für zwei Erwachsene', en: '18+ · For two adults' },
@@ -3112,10 +3114,17 @@ const LATE_NIGHT_PACK = {
   secretAtIndex: LATE_NIGHT_SECRET_AT_INDEX,
   routes: LATE_NIGHT_ROUTES,
   defaultRouteId: 'standard',
+  // The generic consent-gate mechanism (CloserGame.js) activates for any
+  // pack that sets this -- LATE NIGHT is the only one today. `notice` gates
+  // entry to the pack at all (both people confirm separately before
+  // `intro`); `act2OptIn` gates entry to Act II specifically (both confirm
+  // again, separately, before touch/fantasy/kink questions appear). Either
+  // person declining either gate ends the pack neutrally.
+  consentGate: {
+    notice: LATE_NIGHT_CONSENT_NOTICE,
+    act2OptIn: LATE_NIGHT_ACT_II_OPT_IN,
+  },
 };
-// A bare `void` read, not a real usage -- keeps the constant from tripping
-// no-unused-vars while it waits (deliberately) to be added to PACKS below.
-void LATE_NIGHT_PACK;
 
 /*
  * The PACKS registry. Each entry is everything CloserGame.js needs to run a

@@ -3,6 +3,7 @@ import {
   CONTENT_VERSION,
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
+  LATE_NIGHT_PACK,
   PACKS,
   QUESTIONS_PER_ACT,
   SKIP_TOKENS,
@@ -122,6 +123,27 @@ describe('PACKS registry', () => {
   it('LATE NIGHT is not registered yet -- getPack("late-night") falls back to the default pack', () => {
     expect(getPack('late-night')).toBe(PACKS[DEFAULT_PACK_ID]);
     expect(PACKS['late-night']).toBeUndefined();
+  });
+
+  /*
+   * The consent-gate UI (CloserGame.js) is built and reads
+   * pack.consentGate generically, but LATE_NIGHT_PACK -- the only pack
+   * that sets it -- is still deliberately not in PACKS (see the test
+   * above). This pins the exported constant's own shape directly, since
+   * the registry-wide shape tests below never see it.
+   */
+  it("LATE_NIGHT_PACK's consentGate has both required, non-empty prompts", () => {
+    expect(LATE_NIGHT_PACK.consentGate).toBeDefined();
+    expect(pick(LATE_NIGHT_PACK.consentGate.notice, 'de')).toBeTruthy();
+    expect(pick(LATE_NIGHT_PACK.consentGate.notice, 'en')).toBeTruthy();
+    expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'de')).toBeTruthy();
+    expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'en')).toBeTruthy();
+  });
+
+  it('no currently registered pack sets consentGate -- the gate stays fully dead code until one does', () => {
+    Object.values(PACKS).forEach((pack) => {
+      expect(pack.consentGate).toBeUndefined();
+    });
   });
 
   it('every registered pack has the shape CloserGame.js relies on', () => {

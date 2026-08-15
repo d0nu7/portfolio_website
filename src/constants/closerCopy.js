@@ -290,6 +290,15 @@ const COPY = {
     lang === 'de' ? `${who} stellt die Geheimfrage.` : `${who} asks the secret question.`,
   end: { de: 'Ende', en: 'End' },
 
+  /* per-pack consent gate (dead today -- no registered pack sets
+     pack.consentGate; kept for whenever one does, e.g. LATE NIGHT) ------- */
+  consentAgree: { de: 'Ich stimme zu', en: 'I agree' },
+  // Deliberately its own key, not a reuse of `end` -- the catalog wants
+  // this button visually equal to "I agree", not a lesser/secondary
+  // option, and "Hier enden" reads as a complete, calm sentence rather
+  // than the terser "Ende".
+  endHere: { de: 'Hier enden', en: 'End here' },
+
   /* in-game menu -------------------------------------------------------- */
   // Bugfix-report iteration 7, BF-04: Act III promised "skip or end the
   // game anytime", but no general end path existed outside Question 37's
