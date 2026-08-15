@@ -107,6 +107,20 @@ describe('PACKS registry', () => {
     expect(getPack(undefined)).toBe(PACKS[DEFAULT_PACK_ID]);
   });
 
+  /*
+   * LATE NIGHT's content exists in closer.js (LATE_NIGHT_PACK) but is
+   * deliberately not exported or added here -- see that block's own
+   * comment: it needs a consent-gate UI CloserGame.js doesn't have yet,
+   * and the catalog's own outstanding Austrian legal review. This pins
+   * that gap so it can't be closed by accident (e.g. a stray registry
+   * entry added without also building the gate) without a test forcing
+   * someone to look at this comment first.
+   */
+  it('LATE NIGHT is not registered yet -- getPack("late-night") falls back to the default pack', () => {
+    expect(getPack('late-night')).toBe(PACKS[DEFAULT_PACK_ID]);
+    expect(PACKS['late-night']).toBeUndefined();
+  });
+
   it('every registered pack has the shape CloserGame.js relies on', () => {
     Object.values(PACKS).forEach((pack) => {
       expect(Array.isArray(pack.acts)).toBe(true);
@@ -341,22 +355,35 @@ describe('routes (iteration 7, Phase 2)', () => {
   });
 
   /*
-   * Every route -- current and any future one, in any pack -- must keep
-   * the pack's closing (`last: true`) question as its own actual last
-   * question, and must place the secret-question interrupt strictly
-   * inside its own bounds, not at or past the end (see closer.js's own
-   * comment on secretAtIndexFor for why this is derived, not hand-set,
-   * per route). Iterates every registered pack (not just classic, since
-   * iteration 8 added first-date) so a future pack's routes get this
-   * coverage automatically just by being added to PACKS.
+   * Every route -- current and any future one, in any pack -- must place
+   * the secret-question interrupt strictly inside its own bounds, not at
+   * or past the end (see closer.js's own comment on secretAtIndexFor for
+   * why this is derived, not hand-set, per route). Iterates every
+   * registered pack (not just classic, since iteration 8 added first-date
+   * and beyond) so a future pack's routes get this coverage automatically
+   * just by being added to PACKS.
+   *
+   * The pack's closing (`last: true`) question only has to be the actual
+   * last question of its FULL route, not every route: several iteration-8
+   * packs (COUPLES, FRIENDS, OLD FRIENDS, CHAOS) deliberately end Quick/
+   * Standard one or more questions short of that closer by the catalog's
+   * own curation -- e.g. FRIENDS' Q36 is marked Full-only in
+   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md, reserving its
+   * closing "REFLECT" question for the complete experience. The app
+   * itself never reads `.last` at runtime (CloserGame.js's `isLast` is
+   * already route-relative, via finalQuestionIndex) -- this was always
+   * just an extra content-integrity check, not something the engine
+   * depends on, so relaxing it to the full route is safe.
    */
   Object.values(PACKS).forEach((pack) => {
     Object.entries(pack.routes).forEach(([routeId, route]) => {
       describe(`${pack.id} route "${routeId}"`, () => {
-        it('ends on the pack\'s actual closing question', () => {
-          const total = totalQuestions(pack.id, routeId);
-          expect(questionAt(pack.id, total - 1, routeId).last).toBe(true);
-        });
+        if (routeId === DEFAULT_ROUTE_ID) {
+          it('ends on the pack\'s actual closing question', () => {
+            const total = totalQuestions(pack.id, routeId);
+            expect(questionAt(pack.id, total - 1, routeId).last).toBe(true);
+          });
+        }
 
         it('places the secret-question interrupt strictly inside its own bounds', () => {
           const total = totalQuestions(pack.id, routeId);
