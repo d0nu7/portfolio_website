@@ -57,7 +57,11 @@ export const Screen = styled.main`
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 2.4rem 2.4rem calc(2.4rem + env(safe-area-inset-bottom));
+  /* All four safe-area insets, not just the bottom -- fullscreen (and iOS's
+     black-translucent status bar) can put a notch or camera cutout right
+     over the top edge, not only the home-indicator gesture area. */
+  padding: calc(2.4rem + env(safe-area-inset-top)) calc(2.4rem + env(safe-area-inset-right))
+    calc(2.4rem + env(safe-area-inset-bottom)) calc(2.4rem + env(safe-area-inset-left));
   max-width: 640px;
   margin: 0 auto;
   position: relative;
@@ -84,7 +88,8 @@ export const Screen = styled.main`
   }
 
   @media ${(props) => props.theme.breakpoints.xs} {
-    padding: 1.8rem 1.8rem calc(1.8rem + env(safe-area-inset-bottom));
+    padding: calc(1.8rem + env(safe-area-inset-top)) calc(1.8rem + env(safe-area-inset-right))
+      calc(1.8rem + env(safe-area-inset-bottom)) calc(1.8rem + env(safe-area-inset-left));
   }
 `;
 
@@ -643,6 +648,15 @@ export const InstallCard = styled.div`
   p {
     margin: 0;
   }
+
+  /* At 320x568 with the card visible, the start screen ran a little taller
+     than the viewport (touch targets below make that slightly worse) --
+     trim the card's own spacing on short viewports rather than let the
+     page scroll. */
+  @media (max-height: 620px) {
+    margin-top: 1.2rem;
+    padding: 1.2rem 1.6rem;
+  }
 `;
 
 export const InstallKicker = styled.p`
@@ -668,11 +682,21 @@ export const InstallRow = styled.div`
   margin-top: 1.4rem;
 `;
 
+/*
+ * Both of these read as plain small text links, but the tap target is the
+ * whole 44px box -- negative margins cancel the extra padding out visually
+ * so the row's spacing doesn't change, only the hit area grows.
+ */
 export const InstallButton = styled.button`
   ${base};
+  box-sizing: border-box;
   border: none;
   background: none;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 4.4rem;
+  padding: 1rem 0.6rem;
+  margin: -1rem -0.6rem;
   color: ${({ $accent }) => $accent};
   font-size: 1.3rem;
   font-weight: 600;
@@ -682,9 +706,14 @@ export const InstallButton = styled.button`
 
 export const InstallDismiss = styled.button`
   ${base};
+  box-sizing: border-box;
   border: none;
   background: none;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 4.4rem;
+  padding: 1rem 0.6rem;
+  margin: -1rem -0.6rem;
   color: rgba(242, 243, 245, 0.32);
   font-size: 1.3rem;
   letter-spacing: 0.1em;

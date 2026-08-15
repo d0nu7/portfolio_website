@@ -19,6 +19,13 @@ const COPY = {
     en: 'Add CLOSER to your Home Screen\nto play without the browser bar.',
   },
   installHintIOS: { de: 'Teilen → Zum Home-Bildschirm', en: 'Share → Add to Home Screen' },
+  // Shown on Android/Chromium browsers that haven't (yet, or ever) fired
+  // beforeinstallprompt -- e.g. Firefox, Samsung Internet, or Chrome before
+  // its own install-eligibility heuristics are satisfied.
+  installHintAndroid: {
+    de: 'Browsermenü öffnen → App installieren / Zum Startbildschirm hinzufügen',
+    en: 'Open browser menu → Install app / Add to Home screen',
+  },
   installHintInstall: { de: 'Installieren', en: 'Install' },
   installHintDismiss: { de: 'Nicht jetzt', en: 'Not now' },
   installHintInstalled: {

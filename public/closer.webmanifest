@@ -5,7 +5,7 @@
   "description": "Two people. One phone. No small talk.",
   "start_url": "/closer/",
   "scope": "/closer/",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#08090c",
   "theme_color": "#08090c",

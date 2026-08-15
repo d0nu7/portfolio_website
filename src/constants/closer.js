@@ -11,13 +11,14 @@
  * the conversation.
  *
  *   twist: 'predict'    -- the other person guesses the answer first
- *          'both'       -- answered together, after a 3-2-1
- *          'nothinking' -- 5-4-3-2-1, then the question, answer immediately
+ *          'both'       -- the question appears, then a 3-2-1, then answer together
+ *          'nothinking' -- the question appears, then a 5-4-3-2-1, then answer immediately
  *          'deeper'     -- afterwards, offers one follow-up of your own
  *   stayEnabled         -- afterwards, offers STAY instead of only NEXT
  *
- * ORIGINAL mode runs only 'deeper' and stayEnabled. DATE NIGHT adds the
- * playful twists on top.
+ * ORIGINAL mode runs 'predict', 'deeper' and stayEnabled -- a restrained
+ * enough twist that it still fits ORIGINAL's tone (spec feedback 11). 'both'
+ * and 'nothinking' stay more playful and DATE NIGHT-exclusive.
  */
 
 export const LANGS = ['de', 'en'];

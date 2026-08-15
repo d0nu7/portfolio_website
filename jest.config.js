@@ -8,7 +8,10 @@ const createJestConfig = nextJest({ dir: './' });
 const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/out/'],
+  // e2e/ holds Playwright specs (`npm run test:e2e`), which import their own
+  // `test`/`expect` from @playwright/test -- letting Jest collect those too
+  // would shadow its globals and fail outright.
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/out/', '<rootDir>/e2e/'],
 };
 
 module.exports = createJestConfig(customJestConfig);

@@ -9,6 +9,10 @@ const DISMISS_KEY = 'closer:installHintDismissed';
 function isStandalone() {
   if (typeof window === 'undefined') return false;
   return (
+    // The manifest requests 'fullscreen' (falls back to 'standalone' on
+    // browsers that don't support it), so an installed launch can present
+    // as either display-mode -- both count as "already installed".
+    window.matchMedia?.('(display-mode: fullscreen)').matches ||
     window.matchMedia?.('(display-mode: standalone)').matches ||
     window.navigator.standalone === true
   );
@@ -21,7 +25,12 @@ function isMobile() {
 
 function isIOS() {
   if (typeof navigator === 'undefined') return false;
-  return /iPad|iPhone|iPod/.test(navigator.userAgent || '');
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
+    // Modern iPadOS reports as "Macintosh" in the UA string, so a touch
+    // point count Macs don't have is the only reliable signal left.
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
 }
 
 /*
@@ -105,7 +114,16 @@ export default function CloserInstallHint({ lang, accent }) {
           <InstallBody style={{ fontSize: '1.2rem', color: 'rgba(242,243,245,.4)' }}>
             {t('installHintIOS')}
           </InstallBody>
-        ) : null}
+        ) : (
+          // No beforeinstallprompt yet -- Android/Chromium hasn't met its
+          // own criteria to fire it (or never will, on Firefox/Samsung
+          // Internet/etc.), so there is otherwise no path to install at
+          // all. A manual menu instruction beats leaving the button silently
+          // absent.
+          <InstallBody style={{ fontSize: '1.2rem', color: 'rgba(242,243,245,.4)' }}>
+            {t('installHintAndroid')}
+          </InstallBody>
+        )}
         <InstallDismiss type="button" onClick={dismiss}>
           {t('installHintDismiss')}
         </InstallDismiss>

@@ -11,6 +11,7 @@
     "start": "next start",
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
+    "test:e2e": "playwright test",
     "lint": "next lint"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "styled-normalize": "^8.0.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@svgr/cli": "^6.5.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
