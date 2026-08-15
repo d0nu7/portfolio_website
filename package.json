@@ -12,6 +12,7 @@
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
     "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "lint": "eslint ."
   },
   "dependencies": {
