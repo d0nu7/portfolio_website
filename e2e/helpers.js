@@ -14,6 +14,11 @@ const BASE_STATE = {
   // override qIndex/skipsRemaining/etc. still land on "Spiel fortsetzen".
   // Specs targeting a specific interstitial (secretPass1, q37intro, ...)
   // override this explicitly.
+  //
+  // No `packId` here on purpose: it exercises the same migration path a
+  // real pre-pack-architecture save goes through (CloserGame.js's
+  // loadSaved() defaults a missing packId to the classic pack), rather than
+  // every spec asserting against an explicitly-set value.
   phase: 'q',
   lang: 'de',
   players: ['Alex', 'Sam'],

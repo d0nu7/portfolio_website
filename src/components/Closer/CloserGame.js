@@ -1,19 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
-  ACTS,
-  ACT_STYLE,
+  DEFAULT_PACK_ID,
   LANGS,
-  MODES,
-  Q37,
-  SECRET_AT_INDEX,
   SKIP_TOKENS,
-  TOTAL_QUESTIONS,
   actIndexFor,
   classifySecretAsked,
+  finalQuestionIndex,
+  getPack,
   pick,
   questionAt,
   starterFor,
+  totalQuestions,
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
 import CloserInstallHint from './CloserInstallHint';
@@ -68,7 +66,8 @@ const initialState = {
   phase: 'start',
   lang: 'de',
   players: ['', ''],
-  modeId: MODES[0].id,
+  packId: DEFAULT_PACK_ID,
+  modeId: getPack(DEFAULT_PACK_ID).modes[0].id,
   timerEnabled: true,
   qIndex: 0,
   pending: 0,
@@ -81,6 +80,10 @@ const initialState = {
   completed: false,
 };
 
+// `{ ...initialState, ...saved }` is also the resume-state migration for
+// packId: a save written before packId existed simply has no such key, so
+// the spread leaves initialState's `DEFAULT_PACK_ID` in place untouched --
+// nothing else needs an explicit `saved.packId ?? DEFAULT_PACK_ID` fallback.
 function loadSaved() {
   if (typeof window === 'undefined') return null;
   try {
@@ -194,14 +197,21 @@ export default function CloserGame() {
     return () => clearInterval(id);
   }, [s.timerEnabled, s.actStartedAt]);
 
+  // Everything pack-specific (acts, style modes, per-act look, question-37
+  // wording, secret-question placement) is looked up once per render from
+  // s.packId -- getPack() falls back to the default pack for any packId it
+  // doesn't recognise, so this never needs its own guard.
+  const pack = getPack(s.packId);
+  const total = totalQuestions(s.packId);
+
   const mode = useMemo(
-    () => MODES.find((m) => m.id === s.modeId) || MODES[0],
-    [s.modeId]
+    () => pack.modes.find((m) => m.id === s.modeId) || pack.modes[0],
+    [pack, s.modeId]
   );
-  const actIdx = actIndexFor(s.qIndex);
-  const style = ACT_STYLE[actIdx];
-  const question = questionAt(s.qIndex);
-  const isLast = s.qIndex === TOTAL_QUESTIONS - 1;
+  const actIdx = actIndexFor(s.packId, s.qIndex);
+  const style = pack.actStyle[actIdx];
+  const question = questionAt(s.packId, s.qIndex);
+  const isLast = s.qIndex === finalQuestionIndex(s.packId);
 
   const nameOf = useCallback(
     (i) =>
@@ -216,8 +226,9 @@ export default function CloserGame() {
   const canStay = Boolean(question?.stayEnabled && mode.twists.stay);
 
   const enterQuestion = useCallback((index, state) => {
-    const q = questionAt(index);
-    const m = MODES.find((x) => x.id === state.modeId) || MODES[0];
+    const p = getPack(state.packId);
+    const q = questionAt(state.packId, index);
+    const m = p.modes.find((x) => x.id === state.modeId) || p.modes[0];
     const tw = q?.twist && m.twists[q.twist] ? q.twist : null;
     // 'deeper' is a post-answer twist; the rest open with a lead-in screen.
     setStep(tw && tw !== 'deeper' ? 'twist' : 'ask');
@@ -234,7 +245,8 @@ export default function CloserGame() {
   const goTo = useCallback(
     (index, patch = {}) => {
       const base = { ...s, ...patch };
-      if (index >= TOTAL_QUESTIONS) {
+      const baseTotal = totalQuestions(base.packId);
+      if (index >= baseTotal) {
         set({ ...patch, phase: 'all36' });
         return;
       }
@@ -243,11 +255,11 @@ export default function CloserGame() {
         set({ ...patch, phase: 'break', breakAct: index / 12 - 1, pending: index });
         return;
       }
-      if (index === SECRET_AT_INDEX && !base.secretReady[0]) {
+      if (index === getPack(base.packId).secretAtIndex && !base.secretReady[0]) {
         set({ ...patch, phase: 'secretPass1', pending: index });
         return;
       }
-      if (index === TOTAL_QUESTIONS - 1) {
+      if (index === baseTotal - 1) {
         buzz(20);
         set({ ...patch, phase: 'lastIntro', pending: index });
         return;
@@ -344,12 +356,12 @@ export default function CloserGame() {
     setConfirmReset(false);
     setBeat(0);
     setStep('ask');
-    setS((prev) => ({ ...initialState, lang: prev.lang }));
+    setS((prev) => ({ ...initialState, lang: prev.lang, packId: prev.packId }));
   }, []);
 
   const elapsed = s.actStartedAt && now ? now - s.actStartedAt : 0;
   const overtime = s.timerEnabled && s.actStartedAt && elapsed > ACT_MS;
-  const pct = Math.round((s.qIndex / (TOTAL_QUESTIONS - 1)) * 100);
+  const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
   const frame = (content, opts = {}) => (
     <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
@@ -358,7 +370,7 @@ export default function CloserGame() {
     </Screen>
   );
 
-  const A0 = ACT_STYLE[0].accent;
+  const A0 = pack.actStyle[0].accent;
 
   /* ================================================================== */
   /* START                                                              */
@@ -480,7 +492,7 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Kicker $accent={A0}>{t('pickMode')}</Kicker>
-          {MODES.map((m) => (
+          {pack.modes.map((m) => (
             <Choice
               key={m.id}
               $on={s.modeId === m.id}
@@ -545,9 +557,9 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase === 'act') {
-    const idx = actIndexFor(s.pending);
-    const act = ACTS[idx];
-    const st = ACT_STYLE[idx];
+    const idx = actIndexFor(s.packId, s.pending);
+    const act = pack.acts[idx];
+    const st = pack.actStyle[idx];
     return frame(
       <>
         <Body $center>
@@ -575,8 +587,8 @@ export default function CloserGame() {
   }
 
   if (s.phase === 'break') {
-    const done = ACTS[s.breakAct];
-    const st = ACT_STYLE[s.breakAct];
+    const done = pack.acts[s.breakAct];
+    const st = pack.actStyle[s.breakAct];
     return frame(
       <>
         <Body $center>
@@ -606,7 +618,7 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase.startsWith('secret')) {
-    const st = ACT_STYLE[2];
+    const st = pack.actStyle[2];
     const p = s.phase;
 
     if (p === 'secretPass1' || p === 'secretPass2') {
@@ -705,7 +717,7 @@ export default function CloserGame() {
           </GhostButton>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -724,7 +736,7 @@ export default function CloserGame() {
           )}
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -740,18 +752,18 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={ACT_STYLE[2].accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
+          <Kicker $accent={pack.actStyle[2].accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
         </Body>
         <Foot>
           <Button
-            $accent={ACT_STYLE[2].accent}
+            $accent={pack.actStyle[2].accent}
             onClick={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
           >
             {tf('iAm', nameOf(who))}
           </Button>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -759,16 +771,16 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={ACT_STYLE[2].accent}>{t('passPhoneBack')}</Kicker>
+          <Kicker $accent={pack.actStyle[2].accent}>{t('passPhoneBack')}</Kicker>
           <Lede>{t('passPhoneBackText')}</Lede>
         </Body>
         <Foot>
-          <Button $accent={ACT_STYLE[2].accent} onClick={() => set({ phase: 'q37intro' })}>
+          <Button $accent={pack.actStyle[2].accent} onClick={() => set({ phase: 'q37intro' })}>
             {t('continue')}
           </Button>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -792,7 +804,7 @@ export default function CloserGame() {
           </Row>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -835,7 +847,7 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: ACT_STYLE[2].accent, glow: 0.03 }
+        { accent: pack.actStyle[2].accent, glow: 0.03 }
       );
     }
 
@@ -844,7 +856,7 @@ export default function CloserGame() {
       // "pending player" to anchor on -- continue the same strict
       // alternation the whole game has used, one step past question 36, so
       // the order is fixed rather than a coin flip made twice.
-      const opener = starterFor(TOTAL_QUESTIONS, s.starterOffset);
+      const opener = starterFor(total, s.starterOffset);
       const asker = s.phase === 'q37a' ? opener : 1 - opener;
       return frame(
         <>
@@ -854,7 +866,7 @@ export default function CloserGame() {
           </Body>
           <Foot>
             {s.phase === 'q37a' ? (
-              <Button $accent={ACT_STYLE[2].accent} onClick={() => set({ phase: 'q37b' })}>
+              <Button $accent={pack.actStyle[2].accent} onClick={() => set({ phase: 'q37b' })}>
                 {t('continue')}
               </Button>
             ) : (
@@ -864,15 +876,15 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: ACT_STYLE[2].accent, glow: 0.03 }
+        { accent: pack.actStyle[2].accent, glow: 0.03 }
       );
     }
 
     // 'one' and 'both' still land on a single shared prompt -- there is
     // exactly one question left to ask (or, for 'both', one optional bonus),
     // so there is nothing to sequence.
-    let prompt = pick(Q37.both, lang);
-    if (!neither && !bothAsked) prompt = Q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
+    let prompt = pick(pack.q37.both, lang);
+    if (!neither && !bothAsked) prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
 
     return frame(
       <>
@@ -886,7 +898,7 @@ export default function CloserGame() {
           </TextButton>
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: 0.03 }
+      { accent: pack.actStyle[2].accent, glow: 0.03 }
     );
   }
 
@@ -910,7 +922,7 @@ export default function CloserGame() {
           )}
         </Foot>
       </>,
-      { accent: ACT_STYLE[2].accent, glow: isFinal ? 0.1 : 0.02 }
+      { accent: pack.actStyle[2].accent, glow: isFinal ? 0.1 : 0.02 }
     );
   }
 
@@ -1113,7 +1125,7 @@ export default function CloserGame() {
             <Count>
               {progress === 'number'
                 ? String(s.qIndex + 1).padStart(2, '0')
-                : `${String(s.qIndex + 1).padStart(2, '0')} / ${TOTAL_QUESTIONS}`}
+                : `${String(s.qIndex + 1).padStart(2, '0')} / ${total}`}
             </Count>
             {s.timerEnabled && s.actStartedAt ? (
               <Elapsed $long={overtime}>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>

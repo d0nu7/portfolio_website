@@ -1,28 +1,34 @@
 import {
-  ACTS,
-  MODES,
-  SECRET_AT_INDEX,
+  DEFAULT_PACK_ID,
+  PACKS,
   SKIP_TOKENS,
-  TOTAL_QUESTIONS,
   actIndexFor,
   classifySecretAsked,
+  finalQuestionIndex,
+  getPack,
   questionAt,
+  questionIdFor,
   starterFor,
+  totalQuestions,
+  voiceSrc,
 } from '../closer';
 
 /*
  * These cover the extractable pure logic behind CLOSER's state machine --
- * question sequencing, turn alternation, and the question-37 truth table.
- * Everything else (phase transitions, timers, persistence) lives inline in
- * CloserGame.js and is exercised manually/via Playwright; see the repo's
- * project notes for what's covered where.
+ * question sequencing, turn alternation, and the question-37 truth table --
+ * plus the pack registry itself. Everything else (phase transitions, timers,
+ * persistence) lives inline in CloserGame.js and is exercised manually/via
+ * Playwright; see the repo's project notes for what's covered where.
  */
 
-describe('ACTS content invariants', () => {
+const ACTS = PACKS.classic.acts;
+const MODES = PACKS.classic.modes;
+
+describe('ACTS content invariants (classic pack)', () => {
   it('has exactly 3 acts of 12 questions each, 36 total', () => {
     expect(ACTS).toHaveLength(3);
     ACTS.forEach((act) => expect(act.questions).toHaveLength(12));
-    expect(TOTAL_QUESTIONS).toBe(36);
+    expect(totalQuestions('classic')).toBe(36);
   });
 
   it('gives every question non-empty de and en text', () => {
@@ -53,7 +59,7 @@ describe('ACTS content invariants', () => {
   });
 });
 
-describe('MODES', () => {
+describe('MODES (classic pack)', () => {
   it('defines twists for every act-referenced twist type in both modes', () => {
     const usedTwists = new Set(
       ACTS.flatMap((act) => act.questions.map((q) => q.twist)).filter(Boolean)
@@ -82,34 +88,74 @@ describe('MODES', () => {
   });
 });
 
+describe('PACKS registry', () => {
+  it('DEFAULT_PACK_ID points at a real, registered pack', () => {
+    expect(PACKS[DEFAULT_PACK_ID]).toBeDefined();
+    expect(PACKS[DEFAULT_PACK_ID].id).toBe(DEFAULT_PACK_ID);
+  });
+
+  it('getPack falls back to the default pack for an unknown packId', () => {
+    expect(getPack('does-not-exist')).toBe(PACKS[DEFAULT_PACK_ID]);
+    expect(getPack(undefined)).toBe(PACKS[DEFAULT_PACK_ID]);
+  });
+
+  it('every registered pack has the shape CloserGame.js relies on', () => {
+    Object.values(PACKS).forEach((pack) => {
+      expect(Array.isArray(pack.acts)).toBe(true);
+      expect(Array.isArray(pack.modes)).toBe(true);
+      expect(Array.isArray(pack.actStyle)).toBe(true);
+      expect(pack.actStyle.length).toBe(pack.acts.length);
+      expect(typeof pack.secretAtIndex).toBe('number');
+      expect(pack.q37).toBeDefined();
+    });
+  });
+});
+
 describe('actIndexFor', () => {
   it('maps question indices to the correct act', () => {
-    expect(actIndexFor(0)).toBe(0);
-    expect(actIndexFor(11)).toBe(0);
-    expect(actIndexFor(12)).toBe(1);
-    expect(actIndexFor(23)).toBe(1);
-    expect(actIndexFor(24)).toBe(2);
-    expect(actIndexFor(35)).toBe(2);
+    expect(actIndexFor('classic', 0)).toBe(0);
+    expect(actIndexFor('classic', 11)).toBe(0);
+    expect(actIndexFor('classic', 12)).toBe(1);
+    expect(actIndexFor('classic', 23)).toBe(1);
+    expect(actIndexFor('classic', 24)).toBe(2);
+    expect(actIndexFor('classic', 35)).toBe(2);
   });
 
   it('clamps out-of-range indices to the last act rather than throwing', () => {
-    expect(actIndexFor(999)).toBe(2);
+    expect(actIndexFor('classic', 999)).toBe(2);
+  });
+
+  it('falls back to the default pack for an unknown packId', () => {
+    expect(actIndexFor('nope', 0)).toBe(actIndexFor('classic', 0));
   });
 });
 
 describe('questionAt', () => {
   it('returns the first and last question correctly', () => {
-    expect(questionAt(0)).toBe(ACTS[0].questions[0]);
-    expect(questionAt(TOTAL_QUESTIONS - 1)).toBe(ACTS[2].questions[11]);
+    expect(questionAt('classic', 0)).toBe(ACTS[0].questions[0]);
+    expect(questionAt('classic', finalQuestionIndex('classic'))).toBe(ACTS[2].questions[11]);
   });
 
   it('returns the right question across an act boundary', () => {
-    expect(questionAt(12)).toBe(ACTS[1].questions[0]);
+    expect(questionAt('classic', 12)).toBe(ACTS[1].questions[0]);
   });
 
   it('returns null past the end', () => {
-    expect(questionAt(TOTAL_QUESTIONS)).toBeNull();
-    expect(questionAt(999)).toBeNull();
+    expect(questionAt('classic', totalQuestions('classic'))).toBeNull();
+    expect(questionAt('classic', 999)).toBeNull();
+  });
+});
+
+describe('questionIdFor / voiceSrc', () => {
+  it('produces stable, 1-indexed, zero-padded ids', () => {
+    expect(questionIdFor('classic', 0)).toBe('classic-q01');
+    expect(questionIdFor('classic', 35)).toBe('classic-q36');
+  });
+
+  it('builds a pack-namespaced audio path from a packId/lang/questionId', () => {
+    expect(voiceSrc('classic', 'de', 'classic-q01')).toBe(
+      '/audio/closer/classic/de/classic-q01.mp3'
+    );
   });
 });
 
@@ -179,8 +225,8 @@ describe('classifySecretAsked', () => {
 });
 
 describe('other constants', () => {
-  it('SECRET_AT_INDEX sits between question 27 and 28 (0-indexed 27)', () => {
-    expect(SECRET_AT_INDEX).toBe(27);
+  it('the classic pack\'s secretAtIndex sits between question 27 and 28 (0-indexed 27)', () => {
+    expect(PACKS.classic.secretAtIndex).toBe(27);
   });
 
   it('SKIP_TOKENS is 3, per spec', () => {

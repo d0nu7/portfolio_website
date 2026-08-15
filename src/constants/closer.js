@@ -19,6 +19,27 @@
  * ORIGINAL mode runs 'predict', 'deeper' and stayEnabled -- a restrained
  * enough twist that it still fits ORIGINAL's tone (spec feedback 11). 'both'
  * and 'nothinking' stay more playful and DATE NIGHT-exclusive.
+ *
+ * --- Pack architecture (added ahead of further game packs) ----------------
+ *
+ * "Pack" (this file's PACKS registry) and "Style" (a pack's own `modes`,
+ * formerly the top-level MODES) are two separate axes and were previously
+ * conflated -- there was only ever one pack, so nobody had to say so.
+ *   pack  = WHAT is being asked: the 36 (or however many) questions, their
+ *           acts, their per-act look, the secret-question placement, the
+ *           question-37 wording. E.g. classic, first-date, friends.
+ *   style = HOW those questions play: which twists are active. This is the
+ *           existing ORIGINAL/DATE NIGHT distinction, now scoped inside a
+ *           pack's `modes` rather than global, since a future pack may want
+ *           its own style options rather than reusing ORIGINAL/DATE NIGHT
+ *           verbatim.
+ * All of CLOSER's original content now lives under PACKS.classic unchanged
+ * -- this refactor is additive, not a content change. New packs are added by
+ * inserting another entry into PACKS; nothing else needs to know how many
+ * packs exist. See questionAt/actIndexFor/totalQuestions/finalQuestionIndex
+ * below, all of which take a packId as their first argument, and
+ * CloserGame.js's `packId` field in saved state (defaults to 'classic' for
+ * any save written before this existed -- see loadSaved()).
  */
 
 export const LANGS = ['de', 'en'];
@@ -30,7 +51,7 @@ export function pick(value, lang) {
   return value;
 }
 
-export const ACTS = [
+const CLASSIC_ACTS = [
   {
     id: 'curious',
     numeral: { de: 'AKT I', en: 'ACT I' },
@@ -250,7 +271,7 @@ export const ACTS = [
  * asking over, and which prompt appears depends on whether each person's
  * secret question actually got asked (spec 39).
  */
-export const Q37 = {
+const CLASSIC_Q37 = {
   neither: {
     de: 'Stellt euch die Frage, von der ihr gehofft habt, dass sie kommt.',
     en: 'Ask the question you hoped they would ask.',
@@ -265,7 +286,7 @@ export const Q37 = {
   },
 };
 
-export const MODES = [
+const CLASSIC_MODES = [
   {
     id: 'original',
     title: { de: 'ORIGINAL', en: 'ORIGINAL' },
@@ -294,9 +315,7 @@ export const MODES = [
 ];
 
 // The secret question interrupts between question 27 and question 28.
-export const SECRET_AT_INDEX = 27;
-
-export const TOTAL_QUESTIONS = ACTS.reduce((n, a) => n + a.questions.length, 0);
+const CLASSIC_SECRET_AT_INDEX = 27;
 
 export const SKIP_TOKENS = 3;
 
@@ -306,28 +325,93 @@ export const SKIP_TOKENS = 3;
  * the marker and dims, Act III shows a bare number. Question 36 shows nothing
  * at all (handled in the component).
  */
-export const ACT_STYLE = [
+const CLASSIC_ACT_STYLE = [
   { accent: '#13ADC7', chrome: 1, progress: 'full', glow: 0.28 },
   { accent: '#945DD6', chrome: 0.5, progress: 'count', glow: 0.15 },
   { accent: '#8b93a3', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
-export function actIndexFor(questionIndex) {
-  let n = 0;
-  for (let i = 0; i < ACTS.length; i += 1) {
-    n += ACTS[i].questions.length;
-    if (questionIndex < n) return i;
-  }
-  return ACTS.length - 1;
+/*
+ * The PACKS registry. Each entry is everything CloserGame.js needs to run a
+ * full playthrough: acts (and their questions), style modes, per-act look,
+ * question-37 wording, and where the secret question interrupts. `classic`
+ * is CLOSER as it has always been; it is the default and the fallback for
+ * any packId this registry doesn't recognise (including saves from before
+ * packId existed -- see getPack()).
+ *
+ * Adding a pack means adding another entry here with its own acts/modes/
+ * actStyle/q37/secretAtIndex -- nothing in CloserGame.js hardcodes `classic`
+ * or assumes there is only one pack.
+ */
+export const PACKS = {
+  classic: {
+    id: 'classic',
+    title: { de: 'CLASSIC', en: 'CLASSIC' },
+    blurb: {
+      de: 'Die 36 Fragen. Der Ursprung.',
+      en: 'The original 36 questions.',
+    },
+    acts: CLASSIC_ACTS,
+    modes: CLASSIC_MODES,
+    actStyle: CLASSIC_ACT_STYLE,
+    q37: CLASSIC_Q37,
+    secretAtIndex: CLASSIC_SECRET_AT_INDEX,
+  },
+};
+
+export const DEFAULT_PACK_ID = 'classic';
+
+export function getPack(packId) {
+  return PACKS[packId] || PACKS[DEFAULT_PACK_ID];
 }
 
-export function questionAt(questionIndex) {
+export function totalQuestions(packId) {
+  return getPack(packId).acts.reduce((n, a) => n + a.questions.length, 0);
+}
+
+export function finalQuestionIndex(packId) {
+  return totalQuestions(packId) - 1;
+}
+
+export function actIndexFor(packId, questionIndex) {
+  const acts = getPack(packId).acts;
+  let n = 0;
+  for (let i = 0; i < acts.length; i += 1) {
+    n += acts[i].questions.length;
+    if (questionIndex < n) return i;
+  }
+  return acts.length - 1;
+}
+
+export function questionAt(packId, questionIndex) {
+  const acts = getPack(packId).acts;
   let n = questionIndex;
-  for (let i = 0; i < ACTS.length; i += 1) {
-    if (n < ACTS[i].questions.length) return ACTS[i].questions[n];
-    n -= ACTS[i].questions.length;
+  for (let i = 0; i < acts.length; i += 1) {
+    if (n < acts[i].questions.length) return acts[i].questions[n];
+    n -= acts[i].questions.length;
   }
   return null;
+}
+
+/*
+ * A stable, deterministic id for a given pack + question position -- e.g.
+ * 'classic-q01' .. 'classic-q36'. Derived rather than stored on each
+ * question object, so there is nothing to keep in sync by hand across 36+
+ * questions per pack and no risk of a typo'd or duplicate id.
+ */
+export function questionIdFor(packId, questionIndex) {
+  return `${packId}-q${String(questionIndex + 1).padStart(2, '0')}`;
+}
+
+/*
+ * The agreed contract for pack-namespaced voice audio, so the voice branch
+ * (feat/closer-voice, developed separately and not touched by this change)
+ * has a fixed path convention to adopt once further packs exist. Before
+ * this, audio was implicitly single-pack; new TTS generation should target
+ * this layout going forward.
+ */
+export function voiceSrc(packId, lang, questionId) {
+  return `/audio/closer/${packId}/${lang}/${questionId}.mp3`;
 }
 
 /*
@@ -335,8 +419,8 @@ export function questionAt(questionIndex) {
  * starterOffset is the one coin flip (made once, at player setup) that
  * decides who goes first overall; every question after that just walks the
  * parity forward. Question 37, which has no qIndex of its own, reuses this
- * with qIndex = TOTAL_QUESTIONS to continue the same sequence rather than
- * flipping a fresh coin.
+ * with qIndex = totalQuestions(packId) to continue the same sequence rather
+ * than flipping a fresh coin.
  */
 export function starterFor(questionIndex, starterOffset) {
   return (questionIndex + starterOffset) % 2;
