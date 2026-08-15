@@ -47,4 +47,44 @@ test.describe('Skip tokens', () => {
     await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(0);
     await expect(page.getByText(/kein.*skip/i)).toHaveCount(0);
   });
+
+  /*
+   * Iteration-6 content review, P1: consent to decline a question must
+   * never be a scarce resource -- both of these pin that the free "Lieber
+   * nicht" path is unaffected by the token Skip's own state.
+   */
+  test('the token Skip control is available even on the last question (36)', async ({ page }) => {
+    // Act III, question index 35: the last question, no chrome shown, but
+    // Skip must still work here -- consent doesn't run out at question 36.
+    await seedAndResume(page, { qIndex: 35, skipsRemaining: 2 });
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+    await page.waitForTimeout(1800);
+
+    // A skipped last question still lands on the "all 36" screen, same as
+    // clicking "Fertig" would.
+    await expect(page.getByText('Das waren alle 36.')).toBeVisible();
+  });
+
+  test('the free "Lieber nicht" opt-out works at zero tokens and on the last question', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 35, skipsRemaining: 0 });
+    // The token Skip button is gone (0 left), but the free opt-out isn't.
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toHaveCount(0);
+
+    const decline = page.getByRole('button', { name: 'Lieber nicht' });
+    await expect(decline).toBeVisible();
+    await decline.click();
+    await page.waitForTimeout(1800);
+
+    await expect(page.getByText('Das waren alle 36.')).toBeVisible();
+  });
+
+  test('declining does not spend a token', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+    await page.waitForTimeout(1800);
+    await expect(page.locator('[aria-label="3/3"]')).toBeVisible();
+  });
 });

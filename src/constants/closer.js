@@ -6,9 +6,11 @@
  * interface strings live in closerCopy.js.
  *
  * Per the spec, a question carries at most ONE twist plus an independent
- * stayEnabled flag, and twists are deliberately sparse: six in Act I, three in
- * Act II, one in Act III. The game is not supposed to be more interesting than
- * the conversation.
+ * stayEnabled flag, and twists are deliberately sparse: five in Act I, three
+ * in Act II, one in Act III (six in Act I originally -- see the content-
+ * review note on the "how will you die" question below, which lost its
+ * PREDICT twist without losing the question itself). The game is not
+ * supposed to be more interesting than the conversation.
  *
  *   twist: 'predict'    -- the other person guesses the answer first
  *          'both'       -- the question appears, then a 3-2-1, then answer together
@@ -18,7 +20,9 @@
  *
  * ORIGINAL mode runs 'predict', 'deeper' and stayEnabled -- a restrained
  * enough twist that it still fits ORIGINAL's tone (spec feedback 11). 'both'
- * and 'nothinking' stay more playful and DATE NIGHT-exclusive.
+ * and 'nothinking' stay more playful and exclusive to the other style
+ * (id `'datenight'`, displayed as PLAYFUL since the content review -- see
+ * PACKS.classic.modes below for why only the label changed, not the id).
  *
  * --- Pack architecture (added ahead of further game packs) ----------------
  *
@@ -29,9 +33,9 @@
  *           look, the secret-question placement, the question-37 wording.
  *           E.g. classic, first-date, friends.
  *   style = HOW those questions play: which twists are active. This is the
- *           existing ORIGINAL/DATE NIGHT distinction, now scoped inside a
+ *           existing ORIGINAL/PLAYFUL distinction, now scoped inside a
  *           pack's `modes` rather than global, since a future pack may want
- *           its own style options rather than reusing ORIGINAL/DATE NIGHT
+ *           its own style options rather than reusing ORIGINAL/PLAYFUL
  *           verbatim.
  * All of CLOSER's original content now lives under PACKS.classic unchanged
  * -- this refactor is additive, not a content change. New packs are added by
@@ -78,9 +82,13 @@ const CLASSIC_ACTS = [
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'NEUGIERIG', en: 'CURIOUS' },
     subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
+    // Reworded per the iteration-6 content review's P2 finding: "start
+    // light" undersold what's actually here -- question 7 asks about your
+    // own death, question 10 about how you were raised. Still an honest
+    // on-ramp, just not a promise the act doesn't keep.
     intro: {
-      de: 'Fangt leicht an. Es gibt noch nichts zu erreichen.',
-      en: 'Start light. There is nowhere to get to yet.',
+      de: 'Fangt neugierig an. Einige Fragen werden schon hier persönlicher. Ihr könnt jederzeit weitergehen.',
+      en: "Start with curiosity. Some questions here already get personal. You can move on whenever you're ready.",
     },
     breakText: {
       de: 'Ihr wisst jetzt wahrscheinlich Dinge voneinander, die ihr vor 15 Minuten noch nicht wusstet.',
@@ -119,9 +127,14 @@ const CLASSIC_ACTS = [
         twist: 'both',
       },
       {
+        // No twist here on purpose (regression-test iteration 6, content
+        // review): PREDICT means guessing what the other person is about to
+        // say out loud, which turns their own mortality into a guessing
+        // game -- tonally wrong for this question, even though it's a
+        // deliberate, legitimate part of CLASSIC otherwise. The question
+        // itself is unchanged.
         de: 'Hast du eine Vorahnung, wie du sterben wirst?',
         en: 'Do you have a hunch about how you are going to die?',
-        twist: 'predict',
       },
       {
         de: 'Nenne drei Dinge, die du und dein Gegenüber scheinbar gemeinsam haben.',
@@ -225,9 +238,13 @@ const CLASSIC_ACTS = [
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'OFFEN', en: 'OPEN' },
     subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
+    // Content warning, not just a mood-setter (iteration-6 content review,
+    // P1): the previous "this part gets personal" was true but nonspecific
+    // -- Act III is where family, difficult memories, loss and death
+    // questions concentrate (18, 19, 23, 24, 33, 35, 36).
     intro: {
-      de: 'Dieser Teil wird persönlich. Denkt dran: Ihr könnt jederzeit überspringen.',
-      en: 'This part gets personal. Remember: you can always skip.',
+      de: 'Dieser Akt berührt Familie, schwierige Erinnerungen, Verlust und Tod. Ihr müsst nichts beantworten. Überspringt oder beendet das Spiel jederzeit – ohne Erklärung.',
+      en: "This act touches on family, difficult memories, loss and death. You don't have to answer anything. Skip or end the game anytime -- no explanation needed.",
     },
     questions: [
       {
@@ -318,18 +335,31 @@ const CLASSIC_MODES = [
     },
     // Act I isn't twist-free any more (spec feedback 11): PREDICT is
     // restrained enough to fit ORIGINAL's tone -- it's still just reading
-    // and guessing out loud, nothing performative -- so it stays on,
-    // giving Act I its two predict questions. BOTH and NO THINKING are
-    // more playful in character and stay DATE NIGHT-exclusive.
+    // and guessing out loud, nothing performative -- so it stays on, giving
+    // Act I its one remaining predict question (a second, on the "how will
+    // you die" question, was removed -- see that question's own comment
+    // above). BOTH and NO THINKING are more playful in character and stay
+    // exclusive to the other style below.
     twists: { predict: true, both: false, nothinking: false, deeper: true, stay: true },
   },
   {
+    // id stays 'datenight' on purpose (regression-test iteration 6, content
+    // review): only the *displayed* name was misleading -- DATE NIGHT reads
+    // as a lighter, more romantic question set, when this is actually the
+    // same intense CLASSIC questions with more playful mechanics layered on
+    // top. Renaming the id too would silently reassign anyone's saved,
+    // in-progress game to a different style on resume (loadSaved()'s P2.4
+    // normalization would fall back to pack.modes[0] for a modeId that no
+    // longer exists) for a change that's purely about what's shown, not
+    // what's stored. A real, separate DATE NIGHT *pack* with its own more
+    // romantic/sensual questions is the review's actual recommendation for
+    // that experience -- not this style being renamed to claim the name.
     id: 'datenight',
-    title: { de: 'DATE NIGHT', en: 'DATE NIGHT' },
-    meta: { de: 'Verspielt', en: 'Playful' },
+    title: { de: 'PLAYFUL', en: 'PLAYFUL' },
+    meta: { de: 'Gleiche Tiefe', en: 'Same depth' },
     blurb: {
-      de: '36 Fragen · mehr verspielte Twists · etwa 45 Minuten',
-      en: '36 questions · more playful twists · about 45 minutes',
+      de: 'Dieselben 36 tiefen Fragen – mit spielerischeren Twists.',
+      en: 'The same 36 deep questions — with more playful twists.',
     },
     twists: { predict: true, both: true, nothinking: true, deeper: true, stay: true },
   },

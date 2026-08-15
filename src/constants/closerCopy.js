@@ -61,6 +61,14 @@ const COPY = {
   off: { de: 'Aus', en: 'Off' },
 
   /* intro ---------------------------------------------------------------- */
+  // Brief positioning, not a wall of warnings -- added per the iteration-6
+  // content review's P2 finding that CLASSIC should say plainly what kind
+  // of experience it is before the game starts, not imply it suits any two
+  // people in any situation.
+  classicPositioning: {
+    de: 'CLASSIC ist ein bewusst persönliches Gespräch für zwei Erwachsene. Spielt nur, wenn ihr beide Tiefe wollt. Es ist kein Test und keine Therapie.',
+    en: "CLASSIC is a deliberately personal conversation for two adults. Only play if you both want depth. It's not a test and not therapy.",
+  },
   introLines: {
     de: 'Legt das Handy zwischen euch.\n\nAntwortet laut.\n\nTippt nichts ein.\n\nEs gibt keine richtigen Antworten.',
     en: "Put the phone between you.\n\nAnswer out loud.\n\nDon't type anything.\n\nThere are no right answers.",
@@ -84,6 +92,12 @@ const COPY = {
   turnBothVerb: { de: 'gleichzeitig', en: 'at the same time' },
   next: { de: 'Weiter', en: 'Next' },
   skip: { de: 'Skip', en: 'Skip' },
+  // Deliberately separate from the 3-token Skip above (iteration-6 content
+  // review, P1): the tokens can stay a playful, limited resource, but
+  // opting out of any single question -- including the last one -- must
+  // never run out. No confirmation sheet, no token cost, works everywhere
+  // Skip does and everywhere it doesn't (see the 'ask' render branch).
+  declineToAnswer: { de: 'Lieber nicht', en: "I'd rather not" },
   stay: { de: 'Bleiben', en: 'Stay' },
   takeYourTime: { de: 'Lasst euch Zeit.', en: 'Take your time.' },
   done: { de: 'Fertig', en: 'Done' },
@@ -133,9 +147,13 @@ const COPY = {
     en: "Forget the game for a moment.\n\nAsk whatever you're curious about.",
   },
 
+  // Reworded per the iteration-6 content review's P2 finding: STAY shows up
+  // on the most emotionally loaded questions, and "Bleiben"/"Stay" read too
+  // easily as an instruction to keep talking about the hard thing rather
+  // than what it actually is -- the app quietly getting out of the way.
   stayTitle: {
-    de: 'Bleibt hier.\n\nVergesst das Spiel für einen Moment.',
-    en: 'Stay here.\n\nForget the game for a moment.',
+    de: 'BLEIBEN gibt euch einfach Raum.\n\nIhr müsst nicht weiterreden und könnt jederzeit fortfahren.',
+    en: "STAY just gives you space.\n\nYou don't have to keep talking, and you can continue whenever you're ready.",
   },
 
   // Announced once, politely, when a BOTH/NO THINKING countdown starts and

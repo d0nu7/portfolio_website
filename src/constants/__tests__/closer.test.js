@@ -84,9 +84,9 @@ describe('MODES (classic pack)', () => {
     });
   });
 
-  it('DATE NIGHT enables every twist', () => {
-    const dateNight = MODES.find((m) => m.id === 'datenight');
-    Object.values(dateNight.twists).forEach((on) => expect(on).toBe(true));
+  it('PLAYFUL (id \'datenight\', renamed from DATE NIGHT -- iteration 6 content review) enables every twist', () => {
+    const playful = MODES.find((m) => m.id === 'datenight');
+    Object.values(playful.twists).forEach((on) => expect(on).toBe(true));
   });
 });
 

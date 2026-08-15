@@ -142,6 +142,13 @@ export default function CloserGame() {
   const [count, setCount] = useState(0);
   const [skipAsking, setSkipAsking] = useState(false);
   const [justSkipped, setJustSkipped] = useState(null);
+  // Separate from justSkipped on purpose (iteration-6 content review, P1):
+  // this is the unlimited, no-confirmation, no-token opt-out, always
+  // available including on the last question -- see the 'ask' render
+  // branch and the declineToAnswer copy. Keeping it apart from the
+  // token-skip flow means neither can accidentally consume or gate the
+  // other.
+  const [justDeclined, setJustDeclined] = useState(false);
   const [staying, setStaying] = useState(false);
   const [stayReady, setStayReady] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -362,6 +369,17 @@ export default function CloserGame() {
     return () => clearTimeout(id);
   }, [justSkipped, goTo, s.qIndex]);
 
+  // Same brief beat as a token skip, minus anything token-related --
+  // declining is free and unlimited, so there's nothing to count down.
+  useEffect(() => {
+    if (!justDeclined) return undefined;
+    const id = setTimeout(() => {
+      setJustDeclined(false);
+      goTo(s.qIndex + 1);
+    }, 1600);
+    return () => clearTimeout(id);
+  }, [justDeclined, goTo, s.qIndex]);
+
   // The closing sequence plays itself out, one line at a time.
   useEffect(() => {
     if (s.phase !== 'ending' || beat >= ENDING_BEATS.length - 1) return undefined;
@@ -570,7 +588,8 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Lede>{t('introLines')}</Lede>
+          <Lede>{t('classicPositioning')}</Lede>
+          <Lede style={{ marginTop: '3.2rem' }}>{t('introLines')}</Lede>
           <Lede style={{ marginTop: '3.2rem' }}>{t('introSkips')}</Lede>
           <Tokens $accent={A0} style={{ marginTop: '1.6rem', fontSize: '2rem' }}>
             {Array.from({ length: SKIP_TOKENS }, (_, i) => (
@@ -878,9 +897,19 @@ export default function CloserGame() {
                 </GhostButton>
               </Row>
             ) : (
-              <GhostButton onClick={() => set({ phase: neither ? 'q37a' : 'q37' })}>
-                {neither ? t('q37Button') : t('continue')}
-              </GhostButton>
+              // Every q37intro branch offers an end option now (iteration-6
+              // content review, P1) -- a self-chosen secret question can be
+              // more intimate than anything scripted, so nobody should be
+              // funneled toward speaking it just because the UI only ever
+              // offered "continue".
+              <Row>
+                <GhostButton onClick={() => set({ phase: neither ? 'q37a' : 'q37' })}>
+                  {neither ? t('q37Button') : t('continue')}
+                </GhostButton>
+                <GhostButton onClick={() => set({ phase: 'ending', completed: true })}>
+                  {t('end')}
+                </GhostButton>
+              </Row>
             )}
           </Foot>
         </>,
@@ -1142,10 +1171,19 @@ export default function CloserGame() {
               {isLast ? t('done') : t('next')}
             </Button>
           )}
-          {/* At zero the control simply goes away -- no "no skips left". */}
-          {!isLast && s.skipsRemaining > 0 && (
+          {/* At zero the control simply goes away -- no "no skips left".
+              Available on the last question too (iteration-6 content
+              review, P1) -- consent doesn't run out just because it's
+              question 36. */}
+          {s.skipsRemaining > 0 && (
             <TextButton onClick={() => setSkipAsking(true)}>{t('skip')}</TextButton>
           )}
+          {/* The free, unlimited, no-confirmation opt-out -- see
+              justDeclined above. Always present, independent of the token
+              skip's state, including at 0 tokens and on question 36. */}
+          <TextButton onClick={() => { buzz(14); setJustDeclined(true); }}>
+            {t('declineToAnswer')}
+          </TextButton>
         </Foot>
       </>
     );
@@ -1234,6 +1272,13 @@ export default function CloserGame() {
             )}
           </Tokens>
           {justSkipped > 0 && <Small>{tf('skipsLeft', justSkipped)}</Small>}
+        </Flash>
+      )}
+
+      {/* No token row here on purpose -- nothing was spent. */}
+      {justDeclined && (
+        <Flash>
+          <Question style={{ textAlign: 'center' }}>{t('skipped')}</Question>
         </Flash>
       )}
     </>

@@ -52,4 +52,26 @@ test.describe('Question 37', () => {
     await page.getByRole('button', { name: 'Ende' }).click();
     await expect(page.getByText(/Das war.s\./)).toBeVisible();
   });
+
+  /*
+   * Iteration-6 content review, P1: a self-chosen secret question can be
+   * more intimate than anything scripted in the game, so every q37intro
+   * branch -- not just "both already asked" -- needs its own end option,
+   * not only a "continue" path.
+   */
+  test('neither asked -> can end directly instead, without ever entering q37a/q37b', async ({ page }) => {
+    await seedAndResume(page, { phase: 'q37intro', secretAsked: [false, false] });
+    await expect(page.getByText('NOCH EINE?')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ende' }).click();
+    await expect(page.getByText(/Das war.s\./)).toBeVisible();
+  });
+
+  test('exactly one pending -> can end directly instead, without being asked', async ({ page }) => {
+    await seedAndResume(page, { phase: 'q37intro', secretAsked: [false, true] });
+    await expect(page.getByText('EINE FRAGE FEHLT NOCH')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ende' }).click();
+    await expect(page.getByText(/Das war.s\./)).toBeVisible();
+  });
 });
