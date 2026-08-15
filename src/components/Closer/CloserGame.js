@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DEFAULT_PACK_ID,
   LANGS,
+  QUESTIONS_PER_ACT,
   SKIP_TOKENS,
   actIndexFor,
   classifySecretAsked,
@@ -80,10 +81,11 @@ const initialState = {
   completed: false,
 };
 
-// `{ ...initialState, ...saved }` is also the resume-state migration for
-// packId: a save written before packId existed simply has no such key, so
-// the spread leaves initialState's `DEFAULT_PACK_ID` in place untouched --
-// nothing else needs an explicit `saved.packId ?? DEFAULT_PACK_ID` fallback.
+// `{ ...initialState, ...saved }` is the resume-state migration for a save
+// written before packId existed: it simply has no such key, so the spread
+// leaves initialState's `DEFAULT_PACK_ID` in place untouched. The
+// canonicalization below handles the other case -- a packId/modeId that IS
+// present but no longer valid.
 function loadSaved() {
   if (typeof window === 'undefined') return null;
   try {
@@ -92,7 +94,23 @@ function loadSaved() {
     const saved = JSON.parse(raw);
     if (!saved || typeof saved !== 'object' || !saved.phase) return null;
     if (saved.phase === 'start' || saved.completed) return null;
-    return { ...initialState, ...saved };
+    const merged = { ...initialState, ...saved };
+    // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
+    // (regression-test iteration 5, P2.4): a hand-edited save, an old save
+    // whose packId pointed at a pack since removed from the registry, or a
+    // modeId that doesn't exist in the resolved pack could otherwise pair
+    // "classic" content with a foreign id, or land on a style screen with
+    // nothing marked active. getPack() already falls back silently for
+    // reads elsewhere in this file, but the *stored* packId itself was
+    // never corrected -- this fixes that once, on load, rather than at
+    // every call site.
+    const pack = getPack(merged.packId);
+    merged.packId = pack.id;
+    if (!pack.modes.some((m) => m.id === merged.modeId)) {
+      merged.modeId = pack.modes[0].id;
+    }
+    merged.qIndex = Math.min(Math.max(merged.qIndex, 0), finalQuestionIndex(pack.id));
+    return merged;
   } catch (err) {
     return null;
   }
@@ -203,6 +221,14 @@ export default function CloserGame() {
   // doesn't recognise, so this never needs its own guard.
   const pack = getPack(s.packId);
   const total = totalQuestions(s.packId);
+  // Secret question / question 37 / ending all share the last act's look.
+  // Derived rather than the bare `finalStyle` this used to be
+  // (regression-test iteration 5, P1.2): every pack is validated to have
+  // exactly 3 acts (see ACTS_PER_PACK in closer.js), so the value is the
+  // same either way, but this stays correct on its own terms rather than
+  // coincidentally, and doesn't silently go out of bounds if that
+  // invariant were ever violated despite the test coverage.
+  const finalStyle = pack.actStyle[pack.actStyle.length - 1];
 
   const mode = useMemo(
     () => pack.modes.find((m) => m.id === s.modeId) || pack.modes[0],
@@ -250,9 +276,14 @@ export default function CloserGame() {
         set({ ...patch, phase: 'all36' });
         return;
       }
-      if (index > 0 && index % 12 === 0) {
+      // QUESTIONS_PER_ACT, not a bare 12: every pack is validated (see
+      // closer.test.js) to be exactly ACTS_PER_PACK acts of
+      // QUESTIONS_PER_ACT questions each -- a deliberate fixed schema, not
+      // an assumption this line happened to encode (regression-test
+      // iteration 5, P1.1).
+      if (index > 0 && index % QUESTIONS_PER_ACT === 0) {
         buzz([18, 60, 18]);
-        set({ ...patch, phase: 'break', breakAct: index / 12 - 1, pending: index });
+        set({ ...patch, phase: 'break', breakAct: index / QUESTIONS_PER_ACT - 1, pending: index });
         return;
       }
       if (index === getPack(base.packId).secretAtIndex && !base.secretReady[0]) {
@@ -356,6 +387,12 @@ export default function CloserGame() {
     setConfirmReset(false);
     setBeat(0);
     setStep('ask');
+    // Without this, a countdown's "Los."/"Go." lingered in the offscreen
+    // status region through a full restart -- silent visually, but a
+    // screen reader on the new game's first question could announce a
+    // leftover countdown result from the previous language (regression-
+    // test iteration 5, P2.3).
+    setAnnounce('');
     setS((prev) => ({ ...initialState, lang: prev.lang, packId: prev.packId }));
   }, []);
 
@@ -618,7 +655,7 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase.startsWith('secret')) {
-    const st = pack.actStyle[2];
+    const st = finalStyle;
     const p = s.phase;
 
     if (p === 'secretPass1' || p === 'secretPass2') {
@@ -717,7 +754,7 @@ export default function CloserGame() {
           </GhostButton>
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -736,7 +773,7 @@ export default function CloserGame() {
           )}
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -752,18 +789,18 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={pack.actStyle[2].accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
+          <Kicker $accent={finalStyle.accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
         </Body>
         <Foot>
           <Button
-            $accent={pack.actStyle[2].accent}
+            $accent={finalStyle.accent}
             onClick={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
           >
             {tf('iAm', nameOf(who))}
           </Button>
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -771,16 +808,16 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Kicker $accent={pack.actStyle[2].accent}>{t('passPhoneBack')}</Kicker>
+          <Kicker $accent={finalStyle.accent}>{t('passPhoneBack')}</Kicker>
           <Lede>{t('passPhoneBackText')}</Lede>
         </Body>
         <Foot>
-          <Button $accent={pack.actStyle[2].accent} onClick={() => set({ phase: 'q37intro' })}>
+          <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37intro' })}>
             {t('continue')}
           </Button>
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -804,7 +841,7 @@ export default function CloserGame() {
           </Row>
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -847,7 +884,7 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: pack.actStyle[2].accent, glow: 0.03 }
+        { accent: finalStyle.accent, glow: 0.03 }
       );
     }
 
@@ -866,7 +903,7 @@ export default function CloserGame() {
           </Body>
           <Foot>
             {s.phase === 'q37a' ? (
-              <Button $accent={pack.actStyle[2].accent} onClick={() => set({ phase: 'q37b' })}>
+              <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37b' })}>
                 {t('continue')}
               </Button>
             ) : (
@@ -876,7 +913,7 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: pack.actStyle[2].accent, glow: 0.03 }
+        { accent: finalStyle.accent, glow: 0.03 }
       );
     }
 
@@ -898,7 +935,7 @@ export default function CloserGame() {
           </TextButton>
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03 }
     );
   }
 
@@ -922,7 +959,7 @@ export default function CloserGame() {
           )}
         </Foot>
       </>,
-      { accent: pack.actStyle[2].accent, glow: isFinal ? 0.1 : 0.02 }
+      { accent: finalStyle.accent, glow: isFinal ? 0.1 : 0.02 }
     );
   }
 

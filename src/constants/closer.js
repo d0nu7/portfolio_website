@@ -25,9 +25,9 @@
  * "Pack" (this file's PACKS registry) and "Style" (a pack's own `modes`,
  * formerly the top-level MODES) are two separate axes and were previously
  * conflated -- there was only ever one pack, so nobody had to say so.
- *   pack  = WHAT is being asked: the 36 (or however many) questions, their
- *           acts, their per-act look, the secret-question placement, the
- *           question-37 wording. E.g. classic, first-date, friends.
+ *   pack  = WHAT is being asked: the questions, their acts, their per-act
+ *           look, the secret-question placement, the question-37 wording.
+ *           E.g. classic, first-date, friends.
  *   style = HOW those questions play: which twists are active. This is the
  *           existing ORIGINAL/DATE NIGHT distinction, now scoped inside a
  *           pack's `modes` rather than global, since a future pack may want
@@ -35,12 +35,33 @@
  *           verbatim.
  * All of CLOSER's original content now lives under PACKS.classic unchanged
  * -- this refactor is additive, not a content change. New packs are added by
- * inserting another entry into PACKS; nothing else needs to know how many
- * packs exist. See questionAt/actIndexFor/totalQuestions/finalQuestionIndex
- * below, all of which take a packId as their first argument, and
+ * inserting another entry into PACKS.
+ *
+ * Fixed schema, deliberately (regression-test iteration 5, P1.1/P1.3):
+ * every pack MUST have exactly ACTS_PER_PACK acts of QUESTIONS_PER_ACT
+ * questions each (3 x 12 = 36), a secret question, and a question 37. This
+ * is enforced by the registry-conformance tests in closer.test.js, not just
+ * assumed -- a pack that doesn't fit isn't added to PACKS. The alternative
+ * (a fully variable engine that derives act breaks from each pack's own
+ * question count) was considered and deliberately not built: every pack
+ * planned so far (FIRST DATE, COUPLES, FRIENDS, OLD FRIENDS, LATE NIGHT,
+ * DEEP, CHAOS -- spec 55) fits this shape, and CloserGame.js's act-break
+ * logic, global copy ("Das waren alle 36.", "FRAGE 37", "Etwa 45 Minuten"),
+ * skip-token count and act timer all rely on it being fixed rather than
+ * reading it per-pack. If a pack that genuinely needs a different shape
+ * ever comes up, that's the trigger to revisit this, not before.
+ *
+ * See questionAt/actIndexFor/totalQuestions/finalQuestionIndex below, all
+ * of which take a packId as their first argument (kept pack-aware even
+ * though every pack is the same shape, since packId is still how a pack's
+ * own question wording/acts/style/secret index/Q37 copy differ), and
  * CloserGame.js's `packId` field in saved state (defaults to 'classic' for
- * any save written before this existed -- see loadSaved()).
+ * any save written before this existed, and is canonicalized on load --
+ * see loadSaved()).
  */
+
+export const ACTS_PER_PACK = 3;
+export const QUESTIONS_PER_ACT = 12;
 
 export const LANGS = ['de', 'en'];
 

@@ -1,6 +1,8 @@
 import {
+  ACTS_PER_PACK,
   DEFAULT_PACK_ID,
   PACKS,
+  QUESTIONS_PER_ACT,
   SKIP_TOKENS,
   actIndexFor,
   classifySecretAsked,
@@ -107,6 +109,31 @@ describe('PACKS registry', () => {
       expect(pack.actStyle.length).toBe(pack.acts.length);
       expect(typeof pack.secretAtIndex).toBe('number');
       expect(pack.q37).toBeDefined();
+    });
+  });
+
+  /*
+   * Hard enforcement of the fixed pack schema (regression-test iteration 5,
+   * P1.1/P1.3): CloserGame.js's act-break logic (`index % QUESTIONS_PER_ACT`)
+   * and CLOSER's global copy ("Das waren alle 36.", "FRAGE 37", "Etwa 45
+   * Minuten", three skip tokens, a 15-minute act timer) all assume every
+   * pack is exactly ACTS_PER_PACK acts of QUESTIONS_PER_ACT questions each.
+   * That assumption is deliberate (see the architecture comment in
+   * closer.js), not incidental -- so a pack that doesn't fit must fail here
+   * rather than silently misbehave in the running game.
+   */
+  it('every registered pack matches the fixed ACTS_PER_PACK x QUESTIONS_PER_ACT schema', () => {
+    Object.values(PACKS).forEach((pack) => {
+      expect(pack.acts).toHaveLength(ACTS_PER_PACK);
+      pack.acts.forEach((act) => expect(act.questions).toHaveLength(QUESTIONS_PER_ACT));
+      expect(totalQuestions(pack.id)).toBe(ACTS_PER_PACK * QUESTIONS_PER_ACT);
+    });
+  });
+
+  it('every registered pack places the secret question inside its bounds', () => {
+    Object.values(PACKS).forEach((pack) => {
+      expect(pack.secretAtIndex).toBeGreaterThan(0);
+      expect(pack.secretAtIndex).toBeLessThan(totalQuestions(pack.id));
     });
   });
 });
