@@ -11,7 +11,13 @@ const COPY = {
     de: 'Zwei Menschen.\nEin Handy.\nKein Small Talk.',
     en: 'Two people.\nOne phone.\nNo small talk.',
   },
-  aboutMinutes: { de: 'Etwa 45 Minuten', en: 'About 45 minutes' },
+  // No longer a single fixed estimate (iteration 7, Phase 2/FR-01): the
+  // actual length now depends on the route chosen on the very next screens,
+  // so this honestly gives the range rather than promising the old default.
+  aboutMinutes: {
+    de: '12–45 Minuten – ihr wählt die Länge.',
+    en: '12–45 minutes — you choose the length.',
+  },
   start: { de: 'Start', en: 'Start' },
   installHintTitle: { de: 'VOLLBILD-ERLEBNIS', en: 'FULL-SCREEN EXPERIENCE' },
   installHintBody: {
@@ -57,6 +63,9 @@ const COPY = {
   },
   playerOne: { de: 'Person 1', en: 'Player 1' },
   playerTwo: { de: 'Person 2', en: 'Player 2' },
+
+  /* duration / route (iteration 7, Phase 2, FR-01/FR-02) ------------------ */
+  pickDuration: { de: 'Wie viel Zeit habt ihr?', en: 'How much time do you have?' },
 
   /* mode ----------------------------------------------------------------- */
   pickMode: { de: 'Modus wählen', en: 'Pick a mode' },
@@ -223,7 +232,12 @@ const COPY = {
   /* finale ------------------------------------------------------------------ */
   oneLastQuestion: { de: 'EINE LETZTE FRAGE', en: 'ONE LAST QUESTION' },
   reveal: { de: 'Zeigen', en: 'Reveal' },
-  allThirtySix: { de: 'Das waren alle 36.', en: "That's all 36." },
+  // A function of the route's own total (iteration 7, Phase 2): a `quick`
+  // playthrough only ever asked 12 questions, so a hardcoded "36" would be
+  // false for it. Called via tf(), the same pattern as passPhoneTo/iAm
+  // below, not t().
+  allThirtySix: (lang, total) =>
+    lang === 'de' ? `Das waren alle ${total}.` : `That's all ${total}.`,
   butYouEachHad: {
     de: 'Aber ihr hattet beide\neine Frage im Kopf.',
     en: 'But you each had\none question in mind.',

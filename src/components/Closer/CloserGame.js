@@ -2,15 +2,20 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   DEFAULT_PACK_ID,
+  DEFAULT_ROUTE_ID,
   LANGS,
-  QUESTIONS_PER_ACT,
+  MINUTES_PER_QUESTION,
   SKIP_TOKENS,
   actIndexFor,
+  actStartIndices,
   classifySecretAsked,
   finalQuestionIndex,
   getPack,
+  getRoute,
   pick,
   questionAt,
+  resolvedActs,
+  secretAtIndexFor,
   starterFor,
   totalQuestions,
 } from '../../constants/closer';
@@ -61,14 +66,13 @@ const STORAGE_KEY = 'closer:v1';
 // literal rather than imported to avoid a cross-component constant just for
 // this one deleteAllLocalData() use (bugfix-report iteration 7, BF-01).
 const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
-const ACT_MS = 15 * 60 * 1000;
 const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 // Bumped only if the saved shape changes in a way old saves can't safely
 // merge into (bugfix-report iteration 7, BF-12). A saved stateVersion that
 // doesn't match this is treated as incompatible rather than guessed at.
 const STATE_VERSION = 1;
 const VALID_PHASES = new Set([
-  'players', 'mode', 'intro', 'act', 'break', 'q',
+  'players', 'duration', 'mode', 'intro', 'act', 'break', 'q',
   'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
   'lastIntro', 'all36',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
@@ -85,6 +89,12 @@ const initialState = {
   lang: 'de',
   players: ['', ''],
   packId: DEFAULT_PACK_ID,
+  // routeId (iteration 7, Phase 2/FR-01): which curated time route this
+  // playthrough uses. Defaults to DEFAULT_ROUTE_ID ('full') -- the same
+  // full 36-question game as every save written before routes existed,
+  // which simply has no routeId key at all and inherits this default via
+  // the `{ ...initialState, ...saved }` merge in loadSaved().
+  routeId: DEFAULT_ROUTE_ID,
   modeId: getPack(DEFAULT_PACK_ID).modes[0].id,
   timerEnabled: true,
   qIndex: 0,
@@ -172,10 +182,18 @@ function loadSaved() {
     // every call site.
     const pack = getPack(merged.packId);
     merged.packId = pack.id;
+    // Same canonicalization, extended to routeId (iteration 7, Phase 2):
+    // getRoute() already falls back to DEFAULT_ROUTE_ID for an unrecognised
+    // id, same as getPack() does for packId -- this just makes the
+    // *stored* value correct too, not just every read of it.
+    merged.routeId = getRoute(pack.id, merged.routeId).id;
     if (!pack.modes.some((m) => m.id === merged.modeId)) {
       merged.modeId = pack.modes[0].id;
     }
-    merged.qIndex = Math.min(Math.max(merged.qIndex, 0), finalQuestionIndex(pack.id));
+    merged.qIndex = Math.min(
+      Math.max(merged.qIndex, 0),
+      finalQuestionIndex(pack.id, merged.routeId)
+    );
     return merged;
   } catch (err) {
     return null;
@@ -319,7 +337,15 @@ export default function CloserGame() {
   // s.packId -- getPack() falls back to the default pack for any packId it
   // doesn't recognise, so this never needs its own guard.
   const pack = getPack(s.packId);
-  const total = totalQuestions(s.packId);
+  const route = getRoute(s.packId, s.routeId);
+  // The route-resolved acts (iteration 7, Phase 2) -- same shape as
+  // pack.acts, but each act's `questions` is filtered to the route's
+  // curated subset (identical to pack.acts, question-for-question, when
+  // s.routeId is DEFAULT_ROUTE_ID). Every act-rendering read below goes
+  // through this, never pack.acts directly, so a shortened route actually
+  // shows its own shortened acts rather than the pack's full ones.
+  const acts = resolvedActs(s.packId, s.routeId);
+  const total = totalQuestions(s.packId, s.routeId);
   // Secret question / question 37 / ending all share the last act's look.
   // Derived rather than the bare `finalStyle` this used to be
   // (regression-test iteration 5, P1.2): every pack is validated to have
@@ -333,10 +359,10 @@ export default function CloserGame() {
     () => pack.modes.find((m) => m.id === s.modeId) || pack.modes[0],
     [pack, s.modeId]
   );
-  const actIdx = actIndexFor(s.packId, s.qIndex);
+  const actIdx = actIndexFor(s.packId, s.qIndex, s.routeId);
   const style = pack.actStyle[actIdx];
-  const question = questionAt(s.packId, s.qIndex);
-  const isLast = s.qIndex === finalQuestionIndex(s.packId);
+  const question = questionAt(s.packId, s.qIndex, s.routeId);
+  const isLast = s.qIndex === finalQuestionIndex(s.packId, s.routeId);
 
   const nameOf = useCallback(
     (i) =>
@@ -352,7 +378,7 @@ export default function CloserGame() {
 
   const enterQuestion = useCallback((index, state) => {
     const p = getPack(state.packId);
-    const q = questionAt(state.packId, index);
+    const q = questionAt(state.packId, index, state.routeId);
     const m = p.modes.find((x) => x.id === state.modeId) || p.modes[0];
     const tw = q?.twist && m.twists[q.twist] ? q.twist : null;
     // 'deeper' is a post-answer twist; the rest open with a lead-in screen.
@@ -377,22 +403,26 @@ export default function CloserGame() {
   const goTo = useCallback(
     (index, patch = {}) => {
       const base = { ...s, ...patch };
-      const baseTotal = totalQuestions(base.packId);
+      const baseTotal = totalQuestions(base.packId, base.routeId);
       if (index >= baseTotal) {
         set({ ...patch, phase: 'all36' });
         return;
       }
-      // QUESTIONS_PER_ACT, not a bare 12: every pack is validated (see
-      // closer.test.js) to be exactly ACTS_PER_PACK acts of
-      // QUESTIONS_PER_ACT questions each -- a deliberate fixed schema, not
-      // an assumption this line happened to encode (regression-test
-      // iteration 5, P1.1).
-      if (index > 0 && index % QUESTIONS_PER_ACT === 0) {
+      // Route-relative act boundaries (iteration 7, Phase 2), not a bare
+      // `% QUESTIONS_PER_ACT`: a route's acts aren't necessarily 12
+      // questions each, so the break has to fire at wherever THIS route's
+      // acts actually start, not at every 12th absolute index.
+      // actStartIndices()[0] is always 0 (Act I's own start), so
+      // `boundaryActIdx > 0` below is exactly "this is the start of Act II
+      // or later, not the very first question."
+      const starts = actStartIndices(base.packId, base.routeId);
+      const boundaryActIdx = starts.indexOf(index);
+      if (boundaryActIdx > 0) {
         buzz([18, 60, 18]);
-        set({ ...patch, phase: 'break', breakAct: index / QUESTIONS_PER_ACT - 1, pending: index });
+        set({ ...patch, phase: 'break', breakAct: boundaryActIdx - 1, pending: index });
         return;
       }
-      if (index === getPack(base.packId).secretAtIndex && !base.secretSeen[0]) {
+      if (index === secretAtIndexFor(base.packId, base.routeId) && !base.secretSeen[0]) {
         set({ ...patch, phase: 'secretPass1', pending: index });
         return;
       }
@@ -512,7 +542,7 @@ export default function CloserGame() {
     setAnnounce('');
     setMenuOpen(false);
     setMenuStep(null);
-    setS((prev) => ({ ...initialState, lang: prev.lang, packId: prev.packId }));
+    setS((prev) => ({ ...initialState, lang: prev.lang, packId: prev.packId, routeId: prev.routeId }));
   }, []);
 
   // Bugfix-report iteration 7, BF-06: while the flash overlay is the only
@@ -536,7 +566,14 @@ export default function CloserGame() {
   }, [s.phase, s.qIndex, step]);
 
   const elapsed = s.actStartedAt && now ? now - s.actStartedAt : 0;
-  const overtime = s.timerEnabled && s.actStartedAt && elapsed > ACT_MS;
+  // Route-aware act timer (iteration 7, Phase 2, "timer range"): a route's
+  // acts aren't necessarily the pack's full 12 questions, so the overtime
+  // threshold scales with the CURRENT act's own resolved length rather
+  // than a fixed 15 minutes -- the same MINUTES_PER_QUESTION ratio each
+  // act's own "about N minutes" subtitle already promises, so the timer
+  // and the copy can never disagree with each other.
+  const actMs = (acts[actIdx]?.questions.length || 0) * MINUTES_PER_QUESTION * 60 * 1000;
+  const overtime = s.timerEnabled && s.actStartedAt && elapsed > actMs;
   const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
   const handleDeleteLocalData = () => {
@@ -762,12 +799,45 @@ export default function CloserGame() {
           <Button
             $accent={A0}
             onClick={() =>
-              set({ phase: 'mode', starterOffset: Math.random() < 0.5 ? 0 : 1 })
+              set({ phase: 'duration', starterOffset: Math.random() < 0.5 ? 0 : 1 })
             }
           >
             {t('continue')}
           </Button>
           <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
+        </Foot>
+      </>,
+      { accent: A0, glow: 0.28 }
+    );
+  }
+
+  /* ================================================================== */
+  /* DURATION / ROUTE (iteration 7, Phase 2, FR-01/FR-02)               */
+  /* ================================================================== */
+
+  if (s.phase === 'duration') {
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={A0}>{t('pickDuration')}</Kicker>
+          {Object.values(pack.routes).map((r) => (
+            <Choice
+              key={r.id}
+              $on={s.routeId === r.id}
+              $accent={A0}
+              aria-pressed={s.routeId === r.id}
+              onClick={() => set({ routeId: r.id })}
+            >
+              <strong>{pick(r.title, lang)}</strong>
+              <em>{pick(r.meta, lang)}</em>
+              <span>{pick(r.subtitle, lang)}</span>
+            </Choice>
+          ))}
+        </Body>
+        <Foot>
+          <Button $accent={A0} onClick={() => set({ phase: 'mode' })}>
+            {t('continue')}
+          </Button>
         </Foot>
       </>,
       { accent: A0, glow: 0.28 }
@@ -849,8 +919,8 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase === 'act') {
-    const idx = actIndexFor(s.packId, s.pending);
-    const act = pack.acts[idx];
+    const idx = actIndexFor(s.packId, s.pending, s.routeId);
+    const act = acts[idx];
     const st = pack.actStyle[idx];
     return frame(
       <>
@@ -879,7 +949,7 @@ export default function CloserGame() {
   }
 
   if (s.phase === 'break') {
-    const done = pack.acts[s.breakAct];
+    const done = acts[s.breakAct];
     const st = pack.actStyle[s.breakAct];
     return frame(
       <>
@@ -1028,7 +1098,7 @@ export default function CloserGame() {
     return frame(
       <>
         <Body $center>
-          <Question>{t('allThirtySix')}</Question>
+          <Question>{tf('allThirtySix', total)}</Question>
           {revealSecond && (
             <Lede style={{ marginTop: '3.2rem' }}>{t('butYouEachHad')}</Lede>
           )}
@@ -1478,14 +1548,15 @@ export default function CloserGame() {
           )}
           {/* At zero the control simply goes away -- no "no skips left".
               Available on the last question too (iteration-6 content
-              review, P1) -- consent doesn't run out just because it's
-              question 36. */}
+              review, P1) -- consent doesn't run out just because it's the
+              last question, whichever route's last question that is. */}
           {s.skipsRemaining > 0 && (
             <TextButton onClick={() => setSkipAsking(true)}>{t('skip')}</TextButton>
           )}
           {/* The free, unlimited, no-confirmation opt-out -- see
               justDeclined above. Always present, independent of the token
-              skip's state, including at 0 tokens and on question 36. */}
+              skip's state, including at 0 tokens and on the last
+              question. */}
           <TextButton onClick={() => { buzz(14); setJustDeclined(true); }}>
             {t('declineToAnswer')}
           </TextButton>

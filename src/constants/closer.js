@@ -62,6 +62,43 @@
  * CloserGame.js's `packId` field in saved state (defaults to 'classic' for
  * any save written before this existed, and is canonicalized on load --
  * see loadSaved()).
+ *
+ * --- Time routes (bugfix/feature-request iteration 7, Phase 2, FR-01/
+ * FR-02) --------------------------------------------------------------
+ *
+ * A pack's fixed 3x12 schema above is still exactly what its full content
+ * looks like -- a route does not change that. What a route adds is a
+ * second, optional axis: which curated subset of a pack's questions a
+ * given playthrough actually uses, and how long that takes. Every pack
+ * MUST define a `routes` map with at least a `full` entry (every question,
+ * in original order -- the only route that existed before this, and still
+ * the default for any save or call site that doesn't ask for another one).
+ * `standard` and `quick` are hand-curated subsets, not an algorithmic
+ * sample -- picking, say, "every third question" would flatten CLASSIC's
+ * deliberate escalation instead of preserving it at a shorter length. Each
+ * route's `actIndices` is an array with one entry per act: either `null`
+ * (use every question in that act, unchanged -- what `full` does for all
+ * three) or an array of local indices (0-based, into that act's own
+ * `questions` array) listing exactly which ones to use and in what order.
+ *
+ * Two invariants every curated route (including any added for a future
+ * pack) must keep, enforced by the registry-conformance tests in
+ * closer.test.js:
+ *   1. The last act's local index carrying `last: true` must be the LAST
+ *      entry of that act's own actIndices -- the closing question has to
+ *      stay the actual last question of the route, not just of the pack.
+ *   2. secretAtIndexFor() (below) must land strictly inside the resolved
+ *      route (not at or past its end) -- see that function's own comment
+ *      for how a route-relative interrupt point is derived automatically
+ *      from the pack's own absolute secretAtIndex, rather than needing to
+ *      be hand-computed and kept in sync per route.
+ *
+ * resolvedActs()/totalQuestions()/finalQuestionIndex()/actIndexFor()/
+ * questionAt()/actStartIndices() all take an optional trailing `routeId`
+ * (defaulting to DEFAULT_ROUTE_ID, `'full'`) rather than reordering their
+ * existing packId-first parameters -- every pre-Phase-2 call site (and
+ * every pre-Phase-2 test) that only ever cared about the full 36 keeps
+ * working completely unchanged.
  */
 
 export const ACTS_PER_PACK = 3;
@@ -378,6 +415,60 @@ const CLASSIC_SECRET_AT_INDEX = 27;
 export const SKIP_TOKENS = 3;
 
 /*
+ * Time routes for CLASSIC (iteration 7, Phase 2). Curated by hand against
+ * the same "kuratierter Auszug, nicht algorithmisch" requirement the
+ * review itself sets: each shortened route keeps a taste of all three acts
+ * (curious -> closer -> open) rather than just truncating the end, keeps a
+ * mix of twist types rather than dropping them all, and -- for `standard`
+ * and `quick` alike -- always keeps Act III's local indices 2 and 3
+ * (questions 27/28, the pair the secret question sits between) adjacent
+ * and in order, and local index 11 (the closing, `last: true` question)
+ * as the final entry. `full` is exactly the pre-Phase-2 game: every
+ * question, unchanged order -- `actIndices: [null, null, null]` means
+ * "every local index of that act, in order" (see resolvedActs() below).
+ */
+const CLASSIC_ROUTES = {
+  quick: {
+    id: 'quick',
+    title: { de: 'KURZ', en: 'QUICK' },
+    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
+    subtitle: {
+      de: '12 Fragen · 3 Akte · etwa 15 Minuten',
+      en: '12 questions · 3 acts · about 15 minutes',
+    },
+    actIndices: [
+      [0, 3, 6, 9],
+      [0, 4, 6, 11],
+      [0, 2, 3, 11],
+    ],
+  },
+  standard: {
+    id: 'standard',
+    title: { de: 'STANDARD', en: 'STANDARD' },
+    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
+    subtitle: {
+      de: '24 Fragen · 3 Akte · etwa 30 Minuten',
+      en: '24 questions · 3 acts · about 30 minutes',
+    },
+    actIndices: [
+      [0, 1, 3, 5, 6, 8, 9, 10],
+      [0, 1, 3, 4, 6, 8, 10, 11],
+      [0, 1, 2, 3, 5, 8, 9, 11],
+    ],
+  },
+  full: {
+    id: 'full',
+    title: { de: 'VOLL', en: 'FULL' },
+    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
+    subtitle: {
+      de: '36 Fragen · 3 Akte · etwa 45 Minuten',
+      en: '36 questions · 3 acts · about 45 minutes',
+    },
+    actIndices: [null, null, null],
+  },
+};
+
+/*
  * Per-act look. The interface withdraws as the conversation takes over:
  * Act I carries a count and a progress marker in a bright accent, Act II drops
  * the marker and dims, Act III shows a bare number. Question 36 shows nothing
@@ -414,25 +505,85 @@ export const PACKS = {
     actStyle: CLASSIC_ACT_STYLE,
     q37: CLASSIC_Q37,
     secretAtIndex: CLASSIC_SECRET_AT_INDEX,
+    routes: CLASSIC_ROUTES,
   },
 };
 
 export const DEFAULT_PACK_ID = 'classic';
+export const DEFAULT_ROUTE_ID = 'full';
 
 export function getPack(packId) {
   return PACKS[packId] || PACKS[DEFAULT_PACK_ID];
 }
 
-export function totalQuestions(packId) {
-  return getPack(packId).acts.reduce((n, a) => n + a.questions.length, 0);
+// Falls back the same way getPack() does: an unrecognised or missing
+// routeId (including every save written before routes existed) resolves
+// to DEFAULT_ROUTE_ID -- the full, unshortened game, so nobody's
+// in-progress or already-bookmarked game gets silently cut short by this
+// existing.
+export function getRoute(packId, routeId) {
+  const pack = getPack(packId);
+  return (pack.routes && pack.routes[routeId]) || pack.routes[DEFAULT_ROUTE_ID];
 }
 
-export function finalQuestionIndex(packId) {
-  return totalQuestions(packId) - 1;
+// Roughly each act's own pre-existing pacing (12 questions / ~15 minutes).
+// Shared by actSubtitle() below and CloserGame.js's route-aware act timer,
+// so the "about N minutes" promise and the timer's own overtime threshold
+// can never drift apart from each other.
+export const MINUTES_PER_QUESTION = 15 / QUESTIONS_PER_ACT;
+
+function actSubtitle(count) {
+  const minutes = Math.round(count * MINUTES_PER_QUESTION);
+  return {
+    de: `${count} Fragen · etwa ${minutes} Minuten`,
+    en: `${count} question${count === 1 ? '' : 's'} · about ${minutes} minutes`,
+  };
 }
 
-export function actIndexFor(packId, questionIndex) {
-  const acts = getPack(packId).acts;
+function resolvedLocalIndices(act, route, actNum) {
+  return route.actIndices[actNum] || act.questions.map((_, i) => i);
+}
+
+/*
+ * A pack's acts, filtered down to whichever route is active. For
+ * DEFAULT_ROUTE_ID this reproduces the original, pre-Phase-2 acts exactly
+ * (same questions, same order, same count) -- routes are additive, not a
+ * replacement for the pack's own full content.
+ */
+export function resolvedActs(packId, routeId = DEFAULT_ROUTE_ID) {
+  const pack = getPack(packId);
+  const route = getRoute(packId, routeId);
+  return pack.acts.map((act, actNum) => {
+    const questions = resolvedLocalIndices(act, route, actNum).map((li) => act.questions[li]);
+    return { ...act, questions, subtitle: actSubtitle(questions.length) };
+  });
+}
+
+export function totalQuestions(packId, routeId = DEFAULT_ROUTE_ID) {
+  return resolvedActs(packId, routeId).reduce((n, a) => n + a.questions.length, 0);
+}
+
+export function finalQuestionIndex(packId, routeId = DEFAULT_ROUTE_ID) {
+  return totalQuestions(packId, routeId) - 1;
+}
+
+// The resolved question index each act starts at -- e.g. [0, 8, 16] for a
+// route with 8 questions per act. Route-length-agnostic on purpose (unlike
+// the old bare `% QUESTIONS_PER_ACT`), so CloserGame.js's act-break check
+// works the same way whether every act is the pack's full 12 or a route's
+// own, possibly uneven, curated count.
+export function actStartIndices(packId, routeId = DEFAULT_ROUTE_ID) {
+  const acts = resolvedActs(packId, routeId);
+  let n = 0;
+  return acts.map((a) => {
+    const start = n;
+    n += a.questions.length;
+    return start;
+  });
+}
+
+export function actIndexFor(packId, questionIndex, routeId = DEFAULT_ROUTE_ID) {
+  const acts = resolvedActs(packId, routeId);
   let n = 0;
   for (let i = 0; i < acts.length; i += 1) {
     n += acts[i].questions.length;
@@ -441,14 +592,65 @@ export function actIndexFor(packId, questionIndex) {
   return acts.length - 1;
 }
 
-export function questionAt(packId, questionIndex) {
-  const acts = getPack(packId).acts;
+export function questionAt(packId, questionIndex, routeId = DEFAULT_ROUTE_ID) {
+  const acts = resolvedActs(packId, routeId);
   let n = questionIndex;
   for (let i = 0; i < acts.length; i += 1) {
     if (n < acts[i].questions.length) return acts[i].questions[n];
     n -= acts[i].questions.length;
   }
   return null;
+}
+
+// Flat, route-relative-index -> original-pack-absolute-index mapping.
+// Shared by originalIndexFor() and secretAtIndexFor() below; kept private
+// since both of those already say everything a caller needs.
+function flattenOriginalIndices(pack, route) {
+  const result = [];
+  let actStart = 0;
+  pack.acts.forEach((act, actNum) => {
+    resolvedLocalIndices(act, route, actNum).forEach((li) => result.push(actStart + li));
+    actStart += act.questions.length;
+  });
+  return result;
+}
+
+/*
+ * Maps a route-relative question index back to its absolute index in the
+ * pack's full, unrouted question list -- e.g. so a future caller (the
+ * voice branch, per its documented pack-namespaced contract) can still key
+ * off the actual question asked (questionIdFor(packId, originalIndex))
+ * rather than its position within whichever route happened to be playing.
+ * Not yet called anywhere at runtime -- feat/closer-voice is untouched and
+ * on hold -- but kept here rather than reinvented later, next to the
+ * function that shares its logic.
+ */
+export function originalIndexFor(packId, questionIndex, routeId = DEFAULT_ROUTE_ID) {
+  const pack = getPack(packId);
+  const route = getRoute(packId, routeId);
+  const flat = flattenOriginalIndices(pack, route);
+  return flat[questionIndex] ?? null;
+}
+
+/*
+ * The route-relative point at which the secret question interrupts,
+ * derived automatically from the pack's own absolute secretAtIndex rather
+ * than hand-computed per route (and so kept correct even if a route's
+ * curated selection ever changes): it's the resolved position of the
+ * first question, in route order, whose original absolute index is at or
+ * past the pack's secretAtIndex. For DEFAULT_ROUTE_ID this always equals
+ * the pack's own secretAtIndex unchanged (every original index is present,
+ * in order). If a route's curation ever failed to include anything at or
+ * past that threshold (not true of any route defined above), this falls
+ * back to the route's own length -- registry-conformance tests assert
+ * that never actually happens.
+ */
+export function secretAtIndexFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const pack = getPack(packId);
+  const route = getRoute(packId, routeId);
+  const flat = flattenOriginalIndices(pack, route);
+  const pos = flat.findIndex((absoluteIndex) => absoluteIndex >= pack.secretAtIndex);
+  return pos === -1 ? flat.length : pos;
 }
 
 /*

@@ -1,15 +1,21 @@
 import {
   ACTS_PER_PACK,
   DEFAULT_PACK_ID,
+  DEFAULT_ROUTE_ID,
   PACKS,
   QUESTIONS_PER_ACT,
   SKIP_TOKENS,
   actIndexFor,
+  actStartIndices,
   classifySecretAsked,
   finalQuestionIndex,
   getPack,
+  getRoute,
+  originalIndexFor,
   questionAt,
   questionIdFor,
+  resolvedActs,
+  secretAtIndexFor,
   starterFor,
   totalQuestions,
   voiceSrc,
@@ -183,6 +189,107 @@ describe('questionIdFor / voiceSrc', () => {
     expect(voiceSrc('classic', 'de', 'classic-q01')).toBe(
       '/audio/closer/classic/de/classic-q01.mp3'
     );
+  });
+});
+
+/*
+ * Iteration 7, Phase 2 (FR-01/FR-02): curated time routes layered on top
+ * of the still-fixed 3x12 pack schema. `full` must reproduce the pre-
+ * Phase-2 game exactly; `quick`/`standard` are hand-curated subsets with
+ * their own invariants worth pinning so a future edit to the curated
+ * index lists can't silently break the secret question or the closing
+ * question without a test failing.
+ */
+describe('routes (iteration 7, Phase 2)', () => {
+  it('DEFAULT_ROUTE_ID is "full" and every registered pack defines it', () => {
+    expect(DEFAULT_ROUTE_ID).toBe('full');
+    Object.values(PACKS).forEach((pack) => {
+      expect(pack.routes[DEFAULT_ROUTE_ID]).toBeDefined();
+    });
+  });
+
+  it('getRoute falls back to the default route for an unknown or missing routeId', () => {
+    expect(getRoute('classic', 'does-not-exist').id).toBe(DEFAULT_ROUTE_ID);
+    expect(getRoute('classic', undefined).id).toBe(DEFAULT_ROUTE_ID);
+  });
+
+  it('the full route reproduces the pack unchanged -- same total, same acts, same last question', () => {
+    expect(totalQuestions('classic', 'full')).toBe(totalQuestions('classic'));
+    expect(totalQuestions('classic', 'full')).toBe(36);
+    expect(secretAtIndexFor('classic', 'full')).toBe(PACKS.classic.secretAtIndex);
+    expect(questionAt('classic', 35, 'full')).toBe(questionAt('classic', 35));
+  });
+
+  it('quick and standard are shorter than full, in the expected proportions', () => {
+    expect(totalQuestions('classic', 'quick')).toBe(12);
+    expect(totalQuestions('classic', 'standard')).toBe(24);
+    expect(totalQuestions('classic', 'full')).toBe(36);
+  });
+
+  /*
+   * Every route -- current and any future one -- must keep the pack's
+   * closing (`last: true`) question as its own actual last question, and
+   * must place the secret-question interrupt strictly inside its own
+   * bounds, not at or past the end (see closer.js's own comment on
+   * secretAtIndexFor for why this is derived, not hand-set, per route).
+   */
+  Object.entries(PACKS.classic.routes).forEach(([routeId, route]) => {
+    describe(`route "${routeId}"`, () => {
+      it('ends on the pack\'s actual closing question', () => {
+        const total = totalQuestions('classic', routeId);
+        expect(questionAt('classic', total - 1, routeId).last).toBe(true);
+      });
+
+      it('places the secret-question interrupt strictly inside its own bounds', () => {
+        const total = totalQuestions('classic', routeId);
+        const secretAt = secretAtIndexFor('classic', routeId);
+        expect(secretAt).toBeGreaterThan(0);
+        expect(secretAt).toBeLessThan(total);
+      });
+
+      it('still has exactly ACTS_PER_PACK acts', () => {
+        expect(resolvedActs('classic', routeId)).toHaveLength(ACTS_PER_PACK);
+      });
+
+      it('every route question is non-empty and traceable back to the pack\'s original 36', () => {
+        const total = totalQuestions('classic', routeId);
+        for (let i = 0; i < total; i += 1) {
+          const original = originalIndexFor('classic', i, routeId);
+          expect(original).toBeGreaterThanOrEqual(0);
+          expect(original).toBeLessThan(36);
+          expect(questionAt('classic', i, routeId)).toBe(questionAt('classic', original));
+        }
+      });
+
+      it("route.actIndices has one entry per act", () => {
+        expect(route.actIndices).toHaveLength(ACTS_PER_PACK);
+      });
+    });
+  });
+
+  it('actStartIndices always starts at 0 and matches each act\'s own resolved length', () => {
+    ['quick', 'standard', 'full'].forEach((routeId) => {
+      const starts = actStartIndices('classic', routeId);
+      const acts = resolvedActs('classic', routeId);
+      expect(starts[0]).toBe(0);
+      expect(starts[1]).toBe(acts[0].questions.length);
+      expect(starts[2]).toBe(acts[0].questions.length + acts[1].questions.length);
+    });
+  });
+
+  it('resolvedActs subtitle reflects the route\'s own per-act question count', () => {
+    const fullActs = resolvedActs('classic', 'full');
+    expect(fullActs[0].subtitle.de).toBe('12 Fragen · etwa 15 Minuten');
+    const quickActs = resolvedActs('classic', 'quick');
+    expect(quickActs[0].questions).toHaveLength(4);
+    expect(quickActs[0].subtitle.de).toMatch(/^4 Fragen/);
+  });
+
+  it('actIndexFor/questionAt/finalQuestionIndex/totalQuestions default to the full route when called with 2 args (backward compatibility)', () => {
+    expect(totalQuestions('classic')).toBe(totalQuestions('classic', 'full'));
+    expect(finalQuestionIndex('classic')).toBe(finalQuestionIndex('classic', 'full'));
+    expect(actIndexFor('classic', 20)).toBe(actIndexFor('classic', 20, 'full'));
+    expect(questionAt('classic', 20)).toBe(questionAt('classic', 20, 'full'));
   });
 });
 
