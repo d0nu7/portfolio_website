@@ -520,6 +520,315 @@ const CLASSIC_ACT_STYLE = [
   { accent: '#8b93a3', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
+/* ======================================================================
+ * FIRST DATE (iteration 8 catalog rollout, FR8-01/FR8-03) -- the pilot
+ * pack the holistic review recommended shipping first. Content is
+ * transcribed verbatim from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md
+ * section 3; that file is the source of truth for any future wording
+ * change to this pack -- edit it there first, then mirror here.
+ *
+ * Deliberately no twists (predict/both/nothinking/deeper) or stayEnabled
+ * on any question: the catalog doesn't mark any FIRST DATE question with a
+ * twist, and assigning one now would be inventing a content decision that
+ * belongs to the same editorial review CLASSIC's twists went through
+ * (spec feedback 11, iteration 6), not something to guess at while wiring
+ * up the pack. FIRST DATE therefore ships with a single CALM style; a
+ * second, twist-bearing style can be added later once specific questions
+ * are chosen for it.
+ * ====================================================================== */
+
+const FIRST_DATE_ACTS = [
+  {
+    id: 'curiosity',
+    numeral: { de: 'AKT I', en: 'ACT I' },
+    title: { de: 'NEUGIER', en: 'CURIOSITY' },
+    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
+    intro: {
+      de: 'Fangt leicht an. Es geht um Neugier, nicht um Tiefe – ihr könnt jederzeit weitergehen.',
+      en: "Start light. This is about curiosity, not depth -- you can move on whenever you like.",
+    },
+    breakText: {
+      de: 'Ihr wisst jetzt ein paar Dinge übereinander, die ihr vor diesem Akt noch nicht wusstet.',
+      en: "You now know a few things about each other you didn't before this act.",
+    },
+    breakSub: {
+      de: 'Trinkt einen Schluck. Lächelt.',
+      en: 'Take a sip. Smile.',
+    },
+    questions: [
+      {
+        de: 'Wie sieht für dich ein perfekter ungeplanter Abend aus?',
+        en: 'What does your perfect spontaneous evening look like?',
+      },
+      {
+        de: 'Über welches Thema kannst du reden, ohne die Zeit zu bemerken?',
+        en: 'What topic can you talk about and completely lose track of time?',
+      },
+      {
+        de: 'Welche Kleinigkeit bringt dich fast immer zum Lachen?',
+        en: 'What small thing can almost always make you laugh?',
+      },
+      {
+        de: 'Worauf freust du dich gerade wirklich?',
+        en: 'What are you genuinely looking forward to right now?',
+      },
+      {
+        de: 'Welche einfache Freude hat zuletzt einen gewöhnlichen Tag besser gemacht?',
+        en: 'What simple pleasure recently made an ordinary day better?',
+      },
+      {
+        de: 'Was machst du gern, ohne darin besonders gut sein zu müssen?',
+        en: 'What do you enjoy doing without needing to be particularly good at it?',
+      },
+      {
+        de: 'Auf welchen kleinen Moment der letzten Zeit bist du stolz – und warum?',
+        en: 'What small recent moment made you feel proud, and why?',
+      },
+      {
+        de: 'Wofür begeisterst du dich gerade mehr, als andere vielleicht erwarten würden?',
+        en: 'What are you more excited about lately than people might expect?',
+      },
+      {
+        de: 'An welchem Ort fühlst du dich überraschend schnell wohl?',
+        en: 'Where do you find it surprisingly easy to feel at home?',
+      },
+      {
+        de: 'Welche kleine Gewohnheit macht deinen Alltag spürbar besser?',
+        en: 'What small habit makes a real difference to your day?',
+      },
+      {
+        de: 'Was würdest du gern nur zum Vergnügen lernen?',
+        en: 'What would you love to learn purely for the fun of it?',
+      },
+      {
+        de: 'Welche kleine Entscheidung hat dir in letzter Zeit überraschend gutgetan?',
+        en: 'What small decision has turned out surprisingly well for you lately?',
+      },
+    ],
+  },
+  {
+    id: 'signal',
+    numeral: { de: 'AKT II', en: 'ACT II' },
+    title: { de: 'SIGNAL', en: 'SIGNALS' },
+    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
+    intro: {
+      de: 'Jetzt geht es um das, was sich zwischen euch beiden gerade zeigt.',
+      en: "Now it's about what's showing up between the two of you right now.",
+    },
+    breakText: {
+      de: 'Kein Tempo ist hier falsch.',
+      en: "There's no wrong pace here.",
+    },
+    breakSub: {
+      de: 'Macht weiter, wenn ihr so weit seid.',
+      en: "Continue when you're ready.",
+    },
+    questions: [
+      {
+        de: 'Was hilft dir, dich mit einer neuen Person schnell wohlzufühlen?',
+        en: 'What helps you feel comfortable around someone new?',
+      },
+      {
+        de: 'Welche Eigenschaft fällt dir an anderen Menschen positiv auf?',
+        en: 'What quality in other people tends to catch your attention in a good way?',
+      },
+      {
+        de: 'Was macht ein Date für dich gut – unabhängig davon, wie es danach weitergeht?',
+        en: 'What makes a date worthwhile, regardless of what happens afterward?',
+      },
+      {
+        de: 'Was möchtest du über einen Menschen wissen, bevor du dir ein Urteil bildest?',
+        en: 'What do you want to know about someone before you form an opinion of them?',
+      },
+      {
+        de: 'Welches Verhalten gibt dir das Gefühl, dass dir wirklich zugehört wird?',
+        en: 'What does someone do that makes you feel genuinely heard?',
+      },
+      {
+        de: 'Wie zeigst du, dass dich eine Antwort wirklich interessiert?',
+        en: 'How do you show someone that you are genuinely interested in their answer?',
+      },
+      {
+        de: 'Welche Art von Kompliment erreicht dich wirklich?',
+        en: 'What kind of compliment truly lands with you?',
+      },
+      {
+        de: 'Welche Art von gemeinsamem Schweigen fühlt sich für dich angenehm an?',
+        en: 'What kind of shared silence feels comfortable to you?',
+      },
+      {
+        de: 'Welcher Wert zeigt sich in deinem Alltag besonders deutlich?',
+        en: 'Which of your values shows up most clearly in your everyday life?',
+      },
+      {
+        de: 'Welche gute Eigenschaft an dir erkennen Menschen oft erst mit der Zeit?',
+        en: 'What good quality in you do people often discover only with time?',
+      },
+      {
+        de: 'Welche Mischung aus Planung und Spontaneität passt gut zu dir?',
+        en: 'What balance of planning and spontaneity suits you best?',
+      },
+      {
+        de: 'Welche Version von dir lernen neue Menschen meistens zuerst kennen?',
+        en: 'Which version of you do new people usually meet first?',
+      },
+    ],
+  },
+  {
+    id: 'clarity',
+    numeral: { de: 'AKT III', en: 'ACT III' },
+    title: { de: 'KLARHEIT', en: 'CLARITY' },
+    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
+    intro: {
+      de: 'Dieser Akt bringt Klarheit über Erwartungen und Grenzen. Nichts davon ist ein Versprechen für später.',
+      en: "This act brings clarity about expectations and boundaries. None of it is a promise about what comes next.",
+    },
+    questions: [
+      {
+        de: 'Was soll eine Person an dir bemerken, ohne dass du es beweisen musst?',
+        en: 'What do you hope someone notices about you without making you prove it?',
+      },
+      {
+        de: 'Woran merkst du, dass du jemanden gern wiedersehen möchtest?',
+        en: 'How do you know when you would like to see someone again?',
+      },
+      {
+        de: 'Welche Grenze macht Dating für dich leichter und sicherer?',
+        en: 'What boundary makes dating feel easier and safer for you?',
+      },
+      {
+        de: 'Welche Art von Verbindung hoffst du zu finden, ohne heute schon mehr versprechen zu müssen?',
+        en: 'What kind of connection are you hoping for without having to promise anything tonight?',
+      },
+      {
+        de: 'Welches Tempo fühlt sich beim Kennenlernen für dich gut an?',
+        en: 'What pace feels right to you when getting to know someone?',
+      },
+      {
+        de: 'Welche Wahrheit über deinen Alltag ist wichtig, um dich gerade gut kennenzulernen?',
+        en: 'What truth about your day-to-day life right now would help someone understand you better?',
+      },
+      {
+        de: 'Wie zeigt sich Verlässlichkeit für dich am Anfang eines Kennenlernens?',
+        en: 'What does reliability look like to you early on?',
+      },
+      {
+        de: 'Wie soll eine Person nachfragen, wenn sie deine Gefühle nicht sicher einschätzen kann?',
+        en: 'How would you like someone to ask when they are unsure how you feel?',
+      },
+      {
+        de: 'Was lässt dich respektiert fühlen, wenn Interessen oder Meinungen auseinandergehen?',
+        en: 'What makes you feel respected when interests or opinions differ?',
+      },
+      {
+        de: 'Was soll dein Gegenüber von dir aus diesem Abend in Erinnerung behalten?',
+        en: 'What do you hope the other person remembers about you from tonight?',
+      },
+      {
+        de: 'Was hilft dir, ehrlich Nein zu sagen, ohne dich für die Stimmung verantwortlich zu fühlen?',
+        en: 'What helps you say an honest no without feeling responsible for the mood?',
+      },
+      {
+        de: 'Was würde diesen Abend für dich gut und druckfrei abrunden?',
+        en: 'What would make this evening feel complete and pressure-free for you?',
+        last: true,
+      },
+    ],
+  },
+];
+
+const FIRST_DATE_Q37 = {
+  neither: {
+    de: 'Stellt euch nacheinander die Frage, von der ihr gehofft habt, dass sie heute noch kommt.',
+    en: 'Take turns asking the question you each hoped would come up tonight.',
+  },
+  one: (lang, who, other) =>
+    lang === 'de'
+      ? `${who}, stell ${other} die Frage, von der du gehofft hast, dass sie dir heute gestellt wird.`
+      : `${who}, ask ${other} the question you hoped they would ask you tonight.`,
+  both: {
+    de: 'Stellt euch noch eine Frage, die diesen ersten Abend gut abrundet.',
+    en: 'Ask each other one more question that would bring this first evening to a good close.',
+  },
+};
+
+// A single style, all twists off -- see the block comment above for why.
+const FIRST_DATE_MODES = [
+  {
+    id: 'calm',
+    title: { de: 'CALM', en: 'CALM' },
+    meta: { de: 'Ruhig und ehrlich', en: 'Calm and honest' },
+    blurb: {
+      de: 'Zurückhaltende Inszenierung, ausgewählte Route.',
+      en: 'Understated presentation for your selected route.',
+    },
+    twists: { predict: false, both: false, nothinking: false, deeper: false, stay: false },
+  },
+];
+
+// Same relative placement as CLASSIC's (interrupts before absolute index
+// 27, i.e. between the 3rd and 4th question of Act III) -- no pack-
+// specific placement is given in the catalog, so this keeps a single,
+// consistent convention across packs rather than inventing a bespoke one
+// per pack.
+const FIRST_DATE_SECRET_AT_INDEX = 27;
+
+/*
+ * Curated routes, verbatim from the catalog's "Kuratierte Routen" section.
+ * Local (0-based, per-act) indices derived from the catalog's absolute
+ * Q-numbers: Quick Q01,Q02,Q04,Q07 / Q13,Q15,Q17,Q21 / Q25,Q27,Q28,Q36;
+ * Standard Q01-Q05,Q07,Q08,Q12 / Q13-Q17,Q19,Q21,Q24 / Q25,Q26,Q27,Q28,Q29,Q31,Q34,Q36.
+ */
+const FIRST_DATE_ROUTES = {
+  quick: {
+    id: 'quick',
+    title: { de: 'KURZ', en: 'QUICK' },
+    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
+    subtitle: {
+      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
+      en: '12 questions · 3 acts · about 18 minutes',
+    },
+    actIndices: [
+      [0, 1, 3, 6],
+      [0, 2, 4, 8],
+      [0, 2, 3, 11],
+    ],
+  },
+  standard: {
+    id: 'standard',
+    title: { de: 'STANDARD', en: 'STANDARD' },
+    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
+    subtitle: {
+      de: '24 Fragen · 3 Akte · etwa 30 Minuten',
+      en: '24 questions · 3 acts · about 30 minutes',
+    },
+    actIndices: [
+      [0, 1, 2, 3, 4, 6, 7, 11],
+      [0, 1, 2, 3, 4, 6, 8, 11],
+      [0, 1, 2, 3, 4, 6, 9, 11],
+    ],
+  },
+  full: {
+    id: 'full',
+    title: { de: 'VOLL', en: 'FULL' },
+    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
+    subtitle: {
+      de: '36 Fragen · 3 Akte · etwa 50 Minuten',
+      en: '36 questions · 3 acts · about 50 minutes',
+    },
+    actIndices: [null, null, null],
+  },
+};
+
+// Warm, distinct from CLASSIC's cool teal/purple/grey -- same progressive
+// withdrawal (chrome/glow shrink act over act) since that's a general
+// CLOSER design principle, not a CLASSIC-specific choice.
+const FIRST_DATE_ACT_STYLE = [
+  { accent: '#FF8A65', chrome: 1, progress: 'full', glow: 0.28 },
+  { accent: '#F76E9E', chrome: 0.5, progress: 'count', glow: 0.15 },
+  { accent: '#FFC24B', chrome: 0.22, progress: 'number', glow: 0.05 },
+];
+
 /*
  * The PACKS registry. Each entry is everything CloserGame.js needs to run a
  * full playthrough: acts (and their questions), style modes, per-act look,
@@ -531,14 +840,24 @@ const CLASSIC_ACT_STYLE = [
  * Adding a pack means adding another entry here with its own acts/modes/
  * actStyle/q37/secretAtIndex -- nothing in CloserGame.js hardcodes `classic`
  * or assumes there is only one pack.
+ *
+ * `title`/`meta`/`blurb` are what the Pack-Auswahl screen (FR8-03) shows on
+ * each pack's own card -- the same three-field shape routes and modes
+ * already use. `defaultRouteId` is that screen's preselection for a freshly
+ * chosen pack (e.g. CLASSIC still opens on Full, FIRST DATE opens on Quick,
+ * per the catalog's own per-pack "Default" line) -- distinct from the
+ * global DEFAULT_ROUTE_ID constant below, which is getRoute()'s technical
+ * fallback for a routeId that's missing or doesn't exist at all, not a
+ * per-pack editorial choice.
  */
 export const PACKS = {
   classic: {
     id: 'classic',
     title: { de: 'CLASSIC', en: 'CLASSIC' },
+    meta: { de: 'Die 36 Fragen', en: 'The 36 questions' },
     blurb: {
-      de: 'Die 36 Fragen. Der Ursprung.',
-      en: 'The original 36 questions.',
+      de: 'Für tiefes Kennenlernen – jede Intensität, jede Beziehung.',
+      en: 'For deep connection — any intensity, any relationship.',
     },
     acts: CLASSIC_ACTS,
     modes: CLASSIC_MODES,
@@ -546,6 +865,23 @@ export const PACKS = {
     q37: CLASSIC_Q37,
     secretAtIndex: CLASSIC_SECRET_AT_INDEX,
     routes: CLASSIC_ROUTES,
+    defaultRouteId: 'full',
+  },
+  'first-date': {
+    id: 'first-date',
+    title: { de: 'FIRST DATE', en: 'FIRST DATE' },
+    meta: { de: 'Für ein erstes Date', en: 'For a first date' },
+    blurb: {
+      de: 'Neugier und Chemie entdecken – leicht, druckfrei.',
+      en: 'Explore curiosity and chemistry — light, no pressure.',
+    },
+    acts: FIRST_DATE_ACTS,
+    modes: FIRST_DATE_MODES,
+    actStyle: FIRST_DATE_ACT_STYLE,
+    q37: FIRST_DATE_Q37,
+    secretAtIndex: FIRST_DATE_SECRET_AT_INDEX,
+    routes: FIRST_DATE_ROUTES,
+    defaultRouteId: 'quick',
   },
 };
 

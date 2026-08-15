@@ -64,6 +64,9 @@ const COPY = {
   playerOne: { de: 'Person 1', en: 'Player 1' },
   playerTwo: { de: 'Person 2', en: 'Player 2' },
 
+  /* pack (iteration 8 catalog rollout, FR8-03) ---------------------------- */
+  pickPack: { de: 'Welches Pack?', en: 'Which pack?' },
+
   /* duration / route (iteration 7, Phase 2, FR-01/FR-02) ------------------ */
   pickDuration: { de: 'Wie viel Zeit habt ihr?', en: 'How much time do you have?' },
 

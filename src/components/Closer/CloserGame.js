@@ -5,6 +5,7 @@ import {
   DEFAULT_ROUTE_ID,
   LANGS,
   MINUTES_PER_QUESTION,
+  PACKS,
   SKIP_TOKENS,
   actIndexFor,
   actStartIndices,
@@ -72,7 +73,7 @@ const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 // doesn't match this is treated as incompatible rather than guessed at.
 const STATE_VERSION = 1;
 const VALID_PHASES = new Set([
-  'players', 'duration', 'mode', 'intro', 'act', 'break', 'q',
+  'players', 'pack', 'duration', 'mode', 'intro', 'act', 'break', 'q',
   'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
   'lastIntro', 'all36',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
@@ -173,7 +174,7 @@ function isPlausibleSaved(saved) {
 // set: it's ambiguous on its own, since Act I's very first intro screen is
 // state-shape-identical to Act II/III's after a real act break. See
 // hasRealProgress() below for how that ambiguity is resolved.
-const SETUP_ONLY_PHASES = new Set(['players', 'duration', 'mode', 'intro']);
+const SETUP_ONLY_PHASES = new Set(['players', 'pack', 'duration', 'mode', 'intro']);
 
 // A save written before `hasStarted` existed has no such field -- this is
 // its migration, inferred from phase/progress rather than trusted blindly,
@@ -840,12 +841,51 @@ export default function CloserGame() {
           <Button
             $accent={A0}
             onClick={() =>
-              set({ phase: 'duration', starterOffset: Math.random() < 0.5 ? 0 : 1 })
+              set({ phase: 'pack', starterOffset: Math.random() < 0.5 ? 0 : 1 })
             }
           >
             {t('continue')}
           </Button>
           <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
+        </Foot>
+      </>,
+      { accent: A0, glow: 0.28 }
+    );
+  }
+
+  /* ================================================================== */
+  /* PACK (iteration 8 catalog rollout, FR8-03)                         */
+  /* ================================================================== */
+
+  if (s.phase === 'pack') {
+    return frame(
+      <>
+        <Body $center>
+          <Kicker $accent={A0}>{t('pickPack')}</Kicker>
+          {Object.values(PACKS).map((p) => (
+            <Choice
+              key={p.id}
+              $on={s.packId === p.id}
+              $accent={A0}
+              aria-pressed={s.packId === p.id}
+              onClick={() =>
+                set({
+                  packId: p.id,
+                  routeId: p.defaultRouteId || DEFAULT_ROUTE_ID,
+                  modeId: p.modes[0].id,
+                })
+              }
+            >
+              <strong>{pick(p.title, lang)}</strong>
+              <em>{pick(p.meta, lang)}</em>
+              <span>{pick(p.blurb, lang)}</span>
+            </Choice>
+          ))}
+        </Body>
+        <Foot>
+          <Button $accent={A0} onClick={() => set({ phase: 'duration' })}>
+            {t('continue')}
+          </Button>
         </Foot>
       </>,
       { accent: A0, glow: 0.28 }

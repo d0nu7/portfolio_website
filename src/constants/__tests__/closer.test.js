@@ -296,42 +296,92 @@ describe('routes (iteration 7, Phase 2)', () => {
   });
 
   /*
-   * Every route -- current and any future one -- must keep the pack's
-   * closing (`last: true`) question as its own actual last question, and
-   * must place the secret-question interrupt strictly inside its own
-   * bounds, not at or past the end (see closer.js's own comment on
-   * secretAtIndexFor for why this is derived, not hand-set, per route).
+   * FIRST DATE (iteration 8 catalog rollout, FR8-01) -- same pinning
+   * approach as CLASSIC's above, verbatim against
+   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 3's own
+   * "Kuratierte Routen" line.
    */
-  Object.entries(PACKS.classic.routes).forEach(([routeId, route]) => {
-    describe(`route "${routeId}"`, () => {
-      it('ends on the pack\'s actual closing question', () => {
-        const total = totalQuestions('classic', routeId);
-        expect(questionAt('classic', total - 1, routeId).last).toBe(true);
-      });
+  it("FIRST DATE's quick and standard resolve to exactly the catalog's curated question IDs", () => {
+    const idsFor = (routeId) => {
+      const total = totalQuestions('first-date', routeId);
+      return Array.from({ length: total }, (_, i) =>
+        questionIdFor('first-date', originalIndexFor('first-date', i, routeId))
+      );
+    };
+    expect(idsFor('quick')).toEqual([
+      'first-date-q01', 'first-date-q02', 'first-date-q04', 'first-date-q07',
+      'first-date-q13', 'first-date-q15', 'first-date-q17', 'first-date-q21',
+      'first-date-q25', 'first-date-q27', 'first-date-q28', 'first-date-q36',
+    ]);
+    expect(idsFor('standard')).toEqual([
+      'first-date-q01', 'first-date-q02', 'first-date-q03', 'first-date-q04',
+      'first-date-q05', 'first-date-q07', 'first-date-q08', 'first-date-q12',
+      'first-date-q13', 'first-date-q14', 'first-date-q15', 'first-date-q16',
+      'first-date-q17', 'first-date-q19', 'first-date-q21', 'first-date-q24',
+      'first-date-q25', 'first-date-q26', 'first-date-q27', 'first-date-q28',
+      'first-date-q29', 'first-date-q31', 'first-date-q34', 'first-date-q36',
+    ]);
+  });
 
-      it('places the secret-question interrupt strictly inside its own bounds', () => {
-        const total = totalQuestions('classic', routeId);
-        const secretAt = secretAtIndexFor('classic', routeId);
-        expect(secretAt).toBeGreaterThan(0);
-        expect(secretAt).toBeLessThan(total);
-      });
+  it('FIRST DATE has exactly 3 acts of 12 questions each, 36 total, and no twists assigned', () => {
+    const acts = PACKS['first-date'].acts;
+    expect(acts).toHaveLength(3);
+    acts.forEach((act) => expect(act.questions).toHaveLength(12));
+    expect(totalQuestions('first-date')).toBe(36);
+    // Deliberate for now (see the block comment above FIRST_DATE_ACTS in
+    // closer.js) -- no question carries a twist or stayEnabled until
+    // that's an explicit editorial decision, not an assumption baked into
+    // this pack's launch.
+    acts.forEach((act) =>
+      act.questions.forEach((q) => {
+        expect(q.twist).toBeUndefined();
+        expect(q.stayEnabled).toBeUndefined();
+      })
+    );
+  });
 
-      it('still has exactly ACTS_PER_PACK acts', () => {
-        expect(resolvedActs('classic', routeId)).toHaveLength(ACTS_PER_PACK);
-      });
+  /*
+   * Every route -- current and any future one, in any pack -- must keep
+   * the pack's closing (`last: true`) question as its own actual last
+   * question, and must place the secret-question interrupt strictly
+   * inside its own bounds, not at or past the end (see closer.js's own
+   * comment on secretAtIndexFor for why this is derived, not hand-set,
+   * per route). Iterates every registered pack (not just classic, since
+   * iteration 8 added first-date) so a future pack's routes get this
+   * coverage automatically just by being added to PACKS.
+   */
+  Object.values(PACKS).forEach((pack) => {
+    Object.entries(pack.routes).forEach(([routeId, route]) => {
+      describe(`${pack.id} route "${routeId}"`, () => {
+        it('ends on the pack\'s actual closing question', () => {
+          const total = totalQuestions(pack.id, routeId);
+          expect(questionAt(pack.id, total - 1, routeId).last).toBe(true);
+        });
 
-      it('every route question is non-empty and traceable back to the pack\'s original 36', () => {
-        const total = totalQuestions('classic', routeId);
-        for (let i = 0; i < total; i += 1) {
-          const original = originalIndexFor('classic', i, routeId);
-          expect(original).toBeGreaterThanOrEqual(0);
-          expect(original).toBeLessThan(36);
-          expect(questionAt('classic', i, routeId)).toBe(questionAt('classic', original));
-        }
-      });
+        it('places the secret-question interrupt strictly inside its own bounds', () => {
+          const total = totalQuestions(pack.id, routeId);
+          const secretAt = secretAtIndexFor(pack.id, routeId);
+          expect(secretAt).toBeGreaterThan(0);
+          expect(secretAt).toBeLessThan(total);
+        });
 
-      it("route.actIndices has one entry per act", () => {
-        expect(route.actIndices).toHaveLength(ACTS_PER_PACK);
+        it('still has exactly ACTS_PER_PACK acts', () => {
+          expect(resolvedActs(pack.id, routeId)).toHaveLength(ACTS_PER_PACK);
+        });
+
+        it('every route question is non-empty and traceable back to the pack\'s original questions', () => {
+          const total = totalQuestions(pack.id, routeId);
+          for (let i = 0; i < total; i += 1) {
+            const original = originalIndexFor(pack.id, i, routeId);
+            expect(original).toBeGreaterThanOrEqual(0);
+            expect(original).toBeLessThan(totalQuestions(pack.id));
+            expect(questionAt(pack.id, i, routeId)).toBe(questionAt(pack.id, original));
+          }
+        });
+
+        it("route.actIndices has one entry per act", () => {
+          expect(route.actIndices).toHaveLength(ACTS_PER_PACK);
+        });
       });
     });
   });

@@ -15,7 +15,8 @@ test.describe('Duration / route selection', () => {
   }) => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Start' }).click();
-    await page.getByRole('button', { name: 'Weiter' }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
+    await page.getByRole('button', { name: 'Weiter' }).click(); // pack (default CLASSIC) -> duration
 
     await expect(page.getByText('Wie viel Zeit habt ihr?')).toBeVisible();
     // All three routes are offered, with their curated question counts.

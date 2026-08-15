@@ -38,13 +38,20 @@ describe('CloserGame smoke test', () => {
   });
 
   // Iteration 7, Phase 2: the setup flow gained a new Duration/route step
-  // between player setup and mode selection -- confirm it actually renders
-  // in the sequence, not just that closer.js's route data resolves.
-  it('moves from player setup to the new duration screen, then to mode', async () => {
+  // between player setup and mode selection; iteration 8 (FR8-03) added a
+  // Pack step before that. Confirm the full players -> pack -> duration ->
+  // mode sequence actually renders, not just that closer.js's data resolves.
+  it('moves from player setup through pack and duration to mode', async () => {
     renderGame();
 
     fireEvent.click(await screen.findByRole('button', { name: 'Start' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Weiter' }));
+
+    expect(await screen.findByText('Welches Pack?')).toBeInTheDocument();
+    expect(screen.getByText('CLASSIC')).toBeInTheDocument();
+    expect(screen.getByText('FIRST DATE')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Weiter' }));
 
     expect(await screen.findByText('Wie viel Zeit habt ihr?')).toBeInTheDocument();
     expect(screen.getByText('KURZ')).toBeInTheDocument();
