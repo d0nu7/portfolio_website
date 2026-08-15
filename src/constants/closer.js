@@ -41,19 +41,29 @@
  * -- this refactor is additive, not a content change. New packs are added by
  * inserting another entry into PACKS.
  *
- * Fixed schema, deliberately (regression-test iteration 5, P1.1/P1.3):
- * every pack MUST have exactly ACTS_PER_PACK acts of QUESTIONS_PER_ACT
- * questions each (3 x 12 = 36), a secret question, and a question 37. This
- * is enforced by the registry-conformance tests in closer.test.js, not just
- * assumed -- a pack that doesn't fit isn't added to PACKS. The alternative
- * (a fully variable engine that derives act breaks from each pack's own
- * question count) was considered and deliberately not built: every pack
+ * Fixed act count, deliberately (regression-test iteration 5, P1.1/P1.3):
+ * every pack MUST have exactly ACTS_PER_PACK acts, a secret question, and a
+ * question 37. This is enforced by the registry-conformance tests in
+ * closer.test.js, not just assumed -- a pack that doesn't fit isn't added
+ * to PACKS. The alternative (a fully variable engine with no fixed act
+ * count at all) was considered and deliberately not built: every pack
  * planned so far (FIRST DATE, COUPLES, FRIENDS, OLD FRIENDS, LATE NIGHT,
- * DEEP, CHAOS -- spec 55) fits this shape, and CloserGame.js's act-break
- * logic, global copy ("Das waren alle 36.", "FRAGE 37", "Etwa 45 Minuten"),
- * skip-token count and act timer all rely on it being fixed rather than
- * reading it per-pack. If a pack that genuinely needs a different shape
- * ever comes up, that's the trigger to revisit this, not before.
+ * DEEP, CHAOS -- spec 55) is a 3-act shape, and CloserGame.js's act-break
+ * logic, global copy ("FRAGE 37", three skip tokens), and per-act timer all
+ * rely on ACTS_PER_PACK being fixed rather than read per-pack.
+ *
+ * QUESTIONS_PER_ACT (12) is each act's CEILING, not a mandate every pack
+ * must fill (iteration 7, Phase 3, per FR-01's own "bis zu zwölf Fragen pro
+ * Akt" / "up to twelve questions per act" and its DEEP example of a pack
+ * that can simply lack a `quick` route until it has content for one -- the
+ * UI then just doesn't offer that choice, see getRoute() below). CLASSIC
+ * itself still has exactly 12 per act, 36 total -- that content is
+ * untouched and stays the full original experience. A newer, smaller pack
+ * (e.g. a FIRST DATE pilot with only a hand-curated `quick` set so far) can
+ * have fewer, and only defines the routes it actually has questions
+ * written for. If a pack that genuinely needs more than ACTS_PER_PACK acts
+ * ever comes up, that's the trigger to revisit the act count too, not
+ * before.
  *
  * See questionAt/actIndexFor/totalQuestions/finalQuestionIndex below, all
  * of which take a packId as their first argument (kept pack-aware even
@@ -520,10 +530,18 @@ export function getPack(packId) {
 // routeId (including every save written before routes existed) resolves
 // to DEFAULT_ROUTE_ID -- the full, unshortened game, so nobody's
 // in-progress or already-bookmarked game gets silently cut short by this
-// existing.
+// existing. A pack that doesn't (yet) define DEFAULT_ROUTE_ID itself --
+// e.g. a pilot pack with only a hand-curated `quick` set so far, iteration
+// 7 Phase 3 -- falls back further, to whichever route it DOES define
+// (Object.values() order == declaration order, so this is that pack's
+// first/only route) rather than crashing on a route that doesn't exist for
+// it. Every pack must still define at least one route -- see
+// closer.test.js's registry-conformance coverage.
 export function getRoute(packId, routeId) {
   const pack = getPack(packId);
-  return (pack.routes && pack.routes[routeId]) || pack.routes[DEFAULT_ROUTE_ID];
+  const requested = pack.routes && pack.routes[routeId];
+  if (requested) return requested;
+  return pack.routes[DEFAULT_ROUTE_ID] || Object.values(pack.routes)[0];
 }
 
 // Roughly each act's own pre-existing pacing (12 questions / ~15 minutes).

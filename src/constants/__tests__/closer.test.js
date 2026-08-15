@@ -119,20 +119,57 @@ describe('PACKS registry', () => {
   });
 
   /*
-   * Hard enforcement of the fixed pack schema (regression-test iteration 5,
-   * P1.1/P1.3): CloserGame.js's act-break logic (`index % QUESTIONS_PER_ACT`)
-   * and CLOSER's global copy ("Das waren alle 36.", "FRAGE 37", "Etwa 45
-   * Minuten", three skip tokens, a 15-minute act timer) all assume every
-   * pack is exactly ACTS_PER_PACK acts of QUESTIONS_PER_ACT questions each.
-   * That assumption is deliberate (see the architecture comment in
-   * closer.js), not incidental -- so a pack that doesn't fit must fail here
-   * rather than silently misbehave in the running game.
+   * Hard enforcement of the fixed ACT COUNT (regression-test iteration 5,
+   * P1.1/P1.3): CloserGame.js's act-break logic and CLOSER's global copy
+   * ("FRAGE 37", three skip tokens, a per-act timer) all assume every pack
+   * is exactly ACTS_PER_PACK acts. That assumption is deliberate (see the
+   * architecture comment in closer.js), not incidental -- so a pack that
+   * doesn't fit must fail here rather than silently misbehave in the
+   * running game.
+   *
+   * QUESTIONS_PER_ACT is a ceiling per act, not a mandate every pack must
+   * fill (iteration 7, Phase 3, per FR-01's "up to twelve questions per
+   * act" -- a newer, smaller pack can have fewer while it's still being
+   * written). CLASSIC specifically is pinned to exactly 12 per act, 36
+   * total, in its own describe block above -- that invariant is about
+   * CLASSIC's content staying the full original experience, not about
+   * every pack matching it.
    */
-  it('every registered pack matches the fixed ACTS_PER_PACK x QUESTIONS_PER_ACT schema', () => {
+  it('every registered pack has exactly ACTS_PER_PACK acts, each with at most QUESTIONS_PER_ACT questions', () => {
     Object.values(PACKS).forEach((pack) => {
       expect(pack.acts).toHaveLength(ACTS_PER_PACK);
-      pack.acts.forEach((act) => expect(act.questions).toHaveLength(QUESTIONS_PER_ACT));
-      expect(totalQuestions(pack.id)).toBe(ACTS_PER_PACK * QUESTIONS_PER_ACT);
+      pack.acts.forEach((act) => {
+        expect(act.questions.length).toBeGreaterThan(0);
+        expect(act.questions.length).toBeLessThanOrEqual(QUESTIONS_PER_ACT);
+      });
+    });
+  });
+
+  it('CLASSIC specifically is still the full, untouched 3x12 = 36 original experience', () => {
+    PACKS.classic.acts.forEach((act) => expect(act.questions).toHaveLength(QUESTIONS_PER_ACT));
+    expect(totalQuestions('classic')).toBe(ACTS_PER_PACK * QUESTIONS_PER_ACT);
+  });
+
+  it('getRoute falls back to a pack\'s own first route if it has no DEFAULT_ROUTE_ID route (e.g. a smaller, in-progress pack)', () => {
+    // No real pack lacks a `full` route today (CLASSIC has one) -- this
+    // pins getRoute()'s fallback chain directly rather than waiting for a
+    // future pack to exercise it for the first time.
+    const stub = { id: 'stub', routes: { quick: { id: 'quick' } } };
+    const originalStub = PACKS.stub;
+    PACKS.stub = stub;
+    try {
+      expect(getRoute('stub', 'full').id).toBe('quick');
+      expect(getRoute('stub', undefined).id).toBe('quick');
+    } finally {
+      if (originalStub === undefined) delete PACKS.stub;
+      else PACKS.stub = originalStub;
+    }
+  });
+
+  it('every registered pack defines at least one route', () => {
+    Object.values(PACKS).forEach((pack) => {
+      expect(pack.routes).toBeDefined();
+      expect(Object.keys(pack.routes).length).toBeGreaterThan(0);
     });
   });
 
