@@ -11,7 +11,7 @@
 | ID | Priorität | Feature |
 |---|:---:|---|
 | FR8-01 | P1 | Vollständigen Fragenkatalog als Single Source of Truth integrieren |
-| FR8-02 | P1 | Secret Question um `none | pending | asked` erweitern |
+| FR8-02 | P2 | Bestehende Secret-Question-Semantik als packweiten Vertrag festschreiben |
 | FR8-03 | P1 | Pack-Auswahl und pack-spezifische Zeitrouten ausliefern |
 | FR8-04 | P2 | „CLOSER PULSE“: ruhige Belohnungsanimationen an Meilensteinen |
 | FR8-05 | P2 | Route- und Style-Copy technisch entkoppeln |
@@ -67,24 +67,29 @@ TTS wird erst danach packweise ergänzt. Die ausstehende ElevenLabs-Voice-Arbeit
 
 ---
 
-## FR8-02 – Secret Question: echte „Heute keine“-Option
+## FR8-02 – Secret Question: bestehenden Vertrag für alle Packs bewahren
 
-Der Katalog erlaubt jeder Person, die Geheimfrage mit **Heute keine / Not tonight** abzulehnen. Das aktuelle boolesche Modell kann diesen Fall nicht korrekt ausdrücken.
+Die aktuelle Iteration bietet **Heute keine / Not today** bereits gleichwertig an und deckt den Fall mit End-to-End-Tests ab. Sie trennt korrekt zwischen `hasSecretQuestion` und `secretAsked`; dadurch wird eine abgelehnte Frage nie später als offen angefordert. Hier ist kein P1-Neubau nötig.
 
 ### State-Vertrag
 
 ```text
-secretStatusByPlayer = ["none" | "pending" | "asked", "none" | "pending" | "asked"]
-pendingOwners = indices where status === "pending"
+hasSecretQuestion = [true | false | null, true | false | null]
+secretAsked       = [true | false | null, true | false | null]
+
+derivedStatus(person):
+  hasSecretQuestion === false                         -> none
+  hasSecretQuestion === true && secretAsked === false -> pending
+  hasSecretQuestion === true && secretAsked === true  -> asked
 ```
 
 Branches:
 
 - `neither`: zwei vorhandene Geheimfragen sind noch offen;
 - `one`: genau eine vorhandene Geheimfrage ist noch offen;
-- `both`: keine vorhandene Geheimfrage ist offen; nur freiwillige Bonusfrage.
+- `both`: keine vorhandene Geheimfrage ist offen; nur freiwillige Bonusfrage. Bei zwei Ablehnungen kann die vorhandene besondere No-Secret-Copy verwendet werden.
 
-`none` darf niemals wie eine offene Frage behandelt werden. In Quick/Standard zeigt das UI **Letzte Frage / Final Question**, nicht die falsche Nummer 37.
+Für neue Packs muss exakt diese Semantik erhalten bleiben. Optional kann das Datenmodell später intern auf ein Enum `none | pending | asked` vereinfacht werden; das ist ein Refactor, kein Feature-Gate. In Quick/Standard zeigt das UI **Letzte Frage / Final Question**, nicht die falsche Nummer 37.
 
 ### LATE NIGHT zusätzlicher Gate
 

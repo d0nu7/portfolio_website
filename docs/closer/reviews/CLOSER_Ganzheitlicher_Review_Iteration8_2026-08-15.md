@@ -67,6 +67,7 @@ Der erste lokale Buildversuch traf auf veraltete installierte Abhängigkeiten. N
 - Antworten werden nicht eingegeben, ausgewertet oder aufgenommen.
 - Es gibt keine scheinpsychologische Auswertung und keinen Beziehungs-Score.
 - **Lieber nicht** bleibt kostenlos, unbegrenzt und ohne negative Rückmeldung.
+- **Heute keine** ist als echte Alternative zur Geheimfrage vorhanden; beide Ablehnungsfälle und das Finale sind automatisiert abgedeckt.
 - NO THINKING zeigt die Frage vor und während des Countdowns.
 - Die Oberfläche wird in den späteren Akten ruhiger.
 - Question 37 hat mehrere sichere Endpfade und keinen erzwungenen Abschluss.
@@ -106,7 +107,7 @@ Details und Abnahmekriterien: [`CLOSER_Bugfixes_Iteration8_2026-08-15.md`](CLOSE
 ### P2 – danach
 
 - Aktpausen müssen zeitneutral oder route-aware werden.
-- Secret Question braucht für **Heute keine** den Status `none | pending | asked`.
+- Die bestehende `hasSecretQuestion`-/`secretAsked`-Semantik muss beim Einbau neuer Packs unverändert erhalten bleiben; ein Enum-Refactor ist optional.
 - Content-Version plus aufgelöste Frage-IDs müssen im Resume-State stabil bleiben.
 - Die Code-Kommentare zur Pack-Größe sollten die aktuelle Validierung eindeutig widerspiegeln.
 
@@ -153,7 +154,7 @@ Damit wird Fortschritt fühlbar, ohne das Gespräch zu bewerten. Während Fragen
 ## Empfohlene nächste Umsetzung
 
 1. BF8-01 bis BF8-04 schließen und E2E ergänzen.
-2. Secret-State auf `none | pending | asked` migrieren.
+2. Den bestehenden Secret-State-Vertrag in Pack-Konformitätstests festschreiben.
 3. Pack-Auswahl einbauen und FIRST DATE als Pilot aus dem Katalog implementieren.
 4. Danach DATE NIGHT, COUPLES, FRIENDS/OLD FRIENDS, CHAOS und DEEP.
 5. CLOSER-PULSE-Prototyp für Start, Aktwechsel und Finale auf einem realen Android-Gerät testen.

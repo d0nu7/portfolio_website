@@ -35,15 +35,20 @@ In Tabellen mit einer Spalte **Route** bedeutet `Q/S/F`: Quick, Standard und Ful
 Die Geheimfrage ist keine Eingabeaufforderung. Jede Person erhält privat diese Wahl:
 
 - **DE:** „Denk an eine Frage, von der du insgeheim hoffst, dass dein Gegenüber sie dir heute stellt. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
-- **EN:** “Think of one question you secretly hope the other person asks you tonight. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
+- **EN:** “Think of one question you secretly hope the other person asks you during this game. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
 
-Gleichwertige Alternative: **„Heute keine“ / “Not tonight”**. Die pack-spezifische Frage 37 am Ende berücksichtigt, ob keine, eine oder beide tatsächlich vorhandenen Geheimfragen noch offen sind.
+Gleichwertige Alternative: **„Heute keine“ / “Not today”**. Die pack-spezifische Frage 37 am Ende berücksichtigt, ob keine, eine oder beide tatsächlich vorhandenen Geheimfragen noch offen sind.
 
-**Verbindlicher State-Vertrag:** „Heute keine“ darf nicht als `false` im bisherigen `secretAsked: true | false | null` gespeichert werden; sonst fordert das Finale eine Frage an, die nie existiert hat. Pro Person wird ein eigener Status `none | pending | asked` benötigt. Daraus werden `pendingOwners` abgeleitet und die drei bestehenden Branches aufgelöst:
+**Verbindlicher State-Vertrag:** „Heute keine“ darf nicht als `false` in `secretAsked` gespeichert werden; dort bedeutet `false`, dass eine vorhandene Frage noch offen ist. Die aktuelle Implementierung löst das bereits korrekt mit zwei getrennten Angaben pro Person:
+
+- `hasSecretQuestion: true | false | null` – wurde überhaupt eine Geheimfrage gebildet?
+- `secretAsked: true | false | null` – wurde eine vorhandene Geheimfrage im Gespräch bereits gestellt?
+
+Damit gilt semantisch: `hasSecretQuestion === false` → `none`; vorhandene Frage plus `secretAsked === false` → `pending`; vorhandene Frage plus `secretAsked === true` → `asked`. Ein späterer Enum-Refactor auf `none | pending | asked` ist möglich, aber nicht Voraussetzung. Aus dem bestehenden Modell werden die offenen Fragen und die drei Branches abgeleitet:
 
 - `neither`: zwei vorhandene Geheimfragen sind noch offen;
 - `one`: genau eine vorhandene Geheimfrage ist noch offen;
-- `both`: keine vorhandene Geheimfrage ist mehr offen; es erscheint nur die freiwillige pack-spezifische Bonusfrage.
+- `both`: keine vorhandene Geheimfrage ist mehr offen; es erscheint nur die freiwillige pack-spezifische Bonusfrage. Das umfasst bereits gestellte und ausdrücklich abgelehnte Geheimfragen. Wenn beide **Heute keine** gewählt haben, darf die Oberfläche zusätzlich die vorhandene spezielle No-Secret-Copy zeigen.
 
 `Question 37` kann intern als Mechanikname bestehen bleiben. In Quick und Standard zeigt die Oberfläche jedoch **LETZTE FRAGE / FINAL QUESTION** statt einer sachlich falschen Nummer 37. Aufgeführte Response Cards sind optionale Zuhörimpulse und zählen nicht als Fragen.
 
