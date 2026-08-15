@@ -47,4 +47,80 @@ test.describe('Skip tokens', () => {
     await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(0);
     await expect(page.getByText(/kein.*skip/i)).toHaveCount(0);
   });
+
+  /*
+   * Iteration-6 content review, P1: consent to decline a question must
+   * never be a scarce resource -- both of these pin that the free "Lieber
+   * nicht" path is unaffected by the token Skip's own state.
+   */
+  test('the token Skip control is available even on the last question (36)', async ({ page }) => {
+    // Act III, question index 35: the last question, no chrome shown, but
+    // Skip must still work here -- consent doesn't run out at question 36.
+    await seedAndResume(page, { qIndex: 35, skipsRemaining: 2 });
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+    await page.waitForTimeout(1800);
+
+    // A skipped last question still lands on the "all 36" screen, same as
+    // clicking "Fertig" would.
+    await expect(page.getByText('Das waren alle 36.')).toBeVisible();
+  });
+
+  test('the free "Lieber nicht" opt-out works at zero tokens and on the last question', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 35, skipsRemaining: 0 });
+    // The token Skip button is gone (0 left), but the free opt-out isn't.
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toHaveCount(0);
+
+    const decline = page.getByRole('button', { name: 'Lieber nicht' });
+    await expect(decline).toBeVisible();
+    await decline.click();
+    await page.waitForTimeout(1800);
+
+    await expect(page.getByText('Das waren alle 36.')).toBeVisible();
+  });
+
+  test('declining does not spend a token', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+    await page.waitForTimeout(1800);
+    await expect(page.locator('[aria-label="3/3"]')).toBeVisible();
+  });
+
+  /*
+   * Bugfix-report iteration 7, BF-06: the question's own controls (Next/
+   * Skip/decline/menu) used to stay mounted underneath the flash overlay,
+   * just visually covered -- reachable by keyboard/screen reader and able
+   * to race the flash's own 1.6s auto-advance. This pins that while the
+   * flash is showing, no button from the question screen underneath it is
+   * present in the accessibility tree at all.
+   */
+  test('while a decline flash is showing, no question-screen controls exist in the DOM', async ({
+    page,
+  }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+
+    await expect(page.getByText('Übersprungen.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Weiter' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Lieber nicht' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Menü' })).toHaveCount(0);
+
+    await page.waitForTimeout(1800);
+    await expect(page.getByRole('button', { name: 'Weiter' })).toBeVisible();
+  });
+
+  test('while a token-skip flash is showing, no question-screen controls exist in the DOM', async ({
+    page,
+  }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+
+    await expect(page.getByText('Übersprungen.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Weiter' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Menü' })).toHaveCount(0);
+  });
 });

@@ -36,4 +36,23 @@ describe('CloserGame smoke test', () => {
 
     expect(await screen.findByText('Wer spielt?')).toBeInTheDocument();
   });
+
+  // Iteration 7, Phase 2: the setup flow gained a new Duration/route step
+  // between player setup and mode selection -- confirm it actually renders
+  // in the sequence, not just that closer.js's route data resolves.
+  it('moves from player setup to the new duration screen, then to mode', async () => {
+    renderGame();
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Start' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Weiter' }));
+
+    expect(await screen.findByText('Wie viel Zeit habt ihr?')).toBeInTheDocument();
+    expect(screen.getByText('KURZ')).toBeInTheDocument();
+    expect(screen.getByText('STANDARD')).toBeInTheDocument();
+    expect(screen.getByText('VOLL')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Weiter' }));
+
+    expect(await screen.findByText('Modus wählen')).toBeInTheDocument();
+  });
 });
