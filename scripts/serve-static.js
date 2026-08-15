@@ -68,6 +68,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  // eslint-disable-next-line no-console
   console.log(`Serving ${dir} at http://localhost:${port}`);
 });

@@ -7,16 +7,16 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
     "test:e2e": "playwright test",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "eslint-config-next": "^13.0.5",
-    "next": "^13.0.5",
+    "eslint-config-next": "^16.3.1",
+    "next": "^16.3.1",
     "react": "^18.2.0",
     "react-burger-menu": "^3.0.8",
     "react-dom": "^18.2.0",
@@ -29,7 +29,7 @@
     "@svgr/cli": "^6.5.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.5",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1"
   }
