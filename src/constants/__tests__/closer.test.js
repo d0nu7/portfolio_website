@@ -208,11 +208,16 @@ describe('starterFor', () => {
 });
 
 describe('classifySecretAsked', () => {
+  // hasSecretQuestion omitted (undefined) in most of these on purpose --
+  // bugfix-report iteration 7 added it as a second argument, but every
+  // pre-existing call/save has none, and null there must classify exactly
+  // as before (default "has a question, not yet resolved" per person).
   it('treats [null, null] (nothing answered yet) as neither/bothAsked false, no pending player', () => {
     expect(classifySecretAsked([null, null])).toEqual({
       neither: false,
       bothAsked: false,
       pendingPlayer: null,
+      noneHaveSecretQuestion: false,
     });
   });
 
@@ -231,6 +236,7 @@ describe('classifySecretAsked', () => {
       neither: false,
       bothAsked: true,
       pendingPlayer: null,
+      noneHaveSecretQuestion: false,
     });
   });
 
@@ -239,6 +245,7 @@ describe('classifySecretAsked', () => {
       neither: false,
       bothAsked: false,
       pendingPlayer: 0,
+      noneHaveSecretQuestion: false,
     });
   });
 
@@ -247,6 +254,46 @@ describe('classifySecretAsked', () => {
       neither: false,
       bothAsked: false,
       pendingPlayer: 1,
+      noneHaveSecretQuestion: false,
+    });
+  });
+
+  // hasSecretQuestion (bugfix-report iteration 7, BF-08/FR-07): 'Heute
+  // keine' opts a person out of this accounting entirely, not just out of
+  // one screen.
+  describe('with hasSecretQuestion (BF-08 opt-out)', () => {
+    it('flags noneHaveSecretQuestion when both opted out, regardless of secretAsked', () => {
+      expect(classifySecretAsked([null, null], [false, false])).toEqual({
+        neither: false,
+        bothAsked: false,
+        pendingPlayer: null,
+        noneHaveSecretQuestion: true,
+      });
+    });
+
+    it('treats an opted-out person as resolved -- the other pending still surfaces', () => {
+      // Player 0 opted out; player 1 has a question that hasn't been asked.
+      expect(classifySecretAsked([null, false], [false, true])).toEqual({
+        neither: false,
+        bothAsked: false,
+        pendingPlayer: 1,
+        noneHaveSecretQuestion: false,
+      });
+    });
+
+    it('flags bothAsked when the only applicable person was asked and the other opted out', () => {
+      expect(classifySecretAsked([null, true], [false, true])).toEqual({
+        neither: false,
+        bothAsked: true,
+        pendingPlayer: null,
+        noneHaveSecretQuestion: false,
+      });
+    });
+
+    it('null (not yet decided) classifies the same as true (has one, unresolved)', () => {
+      expect(classifySecretAsked([false, false], [null, null])).toEqual(
+        classifySecretAsked([false, false], [true, true])
+      );
     });
   });
 });

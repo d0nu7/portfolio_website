@@ -44,8 +44,12 @@ const COPY = {
 
   /* players -------------------------------------------------------------- */
   whosPlaying: { de: 'Wer spielt?', en: "Who's playing?" },
-  yourName: { de: 'Dein Name', en: 'Your name' },
-  theirName: { de: 'Ihr Name', en: 'Their name' },
+  // Symmetric, genderneutral labels (bugfix-report iteration 7, BF-11 /
+  // feature-request FR-08): "Dein Name"/"Ihr Name" was asymmetric, and "Ihr"
+  // reads ambiguously as a female possessive or a formal address. Person
+  // 1/2 match the existing playerOne/playerTwo fallback names below.
+  yourName: { de: 'Person 1 – Name (optional)', en: 'Player 1 – name (optional)' },
+  theirName: { de: 'Person 2 – Name (optional)', en: 'Player 2 – name (optional)' },
   continue: { de: 'Weiter', en: 'Continue' },
   namesOptional: {
     de: 'Namen könnt ihr auch leer lassen.',
@@ -56,7 +60,9 @@ const COPY = {
 
   /* mode ----------------------------------------------------------------- */
   pickMode: { de: 'Modus wählen', en: 'Pick a mode' },
-  timer: { de: 'Timer', en: 'Timer' },
+  // Renamed from "Timer" (feature-request FR-04): this only ever shows
+  // elapsed time, never counts down or alarms, so "Timer" overpromised.
+  timer: { de: 'Zeit anzeigen', en: 'Show time' },
   on: { de: 'An', en: 'On' },
   off: { de: 'Aus', en: 'Off' },
 
@@ -73,13 +79,20 @@ const COPY = {
     de: 'Legt das Handy zwischen euch.\n\nAntwortet laut.\n\nTippt nichts ein.\n\nEs gibt keine richtigen Antworten.',
     en: "Put the phone between you.\n\nAnswer out loud.\n\nDon't type anything.\n\nThere are no right answers.",
   },
+  // "Jede und jeder" -> "Alle" (BF-11/FR-08): same meaning, one word,
+  // genderneutral without sounding like a deliberate correction.
   introSkips: {
-    de: 'Ihr teilt euch 3 Skip Tokens.\n\nJede und jeder darf eine Frage überspringen.\nOhne Begründung.',
+    de: 'Ihr teilt euch 3 Skip Tokens.\n\nAlle dürfen eine Frage überspringen.\nOhne Begründung.',
     en: 'You share 3 Skip Tokens.\n\nAnyone can skip a question.\nNo explanation needed.',
   },
+  // Rewritten to actually match what's stored (bugfix-report iteration 7,
+  // BF-01): the previous "the game only remembers where you are" undersold
+  // it -- localStorage also holds both optional names, language, pack/
+  // style, skip/secret-question state and timer status. What's still true,
+  // and stays true: answers are never typed in, recorded, or stored.
   privacy: {
-    de: 'Nichts, was ihr sagt, wird aufgezeichnet.\nNichts, was ihr antwortet, wird gespeichert.\nDas Spiel merkt sich nur, wo ihr gerade seid.',
-    en: 'Nothing you say is recorded.\nNothing you answer is stored.\nThis game only remembers where you are in the game.',
+    de: 'Eure Antworten werden weder eingegeben noch aufgenommen.\nAuf diesem Gerät speichert CLOSER eure optionalen Namen, Einstellungen und den Spielfortschritt, damit ihr fortsetzen könnt.\nMit „Von vorne“ oder „Lokale Spieldaten löschen“ werden diese Daten entfernt.',
+    en: "Your answers are never typed in or recorded.\nOn this device, CLOSER stores your optional names, settings and game progress so you can continue later.\n“Start over” or “Delete local data” removes this data.",
   },
   begin: { de: 'Los geht’s', en: 'Begin' },
 
@@ -164,11 +177,16 @@ const COPY = {
   countdownGo: { de: 'Los.', en: 'Go.' },
 
   /* timer ------------------------------------------------------------------ */
-  // Restored to the fuller spec wording; Elapsed (see CloserStyles) wraps
-  // this onto a couple of lines instead of the single-line clock format.
+  // Bugfix-report iteration 7, BF-05: the previous wording ("the next act
+  // is ready whenever you are") stated something false whenever the couple
+  // hadn't actually reached the act boundary yet -- the state machine still
+  // requires the remaining questions in this act regardless of elapsed
+  // time. This is the short-term fix (an honest, non-committal message);
+  // real "finish act now" / "keep going" controls are future work (FR-01/
+  // FR-04, once routes exist to jump to a real act boundary).
   timerOver: {
-    de: 'Der nächste Akt ist bereit, wenn ihr es seid.',
-    en: 'The next act is ready whenever you are.',
+    de: 'Ihr seid über der geplanten Zeit. Spielt in eurem Tempo weiter.',
+    en: "You're past the planned time. Keep going at your own pace.",
   },
 
   /* acts ------------------------------------------------------------------- */
@@ -185,6 +203,12 @@ const COPY = {
       ? `Denk an eine Frage, von der du insgeheim hoffst, dass ${other} sie dir heute Abend stellt.\n\nSag sie nicht laut.\n\nTipp sie nirgends ein.\n\nMerk sie dir einfach.`
       : `Think of one question you secretly hope ${other} asks you tonight.\n\nDon't say it out loud.\n\nDon't type it anywhere.\n\nJust remember it.`,
   iHaveOne: { de: 'Ich hab eine', en: 'I have one' },
+  // Equally-valid second path (bugfix-report iteration 7, BF-08): the
+  // screen used to force "Ich hab eine" -- nobody could honestly continue
+  // without either having a question ready or pretending to. No judgment,
+  // no follow-up prompt -- see the noSecretToday-branch handling in
+  // CloserGame.js and Question 37's own dedicated copy below.
+  noSecretToday: { de: 'Heute keine', en: 'Not today' },
   passPhone: { de: 'GIB DAS HANDY WEITER', en: 'PASS THE PHONE' },
   passPhoneText: (lang, other) =>
     lang === 'de'
@@ -213,9 +237,22 @@ const COPY = {
   no: { de: 'Nein', en: 'No' },
 
   q37OneMore: { de: 'NOCH EINE?', en: 'ONE MORE?' },
+  // "Keiner von euch" -> "Ihr habt sie beide ... nicht" (BF-11/FR-08):
+  // same meaning, avoids the masculine-default-reading "keiner".
   q37Neither: {
-    de: 'Keiner von euch hat sie gestellt.\n\nVielleicht ist jetzt der Moment.',
+    de: 'Ihr habt sie beide noch nicht gestellt.\n\nVielleicht ist jetzt der Moment.',
     en: "Neither of you asked it.\n\nMaybe now's the time.",
+  },
+  // Bugfix-report iteration 7, BF-08: shown instead of the above when
+  // hasSecretQuestion is false for both people -- there is no "still
+  // waiting" secret question to prompt about, so the neither/one/both
+  // copy above would misdescribe what happened. Question 37 itself, if
+  // taken, reuses the ordinary shared "both" bonus prompt (nothing
+  // secret-question-specific to ask about instead).
+  q37NoSecretQuestions: { de: 'KEINE GEHEIMFRAGEN', en: 'NO SECRET QUESTIONS' },
+  q37NoSecretQuestionsText: {
+    de: 'Ihr hattet heute beide keine Geheimfrage.\n\nTrotzdem noch eine Frage 37?',
+    en: "Neither of you had a secret question today.\n\nStill want a Question 37?",
   },
   q37OneRemains: { de: 'EINE FRAGE FEHLT NOCH', en: 'ONE QUESTION REMAINS' },
   // Deliberately name-free: earlier wording named a person here and, for one
@@ -235,6 +272,39 @@ const COPY = {
   q37AskSecret: (lang, who) =>
     lang === 'de' ? `${who} stellt die Geheimfrage.` : `${who} asks the secret question.`,
   end: { de: 'Ende', en: 'End' },
+
+  /* in-game menu -------------------------------------------------------- */
+  // Bugfix-report iteration 7, BF-04: Act III promised "skip or end the
+  // game anytime", but no general end path existed outside Question 37's
+  // own end buttons -- closing the PWA is not an equivalent, legible way
+  // to stop. This reachable-everywhere menu (every question, countdown,
+  // act break, secret-question and Q37 phase; deliberately not shown
+  // during STAY, which is meant to stay a single, uncluttered space) is
+  // the fix. "Spiel jetzt beenden" reuses the existing ending sequence
+  // (not a separate screen) -- its copy (endingOne..Four below) is already
+  // blame-free/neutral, and Question 37's own end buttons already routed
+  // an early stop through the same phase, so this stays consistent with
+  // that precedent rather than inventing a second kind of "the end".
+  menuOpen: { de: 'Menü', en: 'Menu' },
+  menuTitle: { de: 'Menü', en: 'Menu' },
+  menuResume: { de: 'Weiterspielen', en: 'Keep playing' },
+  menuEnd: { de: 'Spiel jetzt beenden', en: 'End the game now' },
+  menuEndConfirm: { de: 'Spiel jetzt beenden?', en: 'End the game now?' },
+  menuEndSub: { de: 'Ohne Begründung.', en: 'No explanation needed.' },
+  menuRestart: { de: 'Von vorne beginnen', en: 'Start over' },
+  // Distinct from "Von vorne" (which restarts into a fresh game): this
+  // wipes CLOSER's local data and returns to the plain start screen,
+  // matching BF-01's storage-copy promise literally.
+  deleteLocalData: { de: 'Lokale Spieldaten löschen', en: 'Delete local data' },
+  deleteLocalDataConfirm: {
+    de: 'Lokale Spieldaten löschen?',
+    en: 'Delete local data?',
+  },
+  deleteLocalDataSub: {
+    de: 'Entfernt eure optionalen Namen, Einstellungen und den Spielfortschritt von diesem Gerät. Eure Antworten waren nie gespeichert.',
+    en: 'Removes your optional names, settings and game progress from this device. Your answers were never stored.',
+  },
+  menuClose: { de: 'Schließen', en: 'Close' },
 
   /* ending ------------------------------------------------------------------ */
   endingOne: { de: 'Das war’s.', en: "That's it." },

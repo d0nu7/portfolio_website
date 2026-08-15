@@ -34,6 +34,7 @@ import {
   Kicker,
   LangSwitch,
   Lede,
+  MenuTrigger,
   Question,
   Row,
   Screen,
@@ -56,14 +57,30 @@ import {
 } from './CloserStyles';
 
 const STORAGE_KEY = 'closer:v1';
+// Must match CloserInstallHint.js's own DISMISS_KEY -- duplicated as a
+// literal rather than imported to avoid a cross-component constant just for
+// this one deleteAllLocalData() use (bugfix-report iteration 7, BF-01).
+const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
 const ACT_MS = 15 * 60 * 1000;
 const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
+// Bumped only if the saved shape changes in a way old saves can't safely
+// merge into (bugfix-report iteration 7, BF-12). A saved stateVersion that
+// doesn't match this is treated as incompatible rather than guessed at.
+const STATE_VERSION = 1;
+const VALID_PHASES = new Set([
+  'players', 'mode', 'intro', 'act', 'break', 'q',
+  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'lastIntro', 'all36',
+  'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
+  'q37intro', 'q37', 'q37a', 'q37b', 'ending',
+]);
 
 /*
  * Nothing about the conversation is stored -- answers are never typed in. What
  * persists is only enough to survive a closed tab.
  */
 const initialState = {
+  stateVersion: STATE_VERSION,
   phase: 'start',
   lang: 'de',
   players: ['', ''],
@@ -74,12 +91,61 @@ const initialState = {
   pending: 0,
   breakAct: 0,
   skipsRemaining: SKIP_TOKENS,
-  secretReady: [false, false],
+  // secretSeen: has this person completed their private secret-question
+  // screen (secret1/secret2), regardless of what they chose there.
+  // hasSecretQuestion: did they actually form one ('Ich hab eine') rather
+  // than decline ('Heute keine' -- bugfix-report iteration 7, BF-08/FR-07).
+  // Renamed from the previous single `secretReady` array, which conflated
+  // "screen completed" with "question exists" -- there was no way to
+  // decline honestly. A save from before this rename simply has no
+  // secretSeen key, so the merge below falls back to [false, false] and
+  // that person is asked again, same as a fresh game.
+  secretSeen: [false, false],
+  hasSecretQuestion: [null, null],
   secretAsked: [null, null],
   starterOffset: 0,
   actStartedAt: null,
   completed: false,
 };
+
+// A saved value that is *present* but the wrong shape/type cannot be
+// safely merged or coerced -- rather than silently produce a partial or
+// contradictory state (e.g. a phase the render tree has no branch for, or
+// a qIndex that is a string), isPlausibleSaved() rejects the whole save so
+// loadSaved() falls back to null (a normal, fresh start screen -- never an
+// an uncaught exception or an empty screen; bugfix-report iteration 7, BF-12).
+// A field that's simply *missing* (e.g. packId on a pre-Pack-architecture
+// save) is fine here -- that's the `{ ...initialState, ...saved }` merge's
+// job below, not this check's.
+function isPlausibleSaved(saved) {
+  if (!saved || typeof saved !== 'object') return false;
+  if (typeof saved.phase !== 'string' || !VALID_PHASES.has(saved.phase)) return false;
+  if (saved.stateVersion !== undefined && saved.stateVersion !== STATE_VERSION) return false;
+  const isFiniteNumber = (v) => typeof v === 'number' && Number.isFinite(v);
+  if (saved.qIndex !== undefined && !isFiniteNumber(saved.qIndex)) return false;
+  if (saved.pending !== undefined && !isFiniteNumber(saved.pending)) return false;
+  if (saved.breakAct !== undefined && !isFiniteNumber(saved.breakAct)) return false;
+  if (saved.skipsRemaining !== undefined && !isFiniteNumber(saved.skipsRemaining)) return false;
+  if (saved.starterOffset !== undefined && saved.starterOffset !== 0 && saved.starterOffset !== 1) {
+    return false;
+  }
+  if (
+    saved.actStartedAt !== undefined &&
+    saved.actStartedAt !== null &&
+    !isFiniteNumber(saved.actStartedAt)
+  ) {
+    return false;
+  }
+  if (saved.timerEnabled !== undefined && typeof saved.timerEnabled !== 'boolean') return false;
+  if (saved.completed !== undefined && typeof saved.completed !== 'boolean') return false;
+  if (saved.lang !== undefined && !LANGS.includes(saved.lang)) return false;
+  const isPair = (v) => Array.isArray(v) && v.length === 2;
+  if (saved.players !== undefined && !isPair(saved.players)) return false;
+  if (saved.secretSeen !== undefined && !isPair(saved.secretSeen)) return false;
+  if (saved.secretAsked !== undefined && !isPair(saved.secretAsked)) return false;
+  if (saved.hasSecretQuestion !== undefined && !isPair(saved.hasSecretQuestion)) return false;
+  return true;
+}
 
 // `{ ...initialState, ...saved }` is the resume-state migration for a save
 // written before packId existed: it simply has no such key, so the spread
@@ -92,9 +158,9 @@ function loadSaved() {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const saved = JSON.parse(raw);
-    if (!saved || typeof saved !== 'object' || !saved.phase) return null;
+    if (!isPlausibleSaved(saved)) return null;
     if (saved.phase === 'start' || saved.completed) return null;
-    const merged = { ...initialState, ...saved };
+    const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
     // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
     // (regression-test iteration 5, P2.4): a hand-edited save, an old save
     // whose packId pointed at a pack since removed from the registry, or a
@@ -113,6 +179,20 @@ function loadSaved() {
     return merged;
   } catch (err) {
     return null;
+  }
+}
+
+// Bugfix-report iteration 7, BF-01's storage-copy acceptance criteria:
+// distinct from restart() (which clears the save and immediately starts a
+// fresh game) -- this is the explicit privacy action, wiping every key
+// CLOSER writes to this device (game state and the install-hint dismissal)
+// and landing back on the plain start screen rather than a new game.
+function deleteAllLocalData() {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(INSTALL_HINT_DISMISS_KEY);
+  } catch (err) {
+    /* ignore */
   }
 }
 
@@ -159,6 +239,18 @@ export default function CloserGame() {
   // this offscreen polite region, never a per-tick aria-live on the number
   // itself (see Counter below, which stays a plain, non-live element).
   const [announce, setAnnounce] = useState('');
+  // In-game menu (bugfix-report iteration 7, BF-04): reachable from every
+  // question/countdown/act-break/secret-question/Q37 phase, deliberately
+  // not from STAY (see the `menu` frame() option below). `menuStep` picks
+  // which sub-view of the sheet is showing; null is the top-level list.
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuStep, setMenuStep] = useState(null); // null | 'end' | 'restart' | 'delete'
+  // Focus targets for BF-06/BF-07-adjacent a11y: move focus to the flash
+  // message while it's the only interactive content on screen, and to the
+  // next question once it lands, rather than leaving focus on a button
+  // that's no longer there.
+  const flashRef = useRef(null);
+  const questionHeadingRef = useRef(null);
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
 
@@ -269,6 +361,13 @@ export default function CloserGame() {
     setJustSkipped(null);
     setStaying(false);
     setStayReady(false);
+    // A countdown's "Los."/"Go." used to linger in the offscreen status
+    // region for the rest of the game, not just past a restart (bugfix-
+    // report iteration 7, BF-07 -- the restart-only fix was regression-test
+    // iteration 5's P2.3). Every path into a new question goes through here,
+    // so clearing it here clears it before any later question could
+    // re-announce a stale result.
+    setAnnounce('');
   }, []);
 
   /*
@@ -293,7 +392,7 @@ export default function CloserGame() {
         set({ ...patch, phase: 'break', breakAct: index / QUESTIONS_PER_ACT - 1, pending: index });
         return;
       }
-      if (index === getPack(base.packId).secretAtIndex && !base.secretReady[0]) {
+      if (index === getPack(base.packId).secretAtIndex && !base.secretSeen[0]) {
         set({ ...patch, phase: 'secretPass1', pending: index });
         return;
       }
@@ -411,21 +510,158 @@ export default function CloserGame() {
     // leftover countdown result from the previous language (regression-
     // test iteration 5, P2.3).
     setAnnounce('');
+    setMenuOpen(false);
+    setMenuStep(null);
     setS((prev) => ({ ...initialState, lang: prev.lang, packId: prev.packId }));
   }, []);
+
+  // Bugfix-report iteration 7, BF-06: while the flash overlay is the only
+  // thing on screen (see the early-return branch near the bottom of the
+  // question render), move focus onto its own message rather than leaving
+  // it on a Skip/decline button that's no longer in the DOM.
+  useEffect(() => {
+    if ((justSkipped !== null || justDeclined) && flashRef.current) {
+      flashRef.current.focus();
+    }
+  }, [justSkipped, justDeclined]);
+
+  // ...and once a new question actually lands, move focus onto it -- the
+  // same "danach auf die neue Frage" requirement, satisfied for every
+  // transition into a question (a fresh skip/decline, an act break, a
+  // secret-question handoff, resuming), not just the flash case above.
+  useEffect(() => {
+    if (s.phase === 'q' && step === 'ask' && questionHeadingRef.current) {
+      questionHeadingRef.current.focus();
+    }
+  }, [s.phase, s.qIndex, step]);
 
   const elapsed = s.actStartedAt && now ? now - s.actStartedAt : 0;
   const overtime = s.timerEnabled && s.actStartedAt && elapsed > ACT_MS;
   const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
+  const handleDeleteLocalData = () => {
+    deleteAllLocalData();
+    setResumable(null);
+    setMenuOpen(false);
+    setMenuStep(null);
+    setS({ ...initialState, lang: s.lang });
+  };
+
+  // Rendered inside every frame() call that passes { menu: true } -- see
+  // its call sites below. Kept as one shared implementation rather than
+  // duplicated per phase (bugfix-report iteration 7, BF-04).
+  const menuOverlay = (
+    <>
+      <MenuTrigger type="button" onClick={() => { setMenuStep(null); setMenuOpen(true); }}>
+        {t('menuOpen')}
+      </MenuTrigger>
+      {menuOpen && (
+        <Sheet onClick={() => setMenuOpen(false)}>
+          <SheetPanel onClick={(e) => e.stopPropagation()}>
+            {menuStep === null && (
+              <>
+                <h2>{t('menuTitle')}</h2>
+                <Toggle
+                  $on={s.timerEnabled}
+                  $accent={style.accent}
+                  aria-pressed={s.timerEnabled}
+                  onClick={() => set({ timerEnabled: !s.timerEnabled })}
+                >
+                  {t('timer')}
+                  <b>{s.timerEnabled ? t('on') : t('off')}</b>
+                </Toggle>
+                <div style={{ marginTop: '2rem' }}>
+                  <GhostButton onClick={() => setMenuStep('restart')}>
+                    {t('menuRestart')}
+                  </GhostButton>
+                </div>
+                <div style={{ marginTop: '1.2rem' }}>
+                  <GhostButton onClick={() => setMenuStep('end')}>{t('menuEnd')}</GhostButton>
+                </div>
+                <TextButton style={{ width: '100%', marginTop: '1.6rem' }} onClick={() => setMenuStep('delete')}>
+                  {t('deleteLocalData')}
+                </TextButton>
+                <TextButton style={{ width: '100%' }} onClick={() => setMenuOpen(false)}>
+                  {t('menuClose')}
+                </TextButton>
+              </>
+            )}
+            {menuStep === 'end' && (
+              <>
+                <h2>{t('menuEndConfirm')}</h2>
+                <Small style={{ marginBottom: '2.4rem' }}>{t('menuEndSub')}</Small>
+                <Button
+                  $accent={style.accent}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setMenuStep(null);
+                    set({ phase: 'ending', completed: true });
+                  }}
+                >
+                  {t('menuEnd')}
+                </Button>
+                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
+                  {t('goBack')}
+                </TextButton>
+              </>
+            )}
+            {menuStep === 'restart' && (
+              <>
+                <h2>{t('startOverConfirm')}</h2>
+                <Small style={{ marginBottom: '2.4rem' }}>{t('startOverWarn')}</Small>
+                <Button $accent={style.accent} onClick={restart}>
+                  {t('startOver')}
+                </Button>
+                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
+                  {t('goBack')}
+                </TextButton>
+              </>
+            )}
+            {menuStep === 'delete' && (
+              <>
+                <h2>{t('deleteLocalDataConfirm')}</h2>
+                <Small style={{ marginBottom: '2.4rem' }}>{t('deleteLocalDataSub')}</Small>
+                <Button $accent={style.accent} onClick={handleDeleteLocalData}>
+                  {t('deleteLocalData')}
+                </Button>
+                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
+                  {t('goBack')}
+                </TextButton>
+              </>
+            )}
+          </SheetPanel>
+        </Sheet>
+      )}
+    </>
+  );
+
   const frame = (content, opts = {}) => (
     <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
       <CloserGlobal />
       {content}
+      {opts.menu && menuOverlay}
     </Screen>
   );
 
   const A0 = pack.actStyle[0].accent;
+
+  // Bugfix-report iteration 7, BF-08/FR-07: only a person who actually
+  // formed a secret question (hasSecretQuestion !== false) gets the private
+  // "did they ask it?" check after "that's all 36" -- someone who chose
+  // "Heute keine" has nothing to ask about, so their checkPass/check screens
+  // are skipped entirely rather than asking a question that can't apply.
+  const secretQuestionApplicable = (i) => s.hasSecretQuestion[i] !== false;
+  // Where the "that's all 36" continue button goes: the first applicable
+  // person's handoff screen, or straight to Question 37 if neither has
+  // anything to check.
+  const nextCheckPhase = () => {
+    if (secretQuestionApplicable(0)) return 'checkPass1';
+    if (secretQuestionApplicable(1)) return 'checkPass2';
+    return 'q37intro';
+  };
+  // Where check1 goes once person 0 has answered: person 1's own handoff if
+  // applicable, otherwise straight to the shared handoff-back screen.
+  const afterCheck1 = () => (secretQuestionApplicable(1) ? 'checkPass2' : 'checkPassBack');
 
   /* ================================================================== */
   /* START                                                              */
@@ -638,7 +874,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: st.accent, glow: st.glow + 0.1 }
+      { accent: st.accent, glow: st.glow + 0.1, menu: true }
     );
   }
 
@@ -665,7 +901,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: st.accent, glow: st.glow }
+      { accent: st.accent, glow: st.glow, menu: true }
     );
   }
 
@@ -696,12 +932,29 @@ export default function CloserGame() {
             </Button>
           </Foot>
         </>,
-        { accent: st.accent, glow: st.glow }
+        { accent: st.accent, glow: st.glow, menu: true }
       );
     }
 
     if (p === 'secret1' || p === 'secret2') {
       const me = p === 'secret1' ? 0 : 1;
+      // "Heute keine" is an equally valid choice, not a fallback (bugfix-
+      // report iteration 7, BF-08/FR-07) -- both buttons advance the phone-
+      // handoff sequence identically; only hasSecretQuestion[me] differs,
+      // which later decides whether this person gets a private check-in
+      // screen after "that's all 36" and whether Question 37 treats their
+      // slot as pending.
+      const choose = (has) => {
+        const seen = [...s.secretSeen];
+        seen[me] = true;
+        const have = [...s.hasSecretQuestion];
+        have[me] = has;
+        set({
+          secretSeen: seen,
+          hasSecretQuestion: have,
+          phase: me === 0 ? 'secretPass2' : 'secretPassBack',
+        });
+      };
       return frame(
         <>
           <Body $center>
@@ -709,19 +962,13 @@ export default function CloserGame() {
             <Lede>{tf('secretTask', nameOf(1 - me))}</Lede>
           </Body>
           <Foot>
-            <Button
-              $accent={st.accent}
-              onClick={() => {
-                const ready = [...s.secretReady];
-                ready[me] = true;
-                set({ secretReady: ready, phase: me === 0 ? 'secretPass2' : 'secretPassBack' });
-              }}
-            >
+            <Button $accent={st.accent} onClick={() => choose(true)}>
               {t('iHaveOne')}
             </Button>
+            <TextButton onClick={() => choose(false)}>{t('noSecretToday')}</TextButton>
           </Foot>
         </>,
-        { accent: st.accent, glow: st.glow }
+        { accent: st.accent, glow: st.glow, menu: true }
       );
     }
 
@@ -746,7 +993,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: st.accent, glow: st.glow }
+      { accent: st.accent, glow: st.glow, menu: true }
     );
   }
 
@@ -773,7 +1020,7 @@ export default function CloserGame() {
           </GhostButton>
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -788,11 +1035,13 @@ export default function CloserGame() {
         </Body>
         <Foot>
           {revealSecond && (
-            <GhostButton onClick={() => set({ phase: 'checkPass1' })}>{t('continue')}</GhostButton>
+            <GhostButton onClick={() => set({ phase: nextCheckPhase() })}>
+              {t('continue')}
+            </GhostButton>
           )}
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -819,7 +1068,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -836,7 +1085,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -845,7 +1094,7 @@ export default function CloserGame() {
     const answer = (value) => {
       const asked = [...s.secretAsked];
       asked[me] = value;
-      set({ secretAsked: asked, phase: me === 0 ? 'checkPass2' : 'checkPassBack' });
+      set({ secretAsked: asked, phase: me === 0 ? afterCheck1() : 'checkPassBack' });
     };
     return frame(
       <>
@@ -860,7 +1109,7 @@ export default function CloserGame() {
           </Row>
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -870,12 +1119,21 @@ export default function CloserGame() {
 
   if (s.phase === 'q37intro' || s.phase === 'q37' || s.phase === 'q37a' || s.phase === 'q37b') {
     // Exactly one person's question went unasked -- that person asks it now.
-    const { neither, bothAsked, pendingPlayer } = classifySecretAsked(s.secretAsked);
+    // hasSecretQuestion is passed through as of bugfix-report iteration 7,
+    // BF-08/FR-07 -- a person who chose "Heute keine" never counts as
+    // "still waiting" for a question that was never formed.
+    const { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion } = classifySecretAsked(
+      s.secretAsked,
+      s.hasSecretQuestion
+    );
 
     if (s.phase === 'q37intro') {
       let kicker = t('q37OneMore');
       let text = t('q37Neither');
-      if (bothAsked) {
+      if (noneHaveSecretQuestion) {
+        kicker = t('q37NoSecretQuestions');
+        text = t('q37NoSecretQuestionsText');
+      } else if (bothAsked) {
         kicker = t('q37AlreadyAsked');
         text = t('q37StillWantOne');
       } else if (!neither) {
@@ -889,7 +1147,11 @@ export default function CloserGame() {
             <Question>{text}</Question>
           </Body>
           <Foot>
-            {bothAsked ? (
+            {bothAsked || noneHaveSecretQuestion ? (
+              // Nobody has a secret question waiting either way here --
+              // "bothAsked" offers the ordinary bonus prompt, and so does
+              // "noneHaveSecretQuestion" (there's nothing secret-question-
+              // specific left to offer instead).
               <Row>
                 <GhostButton onClick={() => set({ phase: 'q37' })}>{t('yes')}</GhostButton>
                 <GhostButton onClick={() => set({ phase: 'ending', completed: true })}>
@@ -913,7 +1175,7 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: finalStyle.accent, glow: 0.03 }
+        { accent: finalStyle.accent, glow: 0.03, menu: true }
       );
     }
 
@@ -932,9 +1194,18 @@ export default function CloserGame() {
           </Body>
           <Foot>
             {s.phase === 'q37a' ? (
-              <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37b' })}>
-                {t('continue')}
-              </Button>
+              // Bugfix-report iteration 7, BF-09: consent can change between
+              // the two people's turns -- q37a used to only offer
+              // "continue" into q37b, with no way to stop before the second
+              // person's turn.
+              <Row>
+                <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37b' })}>
+                  {t('continue')}
+                </Button>
+                <GhostButton onClick={() => set({ phase: 'ending', completed: true })}>
+                  {t('end')}
+                </GhostButton>
+              </Row>
             ) : (
               <TextButton onClick={() => set({ phase: 'ending', completed: true })}>
                 {t('done')}
@@ -942,15 +1213,17 @@ export default function CloserGame() {
             )}
           </Foot>
         </>,
-        { accent: finalStyle.accent, glow: 0.03 }
+        { accent: finalStyle.accent, glow: 0.03, menu: true }
       );
     }
 
     // 'one' and 'both' still land on a single shared prompt -- there is
-    // exactly one question left to ask (or, for 'both', one optional bonus),
-    // so there is nothing to sequence.
+    // exactly one question left to ask (or, for 'both'/noneHaveSecretQuestion,
+    // one optional bonus), so there is nothing to sequence.
     let prompt = pick(pack.q37.both, lang);
-    if (!neither && !bothAsked) prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
+    if (!neither && !bothAsked && !noneHaveSecretQuestion) {
+      prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
+    }
 
     return frame(
       <>
@@ -964,7 +1237,7 @@ export default function CloserGame() {
           </TextButton>
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: 0.03 }
+      { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
@@ -1023,6 +1296,36 @@ export default function CloserGame() {
   /* ================================================================== */
 
   const questionText = pick(question, lang);
+
+  // Bugfix-report iteration 7, BF-06: while a skip/decline flash is
+  // showing, render ONLY the flash -- not the question's own controls
+  // (Next/Stay/Skip/decline) underneath it, and not the in-game menu
+  // trigger either. Those used to stay mounted, just visually covered by
+  // the flash, which left them reachable by keyboard/screen reader (an
+  // extra tap or Enter could advance more than one question, racing the
+  // flash's own 1.6s auto-advance) and kept them in the accessibility tree
+  // during what's meant to be a brief, controls-free beat. Focus moves onto
+  // the flash message itself via the effect above.
+  if (justSkipped !== null || justDeclined) {
+    return frame(
+      <Flash>
+        <Question ref={flashRef} tabIndex={-1} style={{ textAlign: 'center', outline: 'none' }}>
+          {t('skipped')}
+        </Question>
+        {justSkipped !== null && (
+          <>
+            <Tokens $accent={style.accent} style={{ fontSize: '2.4rem' }}>
+              {Array.from({ length: SKIP_TOKENS }, (_, i) =>
+                i < justSkipped ? <b key={i}>♥</b> : <s key={i}>♡</s>
+              )}
+            </Tokens>
+            {justSkipped > 0 && <Small>{tf('skipsLeft', justSkipped)}</Small>}
+          </>
+        )}
+        {/* No token row for a decline -- nothing was spent. */}
+      </Flash>
+    );
+  }
 
   // Whose turn it is reads the same whether the question is still behind a
   // twist screen, mid-countdown, or already the live question -- computed
@@ -1155,7 +1458,9 @@ export default function CloserGame() {
       <>
         <Body $center>
           {!isLast && badge}
-          <Question>{questionText}</Question>
+          <Question ref={questionHeadingRef} tabIndex={-1} style={{ outline: 'none' }}>
+            {questionText}
+          </Question>
           {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
         </Body>
         <Foot>
@@ -1262,25 +1567,7 @@ export default function CloserGame() {
           </SheetPanel>
         </Sheet>
       )}
-
-      {justSkipped !== null && (
-        <Flash>
-          <Question style={{ textAlign: 'center' }}>{t('skipped')}</Question>
-          <Tokens $accent={style.accent} style={{ fontSize: '2.4rem' }}>
-            {Array.from({ length: SKIP_TOKENS }, (_, i) =>
-              i < justSkipped ? <b key={i}>♥</b> : <s key={i}>♡</s>
-            )}
-          </Tokens>
-          {justSkipped > 0 && <Small>{tf('skipsLeft', justSkipped)}</Small>}
-        </Flash>
-      )}
-
-      {/* No token row here on purpose -- nothing was spent. */}
-      {justDeclined && (
-        <Flash>
-          <Question style={{ textAlign: 'center' }}>{t('skipped')}</Question>
-        </Flash>
-      )}
-    </>
+    </>,
+    { menu: true }
   );
 }

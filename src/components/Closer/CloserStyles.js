@@ -380,6 +380,37 @@ export const TextButton = styled.button`
   }
 `;
 
+/*
+ * Unobtrusive corner trigger for the in-game menu (bugfix-report iteration
+ * 7, BF-04) -- deliberately not part of the flex flow (position: absolute)
+ * so it never competes with a question's own Foot controls for thumb reach,
+ * and stays in the same corner across every phase that shows it. 44px+
+ * touch target, safe-area aware like the rest of CLOSER's chrome.
+ */
+export const MenuTrigger = styled.button`
+  ${base};
+  position: absolute;
+  z-index: 3;
+  top: calc(1.6rem + env(safe-area-inset-top));
+  right: calc(1.6rem + env(safe-area-inset-right));
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  padding: 0;
+  border: none;
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(242, 243, 245, 0.3);
+  font-size: 1.05rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  &:hover {
+    color: rgba(242, 243, 245, 0.7);
+  }
+`;
+
 export const Row = styled.div`
   display: flex;
   gap: 1rem;

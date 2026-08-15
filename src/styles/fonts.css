@@ -1,0 +1,20 @@
+/*
+ * Space Grotesk, self-hosted via @fontsource/space-grotesk instead of a
+ * runtime <link> to fonts.googleapis.com/fonts.gstatic.com (developer
+ * review, iteration 7, BF-03). Every weight the theme actually uses
+ * (theme.fonts.title/main both resolve to "Space Grotesk, sans-serif" --
+ * see src/themes/default.js) is imported once here; each @fontsource file
+ * already ships per-subset @font-face rules with unicode-range, so the
+ * browser only ever downloads the Latin/Latin-Extended subset a German/
+ * English page actually needs, same behavior Google's own CSS API gave us,
+ * with no third-party request left at page load.
+ *
+ * Global CSS can only be imported from _app.js in Next.js -- this file
+ * exists so that import has something dedicated to point at, rather than
+ * reaching into node_modules directly from _app.js.
+ */
+@import '@fontsource/space-grotesk/300.css';
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';

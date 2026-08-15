@@ -28,7 +28,13 @@ const BASE_STATE = {
   pending: 0,
   breakAct: 0,
   skipsRemaining: 3,
-  secretReady: [false, false],
+  // secretSeen tracks whether a person completed their private secret-
+  // question screen; hasSecretQuestion tracks whether they actually formed
+  // one there rather than choosing "Heute keine" (bugfix-report iteration
+  // 7, BF-08/FR-07 -- renamed from a single `secretReady` array that
+  // conflated the two).
+  secretSeen: [false, false],
+  hasSecretQuestion: [null, null],
   secretAsked: [null, null],
   starterOffset: 0,
   actStartedAt: null,

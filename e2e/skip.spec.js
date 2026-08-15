@@ -87,4 +87,40 @@ test.describe('Skip tokens', () => {
     await page.waitForTimeout(1800);
     await expect(page.locator('[aria-label="3/3"]')).toBeVisible();
   });
+
+  /*
+   * Bugfix-report iteration 7, BF-06: the question's own controls (Next/
+   * Skip/decline/menu) used to stay mounted underneath the flash overlay,
+   * just visually covered -- reachable by keyboard/screen reader and able
+   * to race the flash's own 1.6s auto-advance. This pins that while the
+   * flash is showing, no button from the question screen underneath it is
+   * present in the accessibility tree at all.
+   */
+  test('while a decline flash is showing, no question-screen controls exist in the DOM', async ({
+    page,
+  }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+
+    await expect(page.getByText('Übersprungen.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Weiter' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Skip', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Lieber nicht' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Menü' })).toHaveCount(0);
+
+    await page.waitForTimeout(1800);
+    await expect(page.getByRole('button', { name: 'Weiter' })).toBeVisible();
+  });
+
+  test('while a token-skip flash is showing, no question-screen controls exist in the DOM', async ({
+    page,
+  }) => {
+    await seedAndResume(page, { qIndex: 2, skipsRemaining: 3 });
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+
+    await expect(page.getByText('Übersprungen.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Weiter' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Menü' })).toHaveCount(0);
+  });
 });

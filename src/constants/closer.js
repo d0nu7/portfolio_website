@@ -257,11 +257,16 @@ const CLASSIC_ACTS = [
         twist: 'deeper',
       },
       {
-        de: 'Wenn du ein enger Freund deines Gegenübers werden solltest, was wäre für sie oder ihn wichtig, über dich zu wissen?',
+        // Genderneutral rewording (bugfix-report iteration 7, BF-11/FR-08):
+        // "für sie oder ihn" -> "für diese Person". Content, order and
+        // meaning are unchanged -- only the binary pronoun is gone. English
+        // was already neutral ("them").
+        de: 'Wenn du mit deinem Gegenüber eng befreundet wärst: Was wäre für diese Person wichtig, über dich zu wissen?',
         en: 'If you were to become a close friend of the other person, what would be important for them to know about you?',
       },
       {
-        de: 'Sag deinem Gegenüber, was du an ihm oder ihr magst. Sei dabei sehr ehrlich und sag etwas, das du wahrscheinlich nicht zu jemandem sagen würdest, den du gerade getroffen hast.',
+        // Same rewording as above: "an ihm oder ihr" -> "an dieser Person".
+        de: 'Sag deinem Gegenüber, was du an dieser Person magst. Sei dabei sehr ehrlich und sag etwas, das du wahrscheinlich nicht zu jemandem sagen würdest, den du gerade getroffen hast.',
         en: 'Tell the other person what you like about them. Be very honest — say something you probably would not say to someone you had just met.',
       },
       {
@@ -296,7 +301,9 @@ const CLASSIC_ACTS = [
         stayEnabled: true,
       },
       {
-        de: 'Teile ein persönliches Problem und frage dein Gegenüber, wie er oder sie damit umgehen würde. Und bitte dein Gegenüber ebenso, darüber zu reflektieren, wie du wohl zu dem Problem stehst, das du gewählt hast.',
+        // Same rewording as questions 27/28: "wie er oder sie" -> "wie
+        // diese Person".
+        de: 'Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber außerdem darum, zu spiegeln, wie du dich mit dem Problem zu fühlen scheinst.',
         en: 'Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose.',
         last: true,
       },
@@ -480,18 +487,35 @@ export function starterFor(questionIndex, starterOffset) {
 /*
  * Classifies the two answers from the private "did they ask your secret
  * question?" check (secretAsked = [person0Answer, person1Answer], each
- * true/false/null) into the three cases question 37 branches on:
+ * true/false/null) into the cases question 37 branches on:
  *  - neither: nobody's question got asked -- each of you gets an explicit
  *    turn to ask it now (spec: double-NO sequential turns).
  *  - bothAsked: both already happened, question 37 is a pure bonus.
  *  - pendingPlayer: exactly one is still unasked -- that person asks it.
- * secretAsked defaults to [null, null] before either check completes, which
- * classifies as neither/bothAsked both false and pendingPlayer null.
+ *  - noneHaveSecretQuestion: neither person formed a secret question in the
+ *    first place (bugfix-report iteration 7, BF-08/FR-07 -- "Heute keine"
+ *    is an equally valid choice at the secret-question step, tracked
+ *    separately in hasSecretQuestion). Distinct from `neither`: `neither`
+ *    means two real questions exist and are still waiting; this means
+ *    there is nothing to ask about, so Q37's "still waiting" copy would be
+ *    false.
+ * secretAsked defaults to [null, null] before either check completes.
+ * hasSecretQuestion defaults to [null, null] before the secret-question
+ * step; null there is treated the same as true (has one, not yet resolved)
+ * so a save from before this option existed still classifies exactly as it
+ * did before -- only an explicit `false` opts a person out of this
+ * accounting.
  */
-export function classifySecretAsked(secretAsked) {
+export function classifySecretAsked(secretAsked, hasSecretQuestion) {
   const [a0, a1] = secretAsked || [null, null];
-  const neither = a0 === false && a1 === false;
-  const bothAsked = a0 === true && a1 === true;
-  const pendingPlayer = a0 === false ? 0 : a1 === false ? 1 : null;
-  return { neither, bothAsked, pendingPlayer };
+  const [h0, h1] = hasSecretQuestion || [null, null];
+  const noneHaveSecretQuestion = h0 === false && h1 === false;
+  // A person who opted out has nothing pending -- treat their slot as
+  // "resolved" so they never register as a still-waiting turn.
+  const effective0 = h0 === false ? true : a0;
+  const effective1 = h1 === false ? true : a1;
+  const neither = !noneHaveSecretQuestion && effective0 === false && effective1 === false;
+  const bothAsked = !noneHaveSecretQuestion && effective0 === true && effective1 === true;
+  const pendingPlayer = effective0 === false ? 0 : effective1 === false ? 1 : null;
+  return { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion };
 }

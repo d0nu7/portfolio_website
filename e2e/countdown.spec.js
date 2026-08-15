@@ -52,4 +52,26 @@ test.describe('NO THINKING / BOTH countdown', () => {
     await page.waitForTimeout(5300);
     await expect(region).toHaveText('Los.');
   });
+
+  /*
+   * Bugfix-report iteration 7, BF-07: the restart-only fix (regression-test
+   * iteration 5, P2.3) left "Los." sitting in the live region for the rest
+   * of the same game -- only a full restart cleared it. This pins that a
+   * later question in the same game no longer carries the stale
+   * announcement over.
+   */
+  test('the live region is cleared once a later question in the same game is reached', async ({
+    page,
+  }) => {
+    await seedAndResume(page, { qIndex: 1 });
+    await page.getByRole('button', { name: 'Bereit' }).click();
+    await page.waitForTimeout(5300);
+
+    const region = page.locator('[role="status"]');
+    await expect(region).toHaveText('Los.');
+
+    await page.getByRole('button', { name: 'Weiter' }).click();
+    await expect(page.getByText(/rehearse|Telefonat/)).toBeVisible();
+    await expect(region).toHaveText('');
+  });
 });
