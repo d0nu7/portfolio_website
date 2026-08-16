@@ -4,13 +4,11 @@ import {
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   LANGS,
-  PACKS,
   classifySecretAsked,
   compileRun,
   getPack,
   getRoute,
   pick,
-  routeSubtitleFor,
   starterFor,
 } from '../../constants/closer';
 import {
@@ -52,11 +50,11 @@ import {
 } from '../../closer/infrastructure/storage';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
-import CloserChoiceList from './CloserChoiceList';
 import CloserDialog from './CloserDialog';
 import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
 import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
+import CloserSetupView from './CloserSetupView';
 import {
   ActNumeral,
   ActTitle,
@@ -68,7 +66,6 @@ import {
   Count,
   Counter,
   Elapsed,
-  Field,
   Flash,
   Foot,
   FrameContent,
@@ -889,178 +886,30 @@ export default function CloserGame() {
   const goBackFromSetup = () => dispatchSetup({ type: SETUP_EVENTS.BACK });
 
   /* ================================================================== */
-  /* PLAYER SETUP                                                       */
+  /* SETUP CHOICES                                                      */
   /* ================================================================== */
 
-  if (s.phase === 'players') {
+  if (['players', 'pack', 'duration', 'mode'].includes(s.phase)) {
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{t('whosPlaying')}</Kicker>
-          <Field $accent={A0}>
-            <span>{t('yourName')}</span>
-            <input
-              value={s.players[0]}
-              maxLength={18}
-              autoComplete="off"
-              onChange={(e) => set({ players: [e.target.value, s.players[1]] })}
-            />
-          </Field>
-          <Field $accent={A0}>
-            <span>{t('theirName')}</span>
-            <input
-              value={s.players[1]}
-              maxLength={18}
-              autoComplete="off"
-              onChange={(e) => set({ players: [s.players[0], e.target.value] })}
-            />
-          </Field>
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() => dispatchSetup({
-              type: SETUP_EVENTS.CONTINUE,
-              starterOffset: Math.random() < 0.5 ? 0 : 1,
-            })}
-          >
-            {t('continue')}
-          </Button>
-          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
-          <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
-        </Foot>
-      </>,
-      { accent: A0, glow: 0.28, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* PACK                                                              */
-  /* ================================================================== */
-
-  if (s.phase === 'pack') {
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{t('pickPack')}</Kicker>
-          <CloserChoiceList
-            accent={A0}
-            items={Object.values(PACKS)
-              .filter(
-                (p) => p.discoverability !== 'menu-unlock' || preferences.lateNightVisible
-              )
-              .map((p) => ({
-              id: p.id,
-              selected: s.packId === p.id,
-              title: pick(p.title, lang),
-              meta: pick(p.meta, lang),
-              blurb: pick(p.blurb, lang),
-              onSelect: () =>
-                set({
-                  packId: p.id,
-                  routeId: p.defaultRouteId || DEFAULT_ROUTE_ID,
-                  modeId: p.modes[0].id,
-                }),
-              }))}
-          />
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
-          >
-            {t('continue')}
-          </Button>
-          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
-        </Foot>
-      </>,
-      { accent: A0, glow: 0.28, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* DURATION / ROUTE                                                  */
-  /* ================================================================== */
-
-  if (s.phase === 'duration') {
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{t('pickDuration')}</Kicker>
-          <CloserChoiceList
-            accent={A0}
-            items={Object.values(pack.routes).map((r) => ({
-              id: r.id,
-              selected: s.routeId === r.id,
-              title: pick(r.title, lang),
-              meta: pick(r.meta, lang),
-              blurb: pick(routeSubtitleFor(s.packId, r.id), lang),
-              onSelect: () => set({ routeId: r.id }),
-            }))}
-          />
-          <Toggle
-            $on={s.timerEnabled}
-            $accent={A0}
-            aria-pressed={s.timerEnabled}
-            onClick={() => dispatchGlobal({
-              type: GLOBAL_EVENTS.SET_TIMER,
-              enabled: !s.timerEnabled,
-            })}
-          >
-            {t('timer')}
-            <b>{s.timerEnabled ? t('on') : t('off')}</b>
-          </Toggle>
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
-          >
-            {t('continue')}
-          </Button>
-          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
-        </Foot>
-      </>,
-      { accent: A0, glow: 0.28, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* MODE                                                               */
-  /* ================================================================== */
-
-  if (s.phase === 'mode') {
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{t('pickMode')}</Kicker>
-          {/* Route scope and time are shown here; style copy stays independent
-              of a fixed question count or duration. */}
-          <Small style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            {pick(route.title, lang)} · {pick(routeSubtitleFor(s.packId, route.id), lang)}
-          </Small>
-          <CloserChoiceList
-            accent={A0}
-            items={pack.modes.map((m) => ({
-              id: m.id,
-              selected: s.modeId === m.id,
-              title: pick(m.title, lang),
-              meta: pick(m.meta, lang),
-              blurb: pick(m.blurb, lang),
-              onSelect: () => set({ modeId: m.id }),
-            }))}
-          />
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
-          >
-            {t('continue')}
-          </Button>
-          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
-        </Foot>
-      </>,
+      <CloserSetupView
+        state={s}
+        pack={pack}
+        route={route}
+        lang={lang}
+        accent={A0}
+        preferences={preferences}
+        t={t}
+        onPatch={set}
+        onContinue={(options = {}) => dispatchSetup({
+          type: SETUP_EVENTS.CONTINUE,
+          ...options,
+        })}
+        onBack={goBackFromSetup}
+        onToggleTimer={() => dispatchGlobal({
+          type: GLOBAL_EVENTS.SET_TIMER,
+          enabled: !s.timerEnabled,
+        })}
+      />,
       { accent: A0, glow: 0.28, menu: true }
     );
   }

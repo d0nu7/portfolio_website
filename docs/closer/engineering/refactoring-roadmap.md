@@ -47,6 +47,7 @@ src/closer/
     storage.js                 # guarded localStorage boundary and key ownership
 src/components/Closer/
   CloserGame.js                # browser effects, orchestration, and rendering
+  CloserSetupView.js           # pure player, pack, route, and style setup views
 src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
 
@@ -136,7 +137,7 @@ documentation are in scope.
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [x] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory and implemented families live in the [transition matrix](transition-matrix.md).
 3. [x] Move allowed navigation into pure transition functions. Setup/entry, consent, acts, question completion/pass, private moments, final-question reveal, Question 37, end-run, language, timer, and compiled destinations are characterized in `src/closer/engine/transitions.js`. Canonical state creation, restart, resume preparation, and save parsing live in `src/closer/engine/persistence.js`; guarded browser storage lives in `src/closer/infrastructure/storage.js`. Screen-local effects and Late Night discovery preferences intentionally remain in the controller.
-4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
+4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events. Player, pack, route, and style setup now render through `CloserSetupView.js`; consent, acts, private moments, finale, and question presentation remain to be split incrementally.
 5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
 7. [x] Keep non-run preferences in a separately versioned preference record.
