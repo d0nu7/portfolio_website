@@ -160,8 +160,10 @@ Technical groundwork already delivered:
 - [x] Extract last-question staging, all Q37 branches, and ending beats into one finale view.
 - [x] Extract question, twist, countdown, free-pass, response-card, and stay presentation without changing gameplay timing or controls.
 - [x] Centralize the shared screen, accessibility-blocking, menu, and milestone layers.
+- [x] Extract start/resume/restart-confirmation and global-menu presentation while retaining controller-owned effects and event dispatch.
 
-The remaining transition-core integration is still a dedicated high-blast-radius effort.
+FR-011 implementation is complete in code. The automated release gate and a
+physical-device smoke check remain required before public release.
 
 RaDi decisions before engineering starts:
 

@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
-  LANGS,
   compileRun,
   getPack,
   getRoute,
@@ -49,38 +48,20 @@ import {
 import COPY from '../../constants/closerCopy';
 import CloserActView, { ACT_VIEW_PHASES, actViewStyle } from './CloserActView';
 import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
-import CloserDialog from './CloserDialog';
 import CloserFinaleView, {
   ENDING_BEATS,
   FINALE_VIEW_PHASES,
   finaleViewGlow,
 } from './CloserFinaleView';
-import CloserInstallHint from './CloserInstallHint';
-import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
+import { LEGAL_TITLES } from './CloserLegal';
+import CloserMenu from './CloserMenu';
 import CloserPrivateMomentView, {
   PRIVATE_MOMENT_VIEW_PHASES,
 } from './CloserPrivateMomentView';
 import CloserQuestionView, { questionFrameOptions } from './CloserQuestionView';
 import CloserScreenFrame from './CloserScreenFrame';
 import CloserSetupView from './CloserSetupView';
-import {
-  Body,
-  Button,
-  Choice,
-  Foot,
-  GhostButton,
-  Kicker,
-  LangSwitch,
-  Lede,
-  MenuTrigger,
-  Question,
-  Sheet,
-  SheetPanel,
-  Small,
-  TextButton,
-  Toggle,
-  Wordmark,
-} from './CloserStyles';
+import CloserStartView from './CloserStartView';
 
 export { SAVE_REJECT_REASONS, parseSaved } from '../../closer/engine/persistence';
 
@@ -541,8 +522,6 @@ export default function CloserGame() {
     }
   };
 
-  // Every menu view has its own dialog title. CloserDialog owns the heading
-  // and updates focus whenever a subview replaces the menu root.
   const menuTitle = {
     null: t('menuTitle'),
     end: t('menuEndConfirm'),
@@ -554,141 +533,31 @@ export default function CloserGame() {
   }[menuStep ?? 'null'];
 
   const menuOverlay = (
-    <>
-      <MenuTrigger
-        type="button"
-        aria-haspopup="dialog"
-        aria-expanded={menuOpen}
-        onClick={() => { setMenuStep(null); setMenuOpen(true); }}
-      >
-        {t('menuOpen')}
-      </MenuTrigger>
-      {menuOpen && (
-        <CloserDialog
-          title={menuTitle}
-          viewKey={menuStep ?? 'root'}
-          onClose={() => setMenuOpen(false)}
-        >
-          <>
-            {menuStep === null && (
-              <>
-                {s.phase !== 'start' && (
-                  <Toggle
-                    $on={s.timerEnabled}
-                    $accent={style.accent}
-                    aria-pressed={s.timerEnabled}
-                    onClick={() => dispatchGlobal({
-                      type: GLOBAL_EVENTS.SET_TIMER,
-                      enabled: !s.timerEnabled,
-                    })}
-                  >
-                    {t('timer')}
-                    <b>{s.timerEnabled ? t('on') : t('off')}</b>
-                  </Toggle>
-                )}
-                {s.phase !== 'start' && (
-                  <div style={{ marginTop: '2rem' }}>
-                    <GhostButton onClick={() => setMenuStep('restart')}>
-                      {t('menuRestart')}
-                    </GhostButton>
-                  </div>
-                )}
-                {s.hasStarted && (
-                  <div style={{ marginTop: '1.2rem' }}>
-                    <GhostButton onClick={() => setMenuStep('end')}>{t('menuEnd')}</GhostButton>
-                  </div>
-                )}
-                <div style={{ marginTop: '1.2rem' }}>
-                  <GhostButton onClick={() => setMenuStep('additional')}>
-                    {t('menuAdditionalContent')}
-                  </GhostButton>
-                </div>
-                <div style={{ marginTop: '1.2rem' }}>
-                  <GhostButton onClick={() => setMenuStep('privacy')}>
-                    {t('menuPrivacy')}
-                  </GhostButton>
-                </div>
-                <div style={{ marginTop: '1.2rem' }}>
-                  <GhostButton onClick={() => setMenuStep('imprint')}>
-                    {t('menuImprint')}
-                  </GhostButton>
-                </div>
-                <TextButton style={{ width: '100%', marginTop: '1.6rem' }} onClick={() => setMenuStep('delete')}>
-                  {t('deleteLocalData')}
-                </TextButton>
-                <TextButton style={{ width: '100%' }} onClick={() => setMenuOpen(false)}>
-                  {t('menuClose')}
-                </TextButton>
-              </>
-            )}
-            {menuStep === 'end' && (
-              <>
-                <Small style={{ marginBottom: '2.4rem' }}>{t('menuEndSub')}</Small>
-                <Button
-                  $accent={style.accent}
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setMenuStep(null);
-                    finish('userEnded');
-                  }}
-                >
-                  {t('menuEnd')}
-                </Button>
-                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
-                  {t('goBack')}
-                </TextButton>
-              </>
-            )}
-            {menuStep === 'restart' && (
-              <>
-                <Small style={{ marginBottom: '2.4rem' }}>{t('startOverWarn')}</Small>
-                <Button $accent={style.accent} onClick={restart}>
-                  {t('startOver')}
-                </Button>
-                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
-                  {t('goBack')}
-                </TextButton>
-              </>
-            )}
-            {menuStep === 'delete' && (
-              <>
-                <Small style={{ marginBottom: '2.4rem' }}>{t('deleteLocalDataSub')}</Small>
-                <Button $accent={style.accent} onClick={handleDeleteLocalData}>
-                  {t('deleteLocalData')}
-                </Button>
-                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
-                  {t('goBack')}
-                </TextButton>
-              </>
-            )}
-            {menuStep === 'additional' && (
-              <>
-                <Small style={{ marginBottom: '1.4rem' }}>{t('lateNightMenuIntro')}</Small>
-                <Small style={{ marginBottom: '2.4rem' }}>
-                  {preferences.lateNightVisible ? t('lateNightShown') : t('lateNightHidden')}
-                </Small>
-                <GhostButton
-                  onClick={() => setLateNightVisible(!preferences.lateNightVisible)}
-                >
-                  {preferences.lateNightVisible ? t('lateNightHide') : t('lateNightShow')}
-                </GhostButton>
-                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
-                  {t('goBack')}
-                </TextButton>
-              </>
-            )}
-            {(menuStep === 'imprint' || menuStep === 'privacy') && (
-              <>
-                <CloserLegal view={menuStep} lang={lang} accent={style.accent} />
-                <TextButton style={{ width: '100%', marginTop: '1.6rem' }} onClick={() => setMenuStep(null)}>
-                  {t('goBack')}
-                </TextButton>
-              </>
-            )}
-          </>
-        </CloserDialog>
-      )}
-    </>
+    <CloserMenu
+      open={menuOpen}
+      step={menuStep}
+      title={menuTitle}
+      state={s}
+      preferences={preferences}
+      lang={lang}
+      accent={style.accent}
+      t={t}
+      onOpen={() => { setMenuStep(null); setMenuOpen(true); }}
+      onClose={() => setMenuOpen(false)}
+      onSetStep={setMenuStep}
+      onToggleTimer={() => dispatchGlobal({
+        type: GLOBAL_EVENTS.SET_TIMER,
+        enabled: !s.timerEnabled,
+      })}
+      onFinish={() => {
+        setMenuOpen(false);
+        setMenuStep(null);
+        finish('userEnded');
+      }}
+      onRestart={restart}
+      onDeleteLocalData={handleDeleteLocalData}
+      onSetLateNightVisible={setLateNightVisible}
+    />
   );
 
   const frame = (content, opts = {}) => (
@@ -767,73 +636,32 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (!mounted || s.phase === 'start') {
-    if (confirmReset) {
-      return frame(
-        <>
-          <Body $center>
-            <Question>{t('startOverConfirm')}</Question>
-            <Lede style={{ marginTop: '2.4rem' }}>{t('startOverWarn')}</Lede>
-          </Body>
-          <Foot>
-            <Button $accent={A0} onClick={restart}>
-              {t('startOver')}
-            </Button>
-            <TextButton onClick={() => setConfirmReset(false)}>{t('goBack')}</TextButton>
-          </Foot>
-        </>,
-        { accent: A0, glow: 0.3, menu: true }
-      );
-    }
     return frame(
-      <>
-        <LangSwitch $accent={A0}>
-          {LANGS.map((l) => (
-            <button
-              key={l}
-              type="button"
-              aria-pressed={lang === l}
-              onClick={() => dispatchGlobal({ type: GLOBAL_EVENTS.SET_LANGUAGE, lang: l })}
-            >
-              {l}
-            </button>
-          ))}
-        </LangSwitch>
-        <Body $center>
-          <Wordmark>CLOSER</Wordmark>
-          <Lede>{t('tagline')}</Lede>
-        </Body>
-        <Foot>
-          {mounted && resumable ? (
-            <>
-              <Small style={{ textAlign: 'center' }}>{t('welcomeBack')}</Small>
-              <Button
-                $accent={A0}
-                onClick={() => {
-                  const r = resumeSavedState(resumable, lang);
-                  if (!r) return;
-                  setS(r);
-                  setResumable(null);
-                  if (r.phase === 'q') enterQuestion(r.qIndex, r);
-                }}
-              >
-                {t('continueGame')}
-              </Button>
-              <TextButton onClick={() => setConfirmReset(true)}>{t('startOver')}</TextButton>
-            </>
-          ) : (
-            <>
-              <Button
-                $accent={A0}
-                onClick={() => dispatchSetup({ type: SETUP_EVENTS.START_SETUP })}
-              >
-                {t('start')}
-              </Button>
-              <Small style={{ textAlign: 'center' }}>{t('aboutMinutes')}</Small>
-            </>
-          )}
-        </Foot>
-        <CloserInstallHint lang={lang} accent={A0} />
-      </>,
+      <CloserStartView
+        mounted={mounted}
+        resumable={resumable}
+        confirmReset={confirmReset}
+        lang={lang}
+        accent={A0}
+        t={t}
+        onLanguage={(nextLang) => dispatchGlobal({
+          type: GLOBAL_EVENTS.SET_LANGUAGE,
+          lang: nextLang,
+        })}
+        onResume={() => {
+          const resumed = resumeSavedState(resumable, lang);
+          if (!resumed) return;
+          setS(resumed);
+          setResumable(null);
+          if (resumed.phase === 'q') enterQuestion(resumed.qIndex, resumed);
+        }}
+        onStart={() => dispatchSetup({ type: SETUP_EVENTS.START_SETUP })}
+        onRestart={() => {
+          if (confirmReset) restart();
+          else setConfirmReset(true);
+        }}
+        onCancelReset={() => setConfirmReset(false)}
+      />,
       { accent: A0, glow: 0.3, menu: true }
     );
   }
