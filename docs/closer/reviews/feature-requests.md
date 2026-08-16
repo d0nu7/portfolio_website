@@ -325,3 +325,125 @@ Before implementation, decide whether the local experience is best represented
 as a separately selectable pack, a STUDENTS setup option, or a curated event
 route. It should remain hidden in the configurable pack library by default
 outside an explicitly selected FH Salzburg context.
+
+### FR-016 – Pack-aware PLAYFUL styles and actions
+
+**Status:** Planned; interaction design, editorial assignment, and user testing pending
+
+Extend the interaction mechanics currently associated with CLASSIC PLAYFUL to
+other suitable packs. This must be a pack-aware content feature, not a global
+switch that enables every twist everywhere. `CHAOS` already calls its single
+style PLAYFUL, and several other packs use sparse `GO DEEPER` or `STAY` cues,
+but only CLASSIC currently offers a real style choice with the broader
+`PREDICT`, `BOTH`, and `NO THINKING` action set.
+
+#### Product behavior
+
+- A pack may expose more than one style only when the styles create a
+  meaningfully different experience. Packs with one valid style continue
+  directly without a redundant style-selection screen.
+- CALM or the existing pack-specific default preserves the current question
+  wording, order, response cards, and restrained presentation.
+- PLAYFUL uses the same curated route and questions while enabling a sparse,
+  deterministic set of explicitly approved actions.
+- Every action remains optional. The ordinary free Pass action is available
+  before and during a twist and never requires a reason.
+- PLAYFUL does not add scores, winners, streaks, penalties, public performance,
+  dares, touch tasks, or rewards for disclosing more than feels comfortable.
+- Question progress, duration estimates, private moments, and finales remain
+  properties of the pack and route rather than changing implicitly with style.
+
+#### Editorial eligibility
+
+Each question must explicitly declare whether it may carry a playful action and
+which action is allowed. A pack-level style allow-list is only the second gate;
+an action renders only when both the style and that exact question permit it.
+Do not infer eligibility from act number, keywords, or intensity alone.
+
+- `NO THINKING` is limited to light, low-stakes prompts. The real question is
+  visible before or together with the countdown; nobody answers unseen text.
+- `PREDICT` is limited to harmless preferences or positive observations. It is
+  a guess, never a test of how well someone knows the other person. Roles
+  alternate, results are not scored, and the speaker always gives their own
+  answer afterward.
+- `BOTH` is limited to prompts that are safe to answer simultaneously. It is
+  forbidden when answers concern consent, boundaries, conflict, support needs,
+  identity, difficult memories, or another person's perspective.
+- `GO DEEPER`, `STAY`, and response cards retain their current listening role.
+  They must not be relabelled as competitive or achievement mechanics merely
+  because PLAYFUL is active.
+
+Never assign pressure or proxy mechanics to mortality, grief, trauma, health,
+sex or consent, family conflict, estrangement, workplace evaluation,
+confidential information, or any question where a mismatch could shame or
+obligate someone.
+
+#### Density and pacing
+
+- Quick: at most three playful actions across the entire 12-question route.
+- Standard: at most two playful actions per act and no consecutive actions.
+- Full: at most two playful actions per act and no consecutive actions.
+- The same high-intervention action appears at most once per act.
+- `PREDICT` starters alternate across a run; one person must not repeatedly
+  guess the other person's answers.
+- Act transitions and finales remain quiet enough for the conversation to
+  breathe. Milestone animation may celebrate progress but must not grade an
+  answer or compete with an active prompt.
+
+These values are initial editorial ceilings, not targets. A pack may use fewer
+actions or no PLAYFUL style at all.
+
+#### Initial pack matrix
+
+| Pack | Initial recommendation |
+|---|---|
+| CLASSIC | Preserve ORIGINAL and the legacy PLAYFUL style. Keep the existing `datenight` style ID for save compatibility even though the visible title is PLAYFUL. Re-audit density and role balance against the shared rules. |
+| DATE NIGHT | Strong first candidate. Allow a small number of light `BOTH`, `NO THINKING`, and low-stakes `PREDICT` moments; exclude attraction boundaries, touch, disagreement, and later safety questions. |
+| FRIENDS | Strong first candidate. Prefer playful shared memories and harmless preferences; keep support, boundaries, and appreciation sequential. |
+| COUPLES | Suitable with caution. Use positive or everyday preferences only; never turn `PREDICT` into proof that partners should know each other and never apply it to repair or unmet needs. |
+| CHAOS | Treat the existing single PLAYFUL style as the thematic default. It may gain safe co-creative actions without adding a redundant style screen; avoid making an already energetic pack exhausting. |
+| FIRST DATE | Pilot after the first group. Keep actions sparse and low-pressure; exclude attraction signals, boundaries, rejection, and relationship-future questions. |
+| OLD FRIENDS | Pilot after the first group. Avoid guesses based on an outdated version of the other person and exclude distance, changed identity, and reconciliation-sensitive prompts. |
+| DEEP | Keep the current restrained style initially. `NO THINKING`, `PREDICT`, and `BOTH` are generally incompatible with its purpose; a later alternative would need its own interaction concept rather than inherited CLASSIC actions. |
+| LATE NIGHT | Explicitly excluded. Existing consent rules continue to prohibit countdown pressure, proxy answers, simultaneous boundary answers, and action-oriented twists. |
+| ROAD TRIP | Disable all playful actions whenever either participant is driving. A parked or no-driver variant may be reviewed separately after the base pack is implemented and tested. |
+| FAMILY | Do not use `PREDICT`; fixed family roles and assumptions make proxy answers risky. A later pilot may use a few harmless Act-I `BOTH` or `NO THINKING` actions only. |
+| COLLEAGUES | Keep pressure, prediction, simultaneous answers, countdowns, and performance framing disabled. A future lighter presentation must not resemble assessment or mandatory team building. |
+| STUDENTS / FH Salzburg | Decide during their own editorial design. Any playful variant remains peer-only and must not introduce academic performance, ranking, or staff–student pressure. |
+
+#### Technical contract
+
+- Keep style capability in pack data and question eligibility in question data;
+  do not scatter pack-name conditionals through presentation components.
+- `compileRun()` resolves a stable action assignment for the selected pack,
+  route, and style. Do not randomize actions at render time.
+- The run fingerprint includes the selected style and remains sufficient to
+  reject an incompatible saved run. Adding or changing action assignments
+  requires an intentional content-version decision.
+- Preserve the legacy CLASSIC PLAYFUL style ID during migration. Newly added
+  styles use stable, pack-local IDs and safe fallback behavior for unknown IDs.
+- UI copy explains the concrete difference between the available styles without
+  suggesting that PLAYFUL is better, braver, more intimate, or more complete.
+- The style picker remains fully keyboard accessible, screen-reader named, and
+  usable at 320 px without hiding its primary action.
+
+#### Acceptance criteria
+
+- An editorial matrix lists every twist-bearing question per supported pack,
+  route membership, action type, safety rationale, and excluded topics.
+- Automated conformance tests reject an action that is not permitted by both
+  the selected style and the exact question.
+- Route tests enforce the density, spacing, type-frequency, and `PREDICT`
+  role-balance limits above.
+- Save/resume preserves the exact question, action, countdown state, and starter
+  role without rerolling or silently changing style.
+- Browser tests cover Pass before and during every action type, question-first
+  countdown behavior, simultaneous-answer instructions, starter alternation,
+  one-style screen skipping, DE/EN copy, reduced motion, and mobile layout.
+- Dedicated safety tests prove that Late Night, moving-vehicle Road Trip,
+  Colleagues, and every individually excluded sensitive question cannot render
+  an incompatible action even when an invalid style ID or saved state is
+  supplied.
+- Moderated sessions compare the default and PLAYFUL styles for conversation
+  quality, pressure, confusion, action fatigue, pass rate, and whether attention
+  remains on the other person rather than the phone.
