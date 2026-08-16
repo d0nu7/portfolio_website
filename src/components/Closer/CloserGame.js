@@ -242,12 +242,53 @@ export const SAVE_REJECT_REASONS = Object.freeze({
   NO_PROGRESS: 'no-progress',
   CONTENT_VERSION_MISMATCH: 'content-version-mismatch',
   CONSENT_PHASE_WITHOUT_GATE: 'consent-phase-without-gate',
+  PRIVATE_MOMENT_PHASE_UNAVAILABLE: 'private-moment-phase-unavailable',
+  ACT2_CONSENT_PHASE_INVALID_BREAK_ACT: 'act2-consent-phase-invalid-break-act',
   CONTENT_DRIFT: 'content-drift',
   INDEX_OUT_OF_RANGE: 'index-out-of-range',
   BREAK_ACT_OUT_OF_RANGE: 'break-act-out-of-range',
 });
 
+/*
+ * Phase families for the phase-specific stage below (BUG-008). A family is a
+ * group of phases that share one structural precondition -- something that
+ * is true of every reachable save on any phase in the group, derived
+ * directly from the transitions in this file rather than guessed. Each
+ * family's check runs only once its members' shared dependency (the
+ * canonicalized pack, in both cases below) is available.
+ *
+ * This list is deliberately not exhaustive: only relationships traced with
+ * high confidence from the transition code, and confirmed compatible with
+ * every existing save fixture, are enforced. A stricter but unverified rule
+ * would risk rejecting a legitimate resume, which is worse than the gap it
+ * would close. Extend it the same way -- trace the real transition, check it
+ * against e2e/*.spec.js fixtures, add a named reason -- rather than
+ * inferring a schema from field types alone.
+ */
+// secretPass1..secretPassBack (capturing a private question) and
+// checkPass1..checkPassBack (resolving it after the last question) are only
+// ever entered when goTo()/nextCheckPhase() have already confirmed the
+// route is not Quick and the pack's privateMoment is not 'none'. A pack or
+// route content edit that turns this off after a save was written would
+// not otherwise be caught -- the run fingerprint does not hash
+// privateMoment, only question identity.
+const PRIVATE_MOMENT_PHASES = new Set([
+  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
+]);
+// The renewed Act II consent gate is only ever entered from the 'break'
+// screen's continue action while s.breakAct still holds Act I's value (0);
+// nothing after that transition changes it before these phases render.
+// breakAct 1 (the Act II/III boundary) can never legitimately coexist with
+// them.
+const ACT2_CONSENT_PHASES = new Set([
+  'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
+]);
+
 export function parseSaved(raw) {
+  // Stage 1: versioned envelope. Reject anything that is not well-formed
+  // JSON in a shape this state version understands, before any field is
+  // trusted enough to look up content with.
   if (!raw) return { ok: false, reason: SAVE_REJECT_REASONS.EMPTY };
   let saved;
   try {
@@ -277,12 +318,11 @@ export function parseSaved(raw) {
   if (!pack.modes.some((m) => m.id === merged.modeId)) {
     merged.modeId = pack.modes[0].id;
   }
-  const consentPhases = merged.phase.startsWith('consent');
-  if (consentPhases && !pack.consentGate) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
-  }
-  // Reject content drift instead of resuming at a shifted question. Current
-  // saves use a compact fingerprint; older saves may carry the full ID list.
+
+  // Stage 2: the immutable run reference. Once pack/route/style are
+  // canonicalized, reject a save whose stored fingerprint no longer matches
+  // what the current content resolves to -- this is the run's identity
+  // check, prior to and independent of any single phase's own fields.
   if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
     // merged.modeId is already canonicalized above, so a style that no
     // longer exists cannot slip past this check as if nothing changed.
@@ -290,6 +330,7 @@ export function parseSaved(raw) {
       return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
     }
   } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
+    // Legacy saves predate the fingerprint and carried the full ID list.
     const expected = runQuestionIdsFor(merged.packId, merged.routeId);
     const matchesExpected =
       expected.length === saved.runQuestionIds.length &&
@@ -303,6 +344,26 @@ export function parseSaved(raw) {
   if (merged.breakAct > 1) {
     return { ok: false, reason: SAVE_REJECT_REASONS.BREAK_ACT_OUT_OF_RANGE };
   }
+
+  // Stage 3: phase-specific required/forbidden fields (BUG-008). A phase
+  // that type-checks and stays within the run's own bounds can still
+  // combine with a pack/route configuration it could never have been
+  // reached from -- see the family comments above for exactly which
+  // relationship each check enforces and why it is safe to require.
+  const consentPhases = merged.phase.startsWith('consent');
+  if (consentPhases && !pack.consentGate) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
+  }
+  if (PRIVATE_MOMENT_PHASES.has(merged.phase)) {
+    const privateMomentEnabled = merged.routeId !== 'quick' && pack.privateMoment !== 'none';
+    if (!privateMomentEnabled) {
+      return { ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE };
+    }
+  }
+  if (ACT2_CONSENT_PHASES.has(merged.phase) && merged.breakAct !== 0) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.ACT2_CONSENT_PHASE_INVALID_BREAK_ACT };
+  }
+
   return { ok: true, value: merged };
 }
 

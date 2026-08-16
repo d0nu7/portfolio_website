@@ -155,11 +155,18 @@ The fingerprint included content revision, pack, route, and question order but n
 
 ### BUG-008 – Persisted-state validation is not genuinely phase-discriminated
 
-**Status:** Open
+**Status:** Closed (scoped)
 
-Validation checks broad shape and several invariants, but it still accepts combinations that are impossible for a particular phase. This increases the chance of a broken screen after content or state changes.
+Validation checked broad shape and several invariants, but accepted combinations that were impossible for a particular phase.
 
-Recommended fix: parse a versioned envelope, validate the immutable run reference, then validate phase-specific required and forbidden fields through a discriminated schema or equivalent explicit validators.
+`parseSaved()` is now explicitly staged, matching the recommended fix: (1) versioned envelope — shape, `stateVersion`, setup/completed/no-progress gates, `contentVersion`; (2) the immutable run reference — fingerprint/legacy-ID-list content drift, index bounds; (3) phase-specific required/forbidden fields, via two named phase-family checks derived directly from `goTo()`/`nextCheckPhase()`'s own transition conditions:
+
+- `secretPass1`..`secretPassBack` and `checkPass1`..`checkPassBack` require the canonicalized pack/route to actually have a private moment enabled (`routeId !== 'quick' && pack.privateMoment !== 'none'`) — these phases are only ever entered once that precondition already holds.
+- `consentAct2PassA`/`consentAct2A`/`consentAct2PassB`/`consentAct2B` require `breakAct === 0` — they are only ever entered from the `break` screen while `breakAct` still holds Act I's value; nothing changes it before they render.
+
+Deliberately scoped rather than exhaustive: several other candidate invariants (an `act`-phase `pending` matching an act-start boundary, `hasSecretQuestion[i]` values for the `checkPass*`/`check*` phases) were traced from the transition code but dropped after checking them against `e2e/*.spec.js` fixtures — they either conflicted with an intentionally minimal, currently-correct test fixture (a legacy-migration test that relies on `hasRealProgress()`'s deliberately lenient `pending > 0` heuristic for pre-`hasStarted` saves), or would not actually have prevented a broken screen, only a data inconsistency invisible to the player. A stricter but unverified rule risks rejecting a legitimate resume, which is worse than the gap it closes. The two checks that shipped were each confirmed against the real fixtures and proven to reject exactly the intended case (and only that case) with direct unit tests.
+
+Extending this further (a fuller per-phase schema, or the `act`/`break`/`hasSecretQuestion` invariants considered above) is real remaining work, not implied to be finished by this closure.
 
 ### BUG-009 – Active timer segment may be lost after abrupt termination
 

@@ -123,7 +123,7 @@ Status: partially complete. This is the largest remaining engineering task.
 2. [ ] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`.
 3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function.
 4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
-5. [ ] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants.
+5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
 7. [ ] Keep non-run preferences in a separately versioned preference record.
 8. [x] Pause active time while the page is hidden and request Wake Lock again after visibility returns.

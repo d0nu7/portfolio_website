@@ -95,6 +95,75 @@ describe('parseSaved (discriminated save parser)', () => {
     ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.BREAK_ACT_OUT_OF_RANGE });
   });
 
+  /*
+   * BUG-008: validation checked broad shape but not whether a phase and its
+   * pack/route were even reachable together. secretPass1..checkPassBack are
+   * only ever entered when goTo()/nextCheckPhase() have confirmed the route
+   * is not Quick and the pack's privateMoment is not 'none' -- two
+   * independent ways that precondition can fail, both traced from those
+   * transitions and checked here.
+   */
+  it('rejects a private-moment phase on the Quick route with reason=PRIVATE_MOMENT_PHASE_UNAVAILABLE', () => {
+    expect(
+      parseSaved(
+        JSON.stringify({ ...BASE, packId: 'classic', routeId: 'quick', phase: 'secretPass1' })
+      )
+    ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE });
+  });
+
+  it("rejects a private-moment phase for a pack whose privateMoment is 'none' with reason=PRIVATE_MOMENT_PHASE_UNAVAILABLE", () => {
+    expect(
+      parseSaved(
+        JSON.stringify({
+          ...BASE,
+          packId: 'late-night',
+          routeId: 'standard',
+          phase: 'checkPass1',
+        })
+      )
+    ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE });
+  });
+
+  it('accepts a private-moment phase when the pack/route combination actually supports one', () => {
+    const result = parseSaved(
+      JSON.stringify({ ...BASE, packId: 'classic', routeId: 'full', phase: 'secretPass1' })
+    );
+    expect(result.ok).toBe(true);
+  });
+
+  /*
+   * BUG-008: the renewed Act II consent gate is only ever entered from the
+   * 'break' screen while breakAct still holds Act I's value (0) -- nothing
+   * afterward changes it before these phases render, so breakAct 1 can
+   * never legitimately coexist with them.
+   */
+  it('rejects the Act II consent gate with a stale breakAct, reason=ACT2_CONSENT_PHASE_INVALID_BREAK_ACT', () => {
+    expect(
+      parseSaved(
+        JSON.stringify({
+          ...BASE,
+          packId: 'late-night',
+          routeId: 'standard',
+          phase: 'consentAct2PassA',
+          breakAct: 1,
+        })
+      )
+    ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.ACT2_CONSENT_PHASE_INVALID_BREAK_ACT });
+  });
+
+  it('accepts the Act II consent gate with breakAct 0 for a pack that actually has a consent gate', () => {
+    const result = parseSaved(
+      JSON.stringify({
+        ...BASE,
+        packId: 'late-night',
+        routeId: 'standard',
+        phase: 'consentAct2PassA',
+        breakAct: 0,
+      })
+    );
+    expect(result.ok).toBe(true);
+  });
+
   it('accepts a plausible save and returns the normalized value', () => {
     const fingerprint = runFingerprintFor('classic', 'full');
     const result = parseSaved(
