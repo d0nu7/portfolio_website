@@ -148,6 +148,7 @@ Technical groundwork already delivered:
 - [x] Keep non-game preferences in a separately versioned record.
 - [x] Make `compileRun()` the controller and save parser's runtime source.
 - [x] Establish the complete transition matrix and characterize setup/entry, consent, act-entry/break, private-moment, finale, end-run, and question-destination transition families.
+- [x] Extract canonical state creation and discriminated save parsing into the pure engine layer without changing the stored shape.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 
@@ -163,9 +164,9 @@ RaDi decisions before engineering starts:
 Recommended engineering sequence:
 
 1. Completed: make `compileRun()` the runtime source without changing visible behavior.
-2. Add transition characterization tests for every phase and event.
-3. Move one phase family at a time into a pure transition function.
-4. Replace broad persistence checks with phase-specific validation.
+2. In progress: add transition characterization tests for every phase and event.
+3. In progress: move one phase family at a time into a pure transition function.
+4. Completed for the verified save families: extract persistence parsing and enforce phase-specific validation without changing save compatibility.
 5. Remove compatibility code only after migrated saves and restart paths are verified.
 
 Done when: runtime behavior derives from one immutable run definition, transitions are explicit and testable, invalid saved states fail safely, and no user-visible behavior changes unintentionally.

@@ -21,10 +21,9 @@ This is the only active refactoring roadmap. Dated iteration reports were remove
 
 ## 2. Current architecture
 
-Content has already been split from the public facade. Engine helpers and
-`compileRun()` still live in the compatibility facade; the previously documented
-`src/closer/engine/` directory was a target layout, not the repository's actual
-state on 16 August 2026.
+Content is split from the public compatibility facade. `compileRun()` remains in
+that facade for stable imports, while pure navigation and persistence logic now
+live in dedicated engine modules.
 
 ```text
 src/closer/
@@ -41,9 +40,12 @@ src/closer/
       chaos.js
       late-night.js
     index.js
+  engine/
+    transitions.js             # pure phase transitions and named effects
+    persistence.js             # initial state, save parsing, migration, validation
 src/components/Closer/
-  CloserGame.js                # controller, persistence, transitions, rendering
-src/constants/closer.js        # content-resolution helpers and compileRun()
+  CloserGame.js                # browser effects, orchestration, and rendering
+src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
 
 The remaining architectural problem is not bundle size. It is that `CloserGame.js` still owns a large number of phase-specific render branches and performs transitions through direct state updates. This makes consent, handoffs, resume, and finale behavior harder to reason about as a system.
@@ -131,7 +133,7 @@ documentation are in scope.
 
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [ ] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory now lives in the [transition matrix](transition-matrix.md); event migration remains incremental.
-3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function. Setup/entry, consent, act-entry/break, private-moment capture/resolution, final-question reveal, Question 37, end-run reasons, and compiled question destinations are migrated and characterized in `src/closer/engine/transitions.js`; canonical restart, resume orchestration, and preference events remain in the controller.
+3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function. Setup/entry, consent, act-entry/break, private-moment capture/resolution, final-question reveal, Question 37, end-run reasons, and compiled question destinations are migrated and characterized in `src/closer/engine/transitions.js`. Canonical state creation and save parsing are extracted to `src/closer/engine/persistence.js`; browser storage, resume orchestration, and preference events remain in the controller.
 4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
 5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).

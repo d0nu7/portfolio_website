@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
-  CONTENT_VERSION,
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   LANGS,
@@ -35,6 +34,7 @@ import {
   transitionQ37,
   transitionSetup,
 } from '../../closer/engine/transitions';
+import { createInitialState, parseSaved } from '../../closer/engine/persistence';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
 import CloserChoiceList from './CloserChoiceList';
@@ -84,6 +84,8 @@ import {
   Wordmark,
 } from './CloserStyles';
 
+export { SAVE_REJECT_REASONS, parseSaved } from '../../closer/engine/persistence';
+
 const STORAGE_KEY = 'closer:v1';
 const PREFERENCES_KEY = 'closer:preferences:v1';
 const DEFAULT_PREFERENCES = Object.freeze({ lateNightVisible: false });
@@ -91,300 +93,14 @@ const DEFAULT_PREFERENCES = Object.freeze({ lateNightVisible: false });
 // coupling data deletion to another component's implementation.
 const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
 const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
-// Bump only when an older saved shape cannot be migrated safely.
-const STATE_VERSION = 1;
-const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
 // BUG-009: how often the active timer segment is folded into persisted
 // actElapsedMs while still running, bounding how much active time an
 // abrupt kill can lose. Small enough to keep that loss window tight,
 // large enough to avoid excessive re-renders/localStorage writes.
 const ACTIVE_SEGMENT_CHECKPOINT_MS = 5000;
-const VALID_PHASES = new Set([
-  'players', 'pack', 'duration', 'mode', 'intro', 'act', 'break', 'q',
-  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
-  'lastIntro', 'all36',
-  'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
-  'q37intro', 'q37', 'q37a', 'q37b', 'ending',
-  // Per-pack consent gates. LATE NIGHT uses both the entry gate and the
-  // renewed opt-in before Act II.
-  'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
-  'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
-]);
-
-/*
- * Nothing about the conversation is stored -- answers are never typed in. What
- * persists is only enough to survive a closed tab.
- */
-function createInitialState(options = {}) {
-  const lang = LANGS.includes(options.lang) ? options.lang : 'de';
-  const pack = getPack(options.packId || DEFAULT_PACK_ID);
-  const requestedRoute = options.routeId || pack.defaultRouteId || DEFAULT_ROUTE_ID;
-  const route = getRoute(pack.id, requestedRoute);
-
-  return {
-    stateVersion: STATE_VERSION,
-    phase: 'start',
-    lang,
-    players: ['', ''],
-    packId: pack.id,
-    routeId: route.id,
-    modeId: pack.modes[0].id,
-    timerEnabled: options.timerEnabled ?? true,
-    qIndex: 0,
-    pending: 0,
-    breakAct: 0,
-    // Capture completion and existence are separate so declining a private
-    // question never creates a fictional pending question at the finale.
-    secretSeen: [false, false],
-    hasSecretQuestion: [null, null],
-    secretAsked: [null, null],
-    starterOffset: 0,
-    // Accumulated active conversation time for the current act.
-    actElapsedMs: 0,
-    completed: false,
-    endReason: null,
-    // Setup state is persisted, but only a real question makes a game
-    // resumable. This remains true for the rest of the run.
-    hasStarted: false,
-    // Captured when the first question starts so changed content cannot be
-    // resumed at a different position silently.
-    contentVersion: CONTENT_VERSION,
-    runFingerprint: null,
-  };
-}
 
 const initialState = createInitialState();
 
-// A saved value that is *present* but the wrong shape/type cannot be
-// safely merged or coerced -- rather than silently produce a partial or
-// contradictory state (e.g. a phase the render tree has no branch for, or
-// a qIndex that is a string), isPlausibleSaved() rejects the whole save so
-// loadSaved() falls back to null (a normal, fresh start screen -- never an
-// an uncaught exception or an empty screen.
-// A field that's simply *missing* (e.g. packId on a pre-Pack-architecture
-// save) is fine here -- that's the `{ ...initialState, ...saved }` merge's
-// job below, not this check's.
-function isPlausibleSaved(saved) {
-  if (!saved || typeof saved !== 'object') return false;
-  if (typeof saved.phase !== 'string' || !VALID_PHASES.has(saved.phase)) return false;
-  if (saved.stateVersion !== undefined && saved.stateVersion !== STATE_VERSION) return false;
-  const isNonNegativeInteger = (v) => Number.isInteger(v) && v >= 0;
-  if (saved.qIndex !== undefined && !isNonNegativeInteger(saved.qIndex)) return false;
-  if (saved.pending !== undefined && !isNonNegativeInteger(saved.pending)) return false;
-  if (saved.breakAct !== undefined && !isNonNegativeInteger(saved.breakAct)) return false;
-  if (saved.starterOffset !== undefined && saved.starterOffset !== 0 && saved.starterOffset !== 1) {
-    return false;
-  }
-  if (
-    saved.actElapsedMs !== undefined &&
-    !(typeof saved.actElapsedMs === 'number' && Number.isFinite(saved.actElapsedMs) && saved.actElapsedMs >= 0)
-  ) {
-    return false;
-  }
-  if (saved.timerEnabled !== undefined && typeof saved.timerEnabled !== 'boolean') return false;
-  if (saved.completed !== undefined && typeof saved.completed !== 'boolean') return false;
-  if (saved.hasStarted !== undefined && typeof saved.hasStarted !== 'boolean') return false;
-  if (saved.contentVersion !== undefined && !Number.isInteger(saved.contentVersion)) return false;
-  if (
-    saved.runFingerprint !== undefined &&
-    saved.runFingerprint !== null &&
-    typeof saved.runFingerprint !== 'string'
-  ) {
-    return false;
-  }
-  // Legacy saves stored the complete question ID list before fingerprints.
-  if (
-    saved.runQuestionIds !== undefined &&
-    !(Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.every((id) => typeof id === 'string'))
-  ) {
-    return false;
-  }
-  if (saved.lang !== undefined && !LANGS.includes(saved.lang)) return false;
-  const isPairOf = (v, predicate) =>
-    Array.isArray(v) && v.length === 2 && v.every(predicate);
-  const isBooleanOrNull = (v) => typeof v === 'boolean' || v === null;
-  if (saved.players !== undefined && !isPairOf(saved.players, (v) => typeof v === 'string')) return false;
-  if (saved.secretSeen !== undefined && !isPairOf(saved.secretSeen, (v) => typeof v === 'boolean')) return false;
-  if (saved.secretAsked !== undefined && !isPairOf(saved.secretAsked, isBooleanOrNull)) return false;
-  if (
-    saved.hasSecretQuestion !== undefined &&
-    !isPairOf(saved.hasSecretQuestion, isBooleanOrNull)
-  ) return false;
-  if (saved.endReason !== undefined && saved.endReason !== null && !END_REASONS.has(saved.endReason)) {
-    return false;
-  }
-  return true;
-}
-
-// Phases where nothing about the actual game has happened yet. 'act' is
-// deliberately not in this
-// set: it's ambiguous on its own, since Act I's very first intro screen is
-// state-shape-identical to Act II/III's after a real act break. See
-// hasRealProgress() below for how that ambiguity is resolved.
-// The pre-pack consent gate is setup-only (hasStarted is still false at
-// that point); the Act II renewed opt-in is NOT -- it happens after
-// hasStarted has already flipped true, so it's real in-progress game
-// state, same as any other mid-game phase.
-const SETUP_ONLY_PHASES = new Set([
-  'players', 'pack', 'duration', 'mode', 'intro',
-  'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
-]);
-
-// A save written before `hasStarted` existed is migrated from its phase and
-// progress. A save that carries `hasStarted` is trusted directly (it's
-// set once, at the same 'act' -> 'q' transition below, and never reset
-// except by restart()).
-function hasRealProgress(saved) {
-  if (typeof saved.hasStarted === 'boolean') return saved.hasStarted;
-  if (SETUP_ONLY_PHASES.has(saved.phase)) return false;
-  if (saved.phase === 'act') return (saved.pending || 0) > 0 || (saved.qIndex || 0) > 0;
-  return true;
-}
-
-/*
- * Parsing returns a discriminated result so tests and future migration UI
- * can distinguish an absent save from a specific validation failure.
- */
-export const SAVE_REJECT_REASONS = Object.freeze({
-  EMPTY: 'empty',
-  INVALID_JSON: 'invalid-json',
-  IMPLAUSIBLE_SHAPE: 'implausible-shape',
-  SETUP_PHASE: 'setup-phase',
-  COMPLETED: 'completed',
-  NO_PROGRESS: 'no-progress',
-  CONTENT_VERSION_MISMATCH: 'content-version-mismatch',
-  CONSENT_PHASE_WITHOUT_GATE: 'consent-phase-without-gate',
-  PRIVATE_MOMENT_PHASE_UNAVAILABLE: 'private-moment-phase-unavailable',
-  ACT2_CONSENT_PHASE_INVALID_BREAK_ACT: 'act2-consent-phase-invalid-break-act',
-  CONTENT_DRIFT: 'content-drift',
-  INDEX_OUT_OF_RANGE: 'index-out-of-range',
-  BREAK_ACT_OUT_OF_RANGE: 'break-act-out-of-range',
-});
-
-/*
- * Phase families for the phase-specific stage below (BUG-008). A family is a
- * group of phases that share one structural precondition -- something that
- * is true of every reachable save on any phase in the group, derived
- * directly from the transitions in this file rather than guessed. Each
- * family's check runs only once its members' shared dependency (the
- * canonicalized pack, in both cases below) is available.
- *
- * This list is deliberately not exhaustive: only relationships traced with
- * high confidence from the transition code, and confirmed compatible with
- * every existing save fixture, are enforced. A stricter but unverified rule
- * would risk rejecting a legitimate resume, which is worse than the gap it
- * would close. Extend it the same way -- trace the real transition, check it
- * against e2e/*.spec.js fixtures, add a named reason -- rather than
- * inferring a schema from field types alone.
- */
-// secretPass1..secretPassBack (capturing a private question) and
-// checkPass1..checkPassBack (resolving it after the last question) are only
-// ever entered when goTo()/nextCheckPhase() have already confirmed the
-// route is not Quick and the pack's privateMoment is not 'none'. A pack or
-// route content edit that turns this off after a save was written would
-// not otherwise be caught -- the run fingerprint does not hash
-// privateMoment, only question identity.
-const PRIVATE_MOMENT_PHASES = new Set([
-  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
-  'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
-]);
-// The renewed Act II consent gate is only ever entered from the 'break'
-// screen's continue action while s.breakAct still holds Act I's value (0);
-// nothing after that transition changes it before these phases render.
-// breakAct 1 (the Act II/III boundary) can never legitimately coexist with
-// them.
-const ACT2_CONSENT_PHASES = new Set([
-  'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
-]);
-
-export function parseSaved(raw) {
-  // Stage 1: versioned envelope. Reject anything that is not well-formed
-  // JSON in a shape this state version understands, before any field is
-  // trusted enough to look up content with.
-  if (!raw) return { ok: false, reason: SAVE_REJECT_REASONS.EMPTY };
-  let saved;
-  try {
-    saved = JSON.parse(raw);
-  } catch (err) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.INVALID_JSON };
-  }
-  if (!isPlausibleSaved(saved)) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.IMPLAUSIBLE_SHAPE };
-  }
-  if (saved.phase === 'start') return { ok: false, reason: SAVE_REJECT_REASONS.SETUP_PHASE };
-  if (saved.completed) return { ok: false, reason: SAVE_REJECT_REASONS.COMPLETED };
-  if (!hasRealProgress(saved)) return { ok: false, reason: SAVE_REJECT_REASONS.NO_PROGRESS };
-  if (saved.contentVersion !== CONTENT_VERSION) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_VERSION_MISMATCH };
-  }
-
-  const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
-  delete merged.skipsRemaining;
-  // Make the migrated progress flag explicit for wake-lock and resume logic.
-  merged.hasStarted = true;
-  // Canonicalize registry identifiers once instead of carrying invalid saved
-  // IDs through every render lookup.
-  const pack = getPack(merged.packId);
-  merged.packId = pack.id;
-  merged.routeId = getRoute(pack.id, merged.routeId).id;
-  if (!pack.modes.some((m) => m.id === merged.modeId)) {
-    merged.modeId = pack.modes[0].id;
-  }
-  const run = compileRun(merged.packId, merged.routeId, merged.modeId);
-
-  // Stage 2: the immutable run reference. Once pack/route/style are
-  // canonicalized, reject a save whose stored fingerprint no longer matches
-  // what the current content resolves to -- this is the run's identity
-  // check, prior to and independent of any single phase's own fields.
-  if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
-    // merged.modeId is already canonicalized above, so a style that no
-    // longer exists cannot slip past this check as if nothing changed.
-    if (saved.runFingerprint !== run.fingerprint) {
-      return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
-    }
-  } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
-    // Legacy saves predate the fingerprint and carried the full ID list.
-    const expected = run.questions.map((question) => question.id);
-    const matchesExpected =
-      expected.length === saved.runQuestionIds.length &&
-      expected.every((id, i) => id === saved.runQuestionIds[i]);
-    if (!matchesExpected) return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
-  }
-  const lastQuestion = run.questions.length - 1;
-  if (merged.qIndex > lastQuestion || merged.pending > lastQuestion) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.INDEX_OUT_OF_RANGE };
-  }
-  if (merged.breakAct > 1) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.BREAK_ACT_OUT_OF_RANGE };
-  }
-
-  // Stage 3: phase-specific required/forbidden fields (BUG-008). A phase
-  // that type-checks and stays within the run's own bounds can still
-  // combine with a pack/route configuration it could never have been
-  // reached from -- see the family comments above for exactly which
-  // relationship each check enforces and why it is safe to require.
-  const consentPhases = merged.phase.startsWith('consent');
-  if (consentPhases && !pack.consentGate) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
-  }
-  if (PRIVATE_MOMENT_PHASES.has(merged.phase)) {
-    const privateMomentEnabled = run.routeId !== 'quick' && run.privateMoment !== 'none';
-    if (!privateMomentEnabled) {
-      return { ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE };
-    }
-  }
-  if (ACT2_CONSENT_PHASES.has(merged.phase) && merged.breakAct !== 0) {
-    return { ok: false, reason: SAVE_REJECT_REASONS.ACT2_CONSENT_PHASE_INVALID_BREAK_ACT };
-  }
-
-  return { ok: true, value: merged };
-}
-
-// `{ ...initialState, ...saved }` is the resume-state migration for a save
-// written before packId existed: it simply has no such key, so the spread
-// leaves initialState's `DEFAULT_PACK_ID` in place untouched. The
-// canonicalization above handles the other case -- a packId/modeId that IS
-// present but no longer valid.
 function loadSaved() {
   if (typeof window === 'undefined') return null;
   try {

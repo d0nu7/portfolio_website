@@ -1,4 +1,8 @@
-import { parseSaved, SAVE_REJECT_REASONS } from '../CloserGame';
+import {
+  SAVE_REJECT_REASONS,
+  createInitialState,
+  parseSaved,
+} from '../../../closer/engine/persistence';
 import { CONTENT_VERSION, runFingerprintFor } from '../../../constants/closer';
 
 /*
@@ -15,6 +19,32 @@ const BASE = {
   pending: 5,
   hasStarted: true,
 };
+
+describe('createInitialState', () => {
+  it('creates a canonical fresh state while preserving supported preferences', () => {
+    const state = createInitialState({
+      lang: 'en',
+      packId: 'first-date',
+      routeId: 'quick',
+      timerEnabled: false,
+    });
+
+    expect(state).toEqual(expect.objectContaining({
+      stateVersion: 1,
+      phase: 'start',
+      lang: 'en',
+      packId: 'first-date',
+      routeId: 'quick',
+      timerEnabled: false,
+      qIndex: 0,
+      pending: 0,
+      completed: false,
+      hasStarted: false,
+      contentVersion: CONTENT_VERSION,
+      runFingerprint: null,
+    }));
+  });
+});
 
 describe('parseSaved (discriminated save parser)', () => {
   it('rejects an empty or missing raw value with reason=EMPTY', () => {
@@ -98,7 +128,7 @@ describe('parseSaved (discriminated save parser)', () => {
   /*
    * BUG-008: validation checked broad shape but not whether a phase and its
    * pack/route were even reachable together. secretPass1..checkPassBack are
-   * only ever entered when goTo()/nextCheckPhase() have confirmed the route
+   * only ever entered after the engine has confirmed the route
    * is not Quick and the pack's privateMoment is not 'none' -- two
    * independent ways that precondition can fail, both traced from those
    * transitions and checked here.
