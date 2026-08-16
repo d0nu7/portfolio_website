@@ -3,6 +3,8 @@
 **Updated:** 16 August 2026
 **Status convention:** Proposed, Planned, In progress, Verification pending, or Delivered
 
+Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 remains a separately scheduled engineering effort.
+
 ## P0 – release requirements
 
 ### FR-001 – Discreet Late Night discovery

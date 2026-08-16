@@ -7,6 +7,7 @@ This directory contains the current product, content, review, and engineering do
 | Area | Document | Authority |
 |---|---|---|
 | Product behavior and safety | [Gameplay and safety contract](product/gameplay-and-safety.md) | Desired user-visible behavior, consent rules, route semantics, and release acceptance |
+| Product-owner actions | [RaDi owner TODO](product/radi-owner-todo.md) | Legal approval, editorial work, user sessions, infrastructure decisions, and FR-011 commissioning |
 | Questions and routes | [Question catalog DE/EN](content/question-catalog.de-en.md) | Exact bilingual wording, stable IDs, route membership, pack finales, and pilot durations |
 | Editorial rationale | [Question-design research](content/question-design-research.md) | Research synthesis, limitations, question criteria, and pack-specific editorial guidance |
 | Current assessment | [Holistic review](reviews/current-review.md) | Latest product/code assessment and priorities |
