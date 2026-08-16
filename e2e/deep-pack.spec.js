@@ -25,7 +25,6 @@ test.describe('DEEP standard route (24 questions, 8 per act)', () => {
       routeId: 'standard',
       modeId: 'still',
       qIndex: 7,
-      skipsRemaining: 3,
     });
     // Standard's 8th Act I question (index 7) is Q12, which carries the
     // 'deeper' twist -- the first "Weiter" only opens that question's own
@@ -42,7 +41,6 @@ test.describe('DEEP standard route (24 questions, 8 per act)', () => {
       routeId: 'standard',
       modeId: 'still',
       qIndex: 23,
-      skipsRemaining: 3,
       secretSeen: [true, true],
       hasSecretQuestion: [true, true],
     });
@@ -58,7 +56,6 @@ test.describe('DEEP standard route (24 questions, 8 per act)', () => {
       routeId: 'standard',
       modeId: 'still',
       qIndex: 17,
-      skipsRemaining: 3,
       secretSeen: [false, false],
     });
     await page.getByRole('button', { name: 'Weiter' }).click();

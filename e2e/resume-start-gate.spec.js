@@ -2,16 +2,8 @@ const { test, expect } = require('@playwright/test');
 const { STORAGE_KEY } = require('./helpers');
 
 /*
- * BF8-01 (iteration 8 holistic review): the persistence effect writes
- * localStorage for every phase except 'start', so a reload straight after
- * clicking "Start" -- before a single name, route, style or question --
- * used to already show "Spiel fortsetzen" for a game that had never
- * actually begun. hasStarted is now set once, at the same 'act' -> 'q'
- * transition that starts actStartedAt for real (the first question's own
- * act-intro "Continue"/"Weiter"), and loadSaved() only offers resume once
- * it's true. See CloserGame.js's hasRealProgress() for how a save written
- * before this field existed is migrated (inferred from phase/progress
- * rather than trusted blindly).
+ * Setup-only state is not persisted. hasStarted flips at the first real
+ * question; only then does the app write a resumable run.
  */
 
 async function clickThroughToFirstQuestion(page, { continueLabel, beginLabel, startLabel }) {
@@ -38,13 +30,13 @@ async function seedRaw(page, value) {
 // this fix existed looks like.
 const LEGACY_BASE = {
   stateVersion: 1,
+  contentVersion: 2,
   lang: 'de',
   players: ['', ''],
   modeId: 'original',
   timerEnabled: true,
   pending: 0,
   breakAct: 0,
-  skipsRemaining: 3,
   secretSeen: [false, false],
   hasSecretQuestion: [null, null],
   secretAsked: [null, null],

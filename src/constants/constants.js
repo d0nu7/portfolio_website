@@ -1,5 +1,4 @@
 export const projects = [
-  // wip
   {
     title: "Yokaisho",
     description:
@@ -42,19 +41,9 @@ export const projects = [
     source: "https://www.digitalsalzburg.at/vr-atemcoach/",
     id: 4,
   },
-  // {
-  //   title: "VR Patient",
-  //   description: "Bla.",
-  //   image: "/images/yoka.jpg",
-  //   tags: ["Unity", "C#"],
-  //   source: "https://google.com",
-  //   visit: "https://google.com",
-  //   id: 5,
-  // },
 ];
 
 export const Publications = [
-  // done
   {
     year: 2022,
     title:
@@ -173,7 +162,6 @@ export const Publications = [
 ];
 
 export const TeachingExperience = [
-  //done
   {
     category: "Master Classes",
     events: [

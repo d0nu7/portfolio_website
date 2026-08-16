@@ -5,11 +5,18 @@
 - [Vollständiger Fragenkatalog DE/EN](content/CLOSER_Fragenkatalog_DE_EN.md)
 - [Literaturrecherche zum Fragendesign](content/CLOSER_Literaturrecherche_Fragendesign.md)
 
-## Aktueller Review – Iteration 8
+## Aktueller Review – Iteration 9
 
-- [Ganzheitlicher Review](reviews/CLOSER_Ganzheitlicher_Review_Iteration8_2026-08-15.md)
-- [Bugfix-Report](reviews/CLOSER_Bugfixes_Iteration8_2026-08-15.md)
-- [Feature Requests](reviews/CLOSER_Feature_Requests_Iteration8_2026-08-15.md)
+- [Finaler operativer Refactoringplan](../../refactoring.md)
+- [Ganzheitlicher Review](reviews/CLOSER_Ganzheitlicher_Review_Iteration9_2026-08-15.md)
+- [Code Review](reviews/CLOSER_Code_Review_Iteration9_2026-08-15.md)
+- [Refactoring und Spielmechanik](reviews/CLOSER_Refactoring_und_Spielmechanik_Iteration9_2026-08-15.md)
+
+Iteration 8 bleibt als historische Implementierungsgrundlage erhalten:
+
+- [Ganzheitlicher Review Iteration 8](reviews/CLOSER_Ganzheitlicher_Review_Iteration8_2026-08-15.md)
+- [Bugfix-Report Iteration 8](reviews/CLOSER_Bugfixes_Iteration8_2026-08-15.md)
+- [Feature Requests Iteration 8](reviews/CLOSER_Feature_Requests_Iteration8_2026-08-15.md)
 
 Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fragen, Routen und pack-spezifische Finale. Produktcode und Tests bleiben die technische Source of Truth für den aktuell ausgelieferten Stand.
 
@@ -19,8 +26,9 @@ Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fr
 - **Pack-Auswahl-Screen** (FR8-03): live, zwischen Namenseingabe und Dauer-Wahl.
 - **Live registrierte Packs** (`src/constants/closer.js`, `PACKS`): CLASSIC, FIRST DATE, DATE NIGHT, COUPLES, FRIENDS, OLD FRIENDS, DEEP, CHAOS – Inhalt jeweils wortgleich aus dem Fragenkatalog übernommen. Jedes der acht Packs hat inzwischen einen kleinen, bewusst sparsamen Satz an Twists (2–3 Fragen pro Pack, `deeper`/`stayEnabled`) – redaktionelle Entscheidung, in derselben Sitzung wie die Akzentfarben getroffen. PREDICT/BOTH/NO THINKING bleiben außerhalb von CLASSIC ungenutzt.
 - **LATE NIGHT**: Inhalt vollständig in `closer.js` vorbereitet (`LATE_NIGHT_PACK`, exportiert für Tests), aber absichtlich **nicht** in `PACKS` registriert und damit im Spiel nicht erreichbar. Die Consent-Gate-UI (getrenntes 18+-Opt-in pro Person vor dem Pack, erneutes Opt-in vor Akt II) ist gebaut und generisch über `pack.consentGate` – aber toter Code, solange kein registriertes Pack dieses Feld setzt. Siehe TODOs unten für die verbleibende Voraussetzung.
-- **FR8-04 – CLOSER PULSE**: live. Ruhige Meilenstein-Animation (`src/components/Closer/ClosePulse.js`) an Aktgrenzen, Secret-Übergabe und Finale – zwei Lichtpunkte, die sich annähern, ein gemeinsamer Puls bei der Geheimfrage, ein verblassender Halo im Finale. `prefers-reduced-motion` löst eine kurze Opacity-Blende statt der vollen Animation aus; Tippen überspringt sofort; die Continue-Steuerung des jeweiligen Screens bleibt nach ~350ms klickbar, auch wenn die Animation optisch noch ausklingt. Kein Sound, keine Bewertung, keine Animation bei Skip/Ablehnen/Beenden.
-- **FR8-06 – Content-Versionierung**: live. `runQuestionIds[]` + `contentVersion` werden beim tatsächlichen Spielstart gespeichert; ein Resume vergleicht sie gegen den aktuell aufgelösten Lauf und verwirft den Spielstand, statt still auf verschobenem Content weiterzuspielen.
+- **FR8-04 – CLOSER PULSE**: live. Ruhige Meilenstein-Animation (`src/components/Closer/ClosePulse.js`) an Aktgrenzen, privater Übergabe und natürlichem Finale. `prefers-reduced-motion` löst eine kurze Opacity-Blende statt der vollen Animation aus. Ein früher Menü-/Consent-Abbruch wird inzwischen getrennt gespeichert und nicht mehr als verdienter Abschluss inszeniert. Pointer Events vor dem vollständigen visuellen Ende bleiben als UI-Detail offen.
+- **FR8-06 – Content-Versionierung**: `runQuestionIds[]` + `contentVersion` werden gespeichert und beim Resume geprüft. Die IDs sind weiterhin positionsbasiert; explizite stabile Content-IDs und ein Run-Fingerprint stehen deshalb noch im Refactoringplan.
+- **Iteration-9-Korrekturblock (lokaler Stand, noch nicht deployed)**: Herz-Skip entfernt, kostenloses Passen vereinheitlicht, Singleton-Styles übersprungen, Intros packabhängig, Quick-Finale verkürzt, Secret/Q37-Richtung korrigiert, Resume-Validierung gehärtet und Routenzeiten numerisch vereinheitlicht.
 - **Response Cards**: live für FRIENDS, OLD FRIENDS und DEEP (19 Fragen). Ruhiger, immer sichtbarer Hinweis neben der Frage, nichts zum Antippen.
 
 ## Offene TODOs
@@ -28,7 +36,8 @@ Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fr
 ### P1 – vor jedem öffentlichen Launch von CLOSER
 
 - **Impressum/Datenschutz fehlen weiterhin.** `src/pages/` enthält keine entsprechende Seite (Stand dieses Commits). Das ist laut früherer rechtlicher Einordnung (ECG §5, MedienG §25, DSGVO Art. 13, TKG 2021 §165 Abs. 3) ein Launch-Gate, kein Nice-to-have – braucht RaDis echte Geschäfts-/Kontaktdaten, die keine Session bisher hatte und die nicht erfunden werden dürfen. Die unlistete URL begrenzt die praktische Exposition, ersetzt das Gate aber nicht.
-- **Live-Deploy nicht verifiziert.** Ob `radi.solutions/closer` den aktuellen Stand (Pack-Auswahl, 8 Packs, alle BF8-Fixes) tatsächlich ausliefert, ist aus dem Repository nicht ersichtlich – letzter bekannter Befund war ein Build-ID-Unterschied zwischen live und lokal getestet. Braucht einen echten Smoke-Test nach dem nächsten Deploy: PWA-Install-Flow, Pack-Auswahl, mindestens ein Quick-Playthrough in einem neuen Pack.
+- **Iteration-9-Korrekturblock veröffentlichen.** Die reproduzierten P1-Produktfehler sind im lokalen Arbeitsstand behoben und regressionsgetestet; vor dem Launch fehlen Review, Commit/Merge und Deployment.
+- **Live-Deploy wurde am 15.08.2026 verifiziert.** Acht Packs, Quick-Durchläufe in CLASSIC/FIRST DATE/DATE NIGHT/CHAOS, DE/EN, Skip/Ablehnen, Twists, Secret/Q37, Resume, PWA-Ressourcen und drei Viewports wurden geprüft. Keine Konsolenfehler oder fehlgeschlagenen App-Assets; Rechtsseiten bleiben 404, Service Worker fehlt.
 
 ### P1 – vor der Freigabe von LATE NIGHT speziell
 
@@ -38,11 +47,13 @@ Der Fragenkatalog ist die redaktionelle Single Source of Truth für Pack-IDs, Fr
 
 ### P2 – redaktionelle Entscheidung noch offen
 
-- **Zweiter, twist-reicherer Style pro neuem Pack (PLAYFUL-Äquivalent).** Jedes der acht Packs außer CLASSIC hat aktuell nur einen einzigen Style. Ob und welcher zusätzliche Style (mit BOTH/NO THINKING) für DATE NIGHT, COUPLES etc. sinnvoll wäre, ist eine eigene redaktionelle Entscheidung, keine technische – die aktuelle sparsame Twist-Zuweisung deckt nur `deeper`/`stayEnabled` ab.
+- **Nicht künstlich zweite Styles bauen, nur um den Screen zu rechtfertigen.** Jedes Pack außer CLASSIC hat aktuell einen Style. Der Screen soll bei genau einer Option automatisch entfallen. Ein zweiter Style kommt nur hinzu, wenn er einen echten und packgerechten Regelunterschied bietet.
+- **Private Moments redaktionell ausarbeiten.** Packabhängige sichere Karten ersetzen die universelle Geheimfrage; Quick bleibt kurz, LATE NIGHT verwendet keine geheimen körperlichen/sexuellen Aufgaben.
 
 ### P3 – Testing-Lücken
 
 - **Reale Geräte-Tests weiterhin offen** (aus früheren Reviews, seither nicht erneut geprüft): PWA-Install-Flow unter `display: fullscreen` nach einem bestehenden Install, iOS "Add to Home Screen", echtes VoiceOver/TalkBack, Touch-Ziel-Komfort, CLOSER PULSE auf einem echten Android-Mittelklassegerät (FR8-04 verlangt das explizit als Akzeptanzkriterium).
+- Browser-E2E deckt weiterhin nur Chromium/Pixel 7 ab; WebKit/iOS, Dialogfokus, Kontrast und Console-Guards fehlen.
 - `feat/closer-voice` (TTS-Vorlesefunktion) bleibt wie besprochen unangetastet, bis RaDi sein eigenes Stimmmodell fertig hat.
 
 ### Kein offener Content-TODO mehr

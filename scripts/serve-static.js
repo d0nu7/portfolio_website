@@ -25,6 +25,10 @@ const MIME = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.webmanifest': 'application/manifest+json',
@@ -34,7 +38,15 @@ const MIME = {
 
 function resolveFile(urlPath) {
   const clean = urlPath.split('?')[0].split('#')[0];
-  let filePath = path.join(dir, decodeURIComponent(clean));
+  let decoded;
+  try {
+    decoded = decodeURIComponent(clean);
+  } catch {
+    return null;
+  }
+  const filePath = path.resolve(dir, `.${path.sep}${decoded.replace(/^[/\\]+/, '')}`);
+  const relative = path.relative(dir, filePath);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) return null;
 
   // Directory / extensionless route -> that route's own index.html, same
   // as what static hosts (and `next export`) serve for clean URLs.
@@ -67,6 +79,6 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(filePath).pipe(res);
 });
 
-server.listen(port, () => {
+server.listen(port, '127.0.0.1', () => {
   console.log(`Serving ${dir} at http://localhost:${port}`);
 });

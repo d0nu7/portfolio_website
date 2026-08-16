@@ -134,24 +134,6 @@ export const Count = styled.span`
   font-variant-numeric: tabular-nums;
 `;
 
-export const Tokens = styled.span`
-  display: inline-flex;
-  gap: 0.5rem;
-  font-size: 1.4rem;
-  color: ${({ $accent }) => $accent};
-
-  b {
-    font-weight: 400;
-  }
-
-  /* A spent token stays in place, hollowed out, so the count is legible
-     without having to compare against a remembered state. */
-  s {
-    text-decoration: none;
-    opacity: 0.22;
-  }
-`;
-
 export const Bar = styled.div`
   position: relative;
   z-index: 1;

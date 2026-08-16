@@ -16,7 +16,6 @@ test.describe('Response Cards', () => {
       routeId: 'full',
       modeId: 'easy',
       qIndex: 7,
-      skipsRemaining: 3,
     });
     await expect(page.getByText('CELEBRATE', { exact: true })).toBeVisible();
     await expect(
@@ -31,7 +30,6 @@ test.describe('Response Cards', () => {
       routeId: 'full',
       modeId: 'easy',
       qIndex: 0,
-      skipsRemaining: 3,
     });
     await expect(page.getByText('CELEBRATE', { exact: true })).toHaveCount(0);
     await expect(page.getByText('FOLLOW UP', { exact: true })).toHaveCount(0);
@@ -40,7 +38,7 @@ test.describe('Response Cards', () => {
   });
 
   test('a pack with no response cards defined (CLASSIC) never shows one', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 0, skipsRemaining: 3 });
+    await seedAndResume(page, { qIndex: 0 });
     await expect(page.getByText('CELEBRATE', { exact: true })).toHaveCount(0);
   });
 });

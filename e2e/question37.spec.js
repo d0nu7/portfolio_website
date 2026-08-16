@@ -13,10 +13,10 @@ test.describe('Question 37', () => {
     await expect(page.getByText('NOCH EINE?')).toBeVisible();
 
     await page.getByRole('button', { name: 'FRAGE 37' }).click();
-    await expect(page.getByText('stellt die Geheimfrage')).toBeVisible();
+    await expect(page.getByText('stellt die vorgemerkte Frage')).toBeVisible();
     await page.getByRole('button', { name: 'Weiter' }).click();
 
-    await expect(page.getByText('stellt die Geheimfrage')).toBeVisible();
+    await expect(page.getByText('stellt die vorgemerkte Frage')).toBeVisible();
     await page.getByRole('button', { name: 'Fertig' }).click();
 
     await expect(page.getByText(/Das war.s\./)).toBeVisible();
@@ -25,7 +25,7 @@ test.describe('Question 37', () => {
   test('exactly one pending -> single name-free shared prompt', async ({ page }) => {
     await seedAndResume(page, { phase: 'q37intro', secretAsked: [false, true] });
     await expect(page.getByText('EINE FRAGE FEHLT NOCH')).toBeVisible();
-    await expect(page.getByText('Eine deiner Fragen wurde gestellt.')).toBeVisible();
+    await expect(page.getByText('Eine vorgemerkte Frage wartet noch.')).toBeVisible();
 
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.getByText('FRAGE 37')).toBeVisible();
@@ -85,7 +85,7 @@ test.describe('Question 37', () => {
   }) => {
     await seedAndResume(page, { phase: 'q37intro', secretAsked: [false, false] });
     await page.getByRole('button', { name: 'FRAGE 37' }).click();
-    await expect(page.getByText('stellt die Geheimfrage')).toBeVisible();
+    await expect(page.getByText('stellt die vorgemerkte Frage')).toBeVisible();
 
     await page.getByRole('button', { name: 'Ende' }).click();
     await expect(page.getByText(/Das war.s\./)).toBeVisible();

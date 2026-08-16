@@ -11,7 +11,7 @@ const STORAGE_KEY = 'closer:v1';
 const BASE_STATE = {
   // 'start' is deliberately never resumable (see loadSaved() in
   // CloserGame.js) -- default to a plain question phase so specs that only
-  // override qIndex/skipsRemaining/etc. still land on "Spiel fortsetzen".
+  // override qIndex/etc. still land on "Spiel fortsetzen".
   // Specs targeting a specific interstitial (secretPass1, q37intro, ...)
   // override this explicitly.
   //
@@ -20,6 +20,8 @@ const BASE_STATE = {
   // loadSaved() defaults a missing packId to the classic pack), rather than
   // every spec asserting against an explicitly-set value.
   phase: 'q',
+  stateVersion: 1,
+  contentVersion: 2,
   lang: 'de',
   players: ['Alex', 'Sam'],
   modeId: 'datenight', // has every twist enabled; override per test as needed
@@ -27,7 +29,6 @@ const BASE_STATE = {
   qIndex: 0,
   pending: 0,
   breakAct: 0,
-  skipsRemaining: 3,
   // secretSeen tracks whether a person completed their private secret-
   // question screen; hasSecretQuestion tracks whether they actually formed
   // one there rather than choosing "Heute keine" (bugfix-report iteration

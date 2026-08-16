@@ -8,10 +8,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/serve-static.js out 3000",
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run build && playwright test",
+    "test:e2e:run": "playwright test",
     "test:e2e:install": "playwright install chromium",
     "lint": "eslint ."
   },

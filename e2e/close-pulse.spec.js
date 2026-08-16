@@ -17,14 +17,14 @@ test.describe('CLOSER PULSE', () => {
   test('fires at the Act I -> Act II boundary (stage "actI")', async ({ page }) => {
     // Quick route (4 questions/act) so index 3 -> 4 is actually a boundary,
     // not just the next of 12 (as it would be on the default full route).
-    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3, skipsRemaining: 3 });
+    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3 });
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.locator(`${PULSE}[data-stage="actI"]`)).toBeVisible();
     await expect(page.getByText('ABGESCHLOSSEN')).toBeVisible();
   });
 
   test('fires at the Act II -> Act III boundary (stage "actII")', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 23, skipsRemaining: 3 });
+    await seedAndResume(page, { qIndex: 23 });
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.locator(`${PULSE}[data-stage="actII"]`)).toBeVisible();
     await expect(page.getByText('ABGESCHLOSSEN')).toBeVisible();
@@ -52,17 +52,24 @@ test.describe('CLOSER PULSE', () => {
     await expect(page.locator(`${PULSE}[data-stage="secret"]`)).toBeVisible();
   });
 
-  test('fires when the game actually ends (stage "finale")', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 2 });
-    await page.getByRole('button', { name: 'Menü' }).click();
-    await page.getByRole('button', { name: 'Spiel jetzt beenden' }).click();
-    await page.getByRole('button', { name: 'Spiel jetzt beenden', exact: true }).click();
+  test('fires after a naturally completed finale (stage "finale")', async ({ page }) => {
+    await seedAndResume(page, { phase: 'q37', secretAsked: [true, true] });
+    await page.getByRole('button', { name: 'Fertig' }).click();
     await expect(page.locator(`${PULSE}[data-stage="finale"]`)).toBeVisible();
     await expect(page.getByText('Das war’s.')).toBeVisible();
   });
 
+  test('does not reward an early menu exit with a finale pulse', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 2 });
+    await page.getByRole('button', { name: 'Menü' }).click();
+    await page.getByRole('button', { name: 'Spiel jetzt beenden' }).click();
+    await page.getByRole('button', { name: 'Spiel jetzt beenden', exact: true }).click();
+    await expect(page.locator(PULSE)).toHaveCount(0);
+    await expect(page.getByText('Das war’s.')).toBeVisible();
+  });
+
   test('tapping the overlay dismisses it immediately (tap-to-skip)', async ({ page }) => {
-    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3, skipsRemaining: 3 });
+    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3 });
     await page.getByRole('button', { name: 'Weiter' }).click();
     const pulse = page.locator(PULSE);
     await expect(pulse).toBeVisible();
@@ -74,25 +81,18 @@ test.describe('CLOSER PULSE', () => {
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3, skipsRemaining: 3 });
+    await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3 });
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.locator(`${PULSE}[data-reduced="true"]`)).toBeVisible();
   });
 
   test('does not fire on a plain resume/reload', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 3, skipsRemaining: 3 });
-    await expect(page.locator(PULSE)).toHaveCount(0);
-  });
-
-  test('does not fire on a token skip', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 3, skipsRemaining: 3 });
-    await page.getByRole('button', { name: 'Skip', exact: true }).click();
-    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+    await seedAndResume(page, { qIndex: 3 });
     await expect(page.locator(PULSE)).toHaveCount(0);
   });
 
   test('does not fire on the free "Lieber nicht" decline', async ({ page }) => {
-    await seedAndResume(page, { qIndex: 3, skipsRemaining: 3 });
+    await seedAndResume(page, { qIndex: 3 });
     await page.getByRole('button', { name: 'Lieber nicht' }).click();
     await expect(page.locator(PULSE)).toHaveCount(0);
   });

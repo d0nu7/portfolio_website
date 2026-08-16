@@ -173,7 +173,6 @@ const CLASSIC_ACTS = [
     id: 'curious',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'NEUGIERIG', en: 'CURIOUS' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     // Reworded per the iteration-6 content review's P2 finding: "start
     // light" undersold what's actually here -- question 7 asks about your
     // own death, question 10 about how you were raised. Still an honest
@@ -261,7 +260,6 @@ const CLASSIC_ACTS = [
     id: 'closer',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'NÄHER', en: 'CLOSER' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Die Fragen werden jetzt ein bisschen persönlicher.',
       en: 'The questions get a little more personal now.',
@@ -334,14 +332,13 @@ const CLASSIC_ACTS = [
     id: 'open',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'OFFEN', en: 'OPEN' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     // Content warning, not just a mood-setter (iteration-6 content review,
     // P1): the previous "this part gets personal" was true but nonspecific
     // -- Act III is where family, difficult memories, loss and death
     // questions concentrate (18, 19, 23, 24, 33, 35, 36).
     intro: {
       de: 'Dieser Akt berührt Familie, schwierige Erinnerungen, Verlust und Tod. Ihr müsst nichts beantworten. Überspringt oder beendet das Spiel jederzeit – ohne Erklärung.',
-      en: "This act touches on family, difficult memories, loss and death. You don't have to answer anything. Skip or end the game anytime -- no explanation needed.",
+      en: "This act touches on family, difficult memories, loss and death. You don't have to answer anything. Pass or end the game anytime -- no explanation needed.",
     },
     questions: [
       {
@@ -415,13 +412,13 @@ const CLASSIC_ACTS = [
  */
 const CLASSIC_Q37 = {
   neither: {
-    de: 'Stellt euch die Frage, von der ihr gehofft habt, dass sie kommt.',
-    en: 'Ask the question you hoped they would ask.',
+    de: 'Stellt euch nacheinander eure vorgemerkten Fragen.',
+    en: 'Take turns asking the questions you saved for later.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, stell die Frage, von der du gehofft hast, dass ${other} sie dir stellt.`
-      : `${who}, ask the question you hoped ${other} would ask you.`,
+      ? `${who}, stell ${other} deine vorgemerkte Frage.`
+      : `${who}, ask ${other} the question you saved for later.`,
   both: {
     de: 'Stellt die Frage, von der ihr euch gewünscht hättet, dass sie heute Abend vorgekommen wäre.',
     en: 'Ask the question you wish had appeared tonight.',
@@ -437,7 +434,7 @@ const CLASSIC_MODES = [
     // hardcoded "36 Fragen/45 Minuten" here contradicted whatever route
     // (Quick/Standard/Full) was actually chosen one screen earlier. Scope
     // and time live on the route object and are shown once from there --
-    // see route.subtitle and the Style screen in CloserGame.js.
+    // see routeSubtitleFor() and the duration screen in CloserGame.js.
     blurb: {
       de: 'Zurückhaltende Inszenierung, ausgewählte Route.',
       en: 'Understated presentation for your selected route.',
@@ -478,8 +475,6 @@ const CLASSIC_MODES = [
 // The secret question interrupts between question 27 and question 28.
 const CLASSIC_SECRET_AT_INDEX = 27;
 
-export const SKIP_TOKENS = 3;
-
 /*
  * Time routes for CLASSIC (iteration 7, Phase 2). Curated by hand against
  * the same "kuratierter Auszug, nicht algorithmisch" requirement the
@@ -508,12 +503,9 @@ export const SKIP_TOKENS = 3;
 const CLASSIC_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 15,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 15 Minuten',
-      en: '12 questions · 3 acts · about 15 minutes',
-    },
     // Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
     actIndices: [
       [0, 3, 8, 11],
@@ -523,12 +515,9 @@ const CLASSIC_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 30,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 30 Minuten',
-      en: '24 questions · 3 acts · about 30 minutes',
-    },
     // Q01-Q04, Q08, Q09, Q11, Q12 · Q13-Q18, Q20, Q21 · Q25-Q31, Q36
     actIndices: [
       [0, 1, 2, 3, 7, 8, 10, 11],
@@ -538,12 +527,9 @@ const CLASSIC_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 45,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 45 Minuten',
-      en: '36 questions · 3 acts · about 45 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -582,7 +568,6 @@ const FIRST_DATE_ACTS = [
     id: 'curiosity',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'NEUGIER', en: 'CURIOSITY' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Fangt leicht an. Es geht um Neugier, nicht um Tiefe – ihr könnt jederzeit weitergehen.',
       en: "Start light. This is about curiosity, not depth -- you can move on whenever you like.",
@@ -650,7 +635,6 @@ const FIRST_DATE_ACTS = [
     id: 'signal',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'SIGNAL', en: 'SIGNALS' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Jetzt geht es um das, was sich zwischen euch beiden gerade zeigt.',
       en: "Now it's about what's showing up between the two of you right now.",
@@ -719,7 +703,6 @@ const FIRST_DATE_ACTS = [
     id: 'clarity',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'KLARHEIT', en: 'CLARITY' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt bringt Klarheit über Erwartungen und Grenzen. Nichts davon ist ein Versprechen für später.',
       en: "This act brings clarity about expectations and boundaries. None of it is a promise about what comes next.",
@@ -782,13 +765,13 @@ const FIRST_DATE_ACTS = [
 
 const FIRST_DATE_Q37 = {
   neither: {
-    de: 'Stellt euch nacheinander die Frage, von der ihr gehofft habt, dass sie heute noch kommt.',
-    en: 'Take turns asking the question you each hoped would come up tonight.',
+    de: 'Stellt euch nacheinander eure vorgemerkten Fragen – ohne Erwartungsdruck.',
+    en: 'Take turns asking the questions you saved for later — without pressure.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, stell ${other} die Frage, von der du gehofft hast, dass sie dir heute gestellt wird.`
-      : `${who}, ask ${other} the question you hoped they would ask you tonight.`,
+      ? `${who}, stell ${other} deine vorgemerkte Frage – ohne Erwartungsdruck.`
+      : `${who}, ask ${other} the question you saved for later — without pressure.`,
   both: {
     de: 'Stellt euch noch eine Frage, die diesen ersten Abend gut abrundet.',
     en: 'Ask each other one more question that would bring this first evening to a good close.',
@@ -825,12 +808,9 @@ const FIRST_DATE_SECRET_AT_INDEX = 27;
 const FIRST_DATE_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 18,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
-      en: '12 questions · 3 acts · about 18 minutes',
-    },
     actIndices: [
       [0, 1, 3, 6],
       [0, 2, 4, 8],
@@ -839,12 +819,9 @@ const FIRST_DATE_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 30,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 30 Minuten',
-      en: '24 questions · 3 acts · about 30 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3, 4, 6, 7, 11],
       [0, 1, 2, 3, 4, 6, 8, 11],
@@ -853,12 +830,9 @@ const FIRST_DATE_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 50,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 50 Minuten',
-      en: '36 questions · 3 acts · about 50 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -884,7 +858,6 @@ const DATE_NIGHT_ACTS = [
     id: 'spark',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'FUNKE', en: 'SPARK' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Es geht um Anziehung und Wärme – prickelnd, aber ohne Druck.',
       en: "This is about attraction and warmth -- a spark, without any pressure.",
@@ -952,7 +925,6 @@ const DATE_NIGHT_ACTS = [
     id: 'tension',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'SPANNUNG', en: 'TENSION' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Jetzt geht es um Nähe, Berührung und Wünsche – immer nur, wenn ihr wollt.',
       en: "Now it's about closeness, touch and desire -- only ever if you want to.",
@@ -1021,7 +993,6 @@ const DATE_NIGHT_ACTS = [
     id: 'openness',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'OFFEN', en: 'OPENNESS' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt öffnet Verlangen und Grenzen ehrlich, ohne dass daraus ein Versprechen für heute wird.',
       en: "This act opens up desire and boundaries honestly, without turning into a promise for tonight.",
@@ -1084,13 +1055,13 @@ const DATE_NIGHT_ACTS = [
 
 const DATE_NIGHT_Q37 = {
   neither: {
-    de: 'Stellt euch nacheinander die Frage, die ihr euch für diesen Abend noch gewünscht habt.',
-    en: 'Take turns asking the question you each wished had come up tonight.',
+    de: 'Stellt euch nacheinander eure vorgemerkten Fragen, wenn es sich für euch gut anfühlt.',
+    en: 'Take turns asking the questions you saved, if that feels good to both of you.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, stell ${other} die Frage, die du dir heute Abend insgeheim gewünscht hast.`
-      : `${who}, ask ${other} the question you secretly wished for tonight.`,
+      ? `${who}, stell ${other} deine vorgemerkte Frage, wenn es sich für euch gut anfühlt.`
+      : `${who}, ask ${other} the question you saved, if that feels good to both of you.`,
   both: {
     de: 'Stellt euch noch eine Frage, die den Funken dieses Abends mit in morgen nimmt.',
     en: "Ask each other one more question that carries tonight's spark into tomorrow.",
@@ -1118,12 +1089,9 @@ const DATE_NIGHT_SECRET_AT_INDEX = 27;
 const DATE_NIGHT_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 18,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
-      en: '12 questions · 3 acts · about 18 minutes',
-    },
     actIndices: [
       [0, 1, 4, 8],
       [0, 1, 5, 11],
@@ -1132,12 +1100,9 @@ const DATE_NIGHT_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 32,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 32 Minuten',
-      en: '24 questions · 3 acts · about 32 minutes',
-    },
     actIndices: [
       [0, 1, 3, 4, 5, 8, 9, 11],
       [0, 1, 2, 5, 7, 8, 10, 11],
@@ -1146,12 +1111,9 @@ const DATE_NIGHT_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 55,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 55 Minuten',
-      en: '36 questions · 3 acts · about 55 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -1179,7 +1141,6 @@ const COUPLES_ACTS = [
     id: 'noticing',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'SEHEN', en: 'NOTICING' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Fangt damit an, was zwischen euch gerade gut läuft.',
       en: "Start with what's already going well between you.",
@@ -1247,7 +1208,6 @@ const COUPLES_ACTS = [
     id: 'repair',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'REPARIEREN', en: 'REPAIR' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Kein Therapieersatz -- nur ein bisschen mehr Verständnis für das, was manchmal schwer ist.',
       en: "Not a substitute for therapy -- just a little more understanding for what's sometimes hard.",
@@ -1317,7 +1277,6 @@ const COUPLES_ACTS = [
     id: 'choosing',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WÄHLEN', en: 'CHOOSING' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt schaut nach vorn -- auf das, was ihr als Paar als Nächstes wählt.',
       en: "This act looks ahead -- at what the two of you choose next as a couple.",
@@ -1379,13 +1338,13 @@ const COUPLES_ACTS = [
 
 const COUPLES_Q37 = {
   neither: {
-    de: 'Stellt euch nacheinander die Frage, die ihr euch in eurer Beziehung schon länger wünscht.',
-    en: 'Take turns asking the question you have each been wishing for in your relationship.',
+    de: 'Stellt euch nacheinander eure vorgemerkten Fragen. Zuhören reicht; ihr müsst nichts sofort lösen.',
+    en: 'Take turns asking the questions you saved. Listening is enough; nothing has to be solved now.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, stell ${other} die Frage, die du dir in eurer Beziehung schon länger gewünscht hast.`
-      : `${who}, ask ${other} the question you have been wishing for in your relationship.`,
+      ? `${who}, stell ${other} deine vorgemerkte Frage. Zuhören reicht; ihr müsst nichts sofort lösen.`
+      : `${who}, ask ${other} the question you saved. Listening is enough; nothing has to be solved now.`,
   both: {
     de: 'Stellt euch noch eine Frage, die euch auch morgen an etwas Wertvolles zwischen euch erinnert.',
     en: 'Ask each other one more question that will remind you tomorrow of something valuable between you.',
@@ -1413,12 +1372,9 @@ const COUPLES_SECRET_AT_INDEX = 27;
 const COUPLES_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 15,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Check-in', en: 'Check-in' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 15 Minuten',
-      en: '12 questions · 3 acts · about 15 minutes',
-    },
     actIndices: [
       [0, 1, 4, 8],
       [1, 4, 7, 11],
@@ -1427,12 +1383,9 @@ const COUPLES_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 32,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 32 Minuten',
-      en: '24 questions · 3 acts · about 32 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 8, 9],
       [0, 1, 2, 3, 4, 6, 7, 11],
@@ -1441,12 +1394,9 @@ const COUPLES_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 60,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 60 Minuten',
-      en: '36 questions · 3 acts · about 60 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -1484,7 +1434,6 @@ const FRIENDS_ACTS = [
     id: 'light',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'LEICHT', en: 'LIGHT' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Ausdrücklich freundschaftlich -- Humor und Wertschätzung, keine romantische Rahmung.',
       en: "Explicitly friendship-toned -- humor and appreciation, no romantic framing.",
@@ -1559,7 +1508,6 @@ const FRIENDS_ACTS = [
     id: 'showingup',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'DA SEIN', en: 'SHOWING UP' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Jetzt geht es um Unterstützung -- wie sie wirklich ankommt.',
       en: "Now it's about support -- how it actually lands.",
@@ -1649,7 +1597,6 @@ const FRIENDS_ACTS = [
     id: 'ahead',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WEITER', en: 'AHEAD' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt blickt nach vorn -- auf das, was ihr als Freunde als Nächstes wollt.',
       en: "This act looks ahead -- at what the two of you want next as friends.",
@@ -1725,13 +1672,13 @@ const FRIENDS_ACTS = [
 
 const FRIENDS_Q37 = {
   neither: {
-    de: 'Zwei Fragen haben noch gewartet. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet.',
-    en: 'Two questions have been waiting. If it feels right, ask them one at a time now. No answer is owed.',
+    de: 'Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet.',
+    en: 'Two saved questions are waiting. If it feels right, ask them one at a time now. No answer is owed.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass ${other} sie dir stellt. Eine Antwort bleibt freiwillig.`
-      : `${who}, if it feels right, ask the question you hoped ${other} would ask you. Answering is still optional.`,
+      ? `${who}, wenn es sich für dich gut anfühlt: Stell ${other} jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig.`
+      : `${who}, if it feels right, ask ${other} the question you saved. Answering is still optional.`,
   both: {
     de: 'Was möchtest du, dass die andere Person aus diesem Gespräch über dich mitnimmt?',
     en: 'What would you like the other person to take away from this conversation about you?',
@@ -1755,12 +1702,9 @@ const FRIENDS_SECRET_AT_INDEX = 27;
 const FRIENDS_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 18,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
-      en: '12 questions · 3 acts · about 18 minutes',
-    },
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
@@ -1769,12 +1713,9 @@ const FRIENDS_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 35,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 35 Minuten',
-      en: '24 questions · 3 acts · about 35 minutes',
-    },
     actIndices: [
       [0, 1, 3, 4, 6, 7, 9, 10],
       [0, 1, 3, 4, 6, 7, 9, 10],
@@ -1783,12 +1724,9 @@ const FRIENDS_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 60,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 60 Minuten',
-      en: '36 questions · 3 acts · about 60 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -1817,7 +1755,6 @@ const OLD_FRIENDS_ACTS = [
     id: 'then',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'DAMALS', en: 'THEN' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Fangt bei eurer gemeinsamen Geschichte an -- ohne Nähe oder Versöhnung vorauszusetzen.',
       en: "Start with your shared history -- without assuming closeness or reconciliation.",
@@ -1906,7 +1843,6 @@ const OLD_FRIENDS_ACTS = [
     id: 'inbetween',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'DAZWISCHEN', en: 'IN BETWEEN' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Jetzt geht es um die Zeit dazwischen -- ohne dass sie erklärt oder gelöst werden muss.',
       en: "Now it's about the time in between -- without needing it explained or solved.",
@@ -1982,7 +1918,6 @@ const OLD_FRIENDS_ACTS = [
     id: 'again',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WIEDER', en: 'AGAIN' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt fragt, was heute stimmig wäre -- ohne eine Wiederannäherung vorauszusetzen.',
       en: "This act asks what would feel right today -- without assuming a reconnection.",
@@ -2058,13 +1993,13 @@ const OLD_FRIENDS_ACTS = [
 
 const OLD_FRIENDS_Q37 = {
   neither: {
-    de: 'Zwei Fragen sind zwischen damals und heute offen geblieben. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet.',
-    en: 'Two questions have remained open between then and now. If it feels right, ask them one at a time. No answer is owed.',
+    de: 'Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet.',
+    en: 'Two saved questions are still open. If it feels right, ask them one at a time. No answer is owed.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass ${other} sie dir stellt. Eine Antwort bleibt freiwillig.`
-      : `${who}, if it feels right, ask the question you hoped ${other} would ask you. Answering is still optional.`,
+      ? `${who}, wenn es sich für dich gut anfühlt: Stell ${other} jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig.`
+      : `${who}, if it feels right, ask ${other} the question you saved. Answering is still optional.`,
   both: {
     de: 'Welche Seite der Person vor dir macht dich heute neugierig – unabhängig davon, wie es weitergeht?',
     en: 'What side of the person in front of you makes you curious today, regardless of what happens next?',
@@ -2088,12 +2023,9 @@ const OLD_FRIENDS_SECRET_AT_INDEX = 27;
 const OLD_FRIENDS_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 18,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
-      en: '12 questions · 3 acts · about 18 minutes',
-    },
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
@@ -2102,12 +2034,9 @@ const OLD_FRIENDS_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 32,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 32 Minuten',
-      en: '24 questions · 3 acts · about 32 minutes',
-    },
     actIndices: [
       [0, 1, 3, 4, 6, 7, 9, 10],
       [0, 1, 3, 4, 6, 7, 9, 10],
@@ -2116,12 +2045,9 @@ const OLD_FRIENDS_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 60,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 60 Minuten',
-      en: '36 questions · 3 acts · about 60 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -2151,7 +2077,6 @@ const DEEP_ACTS = [
     id: 'beneath',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'DARUNTER', en: 'BENEATH' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Ein bewusst intensives Gespräch -- Tiefe heißt hier nicht Trauma.',
       en: "A deliberately intensive conversation -- depth here doesn't mean trauma.",
@@ -2227,7 +2152,6 @@ const DEEP_ACTS = [
     id: 'truth',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'WAHRHEIT', en: 'TRUTH' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Verstandenwerden statt Lösungen -- keine Diagnose, keine Bewertung.',
       en: 'Being understood, not solved -- no diagnosis, no judgment.',
@@ -2331,7 +2255,6 @@ const DEEP_ACTS = [
     id: 'carryforward',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'MITNEHMEN', en: 'CARRY FORWARD' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Dieser Akt fragt, was ihr aus diesem Gespräch mitnehmt -- ohne therapeutische Wirkung zu behaupten.',
       en: "This act asks what you'll carry forward from this conversation -- without claiming any therapeutic effect.",
@@ -2400,13 +2323,13 @@ const DEEP_ACTS = [
 
 const DEEP_Q37 = {
   neither: {
-    de: 'Zwei Fragen sind unter der Oberfläche geblieben. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig.',
-    en: 'Two questions have remained beneath the surface. If it feels right, ask them one at a time now. Every question and every answer remains optional.',
+    de: 'Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig.',
+    en: 'Two saved questions are still open. If it feels right, ask them one at a time now. Every question and every answer remains optional.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `${who}, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass ${other} sie dir stellt. Eine Antwort bleibt freiwillig.`
-      : `${who}, if it feels right, ask the question you hoped ${other} would ask you. Answering is still optional.`,
+      ? `${who}, wenn es sich für dich gut anfühlt: Stell ${other} jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig.`
+      : `${who}, if it feels right, ask ${other} the question you saved. Answering is still optional.`,
   both: {
     de: 'Wann hast du dich in diesem Gespräch am meisten verstanden gefühlt – und wodurch?',
     en: 'When did you feel most understood during this conversation, and what made you feel that way?',
@@ -2430,12 +2353,9 @@ const DEEP_SECRET_AT_INDEX = 27;
 const DEEP_ROUTES = {
   standard: {
     id: 'standard',
+    minutes: 38,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 38 Minuten',
-      en: '24 questions · 3 acts · about 38 minutes',
-    },
     actIndices: [
       [0, 1, 3, 4, 7, 8, 10, 11],
       [0, 1, 3, 4, 7, 8, 9, 11],
@@ -2444,12 +2364,9 @@ const DEEP_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 75,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 75 Minuten',
-      en: '36 questions · 3 acts · about 75 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -2480,7 +2397,6 @@ const CHAOS_ACTS = [
     id: 'weird',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'SELTSAM', en: 'WEIRD' },
-    subtitle: { de: '12 Fragen · etwa 10 Minuten', en: '12 questions · about 10 minutes' },
     intro: {
       de: 'Gemeinsames Erfinden und Lachen -- niemand wird bloßgestellt.',
       en: "Inventing things together and laughing -- nobody gets put on the spot.",
@@ -2548,7 +2464,6 @@ const CHAOS_ACTS = [
     id: 'bold',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'MUTIG', en: 'BOLD' },
-    subtitle: { de: '12 Fragen · etwa 10 Minuten', en: '12 questions · about 10 minutes' },
     intro: {
       de: 'Kleine, machbare Risiken -- keine Mutproben, niemand wird bloßgestellt.',
       en: "Small, doable risks -- no dares, no one gets embarrassed.",
@@ -2616,7 +2531,6 @@ const CHAOS_ACTS = [
     id: 'surprisinglyreal',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'ÜBERRASCHEND ECHT', en: 'SURPRISINGLY REAL' },
-    subtitle: { de: '12 Fragen · etwa 10 Minuten', en: '12 questions · about 10 minutes' },
     intro: {
       de: 'Ein bisschen echte Tiefe, ohne den Spaß zu verlieren.',
       en: "A little genuine depth, without losing the fun.",
@@ -2678,13 +2592,13 @@ const CHAOS_ACTS = [
 
 const CHAOS_Q37 = {
   neither: {
-    de: 'Zwei erhoffte Fragen warten noch. Wenn es sich für euch beide gut anfühlt, stellt sie nacheinander. Jede Frage und jede Antwort darf ohne Begründung übersprungen werden – und ihr könnt jederzeit hier enden.',
-    en: 'Two hoped-for questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be skipped without explanation—and you can end here at any time.',
+    de: 'Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch beide gut anfühlt, stellt sie nacheinander. Jede Frage und jede Antwort darf ohne Begründung ausgelassen werden – und ihr könnt jederzeit hier enden.',
+    en: 'Two saved questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be passed without explanation — and you can end here at any time.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `Eine erhoffte Frage wartet noch. Wenn es sich für euch beide weiterhin gut anfühlt, darf ${who} sie jetzt stellen. ${other} darf sie ohne Begründung überspringen. Ihr könnt auch einfach hier enden.`
-      : `One hoped-for question is still waiting. If continuing still feels good to both of you, ${who} may ask it now. ${other} may skip it without giving a reason. You can also simply end here.`,
+      ? `Eine vorgemerkte Frage wartet noch. Wenn es sich für euch beide weiterhin gut anfühlt, darf ${who} sie ${other} jetzt stellen. ${other} darf sie ohne Begründung überspringen. Ihr könnt auch einfach hier enden.`
+      : `One saved question is still waiting. If continuing still feels good to both of you, ${who} may ask ${other} now. ${other} may pass without giving a reason. You can also simply end here.`,
   both: {
     de: 'Ihr könnt hier enden – oder gemeinsam eine freiwillige Bonusfrage nehmen: Welche Regel sollte euer nächstes absurd gutes Abenteuer haben?',
     en: 'You can end here—or take one optional bonus question together: What rule should your next absurdly good adventure have?',
@@ -2710,12 +2624,9 @@ const CHAOS_SECRET_AT_INDEX = 27;
 const CHAOS_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 10,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 10 Minuten',
-      en: '12 questions · 3 acts · about 10 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3],
       [0, 1, 2, 3],
@@ -2724,12 +2635,9 @@ const CHAOS_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 21,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 21 Minuten',
-      en: '24 questions · 3 acts · about 21 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 6, 7],
       [0, 1, 2, 3, 4, 5, 6, 7],
@@ -2738,12 +2646,9 @@ const CHAOS_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 35,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 35 Minuten',
-      en: '36 questions · 3 acts · about 35 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -2812,7 +2717,6 @@ const LATE_NIGHT_ACTS = [
     id: 'atmosphere',
     numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'ATMOSPHÄRE', en: 'ATMOSPHERE' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Worte, Stimmung und Aufmerksamkeit -- noch nichts Explizites.',
       en: "Words, mood and attention -- nothing explicit yet.",
@@ -2880,7 +2784,6 @@ const LATE_NIGHT_ACTS = [
     id: 'desire',
     numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'WUNSCH', en: 'DESIRE' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     // Requires the renewed opt-in above (LATE_NIGHT_ACT_II_OPT_IN) before
     // this act's questions appear -- not yet enforced anywhere, since the
     // gate itself doesn't exist yet (see the block comment above).
@@ -2951,7 +2854,6 @@ const LATE_NIGHT_ACTS = [
     id: 'trust',
     numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'VERTRAUEN', en: 'TRUST' },
-    subtitle: { de: '12 Fragen · etwa 15 Minuten', en: '12 questions · about 15 minutes' },
     intro: {
       de: 'Zustimmung, Grenzen, Safer Sex und Aftercare -- konkret, nie als Handlungsaufforderung.',
       en: "Consent, boundaries, safer sex and aftercare -- concretely, never as a call to action.",
@@ -3012,13 +2914,13 @@ const LATE_NIGHT_ACTS = [
 
 const LATE_NIGHT_Q37 = {
   neither: {
-    de: 'Zwei erhoffte Fragen warten noch. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, stellt ihr sie nacheinander; vor der zweiten Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf übersprungen werden. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.',
-    en: 'Two hoped-for questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be skipped. An answer is information, never consent to an action.',
+    de: 'Zwei vorgemerkte Fragen warten noch. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, stellt ihr sie nacheinander; vor der zweiten Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf ausgelassen werden. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.',
+    en: 'Two saved questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be passed. An answer is information, never consent to an action.',
   },
   one: (lang, who, other) =>
     lang === 'de'
-      ? `Eine erhoffte Frage wartet noch, aber niemand schuldet sie oder eine Antwort darauf. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, darf ${who} die Frage stellen. ${other} kann sie ohne Begründung überspringen. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.`
-      : `One hoped-for question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may ${who} ask it. ${other} may skip it without giving a reason. An answer is information, never consent to an action.`,
+      ? `Eine vorgemerkte Frage wartet noch, aber niemand schuldet sie oder eine Antwort darauf. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, darf ${who} sie ${other} stellen. ${other} kann ohne Begründung passen. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.`
+      : `One saved question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may ${who} ask ${other}. ${other} may pass without giving a reason. An answer is information, never consent to an action.`,
   both: {
     de: 'Ihr könnt hier enden. Wenn ihr beide noch eine freiwillige letzte Gesprächsfrage möchtet: Was würde zukünftige Gespräche über Sex für dich noch ehrlicher und sicherer machen? Auch diese Frage darf übersprungen werden; aus keiner Antwort entsteht eine Handlungserwartung.',
     en: 'You can end here. If you both want one optional final conversation prompt: What would make future conversations about sex feel even more honest and safe for you? You may skip this question too; no answer creates an expectation of action.',
@@ -3048,12 +2950,9 @@ const LATE_NIGHT_SECRET_AT_INDEX = 27;
 const LATE_NIGHT_ROUTES = {
   quick: {
     id: 'quick',
+    minutes: 18,
     title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Eine sichere Steigerung', en: 'A safe escalation' },
-    subtitle: {
-      de: '12 Fragen · 3 Akte · etwa 18 Minuten',
-      en: '12 questions · 3 acts · about 18 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3],
       [0, 1, 2, 3],
@@ -3062,12 +2961,9 @@ const LATE_NIGHT_ROUTES = {
   },
   standard: {
     id: 'standard',
+    minutes: 32,
     title: { de: 'STANDARD', en: 'STANDARD' },
     meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
-    subtitle: {
-      de: '24 Fragen · 3 Akte · etwa 32 Minuten',
-      en: '24 questions · 3 acts · about 32 minutes',
-    },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 6, 7],
       [0, 1, 2, 3, 4, 5, 6, 7],
@@ -3076,12 +2972,9 @@ const LATE_NIGHT_ROUTES = {
   },
   full: {
     id: 'full',
+    minutes: 50,
     title: { de: 'VOLL', en: 'FULL' },
     meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    subtitle: {
-      de: '36 Fragen · 3 Akte · etwa 50 Minuten',
-      en: '36 questions · 3 acts · about 50 minutes',
-    },
     actIndices: [null, null, null],
   },
 };
@@ -3155,6 +3048,10 @@ export const PACKS = {
     blurb: {
       de: 'Für tiefes Kennenlernen – jede Intensität, jede Beziehung.',
       en: 'For deep connection — any intensity, any relationship.',
+    },
+    positioning: {
+      de: 'CLASSIC ist ein bewusst persönliches Gespräch für zwei Erwachsene. Spielt nur, wenn ihr beide Tiefe wollt. Es ist kein Test und keine Therapie.',
+      en: "CLASSIC is a deliberately personal conversation for two adults. Only play if you both want depth. It's not a test and not therapy.",
     },
     acts: CLASSIC_ACTS,
     modes: CLASSIC_MODES,
@@ -3303,14 +3200,7 @@ export function getRoute(packId, routeId) {
   return pack.routes[DEFAULT_ROUTE_ID] || Object.values(pack.routes)[0];
 }
 
-// Roughly each act's own pre-existing pacing (12 questions / ~15 minutes).
-// Shared by actSubtitle() below and CloserGame.js's route-aware act timer,
-// so the "about N minutes" promise and the timer's own overtime threshold
-// can never drift apart from each other.
-export const MINUTES_PER_QUESTION = 15 / QUESTIONS_PER_ACT;
-
-function actSubtitle(count) {
-  const minutes = Math.round(count * MINUTES_PER_QUESTION);
+function actSubtitle(count, minutes) {
   return {
     de: `${count} Fragen · etwa ${minutes} Minuten`,
     en: `${count} question${count === 1 ? '' : 's'} · about ${minutes} minutes`,
@@ -3319,6 +3209,36 @@ function actSubtitle(count) {
 
 function resolvedLocalIndices(act, route, actNum) {
   return route.actIndices[actNum] || act.questions.map((_, i) => i);
+}
+
+// A route owns its editorial time promise. Allocate that exact total across
+// its acts in proportion to their question counts, then distribute the
+// remaining whole minutes from the first act onward. This keeps every visible
+// act estimate and the overtime threshold aligned with the selected pack --
+// including deliberately slower packs such as DEEP and faster ones like CHAOS.
+export function routeTimingFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const pack = getPack(packId);
+  const route = getRoute(packId, routeId);
+  const counts = pack.acts.map((act, actNum) => resolvedLocalIndices(act, route, actNum).length);
+  const questionTotal = counts.reduce((sum, count) => sum + count, 0);
+  const raw = counts.map((count) => (route.minutes * count) / questionTotal);
+  const actMinutes = raw.map(Math.floor);
+  let remainder = route.minutes - actMinutes.reduce((sum, minutes) => sum + minutes, 0);
+
+  for (let actNum = 0; remainder > 0; actNum = (actNum + 1) % actMinutes.length) {
+    actMinutes[actNum] += 1;
+    remainder -= 1;
+  }
+
+  return { totalMinutes: route.minutes, actMinutes, totalQuestions: questionTotal };
+}
+
+export function routeSubtitleFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const timing = routeTimingFor(packId, routeId);
+  return {
+    de: `${timing.totalQuestions} Fragen · ${ACTS_PER_PACK} Akte · etwa ${timing.totalMinutes} Minuten`,
+    en: `${timing.totalQuestions} questions · ${ACTS_PER_PACK} acts · about ${timing.totalMinutes} minutes`,
+  };
 }
 
 /*
@@ -3330,9 +3250,10 @@ function resolvedLocalIndices(act, route, actNum) {
 export function resolvedActs(packId, routeId = DEFAULT_ROUTE_ID) {
   const pack = getPack(packId);
   const route = getRoute(packId, routeId);
+  const timing = routeTimingFor(packId, routeId);
   return pack.acts.map((act, actNum) => {
     const questions = resolvedLocalIndices(act, route, actNum).map((li) => act.questions[li]);
-    return { ...act, questions, subtitle: actSubtitle(questions.length) };
+    return { ...act, questions, subtitle: actSubtitle(questions.length, timing.actMinutes[actNum]) };
   });
 }
 
@@ -3461,7 +3382,7 @@ export function questionIdFor(packId, questionIndex) {
  * recurated); a copy-only fix (spelling, a genderneutral reword) doesn't
  * need to -- the ID it's attached to hasn't changed.
  */
-export const CONTENT_VERSION = 1;
+export const CONTENT_VERSION = 2;
 
 export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
   const total = totalQuestions(packId, routeId);
@@ -3495,12 +3416,13 @@ export function starterFor(questionIndex, starterOffset) {
 
 /*
  * Classifies the two answers from the private "did they ask your secret
- * question?" check (secretAsked = [person0Answer, person1Answer], each
+ * "did you ask your saved question?" check (secretAsked =
+ * [person0Answer, person1Answer], each
  * true/false/null) into the cases question 37 branches on:
- *  - neither: nobody's question got asked -- each of you gets an explicit
+ *  - neither: neither person asked their saved question -- each gets an explicit
  *    turn to ask it now (spec: double-NO sequential turns).
- *  - bothAsked: both already happened, question 37 is a pure bonus.
- *  - pendingPlayer: exactly one is still unasked -- that person asks it.
+ *  - bothAsked: both were already asked, question 37 is a pure bonus.
+ *  - pendingPlayer: exactly one is still unasked -- its owner asks it.
  *  - noneHaveSecretQuestion: neither person formed a secret question in the
  *    first place (bugfix-report iteration 7, BF-08/FR-07 -- "Heute keine"
  *    is an equally valid choice at the secret-question step, tracked

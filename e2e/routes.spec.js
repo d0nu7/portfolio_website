@@ -31,7 +31,11 @@ test.describe('Duration / route selection', () => {
     // Lands on the mode screen next, same as before this screen existed.
     await expect(page.getByText('Modus wählen')).toBeVisible();
 
-    // The chosen route persists into the saved game.
+    // Setup-only choices are not stored as a resumable run. Once the first
+    // real question starts, the chosen route is persisted.
+    await page.getByRole('button', { name: 'Weiter' }).click();
+    await page.getByRole('button', { name: 'Los geht’s' }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
     const stored = await page.evaluate((key) => {
       const raw = window.localStorage.getItem(key);
       return raw ? JSON.parse(raw) : null;
@@ -44,14 +48,28 @@ test.describe('Duration / route selection', () => {
   }) => {
     // BASE_STATE deliberately omits routeId, exercising the same
     // migration path a real pre-Phase-2 save takes.
-    await seedAndResume(page, { qIndex: 35, skipsRemaining: 2 });
-    await page.getByRole('button', { name: 'Skip', exact: true }).click();
-    await page.locator('button', { hasText: 'Skip' }).nth(1).click();
+    await seedAndResume(page, { qIndex: 35 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
     await page.waitForTimeout(1800);
     // Question 35 is the LAST question only on the full (36-question)
     // route -- landing on "all 36" here proves the missing routeId
     // defaulted to full, not some shorter route.
     await expect(page.getByText("Das waren alle 36.")).toBeVisible();
+  });
+
+  test('a pack with one style skips the redundant mode screen', async ({ page }) => {
+    await page.goto('/closer/');
+    await page.getByRole('button', { name: 'Start' }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+    await page.getByText('FIRST DATE', { exact: true }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+
+    await expect(page.getByText('Wie viel Zeit habt ihr?')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Zeit anzeigen/ })).toBeVisible();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+
+    await expect(page.getByText('Modus wählen')).toHaveCount(0);
+    await expect(page.getByText(/Neugier und Chemie entdecken/)).toBeVisible();
   });
 });
 
@@ -61,7 +79,6 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
       routeId: 'quick',
       modeId: 'original',
       qIndex: 3,
-      skipsRemaining: 3,
     });
     await page.getByRole('button', { name: 'Weiter' }).click();
     // qIndex 3 -> 4 is quick's own Act I/II boundary (actStartIndices =
@@ -75,7 +92,6 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
       routeId: 'quick',
       modeId: 'original',
       qIndex: 11,
-      skipsRemaining: 3,
       secretSeen: [true, true],
       hasSecretQuestion: [true, true],
     });
@@ -85,14 +101,13 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
     await expect(page.getByText('Das waren alle 12.')).toBeVisible();
   });
 
-  test('the secret question interrupts at quick\'s own position (index 10), not index 27', async ({
+  test('quick omits the multi-screen secret-question interrupt', async ({
     page,
   }) => {
     await seedAndResume(page, {
       routeId: 'quick',
       modeId: 'original',
       qIndex: 9,
-      skipsRemaining: 3,
       secretSeen: [false, false],
     });
     // Quick's question at index 9 is Q26 (BF8-02's corrected curation),
@@ -102,9 +117,23 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
     // own skip-it option) to actually advance.
     await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
-    // Quick's secretAtIndexFor is 10 (see closer.test.js) -- reaching
-    // question index 10 should hand off to the private secret-question
-    // capture, not go straight to a plain question.
-    await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toBeVisible();
+    // Quick intentionally stays in the question flow; the longer private
+    // sequence remains available to Standard and Full only.
+    await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Weiter|Fertig/ })).toBeVisible();
+  });
+
+  test('quick ends directly after its 12 regular questions', async ({ page }) => {
+    await seedAndResume(page, {
+      routeId: 'quick',
+      modeId: 'original',
+      qIndex: 11,
+    });
+    await page.getByRole('button', { name: 'Fertig' }).click();
+    await page.waitForTimeout(1800);
+    await page.getByRole('button', { name: 'Ende' }).click();
+
+    await expect(page.getByText(/Das war.s\./)).toBeVisible();
+    await expect(page.getByText(/GEHEIMFRAGEN|FRAGE 37/)).toHaveCount(0);
   });
 });

@@ -98,7 +98,7 @@ test.describe('Resume-state validation (BF-12)', () => {
     page,
   }) => {
     const runQuestionIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
-    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 1 });
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 2 });
     await expect(page.getByText('Willkommen zurück.')).toBeVisible();
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
   });
@@ -108,7 +108,30 @@ test.describe('Resume-state validation (BF-12)', () => {
   }) => {
     const staleIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
     staleIds[10] = 'classic-q99'; // simulates content that shifted since this save was written
-    await seedRaw(page, { ...BASE_STATE, runQuestionIds: staleIds, contentVersion: 1 });
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds: staleIds, contentVersion: 2 });
+    await expectFreshStartScreen(page);
+  });
+
+  test('an older contentVersion is rejected even when positional ids still match', async ({ page }) => {
+    const runQuestionIds = Array.from({ length: 36 }, (_, i) =>
+      `classic-q${String(i + 1).padStart(2, '0')}`
+    );
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 1 });
+    await expectFreshStartScreen(page);
+  });
+
+  test('non-string player names are rejected', async ({ page }) => {
+    await seedRaw(page, { ...BASE_STATE, players: [1, 2] });
+    await expectFreshStartScreen(page);
+  });
+
+  test('fractional indices are rejected', async ({ page }) => {
+    await seedRaw(page, { ...BASE_STATE, qIndex: 2.5 });
+    await expectFreshStartScreen(page);
+  });
+
+  test('a consent phase is rejected for a pack without a consent gate', async ({ page }) => {
+    await seedRaw(page, { ...BASE_STATE, phase: 'consentGateA', packId: 'classic' });
     await expectFreshStartScreen(page);
   });
 });

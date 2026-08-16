@@ -6,7 +6,6 @@ import {
   LATE_NIGHT_PACK,
   PACKS,
   QUESTIONS_PER_ACT,
-  SKIP_TOKENS,
   actIndexFor,
   actStartIndices,
   classifySecretAsked,
@@ -18,6 +17,8 @@ import {
   questionAt,
   questionIdFor,
   resolvedActs,
+  routeSubtitleFor,
+  routeTimingFor,
   runQuestionIdsFor,
   secretAtIndexFor,
   starterFor,
@@ -497,6 +498,27 @@ describe('routes (iteration 7, Phase 2)', () => {
     expect(quickActs[0].subtitle.de).toMatch(/^4 Fragen/);
   });
 
+  it('uses each route\'s explicit editorial duration for copy and overtime thresholds', () => {
+    Object.values(PACKS).forEach((pack) => {
+      Object.values(pack.routes).forEach((route) => {
+        expect(Number.isInteger(route.minutes)).toBe(true);
+        expect(route.minutes).toBeGreaterThan(0);
+
+        const timing = routeTimingFor(pack.id, route.id);
+        expect(timing.totalMinutes).toBe(route.minutes);
+        expect(timing.actMinutes).toHaveLength(ACTS_PER_PACK);
+        expect(timing.actMinutes.reduce((sum, minutes) => sum + minutes, 0)).toBe(route.minutes);
+      });
+    });
+  });
+
+  it('does not force slow DEEP or fast CHAOS routes into CLASSIC pacing', () => {
+    expect(routeTimingFor('deep', 'full').actMinutes).toEqual([25, 25, 25]);
+    expect(routeTimingFor('chaos', 'quick').actMinutes).toEqual([4, 3, 3]);
+    expect(routeSubtitleFor('deep', 'full').de).toBe('36 Fragen · 3 Akte · etwa 75 Minuten');
+    expect(routeSubtitleFor('chaos', 'quick').en).toBe('12 questions · 3 acts · about 10 minutes');
+  });
+
   it('actIndexFor/questionAt/finalQuestionIndex/totalQuestions default to the full route when called with 2 args (backward compatibility)', () => {
     expect(totalQuestions('classic')).toBe(totalQuestions('classic', 'full'));
     expect(finalQuestionIndex('classic')).toBe(finalQuestionIndex('classic', 'full'));
@@ -655,10 +677,6 @@ describe('classifySecretAsked', () => {
 describe('other constants', () => {
   it('the classic pack\'s secretAtIndex sits between question 27 and 28 (0-indexed 27)', () => {
     expect(PACKS.classic.secretAtIndex).toBe(27);
-  });
-
-  it('SKIP_TOKENS is 3, per spec', () => {
-    expect(SKIP_TOKENS).toBe(3);
   });
 });
 

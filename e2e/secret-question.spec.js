@@ -73,13 +73,13 @@ test.describe('Secret question -- resolution', () => {
     await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toBeVisible();
     await page.getByRole('button', { name: 'Ich bin Alex' }).click();
 
-    await expect(page.getByText(/Hat Sam die Frage gestellt/)).toBeVisible();
+    await expect(page.getByText(/Hast du Sam deine vorgemerkte Frage/)).toBeVisible();
     await page.getByRole('button', { name: 'Nein' }).click();
 
     await expect(page.getByText(/GIB DAS HANDY AN SAM/i)).toBeVisible();
     await page.getByRole('button', { name: 'Ich bin Sam' }).click();
 
-    await expect(page.getByText(/Hat Alex die Frage gestellt/)).toBeVisible();
+    await expect(page.getByText(/Hast du Alex deine vorgemerkte Frage/)).toBeVisible();
     await page.getByRole('button', { name: 'Nein' }).click();
 
     await expect(page.getByText('GIB DAS HANDY ZURÜCK')).toBeVisible();
@@ -111,7 +111,7 @@ test.describe('Secret question -- resolution', () => {
     // Skips straight to Sam's own handoff -- never Alex's.
     await expect(page.getByText(/GIB DAS HANDY AN SAM/i)).toBeVisible();
     await page.getByRole('button', { name: 'Ich bin Sam' }).click();
-    await expect(page.getByText(/Hat Alex die Frage gestellt/)).toBeVisible();
+    await expect(page.getByText(/Hast du Alex deine vorgemerkte Frage/)).toBeVisible();
     await page.getByRole('button', { name: 'Nein' }).click();
 
     // Sam's own check resolves through the shared handoff-back screen;

@@ -1,6 +1,6 @@
 # CLOSER – vollständiger Fragenkatalog DE/EN
 
-**Stand:** 15.08.2026  
+**Stand:** 16.08.2026
 **Status:** Redaktionelle Content-Spezifikation für die Implementierung  
 **Umfang:** 9 Packs · 324 Master-Fragen · Deutsch und Englisch · kuratierte Zeitrouten · pack-spezifische Frage 37
 
@@ -30,19 +30,19 @@ In Tabellen mit einer Spalte **Route** bedeutet `Q/S/F`: Quick, Standard und Ful
 
 `DEEP` bietet bewusst keine Quick-Route. `CLASSIC Full` ist die vollständige ursprüngliche CLOSER-Erfahrung; kürzere Classic-Routen sind klar als kuratierte Auszüge zu bezeichnen.
 
-### Gemeinsame Geheimfrage
+### Private vorgemerkte Frage
 
-Die Geheimfrage ist keine Eingabeaufforderung. Jede Person erhält privat diese Wahl:
+In Standard und Full erhält jede Person privat diese Wahl. Quick lässt die mehrstufige Übergabe bewusst aus:
 
-- **DE:** „Denk an eine Frage, von der du insgeheim hoffst, dass dein Gegenüber sie dir heute stellt. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
-- **EN:** “Think of one question you secretly hope the other person asks you during this game. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
+- **DE:** „Denk an eine Frage, die du deinem Gegenüber später gerne stellen würdest. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
+- **EN:** “Think of one question you would like to ask the other person later. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
 
 Gleichwertige Alternative: **„Heute keine“ / “Not today”**. Die pack-spezifische Frage 37 am Ende berücksichtigt, ob keine, eine oder beide tatsächlich vorhandenen Geheimfragen noch offen sind.
 
 **Verbindlicher State-Vertrag:** „Heute keine“ darf nicht als `false` in `secretAsked` gespeichert werden; dort bedeutet `false`, dass eine vorhandene Frage noch offen ist. Die aktuelle Implementierung löst das bereits korrekt mit zwei getrennten Angaben pro Person:
 
-- `hasSecretQuestion: true | false | null` – wurde überhaupt eine Geheimfrage gebildet?
-- `secretAsked: true | false | null` – wurde eine vorhandene Geheimfrage im Gespräch bereits gestellt?
+- `hasSecretQuestion: true | false | null` – wurde überhaupt eine Frage vorgemerkt?
+- `secretAsked: true | false | null` – hat die Person ihre eigene vorgemerkte Frage im Gespräch bereits gestellt?
 
 Damit gilt semantisch: `hasSecretQuestion === false` → `none`; vorhandene Frage plus `secretAsked === false` → `pending`; vorhandene Frage plus `secretAsked === true` → `asked`. Ein späterer Enum-Refactor auf `none | pending | asked` ist möglich, aber nicht Voraussetzung. Aus dem bestehenden Modell werden die offenen Fragen und die drei Branches abgeleitet:
 
@@ -50,7 +50,7 @@ Damit gilt semantisch: `hasSecretQuestion === false` → `none`; vorhandene Frag
 - `one`: genau eine vorhandene Geheimfrage ist noch offen;
 - `both`: keine vorhandene Geheimfrage ist mehr offen; es erscheint nur die freiwillige pack-spezifische Bonusfrage. Das umfasst bereits gestellte und ausdrücklich abgelehnte Geheimfragen. Wenn beide **Heute keine** gewählt haben, darf die Oberfläche zusätzlich die vorhandene spezielle No-Secret-Copy zeigen.
 
-`Question 37` kann intern als Mechanikname bestehen bleiben. In Quick und Standard zeigt die Oberfläche jedoch **LETZTE FRAGE / FINAL QUESTION** statt einer sachlich falschen Nummer 37. Aufgeführte Response Cards sind optionale Zuhörimpulse und zählen nicht als Fragen.
+`Question 37` kann intern als Mechanikname bestehen bleiben. Full zeigt **FRAGE 37 / QUESTION 37**, Standard neutral **FINALE**. Quick endet nach seiner letzten regulären Frage ohne private Übergaberunde. Aufgeführte Response Cards sind optionale Zuhörimpulse und zählen nicht als Fragen.
 
 Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach echten Nutzertests kalibriert und erzeugen niemals automatischen Fortschritt oder sichtbaren Zeitdruck.
 
@@ -74,12 +74,12 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 | ID | Deutsch | English |
 |---|---|---|
-| Q01 | Wenn du eine beliebige Person auf der Welt einladen könntest, mit wem würdest du gerne essen gehen? | If you could invite anyone in the world, who would you want to have dinner with? |
+| Q01 | Wenn du jeden und jede auf der Welt einladen könntest, mit wem würdest du gerne essen gehen? | If you could invite anyone in the world, who would you want to have dinner with? |
 | Q02 | Wärst du gerne berühmt? Wenn ja, wie? | Would you like to be famous? If so, in what way? |
 | Q03 | Probst du manchmal vor einem Telefonat, was du sagen wirst? Warum? | Do you ever rehearse what you are going to say before a phone call? Why? |
 | Q04 | Wie würde dein perfekter Tag aussehen? | What would your perfect day look like? |
 | Q05 | Wann hast du zuletzt für dich gesungen? Und für jemand anderen? | When did you last sing to yourself? And to someone else? |
-| Q06 | Wenn du bis 90 leben könntest und du entweder den Körper oder den Geist eines dreißigjährigen Menschen die restlichen 60 Jahre behalten könntest – wofür würdest du dich entscheiden? | If you could live to 90 and keep either the body or the mind of a thirty-year-old for the last 60 years — which would you choose? |
+| Q06 | Wenn du bis 90 leben könntest und du entweder den Körper oder den Geist eines Dreißigjährigen die restlichen 60 Jahre behalten könntest – wofür würdest du dich entscheiden? | If you could live to 90 and keep either the body or the mind of a thirty-year-old for the last 60 years — which would you choose? |
 | Q07 | Hast du eine Vorahnung, wie du sterben wirst? | Do you have a hunch about how you are going to die? |
 | Q08 | Nenne drei Dinge, die du und dein Gegenüber scheinbar gemeinsam haben. | Name three things you and the other person seem to have in common. |
 | Q09 | Wofür bist du in deinem Leben am dankbarsten? | What are you most grateful for in your life? |
@@ -101,16 +101,16 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q20 | Was bedeutet dir Freundschaft? | What does friendship mean to you? |
 | Q21 | Welche Rolle spielen Liebe und Zuneigung in deinem Leben? | What role do love and affection play in your life? |
 | Q22 | Wechselt euch ab, jeweils fünf positive Eigenschaften eures Gegenübers aufzuzählen. | Take turns naming five positive qualities of the other person. |
-| Q23 | Wie nahe und warmherzig ist deine Familie? Glaubst du, dass deine Kindheit glücklicher war als die anderer Menschen? | How close and warm is your family? Do you think your childhood was happier than most people’s? |
+| Q23 | Wie nahe und warmherzig ist deine Familie? Glaubst du, dass deine Kindheit glücklicher war als die anderer Menschen? | How close and warm is your family? Do you think your childhood was happier than most people's? |
 | Q24 | Wie ist die Beziehung zu deiner Mutter? | What is your relationship with your mother like? |
 
 ### Akt III – OFFEN / OPEN
 
 | ID | Deutsch | English |
 |---|---|---|
-| Q25 | Macht jeweils drei wahre Aussagen, die „wir“ beinhalten. Beispielsweise: „Wir sind beide in diesem Raum und fühlen …“ | Each make three true statements using “we.” For example: “We are both in this room and feeling …” |
+| Q25 | Macht jeweils drei wahre Aussagen, die "wir" beinhalten. Beispielsweise: "Wir sind beide in diesem Raum und fühlen …" | Each make three true statements using "we". For example: "We are both in this room and feeling …" |
 | Q26 | Vervollständige diesen Satz: Ich wünschte, ich hätte jemanden, mit dem ich … teilen kann. | Complete this sentence: I wish I had someone I could share … with. |
-| Q27 | Wenn du und dein Gegenüber enge Freundschaft schließen würdet, was wäre wichtig, über dich zu wissen? | If you were to become a close friend of the other person, what would be important for them to know about you? |
+| Q27 | Wenn du mit deinem Gegenüber eng befreundet wärst: Was wäre für diese Person wichtig, über dich zu wissen? | If you were to become a close friend of the other person, what would be important for them to know about you? |
 | Q28 | Sag deinem Gegenüber, was du an dieser Person magst. Sei dabei sehr ehrlich und sag etwas, das du wahrscheinlich nicht zu jemandem sagen würdest, den du gerade getroffen hast. | Tell the other person what you like about them. Be very honest — say something you probably would not say to someone you had just met. |
 | Q29 | Teile einen peinlichen Moment deines Lebens. | Share an embarrassing moment from your life. |
 | Q30 | Wann hast du zuletzt vor einer anderen Person geweint? Und wann alleine? | When did you last cry in front of another person? And when alone? |
@@ -119,14 +119,14 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q33 | Wenn du heute Abend sterben würdest und keine Gelegenheit mehr hättest, mit jemandem zu reden, was würdest du am meisten bereuen, nicht gesagt zu haben? Und warum hast du es noch nicht gesagt? | If you were to die this evening with no chance to speak to anyone, what would you most regret not having said? And why have you not said it yet? |
 | Q34 | Dein Haus und darin alles, was du besitzt, brennt. Menschen und Tiere sind in Sicherheit, und du hast die Möglichkeit, noch ein Ding zu retten. Was wäre das und wieso? | Your house, and everything you own in it, is burning. People and pets are safe, and you can save one more object. What would it be and why? |
 | Q35 | Von all den Menschen in deiner Familie, wessen Tod würde dich am meisten treffen? Warum? | Of everyone in your family, whose death would affect you most? Why? |
-| Q36 | Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber anschließend zu spiegeln, wie du dich mit dem gewählten Problem vermutlich fühlst. | Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose. |
+| Q36 | Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber außerdem darum, zu spiegeln, wie du dich mit dem Problem zu fühlen scheinst. | Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose. |
 
 ### Frage 37 / Question 37
 
 | Fall | Deutsch | English |
 |---|---|---|
-| `neither` – keine der beiden Geheimfragen wurde gestellt | Stellt euch nacheinander die Fragen, von denen ihr gehofft habt, dass sie kommen. | Take turns asking the questions you hoped the other person would ask. |
-| `one` – genau eine ist noch offen | **[Name]**, stell die Frage, von der du gehofft hast, dass **[anderer Name]** sie dir stellt. | **[Name]**, ask the question you hoped **[other name]** would ask you. |
+| `neither` – beide vorgemerkten Fragen sind noch offen | Stellt euch nacheinander eure vorgemerkten Fragen. | Take turns asking the questions you saved for later. |
+| `one` – genau eine ist noch offen | **[Name]**, stell **[anderer Name]** deine vorgemerkte Frage. | **[Name]**, ask **[other name]** the question you saved for later. |
 | `both` – beide wurden bereits gestellt oder keine ist mehr offen | Stellt die Frage, von der ihr euch gewünscht hättet, dass sie heute Abend vorgekommen wäre. | Ask the question you wish had appeared tonight. |
 
 ---
@@ -198,13 +198,13 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 ### Frage 37 / Question 37
 
 
-- **neither / keine der beiden erhofften Fragen wurde gestellt**
-  - DE: „Stellt euch nacheinander die Frage, von der ihr gehofft habt, dass sie heute noch kommt.“
-  - EN: “Take turns asking the question you each hoped would come up tonight.”
-- **one / eine erhoffte Frage ist noch offen**
-  - DE: „{who}, stell {other} die Frage, von der du gehofft hast, dass sie dir heute gestellt wird.“
-  - EN: “{who}, ask {other} the question you hoped they would ask you tonight.”
-- **both / beide erhofften Fragen wurden bereits gestellt; freiwillige Bonusfrage**
+- **neither / beide vorgemerkten Fragen sind noch offen**
+  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen – ohne Erwartungsdruck.“
+  - EN: “Take turns asking the questions you saved for later — without pressure.”
+- **one / eine vorgemerkte Frage ist noch offen**
+  - DE: „{who}, stell {other} deine vorgemerkte Frage – ohne Erwartungsdruck.“
+  - EN: “{who}, ask {other} the question you saved for later — without pressure.”
+- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
   - DE: „Stellt euch noch eine Frage, die diesen ersten Abend gut abrundet.“
   - EN: “Ask each other one more question that would bring this first evening to a good close.”
 
@@ -277,13 +277,13 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 ### Frage 37 / Question 37
 
 
-- **neither / keine der beiden erhofften Fragen wurde gestellt**
-  - DE: „Stellt euch nacheinander die Frage, die ihr euch für diesen Abend noch gewünscht habt.“
-  - EN: “Take turns asking the question you each wished had come up tonight.”
-- **one / eine erhoffte Frage ist noch offen**
-  - DE: „{who}, stell {other} die Frage, die du dir heute Abend insgeheim gewünscht hast.“
-  - EN: “{who}, ask {other} the question you secretly wished for tonight.”
-- **both / beide erhofften Fragen wurden bereits gestellt; freiwillige Bonusfrage**
+- **neither / beide vorgemerkten Fragen sind noch offen**
+  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen, wenn es sich für euch gut anfühlt.“
+  - EN: “Take turns asking the questions you saved, if that feels good to both of you.”
+- **one / eine vorgemerkte Frage ist noch offen**
+  - DE: „{who}, stell {other} deine vorgemerkte Frage, wenn es sich für euch gut anfühlt.“
+  - EN: “{who}, ask {other} the question you saved, if that feels good to both of you.”
+- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
   - DE: „Stellt euch noch eine Frage, die den Funken dieses Abends mit in morgen nimmt.“
   - EN: “Ask each other one more question that carries tonight’s spark into tomorrow.”
 
@@ -356,13 +356,13 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 ### Frage 37 / Question 37
 
 
-- **neither / keine der beiden erhofften Fragen wurde gestellt**
-  - DE: „Stellt euch nacheinander die Frage, die ihr euch in eurer Beziehung schon länger wünscht.“
-  - EN: “Take turns asking the question you have each been wishing for in your relationship.”
-- **one / eine erhoffte Frage ist noch offen**
-  - DE: „{who}, stell {other} die Frage, die du dir in eurer Beziehung schon länger gewünscht hast.“
-  - EN: “{who}, ask {other} the question you have been wishing for in your relationship.”
-- **both / beide erhofften Fragen wurden bereits gestellt; freiwillige Bonusfrage**
+- **neither / beide vorgemerkten Fragen sind noch offen**
+  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen. Zuhören reicht; ihr müsst nichts sofort lösen.“
+  - EN: “Take turns asking the questions you saved. Listening is enough; nothing has to be solved now.”
+- **one / eine vorgemerkte Frage ist noch offen**
+  - DE: „{who}, stell {other} deine vorgemerkte Frage. Zuhören reicht; ihr müsst nichts sofort lösen.“
+  - EN: “{who}, ask {other} the question you saved. Listening is enough; nothing has to be solved now.”
+- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
   - DE: „Stellt euch noch eine Frage, die euch auch morgen an etwas Wertvolles zwischen euch erinnert.“
   - EN: “Ask each other one more question that will remind you tomorrow of something valuable between you.”
 
@@ -436,12 +436,12 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 ### FRIENDS – dynamische Q37-Copy
 
-Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = keine der beiden Geheimfragen wurde gestellt; `one` = genau eine wartet noch; `both` = beide wurden bereits gestellt und die angezeigte Frage ist ein optionaler Bonus.
+Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorgemerkten Fragen warten noch; `one` = genau eine wartet noch; `both` = keine vorgemerkte Frage ist mehr offen und die angezeigte Frage ist ein optionaler Bonus.
 
 | Fall | Deutsch | English |
 |---|---|---|
-| `neither` | Zwei Fragen haben noch gewartet. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two questions have been waiting. If it feels right, ask them one at a time now. No answer is owed. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass `{other}` sie dir stellt. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask the question you hoped `{other}` would ask you. Answering is still optional. |
+| `neither` | Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are waiting. If it feels right, ask them one at a time now. No answer is owed. |
+| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
 | `both` | Was möchtest du, dass die andere Person aus diesem Gespräch über dich mitnimmt? | What would you like the other person to take away from this conversation about you? |
 
 ---
@@ -516,8 +516,8 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = keine der 
 
 | Fall | Deutsch | English |
 |---|---|---|
-| `neither` | Zwei Fragen sind zwischen damals und heute offen geblieben. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two questions have remained open between then and now. If it feels right, ask them one at a time. No answer is owed. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass `{other}` sie dir stellt. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask the question you hoped `{other}` would ask you. Answering is still optional. |
+| `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are still open. If it feels right, ask them one at a time. No answer is owed. |
+| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
 | `both` | Welche Seite der Person vor dir macht dich heute neugierig – unabhängig davon, wie es weitergeht? | What side of the person in front of you makes you curious today, regardless of what happens next? |
 
 ---
@@ -594,8 +594,8 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = keine der 
 
 | Fall | Deutsch | English |
 |---|---|---|
-| `neither` | Zwei Fragen sind unter der Oberfläche geblieben. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig. | Two questions have remained beneath the surface. If it feels right, ask them one at a time now. Every question and every answer remains optional. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell jetzt die Frage, von der du gehofft hast, dass `{other}` sie dir stellt. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask the question you hoped `{other}` would ask you. Answering is still optional. |
+| `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig. | Two saved questions are still open. If it feels right, ask them one at a time now. Every question and every answer remains optional. |
+| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
 | `both` | Wann hast du dich in diesem Gespräch am meisten verstanden gefühlt – und wodurch? | When did you feel most understood during this conversation, and what made you feel that way? |
 
 ---
@@ -659,29 +659,29 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = keine der 
 
 ### Frage 37 / Question 37
 
-Die Branches beziehen sich darauf, ob die erhofften Fragen im bisherigen Gespräch bereits natürlich vorkamen. Wurde „Heute keine“ gewählt, existiert für diese Person keine offene Geheimfrage. Sind insgesamt keine mehr offen, wird nur die freiwillige Bonusfrage angeboten. Neben **Weiter** bleibt immer **Hier enden / End here** sichtbar.
+Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bereits selbst gestellt haben. Wurde „Heute keine“ gewählt, existiert für diese Person keine offene Frage. Sind insgesamt keine mehr offen, wird nur die freiwillige Bonusfrage angeboten. Neben **Weiter** bleibt immer **Hier enden / End here** sichtbar.
 
-#### `neither` – keine der beiden erhofften Fragen wurde gestellt
-
-**DE**
-
-> Zwei erhoffte Fragen warten noch. Wenn es sich für euch beide gut anfühlt, stellt sie nacheinander. Jede Frage und jede Antwort darf ohne Begründung übersprungen werden – und ihr könnt jederzeit hier enden.
-
-**EN**
-
-> Two hoped-for questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be skipped without explanation—and you can end here at any time.
-
-#### `one` – genau eine erhoffte Frage ist noch offen
+#### `neither` – beide vorgemerkten Fragen sind noch offen
 
 **DE**
 
-> Eine erhoffte Frage wartet noch. Wenn es sich für euch beide weiterhin gut anfühlt, darf **{questionOwner}** sie jetzt stellen. **{otherPerson}** darf sie ohne Begründung überspringen. Ihr könnt auch einfach hier enden.
+> Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch beide gut anfühlt, stellt sie nacheinander. Jede Frage und jede Antwort darf ohne Begründung ausgelassen werden – und ihr könnt jederzeit hier enden.
 
 **EN**
 
-> One hoped-for question is still waiting. If continuing still feels good to both of you, **{questionOwner}** may ask it now. **{otherPerson}** may skip it without giving a reason. You can also simply end here.
+> Two saved questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be passed without explanation — and you can end here at any time.
 
-#### `both` – beide erhofften Fragen wurden bereits gestellt oder keine ist mehr offen
+#### `one` – genau eine vorgemerkte Frage ist noch offen
+
+**DE**
+
+> Eine vorgemerkte Frage wartet noch. Wenn es sich für euch beide weiterhin gut anfühlt, darf **{questionOwner}** sie **{otherPerson}** jetzt stellen. **{otherPerson}** darf sie ohne Begründung überspringen. Ihr könnt auch einfach hier enden.
+
+**EN**
+
+> One saved question is still waiting. If continuing still feels good to both of you, **{questionOwner}** may ask **{otherPerson}** now. **{otherPerson}** may pass without giving a reason. You can also simply end here.
+
+#### `both` – keine vorgemerkte Frage ist mehr offen
 
 **DE**
 
@@ -782,29 +782,29 @@ Bevor explizite Fragen zu Berührung, Sex, Fantasien und Kinks erscheinen, best�
 
 ### Frage 37 / Question 37
 
-Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderung**. Vor dem Eintritt und erneut vor einem zweiten Personenwechsel steht eine gleichwertige Ende-Option. Jede Geheimfrage und jede Antwort kann abgelehnt werden. Die Oberfläche wiederholt unmittelbar: **Eine Antwort ist niemals Zustimmung zu einer Handlung.**
+Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderung**. Vor dem Eintritt und erneut vor einem zweiten Personenwechsel steht eine gleichwertige Ende-Option. Jede vorgemerkte Frage und jede Antwort kann abgelehnt werden. Die Oberfläche wiederholt unmittelbar: **Eine Antwort ist niemals Zustimmung zu einer Handlung.**
 
-#### `neither` – keine der beiden erhofften Fragen wurde gestellt
-
-**DE**
-
-> Zwei erhoffte Fragen warten noch. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, stellt ihr sie nacheinander; vor der zweiten Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf übersprungen werden. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
-
-**EN**
-
-> Two hoped-for questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be skipped. An answer is information, never consent to an action.
-
-#### `one` – genau eine erhoffte Frage ist noch offen
+#### `neither` – beide vorgemerkten Fragen sind noch offen
 
 **DE**
 
-> Eine erhoffte Frage wartet noch, aber niemand schuldet sie oder eine Antwort darauf. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, darf **{questionOwner}** die Frage stellen. **{otherPerson}** kann sie ohne Begründung überspringen. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
+> Zwei vorgemerkte Fragen warten noch. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, stellt ihr sie nacheinander; vor der zweiten Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf ausgelassen werden. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
 
 **EN**
 
-> One hoped-for question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may **{questionOwner}** ask it. **{otherPerson}** may skip it without giving a reason. An answer is information, never consent to an action.
+> Two saved questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be passed. An answer is information, never consent to an action.
 
-#### `both` – beide erhofften Fragen wurden bereits gestellt oder keine ist mehr offen
+#### `one` – genau eine vorgemerkte Frage ist noch offen
+
+**DE**
+
+> Eine vorgemerkte Frage wartet noch, aber niemand schuldet sie oder eine Antwort darauf. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, darf **{questionOwner}** sie **{otherPerson}** stellen. **{otherPerson}** kann ohne Begründung passen. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
+
+**EN**
+
+> One saved question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may **{questionOwner}** ask **{otherPerson}**. **{otherPerson}** may pass without giving a reason. An answer is information, never consent to an action.
+
+#### `both` – keine vorgemerkte Frage ist mehr offen
 
 **DE**
 

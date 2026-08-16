@@ -15,8 +15,8 @@ const COPY = {
   // actual length now depends on the route chosen on the very next screens,
   // so this honestly gives the range rather than promising the old default.
   aboutMinutes: {
-    de: '12–45 Minuten – ihr wählt die Länge.',
-    en: '12–45 minutes — you choose the length.',
+    de: 'Etwa 10–75 Minuten – ihr wählt Pack und Länge.',
+    en: 'About 10–75 minutes — you choose the pack and length.',
   },
   start: { de: 'Start', en: 'Start' },
   installHintTitle: { de: 'VOLLBILD-ERLEBNIS', en: 'FULL-SCREEN EXPERIENCE' },
@@ -79,23 +79,15 @@ const COPY = {
   off: { de: 'Aus', en: 'Off' },
 
   /* intro ---------------------------------------------------------------- */
-  // Brief positioning, not a wall of warnings -- added per the iteration-6
-  // content review's P2 finding that CLASSIC should say plainly what kind
-  // of experience it is before the game starts, not imply it suits any two
-  // people in any situation.
-  classicPositioning: {
-    de: 'CLASSIC ist ein bewusst persönliches Gespräch für zwei Erwachsene. Spielt nur, wenn ihr beide Tiefe wollt. Es ist kein Test und keine Therapie.',
-    en: "CLASSIC is a deliberately personal conversation for two adults. Only play if you both want depth. It's not a test and not therapy.",
-  },
   introLines: {
     de: 'Legt das Handy zwischen euch.\n\nAntwortet laut.\n\nTippt nichts ein.\n\nEs gibt keine richtigen Antworten.',
     en: "Put the phone between you.\n\nAnswer out loud.\n\nDon't type anything.\n\nThere are no right answers.",
   },
   // "Jede und jeder" -> "Alle" (BF-11/FR-08): same meaning, one word,
   // genderneutral without sounding like a deliberate correction.
-  introSkips: {
-    de: 'Ihr teilt euch 3 Skip Tokens.\n\nAlle dürfen eine Frage überspringen.\nOhne Begründung.',
-    en: 'You share 3 Skip Tokens.\n\nAnyone can skip a question.\nNo explanation needed.',
+  introPass: {
+    de: 'Jede Frage darf ohne Begründung ausgelassen werden.\n\nEine Grenze kostet nichts.',
+    en: 'Either of you may pass on any question without explanation.\n\nA boundary never costs anything.',
   },
   // Rewritten to actually match what's stored (bugfix-report iteration 7,
   // BF-01): the previous "the game only remembers where you are" undersold
@@ -116,33 +108,12 @@ const COPY = {
   turnBoth: { de: 'Ihr beide', en: 'Both of you' },
   turnBothVerb: { de: 'gleichzeitig', en: 'at the same time' },
   next: { de: 'Weiter', en: 'Next' },
-  skip: { de: 'Skip', en: 'Skip' },
-  // Deliberately separate from the 3-token Skip above (iteration-6 content
-  // review, P1): the tokens can stay a playful, limited resource, but
-  // opting out of any single question -- including the last one -- must
-  // never run out. No confirmation sheet, no token cost, works everywhere
-  // Skip does and everywhere it doesn't (see the 'ask' render branch).
   declineToAnswer: { de: 'Lieber nicht', en: "I'd rather not" },
   stay: { de: 'Bleiben', en: 'Stay' },
   takeYourTime: { de: 'Lasst euch Zeit.', en: 'Take your time.' },
   done: { de: 'Fertig', en: 'Done' },
 
-  /* skip ------------------------------------------------------------------ */
-  skipConfirmTitle: { de: 'Diese Frage überspringen?', en: 'Skip this question?' },
-  skipConfirmSub: { de: 'Ohne Begründung.', en: 'No explanation needed.' },
-  skipUses: {
-    de: 'Das verbraucht einen eurer Skip Tokens.',
-    en: 'This uses one of your skip tokens.',
-  },
-  skipped: { de: 'Übersprungen.', en: 'Skipped.' },
-  skipsLeft: (lang, n) =>
-    lang === 'de'
-      ? n === 1
-        ? 'Noch 1 Skip Token übrig.'
-        : `Noch ${n} Skip Tokens übrig.`
-      : n === 1
-      ? '1 skip token left.'
-      : `${n} skip tokens left.`,
+  passed: { de: 'Weiter ohne Antwort.', en: 'Moving on without an answer.' },
 
   /* twists ---------------------------------------------------------------- */
   predictLabel: { de: 'TIPPEN', en: 'PREDICT' },
@@ -212,8 +183,8 @@ const COPY = {
     lang === 'de' ? `NUR FÜR ${who.toUpperCase()}` : `FOR ${who.toUpperCase()} ONLY`,
   secretTask: (lang, other) =>
     lang === 'de'
-      ? `Denk an eine Frage, von der du insgeheim hoffst, dass ${other} sie dir heute Abend stellt.\n\nSag sie nicht laut.\n\nTipp sie nirgends ein.\n\nMerk sie dir einfach.`
-      : `Think of one question you secretly hope ${other} asks you tonight.\n\nDon't say it out loud.\n\nDon't type it anywhere.\n\nJust remember it.`,
+      ? `Denk an eine Frage, die du ${other} später gerne stellen möchtest.\n\nSag sie nicht laut.\n\nTipp sie nirgends ein.\n\nMerk sie dir einfach.`
+      : `Think of one question you would like to ask ${other} later.\n\nDon't say it out loud.\n\nDon't type it anywhere.\n\nJust remember it.`,
   iHaveOne: { de: 'Ich hab eine', en: 'I have one' },
   // Equally-valid second path (bugfix-report iteration 7, BF-08): the
   // screen used to force "Ich hab eine" -- nobody could honestly continue
@@ -222,10 +193,14 @@ const COPY = {
   // CloserGame.js and Question 37's own dedicated copy below.
   noSecretToday: { de: 'Heute keine', en: 'Not today' },
   passPhone: { de: 'GIB DAS HANDY WEITER', en: 'PASS THE PHONE' },
-  passPhoneText: (lang, other) =>
+  passPhoneText: (lang, other, hasQuestion) =>
     lang === 'de'
-      ? `Gib das Handy an ${other}.\n\nVerrate deine Frage nicht.`
-      : `Give the phone to ${other}.\n\nDon't tell them your question.`,
+      ? hasQuestion
+        ? `Gib das Handy an ${other}.\n\nVerrate deine Frage nicht.`
+        : `Gib das Handy an ${other}.`
+      : hasQuestion
+      ? `Give the phone to ${other}.\n\nDon't tell them your question.`
+      : `Give the phone to ${other}.`,
   passPhoneBack: { de: 'GIB DAS HANDY ZURÜCK', en: 'PASS THE PHONE BACK' },
   passPhoneBackText: {
     de: 'Legt es wieder zwischen euch.',
@@ -233,7 +208,7 @@ const COPY = {
   },
 
   /* finale ------------------------------------------------------------------ */
-  oneLastQuestion: { de: 'EINE LETZTE FRAGE', en: 'ONE LAST QUESTION' },
+  oneLastQuestion: { de: 'LETZTE RUNDE', en: 'FINAL ROUND' },
   reveal: { de: 'Zeigen', en: 'Reveal' },
   // A function of the route's own total (iteration 7, Phase 2): a `quick`
   // playthrough only ever asked 12 questions, so a hardcoded "36" would be
@@ -241,25 +216,23 @@ const COPY = {
   // below, not t().
   allThirtySix: (lang, total) =>
     lang === 'de' ? `Das waren alle ${total}.` : `That's all ${total}.`,
-  butYouEachHad: {
-    de: 'Aber ihr hattet beide\neine Frage im Kopf.',
-    en: 'But you each had\none question in mind.',
-  },
-
-  didTheyAsk: (lang, other) =>
+  secretSummary: (lang, count) =>
     lang === 'de'
-      ? `Hat ${other} die Frage gestellt, von der du insgeheim gehofft hast, dass sie kommt?`
-      : `Did ${other} ask the question you secretly hoped they would ask?`,
+      ? count === 1
+        ? 'Eine vorgemerkte Frage ist noch zu klären.'
+        : 'Ihr habt beide eine Frage vorgemerkt.'
+      : count === 1
+      ? 'One saved question is left to resolve.'
+      : 'You both saved a question for later.',
+
+  didYouAsk: (lang, other) =>
+    lang === 'de'
+      ? `Hast du ${other} deine vorgemerkte Frage im Gespräch bereits gestellt?`
+      : `Did you already ask ${other} the question you saved for later?`,
   yes: { de: 'Ja', en: 'Yes' },
   no: { de: 'Nein', en: 'No' },
 
   q37OneMore: { de: 'NOCH EINE?', en: 'ONE MORE?' },
-  // "Keiner von euch" -> "Ihr habt sie beide ... nicht" (BF-11/FR-08):
-  // same meaning, avoids the masculine-default-reading "keiner".
-  q37Neither: {
-    de: 'Ihr habt sie beide noch nicht gestellt.\n\nVielleicht ist jetzt der Moment.',
-    en: "Neither of you asked it.\n\nMaybe now's the time.",
-  },
   // Bugfix-report iteration 7, BF-08: shown instead of the above when
   // hasSecretQuestion is false for both people -- there is no "still
   // waiting" secret question to prompt about, so the neither/one/both
@@ -277,17 +250,19 @@ const COPY = {
   // vs. whoever's question was already asked are two different people).
   // Not worth the risk a second time.
   q37OneText: {
-    de: 'Eine deiner Fragen wurde gestellt.\n\nEine Frage wartet noch.',
-    en: 'One of your questions was asked.\n\nOne question is still waiting.',
+    de: 'Eine vorgemerkte Frage wartet noch.',
+    en: 'One saved question is still waiting.',
   },
   q37AlreadyAsked: { de: 'IHR HABT SIE SCHON GESTELLT.', en: 'YOU ALREADY ASKED THEM.' },
   q37StillWantOne: { de: 'Trotzdem noch eine?', en: 'Still want one more?' },
   q37Button: { de: 'FRAGE 37', en: 'QUESTION 37' },
   q37Label: { de: 'FRAGE 37', en: 'QUESTION 37' },
+  finalQuestionButton: { de: 'FINALE', en: 'FINALE' },
+  finalQuestionLabel: { de: 'FINALE', en: 'FINALE' },
   // Neither of you asked the other's secret question -- rather than one
   // shared prompt, each of you gets an explicit, ordered turn.
   q37AskSecret: (lang, who) =>
-    lang === 'de' ? `${who} stellt die Geheimfrage.` : `${who} asks the secret question.`,
+    lang === 'de' ? `${who} stellt die vorgemerkte Frage.` : `${who} asks the saved question.`,
   end: { de: 'Ende', en: 'End' },
 
   /* per-pack consent gate (dead today -- no registered pack sets

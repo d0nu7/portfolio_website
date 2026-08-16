@@ -1,8 +1,7 @@
 const nextJest = require('next/jest');
 
-// next/jest loads .babelrc (next/babel + the styled-components SSR plugin)
-// and next.config.js automatically, so this stays in sync with the real
-// build instead of duplicating a second Babel/webpack config for tests.
+// next/jest loads next.config.js and the framework transforms automatically,
+// so tests stay in sync with the build without a second compiler config.
 const createJestConfig = nextJest({ dir: './' });
 
 const customJestConfig = {

@@ -1,14 +1,13 @@
 const { test, expect } = require('@playwright/test');
-const { seedAndResume, STORAGE_KEY } = require('./helpers');
+const { STORAGE_KEY } = require('./helpers');
 
 /*
  * FIRST DATE (iteration 8 catalog rollout, FR8-01/FR8-03) -- CLOSER's first
  * pack beyond CLASSIC, and the new Pack-Auswahl screen that makes choosing
  * it possible at all. These pin the UI-level behavior the Jest coverage in
  * closer.test.js can't reach: the pack card actually renders and is
- * selectable, picking it actually swaps the routes/style/questions shown
- * on every later screen, and its own quick route plays through end to end
- * with its own act boundaries and secret-question position.
+ * selectable, and picking it swaps the routes/style/questions shown on
+ * every later screen.
  */
 test.describe('Pack selection (FR8-03)', () => {
   test('choosing FIRST DATE swaps routes, style and the first question away from CLASSIC', async ({
@@ -30,14 +29,12 @@ test.describe('Pack selection (FR8-03)', () => {
     // newly selected pack's routes, not CLASSIC's.
     await expect(page.getByText('12 Fragen · 3 Akte · etwa 18 Minuten')).toBeVisible();
 
-    await page.getByRole('button', { name: 'Weiter' }).click(); // duration (default Quick) -> mode
+    await page.getByRole('button', { name: 'Weiter' }).click(); // one style -> intro directly
 
-    // Only CALM exists for FIRST DATE (no twist content has been assigned
-    // yet -- see the block comment above FIRST_DATE_MODES in closer.js).
-    await expect(page.getByText('CALM')).toBeVisible();
+    await expect(page.getByText('Modus wählen')).toHaveCount(0);
     await expect(page.getByText('PLAYFUL')).toHaveCount(0);
+    await expect(page.getByText(/Neugier und Chemie entdecken/)).toBeVisible();
 
-    await page.getByRole('button', { name: 'Weiter' }).click(); // mode -> intro
     await page.getByRole('button', { name: 'Los geht’s' }).click(); // intro -> act
 
     await expect(page.getByRole('heading', { name: 'NEUGIER', exact: true })).toBeVisible();
@@ -68,50 +65,5 @@ test.describe('Pack selection (FR8-03)', () => {
     // CLASSIC's own route subtitle, proving the default packId (classic)
     // survived passing through the new screen without a selection.
     await expect(page.getByText('12 Fragen · 3 Akte · etwa 15 Minuten')).toBeVisible();
-  });
-});
-
-test.describe('FIRST DATE quick route (12 questions, 4 per act)', () => {
-  test('the act break fires after only 4 questions', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'first-date',
-      routeId: 'quick',
-      modeId: 'calm',
-      qIndex: 3,
-      skipsRemaining: 3,
-    });
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText('ABGESCHLOSSEN')).toBeVisible();
-  });
-
-  test('finishing all 12 shows the route-aware "that\'s all 12" copy', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'first-date',
-      routeId: 'quick',
-      modeId: 'calm',
-      qIndex: 11,
-      skipsRemaining: 3,
-      secretSeen: [true, true],
-      hasSecretQuestion: [true, true],
-    });
-    await page.getByRole('button', { name: 'Fertig' }).click();
-    await expect(page.getByText('Das waren alle 12.')).toBeVisible();
-  });
-
-  test('the secret question interrupts at this route\'s own position (index 10)', async ({
-    page,
-  }) => {
-    await seedAndResume(page, {
-      packId: 'first-date',
-      routeId: 'quick',
-      modeId: 'calm',
-      qIndex: 9,
-      skipsRemaining: 3,
-      secretSeen: [false, false],
-    });
-    // Unlike CLASSIC's quick route (BF8-02), FIRST DATE has no twists at
-    // all, so a single "Weiter" advances straight to the secret handoff.
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toBeVisible();
   });
 });
