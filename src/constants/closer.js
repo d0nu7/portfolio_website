@@ -29,8 +29,10 @@ export function pick(value, lang) {
 
 import { PACKS, LATE_NIGHT_PACK } from '../closer/content';
 import { ACT_NUMERALS } from '../closer/content/shared';
+import { classifySecretAsked } from '../closer/engine/transitions';
 
 export { PACKS, LATE_NIGHT_PACK };
+export { classifySecretAsked };
 
 export const DEFAULT_PACK_ID = 'classic';
 export const DEFAULT_ROUTE_ID = 'full';
@@ -314,30 +316,4 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
  */
 export function starterFor(questionIndex, starterOffset) {
   return (questionIndex + starterOffset) % 2;
-}
-
-/*
- * Classifies private "did you ask your saved question?" answers into the
- * Question 37 branches:
- *  - neither: two saved questions exist and neither was asked;
- *  - bothAsked: all applicable saved questions were asked;
- *  - pendingPlayer: exactly one applicable question remains;
- *  - noneHaveSecretQuestion: both people opted out of forming one.
- * secretAsked defaults to [null, null] before either check completes.
- * hasSecretQuestion defaults to [null, null] before the secret-question
- * step. Null is treated like true for backward compatibility; only an
- * explicit false opts a person out.
- */
-export function classifySecretAsked(secretAsked, hasSecretQuestion) {
-  const [a0, a1] = secretAsked || [null, null];
-  const [h0, h1] = hasSecretQuestion || [null, null];
-  const noneHaveSecretQuestion = h0 === false && h1 === false;
-  // A person who opted out has nothing pending -- treat their slot as
-  // "resolved" so they never register as a still-waiting turn.
-  const effective0 = h0 === false ? true : a0;
-  const effective1 = h1 === false ? true : a1;
-  const neither = !noneHaveSecretQuestion && effective0 === false && effective1 === false;
-  const bothAsked = !noneHaveSecretQuestion && effective0 === true && effective1 === true;
-  const pendingPlayer = effective0 === false ? 0 : effective1 === false ? 1 : null;
-  return { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion };
 }

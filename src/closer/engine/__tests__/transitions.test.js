@@ -5,6 +5,7 @@ import {
   CONSENT_EVENTS,
   PRIVATE_MOMENT_EFFECTS,
   PRIVATE_MOMENT_EVENTS,
+  Q37_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
@@ -12,6 +13,7 @@ import {
   transitionSetup,
   transitionConsent,
   transitionPrivateMoment,
+  transitionQ37,
   transitionAct,
 } from '../transitions';
 
@@ -408,6 +410,76 @@ describe('private-moment transition core', () => {
     expect(transitionPrivateMoment(full, privateState({ phase: 'q' }), {
       type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
       asked: true,
+    })).toBeNull();
+  });
+});
+
+describe('Question 37 transition core', () => {
+  const full = compileRun('classic', 'full', 'original');
+  const noPrivateMoment = compileRun('late-night', 'full', 'explicit');
+  const q37State = (patch = {}) => ({
+    phase: 'q37intro',
+    secretAsked: [null, null],
+    hasSecretQuestion: [null, null],
+    ...patch,
+  });
+
+  it('opens two sequential turns only when both applicable questions remain', () => {
+    expect(transitionQ37(full, q37State({
+      secretAsked: [false, false],
+      hasSecretQuestion: [true, true],
+    }), { type: Q37_EVENTS.ACCEPT_FINALE })).toEqual({ phase: 'q37a' });
+  });
+
+  it.each([
+    [[false, true], [true, true]],
+    [[true, true], [true, true]],
+    [[null, null], [false, false]],
+  ])('opens the single shared prompt for asked/opt-out state %j / %j', (
+    secretAsked,
+    hasSecretQuestion
+  ) => {
+    expect(transitionQ37(full, q37State({ secretAsked, hasSecretQuestion }), {
+      type: Q37_EVENTS.ACCEPT_FINALE,
+    })).toEqual({ phase: 'q37' });
+  });
+
+  it('uses the ordinary shared bonus when the compiled run has no private moment', () => {
+    expect(transitionQ37(noPrivateMoment, q37State({
+      secretAsked: [false, false],
+      hasSecretQuestion: [true, true],
+    }), { type: Q37_EVENTS.ACCEPT_FINALE })).toEqual({ phase: 'q37' });
+  });
+
+  it('allows an optional end from the intro and between two sequential turns', () => {
+    expect(transitionQ37(full, q37State(), { type: Q37_EVENTS.END_OPTIONAL }))
+      .toEqual({ phase: 'ending', completed: true, endReason: 'userEnded' });
+    expect(transitionQ37(full, q37State({ phase: 'q37a' }), {
+      type: Q37_EVENTS.END_OPTIONAL,
+    })).toEqual({ phase: 'ending', completed: true, endReason: 'userEnded' });
+  });
+
+  it('continues the sequential branch and completes both final prompt forms', () => {
+    expect(transitionQ37(full, q37State({ phase: 'q37a' }), {
+      type: Q37_EVENTS.CONTINUE_SECOND_TURN,
+    })).toEqual({ phase: 'q37b' });
+    expect(transitionQ37(full, q37State({ phase: 'q37b' }), {
+      type: Q37_EVENTS.COMPLETE,
+    })).toEqual({ phase: 'ending', completed: true, endReason: 'completed' });
+    expect(transitionQ37(full, q37State({ phase: 'q37' }), {
+      type: Q37_EVENTS.COMPLETE,
+    })).toEqual({ phase: 'ending', completed: true, endReason: 'completed' });
+  });
+
+  it('rejects events outside their exact Q37 phases', () => {
+    expect(transitionQ37(full, q37State({ phase: 'q' }), {
+      type: Q37_EVENTS.ACCEPT_FINALE,
+    })).toBeNull();
+    expect(transitionQ37(full, q37State({ phase: 'q37b' }), {
+      type: Q37_EVENTS.END_OPTIONAL,
+    })).toBeNull();
+    expect(transitionQ37(full, q37State({ phase: 'q37intro' }), {
+      type: Q37_EVENTS.COMPLETE,
     })).toBeNull();
   });
 });

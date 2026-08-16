@@ -50,6 +50,56 @@ function privateMomentEnabled(run) {
   return run.routeId !== 'quick' && run.privateMoment !== 'none';
 }
 
+/*
+ * Classifies private "did you ask your saved question?" answers into the
+ * Question 37 branches. Null remains applicable for backward compatibility;
+ * only an explicit false opts a person out of having a private question.
+ */
+export function classifySecretAsked(secretAsked, hasSecretQuestion) {
+  const [a0, a1] = secretAsked || [null, null];
+  const [h0, h1] = hasSecretQuestion || [null, null];
+  const noneHaveSecretQuestion = h0 === false && h1 === false;
+  const effective0 = h0 === false ? true : a0;
+  const effective1 = h1 === false ? true : a1;
+  const neither = !noneHaveSecretQuestion && effective0 === false && effective1 === false;
+  const bothAsked = !noneHaveSecretQuestion && effective0 === true && effective1 === true;
+  const pendingPlayer = effective0 === false ? 0 : effective1 === false ? 1 : null;
+  return { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion };
+}
+
+export const Q37_EVENTS = Object.freeze({
+  ACCEPT_FINALE: 'ACCEPT_FINALE',
+  END_OPTIONAL: 'END_OPTIONAL',
+  CONTINUE_SECOND_TURN: 'CONTINUE_SECOND_TURN',
+  COMPLETE: 'COMPLETE',
+});
+
+export function transitionQ37(run, state, event) {
+  if (!event || typeof event.type !== 'string') return null;
+  const q37Phase = ['q37intro', 'q37', 'q37a', 'q37b'].includes(state.phase);
+  if (!q37Phase) return null;
+
+  if (event.type === Q37_EVENTS.END_OPTIONAL) {
+    if (state.phase !== 'q37intro' && state.phase !== 'q37a') return null;
+    return { phase: 'ending', completed: true, endReason: 'userEnded' };
+  }
+
+  if (event.type === Q37_EVENTS.ACCEPT_FINALE && state.phase === 'q37intro') {
+    const { neither } = classifySecretAsked(state.secretAsked, state.hasSecretQuestion);
+    return { phase: privateMomentEnabled(run) && neither ? 'q37a' : 'q37' };
+  }
+
+  if (event.type === Q37_EVENTS.CONTINUE_SECOND_TURN && state.phase === 'q37a') {
+    return { phase: 'q37b' };
+  }
+
+  if (event.type === Q37_EVENTS.COMPLETE && (state.phase === 'q37' || state.phase === 'q37b')) {
+    return { phase: 'ending', completed: true, endReason: 'completed' };
+  }
+
+  return null;
+}
+
 function hasApplicablePrivateQuestion(run, state, playerIndex) {
   return privateMomentEnabled(run) && state.hasSecretQuestion[playerIndex] !== false;
 }

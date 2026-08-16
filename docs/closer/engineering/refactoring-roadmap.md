@@ -131,7 +131,7 @@ documentation are in scope.
 
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [ ] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory now lives in the [transition matrix](transition-matrix.md); event migration remains incremental.
-3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function. Setup/entry, consent, act-entry/break, private-moment capture/resolution, and compiled question destinations are migrated and characterized in `src/closer/engine/transitions.js`; Question 37, ending, and global families remain in the controller.
+3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function. Setup/entry, consent, act-entry/break, private-moment capture/resolution, Question 37, and compiled question destinations are migrated and characterized in `src/closer/engine/transitions.js`; ending and global families remain in the controller.
 4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
 5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).

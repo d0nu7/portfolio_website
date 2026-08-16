@@ -20,6 +20,7 @@ import {
   CONSENT_EVENTS,
   PRIVATE_MOMENT_EFFECTS,
   PRIVATE_MOMENT_EVENTS,
+  Q37_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
@@ -27,6 +28,7 @@ import {
   transitionAct,
   transitionConsent,
   transitionPrivateMoment,
+  transitionQ37,
   transitionSetup,
 } from '../../closer/engine/transitions';
 import COPY from '../../constants/closerCopy';
@@ -1105,6 +1107,10 @@ export default function CloserGame() {
     }
     set(result.patch);
   };
+  const dispatchQ37 = (event) => {
+    const patch = transitionQ37(run, s, event);
+    if (patch) set(patch);
+  };
 
   /* ================================================================== */
   /* START                                                              */
@@ -1774,8 +1780,10 @@ export default function CloserGame() {
               // "noneHaveSecretQuestion" (there's nothing secret-question-
               // specific left to offer instead).
               <Row>
-                <GhostButton onClick={() => set({ phase: 'q37' })}>{t('yes')}</GhostButton>
-                <GhostButton onClick={() => finish('userEnded')}>
+                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.ACCEPT_FINALE })}>
+                  {t('yes')}
+                </GhostButton>
+                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
                   {t('end')}
                 </GhostButton>
               </Row>
@@ -1785,10 +1793,10 @@ export default function CloserGame() {
               // funneled toward speaking it just because the UI only ever
               // offered "continue".
               <Row>
-                <GhostButton onClick={() => set({ phase: neither ? 'q37a' : 'q37' })}>
+                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.ACCEPT_FINALE })}>
                   {neither ? finaleButton : t('continue')}
                 </GhostButton>
-                <GhostButton onClick={() => finish('userEnded')}>
+                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
                   {t('end')}
                 </GhostButton>
               </Row>
@@ -1818,15 +1826,18 @@ export default function CloserGame() {
               // "continue" into q37b, with no way to stop before the second
               // person's turn.
               <Row>
-                <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37b' })}>
+                <Button
+                  $accent={finalStyle.accent}
+                  onClick={() => dispatchQ37({ type: Q37_EVENTS.CONTINUE_SECOND_TURN })}
+                >
                   {t('continue')}
                 </Button>
-                <GhostButton onClick={() => finish('userEnded')}>
+                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
                   {t('end')}
                 </GhostButton>
               </Row>
             ) : (
-              <TextButton onClick={() => finish('completed')}>
+              <TextButton onClick={() => dispatchQ37({ type: Q37_EVENTS.COMPLETE })}>
                 {t('done')}
               </TextButton>
             )}
@@ -1851,7 +1862,7 @@ export default function CloserGame() {
           <Question>{prompt}</Question>
         </Body>
         <Foot>
-          <TextButton onClick={() => finish('completed')}>
+          <TextButton onClick={() => dispatchQ37({ type: Q37_EVENTS.COMPLETE })}>
             {t('done')}
           </TextButton>
         </Foot>
