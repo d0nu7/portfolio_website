@@ -156,6 +156,7 @@ Technical groundwork already delivered:
 - [x] Begin declarative rendering extraction with a pure setup view for players, packs, routes, and styles.
 - [x] Consolidate entry and Act II private opt-in presentation in one consent view without changing consent events.
 - [x] Extract intro, act-entry, and act-break presentation while retaining compiled act timing and boundaries.
+- [x] Consolidate private-question capture and post-run check presentation without weakening individual handoffs.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 

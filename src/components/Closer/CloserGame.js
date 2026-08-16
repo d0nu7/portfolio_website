@@ -53,9 +53,11 @@ import ClosePulse from './ClosePulse';
 import CloserActView, { ACT_VIEW_PHASES, actViewStyle } from './CloserActView';
 import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
 import CloserDialog from './CloserDialog';
-import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
 import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
+import CloserPrivateMomentView, {
+  PRIVATE_MOMENT_VIEW_PHASES,
+} from './CloserPrivateMomentView';
 import CloserSetupView from './CloserSetupView';
 import {
   Bar,
@@ -963,73 +965,30 @@ export default function CloserGame() {
   }
 
   /* ================================================================== */
-  /* SECRET QUESTION                                                    */
+  /* PRIVATE MOMENT                                                     */
   /* ================================================================== */
 
-  if (s.phase.startsWith('secret')) {
-    const st = finalStyle;
-    const p = s.phase;
-
-    if (p === 'secretPass1' || p === 'secretPass2') {
-      const who = p === 'secretPass1' ? 0 : 1;
-      return frame(
-        <CloserHandoff
-          accent={st.accent}
-          kicker={p === 'secretPass1' ? tf('passPhoneTo', nameOf(0)) : t('passPhone')}
-          body={
-            p === 'secretPass2'
-              ? tf('passPhoneText', nameOf(1), s.hasSecretQuestion[0] === true)
-              : null
-          }
-          action={p === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
-          onAction={() => dispatchPrivateMoment({
-            type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
-          })}
-        />,
-        { accent: st.accent, glow: st.glow, menu: true }
-      );
-    }
-
-    if (p === 'secret1' || p === 'secret2') {
-      const me = p === 'secret1' ? 0 : 1;
-      // Declining a saved question is an equal choice. Both actions advance the phone-
-      // handoff sequence identically; only hasSecretQuestion[me] differs,
-      // which later decides whether this person gets a private check-in
-      // screen after "that's all 36" and whether Question 37 treats their
-      // slot as pending.
-      const choose = (hasQuestion) => dispatchPrivateMoment({
-        type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
-        hasQuestion,
-      });
-      return frame(
-        <>
-          <Body $center>
-            <Kicker $accent={st.accent}>{tf('forOnly', nameOf(me))}</Kicker>
-            <Lede>{tf('secretTask', nameOf(1 - me))}</Lede>
-          </Body>
-          <Foot>
-            <Button $accent={st.accent} onClick={() => choose(true)}>
-              {t('iHaveOne')}
-            </Button>
-            <TextButton onClick={() => choose(false)}>{t('noSecretToday')}</TextButton>
-          </Foot>
-        </>,
-        { accent: st.accent, glow: st.glow, menu: true }
-      );
-    }
-
-    // secretPassBack
+  if (PRIVATE_MOMENT_VIEW_PHASES.has(s.phase)) {
     return frame(
-      <CloserHandoff
-        accent={st.accent}
-        kicker={t('passPhoneBack')}
-        body={t('passPhoneBackText')}
-        action={t('continue')}
-        onAction={() => dispatchPrivateMoment({
+      <CloserPrivateMomentView
+        state={s}
+        accent={finalStyle.accent}
+        nameOf={nameOf}
+        t={t}
+        tf={tf}
+        onHandoff={() => dispatchPrivateMoment({
           type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
         })}
+        onSetQuestion={(hasQuestion) => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
+          hasQuestion,
+        })}
+        onSetAsked={(asked) => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+          asked,
+        })}
       />,
-      { accent: st.accent, glow: st.glow, menu: true }
+      { accent: finalStyle.accent, glow: s.phase.startsWith('secret') ? finalStyle.glow : 0.03, menu: true }
     );
   }
 
@@ -1076,66 +1035,6 @@ export default function CloserGame() {
               {isQuick ? t('end') : t('continue')}
             </GhostButton>
           )}
-        </Foot>
-      </>,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* SECRET QUESTION RESOLUTION                                         */
-  /* ================================================================== */
-
-  // The phone is lying between both of them again after "that's all 36" --
-  // each private check needs its own handoff first, same as capturing the
-  // secret questions did, or the check isn't actually private.
-  if (s.phase === 'checkPass1' || s.phase === 'checkPass2') {
-    const who = s.phase === 'checkPass1' ? 0 : 1;
-    return frame(
-      <CloserHandoff
-        accent={finalStyle.accent}
-        kicker={tf('passPhoneTo', nameOf(who))}
-        action={tf('iAm', nameOf(who))}
-        onAction={() => dispatchPrivateMoment({
-          type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
-        })}
-      />,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  if (s.phase === 'checkPassBack') {
-    return frame(
-      <CloserHandoff
-        accent={finalStyle.accent}
-        kicker={t('passPhoneBack')}
-        body={t('passPhoneBackText')}
-        action={t('continue')}
-        onAction={() => dispatchPrivateMoment({
-          type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
-        })}
-      />,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  if (s.phase === 'check1' || s.phase === 'check2') {
-    const me = s.phase === 'check1' ? 0 : 1;
-    const answer = (asked) => dispatchPrivateMoment({
-      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-      asked,
-    });
-    return frame(
-      <>
-        <Body $center>
-          <Kicker>{tf('forOnly', nameOf(me))}</Kicker>
-          <Question>{tf('didYouAsk', nameOf(1 - me))}</Question>
-        </Body>
-        <Foot>
-          <Row>
-            <GhostButton onClick={() => answer(true)}>{t('yes')}</GhostButton>
-            <GhostButton onClick={() => answer(false)}>{t('no')}</GhostButton>
-          </Row>
         </Foot>
       </>,
       { accent: finalStyle.accent, glow: 0.03, menu: true }
