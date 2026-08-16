@@ -120,6 +120,73 @@ test.describe('Resume-state validation (BF-12)', () => {
     await expectFreshStartScreen(page);
   });
 
+  /*
+   * Refactoringplan Phase 1: Neue Spielstaende speichern statt der vollen
+   * ID-Liste den kompakten runFingerprint. Die Liste bleibt als Altformat
+   * gueltig (Test darueber), aber der Fingerprint hat Vorrang, sobald er
+   * vorhanden ist.
+   *
+   * Der erwartete Wert wird hier nicht hartkodiert: er haengt an
+   * CONTENT_VERSION und der Routenkuration und wuerde bei jeder legitimen
+   * Contentaenderung brechen. Stattdessen wird ein echtes Spiel gestartet,
+   * der von der App selbst geschriebene Fingerprint ausgelesen und einmal
+   * unveraendert, einmal verfaelscht zurueckgespielt.
+   */
+  test('ein Spielstand mit passendem runFingerprint wird fortgesetzt', async ({ page }) => {
+    // Der Fingerprint entsteht beim Aktbeginn ('act' -> 'q'), nicht beim
+    // blossen Fortsetzen in eine Frage hinein. Deshalb wird hier ein
+    // Akt-Intro mit echtem Fortschritt geladen und einmal weitergeklickt.
+    await seedRaw(page, {
+      ...BASE_STATE,
+      phase: 'act',
+      qIndex: 12,
+      pending: 12,
+      contentVersion: 2,
+    });
+    await page.getByText('Spiel fortsetzen').click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+
+    const written = await page.evaluate((key) => {
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw).runFingerprint : null;
+    }, STORAGE_KEY);
+    // Nicht nachgebaut, sondern von der App selbst erzeugt -- der Test
+    // bleibt damit gueltig, wenn sich Kuration oder CONTENT_VERSION aendern.
+    expect(typeof written).toBe('string');
+    expect(written.length).toBeGreaterThan(0);
+
+    await seedRaw(page, { ...BASE_STATE, contentVersion: 2, runFingerprint: written });
+    await expect(page.getByText('Willkommen zurück.')).toBeVisible();
+    await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
+  });
+
+  test('ein Spielstand mit fremdem runFingerprint faellt auf den Startscreen zurueck', async ({
+    page,
+  }) => {
+    await seedRaw(page, {
+      ...BASE_STATE,
+      contentVersion: 2,
+      runFingerprint: 'r2-driftedvalue',
+    });
+    await expectFreshStartScreen(page);
+  });
+
+  test('der Fingerprint hat Vorrang vor einer noch passenden Alt-ID-Liste', async ({ page }) => {
+    // Beides gesetzt, aber widerspruechlich: die Liste stimmt, der
+    // Fingerprint nicht. Ohne Vorrangregel wuerde der Spielstand faelschlich
+    // fortgesetzt.
+    const runQuestionIds = Array.from({ length: 36 }, (_, i) =>
+      `classic-q${String(i + 1).padStart(2, '0')}`
+    );
+    await seedRaw(page, {
+      ...BASE_STATE,
+      contentVersion: 2,
+      runQuestionIds,
+      runFingerprint: 'r2-driftedvalue',
+    });
+    await expectFreshStartScreen(page);
+  });
+
   test('non-string player names are rejected', async ({ page }) => {
     await seedRaw(page, { ...BASE_STATE, players: [1, 2] });
     await expectFreshStartScreen(page);

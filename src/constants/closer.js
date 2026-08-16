@@ -3714,6 +3714,50 @@ export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
 }
 
 /*
+ * Der geordnete Run-Fingerprint (Refactoringplan Phase 1).
+ *
+ * Er verdichtet alles, was einen konkreten Lauf inhaltlich ausmacht, zu
+ * einem kurzen Wert: Contentrevision, Pack, Route und die Reihenfolge der
+ * aufgeloesten Frage-IDs. Gespeichert wird ab jetzt dieser eine String
+ * statt der vollen ID-Liste.
+ *
+ * Warum das mehr traegt als die bisherige Listenpruefung:
+ *   - Pack und Route stecken mit drin. Vorher wurden sie getrennt
+ *     kanonisiert und die Liste separat verglichen; jetzt kann beides
+ *     nicht mehr auseinanderlaufen.
+ *   - CONTENT_VERSION steckt mit drin. Ein Versions-Bump aendert damit
+ *     tatsaechlich den Fingerprint -- vorher war der Bump wirkungslos,
+ *     genau der Befund aus CR-P1-05.
+ *   - Die Reihenfolge ist signifikant: Zwei vertauschte Fragen ergeben
+ *     einen anderen Wert, obwohl dieselbe Menge an IDs vorkommt.
+ *
+ * Was er bewusst NICHT einschliesst: den Fragentext. Eine reine
+ * Tippfehlerkorrektur soll laufende Spiele nicht wegwerfen. Eine
+ * Bedeutungsaenderung wird ueber eine neue ID oder einen Bump von
+ * CONTENT_VERSION signalisiert -- das ist eine redaktionelle
+ * Entscheidung, keine automatisch ableitbare.
+ *
+ * FNV-1a, 32 Bit: klein, ohne Abhaengigkeit, stabil ueber Sessions und
+ * Plattformen. Kein Sicherheitsmerkmal -- es geht um versehentliche
+ * Drift, nicht um Manipulationsschutz.
+ */
+export function runFingerprintFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const payload = [
+    CONTENT_VERSION,
+    packId,
+    routeId,
+    runQuestionIdsFor(packId, routeId).join(','),
+  ].join('|');
+
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < payload.length; i += 1) {
+    hash ^= payload.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return `r${CONTENT_VERSION}-${hash.toString(36)}`;
+}
+
+/*
  * The agreed contract for pack-namespaced voice audio, so the voice branch
  * (feat/closer-voice, developed separately and not touched by this change)
  * has a fixed path convention to adopt once further packs exist. Before

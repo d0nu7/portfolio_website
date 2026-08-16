@@ -115,7 +115,7 @@ Status dieser Iteration:
 - [x] Fragen erhalten explizite stabile IDs
 - [x] strukturierter DE/EN-Katalogabgleich nach Pack, Akt und ID
 - [x] der Prototyp `scripts/check-catalog-fidelity.js` wird durch einen CI-tauglichen Exact-Match ersetzt
-- [ ] Contentrevision und geordneter Run-Fingerprint einführen
+- [x] Contentrevision und geordneter Run-Fingerprint einführen
 - [x] Response Cards als vollständige wiederverwendbare Objekte deduplizieren
 - [x] Routenzeiten numerisch modellieren und aus einer Quelle rendern
 

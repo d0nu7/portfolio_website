@@ -17,6 +17,7 @@ import {
   resolvedActs,
   routeSubtitleFor,
   routeTimingFor,
+  runFingerprintFor,
   runQuestionIdsFor,
   secretAtIndexFor,
   starterFor,
@@ -145,16 +146,14 @@ function createInitialState(options = {}) {
   // once, true for the rest of the game, at the same 'act' -> 'q'
   // transition that starts actStartedAt for real.
   hasStarted: false,
-  // FR8-06 (iteration 8 feature requests): snapshotted at the same moment
-  // hasStarted flips true. runQuestionIds is this specific playthrough's
-  // resolved question-ID order; loadSaved() re-derives the same list from
-  // the current pack/route and rejects the resume if they no longer
-  // match, rather than silently continuing on content that shifted under
-  // this save since it was written. See runQuestionIdsFor()'s own comment
-  // in closer.js for why this is an ID-array comparison, not just a
-  // version-number check.
+  // FR8-06 / Refactoringplan Phase 1: beim tatsaechlichen Spielstart
+  // festgehalten (derselbe Moment, in dem hasStarted true wird).
+  // runFingerprint verdichtet Contentrevision, Pack, Route und die
+  // Reihenfolge der aufgeloesten Frage-IDs; loadSaved() bildet ihn neu und
+  // verwirft den Spielstand bei Abweichung, statt still auf verschobenem
+  // Inhalt weiterzuspielen. Siehe runFingerprintFor() in closer.js.
   contentVersion: CONTENT_VERSION,
-  runQuestionIds: [],
+  runFingerprint: null,
   };
 }
 
@@ -191,6 +190,15 @@ function isPlausibleSaved(saved) {
   if (saved.completed !== undefined && typeof saved.completed !== 'boolean') return false;
   if (saved.hasStarted !== undefined && typeof saved.hasStarted !== 'boolean') return false;
   if (saved.contentVersion !== undefined && !Number.isInteger(saved.contentVersion)) return false;
+  if (
+    saved.runFingerprint !== undefined &&
+    saved.runFingerprint !== null &&
+    typeof saved.runFingerprint !== 'string'
+  ) {
+    return false;
+  }
+  // Altformat: Spielstaende vor dem Fingerprint speicherten die volle
+  // ID-Liste. Sie bleiben gueltig und werden unten weiterhin verglichen.
   if (
     saved.runQuestionIds !== undefined &&
     !(Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.every((id) => typeof id === 'string'))
@@ -285,15 +293,20 @@ function loadSaved() {
     }
     const consentPhases = merged.phase.startsWith('consent');
     if (consentPhases && !pack.consentGate) return null;
-    // FR8-06: an old save (written before runQuestionIds existed) simply
-    // has no such field and skips this check entirely -- only a
-    // new-format save gets compared against what the current pack/route
-    // actually resolves to right now. A mismatch means the content
-    // underneath this save has changed since it was written (a question
-    // reordered, removed, or moved to a different route); rather than
-    // silently continuing on a shifted run, this rejects the resume the
-    // same way isPlausibleSaved() rejects any other malformed save.
-    if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
+    // Contentdrift-Schutz. Weicht der Lauf von dem ab, der beim Start
+    // festgehalten wurde -- Frage umsortiert, ersetzt, aus der Route
+    // gefallen -- wird der Spielstand verworfen statt still auf
+    // verschobenem Inhalt fortgesetzt.
+    //
+    // Zwei Formate, weil bereits ausgelieferte Spielstaende weiterlaufen
+    // sollen: neu ist der kompakte runFingerprint, alt die volle ID-Liste.
+    // Ein Spielstand ganz ohne beides (vor FR8-06) ueberspringt die
+    // Pruefung; ihn deckt der CONTENT_VERSION-Vergleich weiter oben ab.
+    if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
+      if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId)) {
+        return null;
+      }
+    } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
       const expected = runQuestionIdsFor(merged.packId, merged.routeId);
       const matchesExpected =
         expected.length === saved.runQuestionIds.length &&
@@ -1230,11 +1243,11 @@ export default function CloserGame() {
                 qIndex: index,
                 actStartedAt: Date.now(),
                 hasStarted: true,
-                // FR8-06: recomputed idempotently on every act's begin
-                // (same as hasStarted above) -- packId/routeId never
-                // change mid-game, so this is always the same snapshot,
-                // just written before it's needed on a resume.
-                runQuestionIds: runQuestionIdsFor(s.packId, s.routeId),
+                // Bei jedem Aktbeginn idempotent neu berechnet (wie
+                // hasStarted darueber) -- Pack und Route aendern sich im
+                // laufenden Spiel nicht, es ist also immer derselbe Wert,
+                // nur frueh genug geschrieben fuer den naechsten Resume.
+                runFingerprint: runFingerprintFor(s.packId, s.routeId),
                 contentVersion: CONTENT_VERSION,
               };
               buzz(16);

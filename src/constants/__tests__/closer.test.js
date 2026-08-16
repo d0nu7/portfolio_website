@@ -19,6 +19,7 @@ import {
   resolvedActs,
   routeSubtitleFor,
   routeTimingFor,
+  runFingerprintFor,
   runQuestionIdsFor,
   secretAtIndexFor,
   starterFor,
@@ -617,6 +618,76 @@ describe('routes (iteration 7, Phase 2)', () => {
  * resume-rejection behavior itself (that's CloserGame.js's own concern,
  * covered by Playwright in e2e/resume-validation.spec.js).
  */
+/*
+ * Der Run-Fingerprint (Refactoringplan Phase 1) verdichtet Contentrevision,
+ * Pack, Route und Frage-Reihenfolge. Die Tests pinnen beide Richtungen:
+ * was ihn aendern MUSS (Reihenfolge, Route, Pack, ID) und was ihn
+ * ausdruecklich NICHT aendern darf (reine Textkorrektur an derselben ID).
+ */
+describe('runFingerprintFor (Phase 1)', () => {
+  const stubPack = (questions, routes) => ({
+    id: 'fp',
+    acts: [{ questions }],
+    routes,
+  });
+  const withStub = (pack, fn) => {
+    const original = PACKS.fp;
+    PACKS.fp = pack;
+    try {
+      return fn();
+    } finally {
+      if (original === undefined) delete PACKS.fp;
+      else PACKS.fp = original;
+    }
+  };
+  const fullRoute = { full: { id: 'full', actIndices: [null] } };
+
+  it('ist stabil ueber wiederholte Aufrufe', () => {
+    expect(runFingerprintFor('classic', 'quick')).toBe(runFingerprintFor('classic', 'quick'));
+  });
+
+  it('unterscheidet Routen und Packs', () => {
+    expect(runFingerprintFor('classic', 'quick')).not.toBe(runFingerprintFor('classic', 'full'));
+    expect(runFingerprintFor('classic', 'full')).not.toBe(runFingerprintFor('friends', 'full'));
+  });
+
+  it('aendert sich, wenn zwei Fragen die Plaetze tauschen', () => {
+    const a = { id: 'fp-q01', de: 'a', en: 'a' };
+    const b = { id: 'fp-q02', de: 'b', en: 'b' };
+    const before = withStub(stubPack([a, b], fullRoute), () => runFingerprintFor('fp', 'full'));
+    const after = withStub(stubPack([b, a], fullRoute), () => runFingerprintFor('fp', 'full'));
+    expect(after).not.toBe(before);
+  });
+
+  it('aendert sich, wenn eine Frage durch eine andere ID ersetzt wird', () => {
+    const base = [{ id: 'fp-q01', de: 'a', en: 'a' }];
+    const before = withStub(stubPack(base, fullRoute), () => runFingerprintFor('fp', 'full'));
+    const after = withStub(stubPack([{ id: 'fp-q99', de: 'a', en: 'a' }], fullRoute), () =>
+      runFingerprintFor('fp', 'full')
+    );
+    expect(after).not.toBe(before);
+  });
+
+  it('aendert sich NICHT bei einer reinen Textkorrektur unter derselben ID', () => {
+    // Genau die Zusicherung aus dem Plan: "Copyfix kompatibel,
+    // Bedeutungsaenderung inkompatibel". Ein Tippfehlerfix darf laufende
+    // Spiele nicht wegwerfen.
+    const before = withStub(stubPack([{ id: 'fp-q01', de: 'Tipfehler', en: 'typo' }], fullRoute), () =>
+      runFingerprintFor('fp', 'full')
+    );
+    const after = withStub(stubPack([{ id: 'fp-q01', de: 'Tippfehler', en: 'typo' }], fullRoute), () =>
+      runFingerprintFor('fp', 'full')
+    );
+    expect(after).toBe(before);
+  });
+
+  it('traegt die Contentrevision sichtbar im Praefix', () => {
+    // Der Bump von CONTENT_VERSION muss den Wert veraendern -- vorher war
+    // ein Versions-Bump wirkungslos (CR-P1-05).
+    expect(runFingerprintFor('classic', 'full')).toMatch(new RegExp(`^r${CONTENT_VERSION}-`));
+  });
+});
+
 describe('runQuestionIdsFor (FR8-06)', () => {
   it('CONTENT_VERSION is a number', () => {
     expect(typeof CONTENT_VERSION).toBe('number');
