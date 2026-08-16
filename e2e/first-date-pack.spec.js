@@ -3,7 +3,7 @@ const { STORAGE_KEY } = require('./helpers');
 
 /*
  * FIRST DATE (iteration 8 catalog rollout, FR8-01/FR8-03) -- CLOSER's first
- * pack beyond CLASSIC, and the new Pack-Auswahl screen that makes choosing
+ * pack beyond CLASSIC, and the new pack-selection screen that makes choosing
  * it possible at all. These pin the UI-level behavior the Jest coverage in
  * closer.test.js can't reach: the pack card actually renders and is
  * selectable, and picking it swaps the routes/style/questions shown on

@@ -29,6 +29,7 @@ import CloserChoiceList from './CloserChoiceList';
 import CloserDialog from './CloserDialog';
 import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
+import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
 import {
   ActNumeral,
   ActTitle,
@@ -43,6 +44,7 @@ import {
   Field,
   Flash,
   Foot,
+  FrameContent,
   GhostButton,
   Kicker,
   LangSwitch,
@@ -71,14 +73,13 @@ import {
 } from './CloserStyles';
 
 const STORAGE_KEY = 'closer:v1';
-// Must match CloserInstallHint.js's own DISMISS_KEY -- duplicated as a
-// literal rather than imported to avoid a cross-component constant just for
-// this one deleteAllLocalData() use (bugfix-report iteration 7, BF-01).
+const PREFERENCES_KEY = 'closer:preferences:v1';
+const DEFAULT_PREFERENCES = Object.freeze({ lateNightVisible: false });
+// Must match CloserInstallHint.js's own key. Keeping the literal here avoids
+// coupling data deletion to another component's implementation.
 const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
 const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
-// Bumped only if the saved shape changes in a way old saves can't safely
-// merge into (bugfix-report iteration 7, BF-12). A saved stateVersion that
-// doesn't match this is treated as incompatible rather than guessed at.
+// Bump only when an older saved shape cannot be migrated safely.
 const STATE_VERSION = 1;
 const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
 const VALID_PHASES = new Set([
@@ -87,10 +88,8 @@ const VALID_PHASES = new Set([
   'lastIntro', 'all36',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
   'q37intro', 'q37', 'q37a', 'q37b', 'ending',
-  // Per-pack consent gate (see the block comment above where it's rendered):
-  // dead phases today, since no registered pack sets pack.consentGate --
-  // kept valid here so a future pack that does isn't fighting phase
-  // validation on top of everything else.
+  // Per-pack consent gates. LATE NIGHT uses both the entry gate and the
+  // renewed opt-in before Act II.
   'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
   'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
 ]);
@@ -106,57 +105,34 @@ function createInitialState(options = {}) {
   const route = getRoute(pack.id, requestedRoute);
 
   return {
-  stateVersion: STATE_VERSION,
-  phase: 'start',
-  lang,
-  players: ['', ''],
-  packId: pack.id,
-  // routeId (iteration 7, Phase 2/FR-01): which curated time route this
-  // playthrough uses. Defaults to DEFAULT_ROUTE_ID ('full') -- the same
-  // full 36-question game as every save written before routes existed,
-  // which simply has no routeId key at all and inherits this default via
-  // the `{ ...initialState, ...saved }` merge in loadSaved().
-  routeId: route.id,
-  modeId: pack.modes[0].id,
-  timerEnabled: options.timerEnabled ?? true,
-  qIndex: 0,
-  pending: 0,
-  breakAct: 0,
-  // secretSeen: has this person completed their private secret-question
-  // screen (secret1/secret2), regardless of what they chose there.
-  // hasSecretQuestion: did they actually form one ('Ich hab eine') rather
-  // than decline ('Heute keine' -- bugfix-report iteration 7, BF-08/FR-07).
-  // Renamed from the previous single `secretReady` array, which conflated
-  // "screen completed" with "question exists" -- there was no way to
-  // decline honestly. A save from before this rename simply has no
-  // secretSeen key, so the merge below falls back to [false, false] and
-  // that person is asked again, same as a fresh game.
-  secretSeen: [false, false],
-  hasSecretQuestion: [null, null],
-  secretAsked: [null, null],
-  starterOffset: 0,
-  // Aktive Gespraechszeit des laufenden Akts (siehe Timer-Effekt).
-  actElapsedMs: 0,
-  completed: false,
-  endReason: null,
-  // Whether the first real question has actually begun -- distinct from
-  // "a save exists" (iteration-8 holistic review, BF8-01). Every phase
-  // before this (players/duration/mode/intro/the very first act-intro
-  // screen) still gets persisted like anything else, but loadSaved() only
-  // offers "Spiel fortsetzen" once this is true, so reloading mid-setup
-  // (no names entered, no route/style picked yet, first question not
-  // started) lands back on a normal Start, not a resume of nothing. Set
-  // once, true for the rest of the game, at the same 'act' -> 'q'
-  // transition that starts the act timer for real.
-  hasStarted: false,
-  // FR8-06 / Refactoringplan Phase 1: beim tatsaechlichen Spielstart
-  // festgehalten (derselbe Moment, in dem hasStarted true wird).
-  // runFingerprint verdichtet Contentrevision, Pack, Route und die
-  // Reihenfolge der aufgeloesten Frage-IDs; loadSaved() bildet ihn neu und
-  // verwirft den Spielstand bei Abweichung, statt still auf verschobenem
-  // Inhalt weiterzuspielen. Siehe runFingerprintFor() in closer.js.
-  contentVersion: CONTENT_VERSION,
-  runFingerprint: null,
+    stateVersion: STATE_VERSION,
+    phase: 'start',
+    lang,
+    players: ['', ''],
+    packId: pack.id,
+    routeId: route.id,
+    modeId: pack.modes[0].id,
+    timerEnabled: options.timerEnabled ?? true,
+    qIndex: 0,
+    pending: 0,
+    breakAct: 0,
+    // Capture completion and existence are separate so declining a private
+    // question never creates a fictional pending question at the finale.
+    secretSeen: [false, false],
+    hasSecretQuestion: [null, null],
+    secretAsked: [null, null],
+    starterOffset: 0,
+    // Accumulated active conversation time for the current act.
+    actElapsedMs: 0,
+    completed: false,
+    endReason: null,
+    // Setup state is persisted, but only a real question makes a game
+    // resumable. This remains true for the rest of the run.
+    hasStarted: false,
+    // Captured when the first question starts so changed content cannot be
+    // resumed at a different position silently.
+    contentVersion: CONTENT_VERSION,
+    runFingerprint: null,
   };
 }
 
@@ -167,7 +143,7 @@ const initialState = createInitialState();
 // contradictory state (e.g. a phase the render tree has no branch for, or
 // a qIndex that is a string), isPlausibleSaved() rejects the whole save so
 // loadSaved() falls back to null (a normal, fresh start screen -- never an
-// an uncaught exception or an empty screen; bugfix-report iteration 7, BF-12).
+// an uncaught exception or an empty screen.
 // A field that's simply *missing* (e.g. packId on a pre-Pack-architecture
 // save) is fine here -- that's the `{ ...initialState, ...saved }` merge's
 // job below, not this check's.
@@ -199,8 +175,7 @@ function isPlausibleSaved(saved) {
   ) {
     return false;
   }
-  // Altformat: Spielstaende vor dem Fingerprint speicherten die volle
-  // ID-Liste. Sie bleiben gueltig und werden unten weiterhin verglichen.
+  // Legacy saves stored the complete question ID list before fingerprints.
   if (
     saved.runQuestionIds !== undefined &&
     !(Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.every((id) => typeof id === 'string'))
@@ -224,8 +199,8 @@ function isPlausibleSaved(saved) {
   return true;
 }
 
-// Phases where nothing about the actual game has happened yet -- setup
-// only, nothing worth resuming (BF8-01). 'act' is deliberately not in this
+// Phases where nothing about the actual game has happened yet. 'act' is
+// deliberately not in this
 // set: it's ambiguous on its own, since Act I's very first intro screen is
 // state-shape-identical to Act II/III's after a real act break. See
 // hasRealProgress() below for how that ambiguity is resolved.
@@ -238,10 +213,8 @@ const SETUP_ONLY_PHASES = new Set([
   'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
 ]);
 
-// A save written before `hasStarted` existed has no such field -- this is
-// its migration, inferred from phase/progress rather than trusted blindly,
-// so the BF8-01 fix also takes effect for saves already sitting on a
-// device. A save that DOES carry `hasStarted` is trusted directly (it's
+// A save written before `hasStarted` existed is migrated from its phase and
+// progress. A save that carries `hasStarted` is trusted directly (it's
 // set once, at the same 'act' -> 'q' transition below, and never reset
 // except by restart()).
 function hasRealProgress(saved) {
@@ -252,23 +225,8 @@ function hasRealProgress(saved) {
 }
 
 /*
- * Ein Spielstand-Parse-Ergebnis als diskriminierter Zustand statt eines
- * nackten `null` (Refactoringplan Phase 3, verbindliche Entscheidung 7:
- * "Saves werden gegen Zustandsinvarianten und Contentrevision geprüft,
- * nicht nur gegen oberflächliche Feldtypen").
- *
- * Vorher liefen alle Ablehnungsgruende in loadSaved() auf dasselbe
- * `return null` hinaus -- von aussen ununterscheidbar von "es liegt gar
- * kein Spielstand vor". Das machte die Pruefung nur noch ueber Playwright
- * testbar (man sieht den Startscreen, aber nicht WARUM), nicht direkt in
- * Jest. `parseSaved()` gibt stattdessen `{ ok: true, value }` oder
- * `{ ok: false, reason }` zurueck; `reason` ist einer der unten benannten,
- * stabilen Gruende -- exportiert, damit ein Test przise gegen den echten
- * Ablehnungsgrund pruefen kann statt nur gegen "kommt kein Resume".
- *
- * Die eigentlichen Pruefungen sind unveraendert (isPlausibleSaved(),
- * hasRealProgress(), Contentdrift-Schutz, Pack-/Routen-Kanonisierung,
- * Grenzenpruefung) -- dies ist eine Struktur-, keine Verhaltensaenderung.
+ * Parsing returns a discriminated result so tests and future migration UI
+ * can distinguish an absent save from a specific validation failure.
  */
 export const SAVE_REJECT_REASONS = Object.freeze({
   EMPTY: 'empty',
@@ -304,27 +262,12 @@ export function parseSaved(raw) {
 
   const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
   delete merged.skipsRemaining;
-  // hasRealProgress() just proved this game is genuinely underway, so
-  // write that back explicitly rather than leaving a pre-BF8-01 save's
-  // missing field to fall through to initialState's `false` -- otherwise
-  // a resumed legacy save would (harmlessly, but incorrectly) skip the
-  // wake lock for the rest of whatever act it resumed into.
+  // Make the migrated progress flag explicit for wake-lock and resume logic.
   merged.hasStarted = true;
-  // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
-  // (regression-test iteration 5, P2.4): a hand-edited save, an old save
-  // whose packId pointed at a pack since removed from the registry, or a
-  // modeId that doesn't exist in the resolved pack could otherwise pair
-  // "classic" content with a foreign id, or land on a style screen with
-  // nothing marked active. getPack() already falls back silently for
-  // reads elsewhere in this file, but the *stored* packId itself was
-  // never corrected -- this fixes that once, on load, rather than at
-  // every call site.
+  // Canonicalize registry identifiers once instead of carrying invalid saved
+  // IDs through every render lookup.
   const pack = getPack(merged.packId);
   merged.packId = pack.id;
-  // Same canonicalization, extended to routeId (iteration 7, Phase 2):
-  // getRoute() already falls back to DEFAULT_ROUTE_ID for an unrecognised
-  // id, same as getPack() does for packId -- this just makes the
-  // *stored* value correct too, not just every read of it.
   merged.routeId = getRoute(pack.id, merged.routeId).id;
   if (!pack.modes.some((m) => m.id === merged.modeId)) {
     merged.modeId = pack.modes[0].id;
@@ -333,15 +276,8 @@ export function parseSaved(raw) {
   if (consentPhases && !pack.consentGate) {
     return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
   }
-  // Contentdrift-Schutz. Weicht der Lauf von dem ab, der beim Start
-  // festgehalten wurde -- Frage umsortiert, ersetzt, aus der Route
-  // gefallen -- wird der Spielstand verworfen statt still auf
-  // verschobenem Inhalt fortgesetzt.
-  //
-  // Zwei Formate, weil bereits ausgelieferte Spielstaende weiterlaufen
-  // sollen: neu ist der kompakte runFingerprint, alt die volle ID-Liste.
-  // Ein Spielstand ganz ohne beides (vor FR8-06) ueberspringt die
-  // Pruefung; ihn deckt der CONTENT_VERSION-Vergleich weiter oben ab.
+  // Reject content drift instead of resuming at a shifted question. Current
+  // saves use a compact fingerprint; older saves may carry the full ID list.
   if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
     if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId)) {
       return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
@@ -378,14 +314,32 @@ function loadSaved() {
   }
 }
 
-// Bugfix-report iteration 7, BF-01's storage-copy acceptance criteria:
-// distinct from restart() (which clears the save and immediately starts a
-// fresh game) -- this is the explicit privacy action, wiping every key
-// CLOSER writes to this device (game state and the install-hint dismissal)
-// and landing back on the plain start screen rather than a new game.
+function loadPreferences() {
+  if (typeof window === 'undefined') return DEFAULT_PREFERENCES;
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(PREFERENCES_KEY) || '{}');
+    return {
+      lateNightVisible: parsed?.lateNightVisible === true,
+    };
+  } catch (err) {
+    return DEFAULT_PREFERENCES;
+  }
+}
+
+function savePreferences(preferences) {
+  try {
+    window.localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+  } catch (err) {
+    /* Preferences are optional; the game remains usable without storage. */
+  }
+}
+
+// This explicit privacy action removes every key written by CLOSER and
+// returns to a plain start screen. It is intentionally broader than restart.
 function deleteAllLocalData() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(PREFERENCES_KEY);
     window.localStorage.removeItem(INSTALL_HINT_DISMISS_KEY);
   } catch (err) {
     /* ignore */
@@ -412,13 +366,13 @@ export default function CloserGame() {
   const [mounted, setMounted] = useState(false);
   const [resumable, setResumable] = useState(null);
   const [s, setS] = useState(initialState);
+  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
 
   // Screen-local state: none of this is worth persisting.
   const [step, setStep] = useState('ask'); // twist | counting | ask | deeper | deeperOpen
   const [count, setCount] = useState(0);
   const [justDeclined, setJustDeclined] = useState(false);
   const [staying, setStaying] = useState(false);
-  const [stayReady, setStayReady] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [beat, setBeat] = useState(0);
   const [now, setNow] = useState(0);
@@ -427,25 +381,31 @@ export default function CloserGame() {
   // this offscreen polite region, never a per-tick aria-live on the number
   // itself (see Counter below, which stays a plain, non-live element).
   const [announce, setAnnounce] = useState('');
-  // In-game menu (bugfix-report iteration 7, BF-04): reachable from every
-  // question/countdown/act-break/secret-question/Q37 phase, deliberately
-  // not from STAY (see the `menu` frame() option below). `menuStep` picks
-  // which sub-view of the sheet is showing; null is the top-level list.
+  // Global menu. It is available before setup as well as during play so
+  // legal information and discreet content preferences are always reachable.
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuStep, setMenuStep] = useState(null); // null | 'end' | 'restart' | 'delete'
+  const [menuStep, setMenuStep] = useState(null);
   // Focus targets for BF-06/BF-07-adjacent a11y: move focus to the flash
   // message while it's the only interactive content on screen, and to the
   // next question once it lands, rather than leaving focus on a button
   // that's no longer there.
   const flashRef = useRef(null);
   const questionHeadingRef = useRef(null);
+  const frameContentRef = useRef(null);
 
-  // CLOSER PULSE (iteration 8 feature requests, FR8-04): a quiet milestone
-  // overlay, never persisted (purely decorative, resets on reload same as
-  // any other transient UI state) and never announced as its own thing --
-  // it's a visual accent on top of whatever screen would render anyway.
+  // Milestone celebrations are transient, decorative, and never persisted
+  // or announced as additional content.
   const [pulseStage, setPulseStage] = useState(null);
-  const dismissPulse = useCallback(() => setPulseStage(null), []);
+  const dismissPulse = useCallback(() => {
+    setPulseStage(null);
+    if (typeof window === 'undefined' || menuOpen) return;
+    window.requestAnimationFrame(() => {
+      const target = s.phase === 'q'
+        ? questionHeadingRef.current
+        : frameContentRef.current?.querySelector('button');
+      target?.focus();
+    });
+  }, [menuOpen, s.phase]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return undefined;
@@ -472,13 +432,14 @@ export default function CloserGame() {
   // the saved game was in, not silently fall back to German -- the language
   // toggle on this screen still lets someone switch before continuing.
   useEffect(() => {
+    setPreferences(loadPreferences());
     setMounted(true);
     const saved = loadSaved();
     setResumable(saved);
     if (saved) set({ lang: saved.lang });
   }, [set]);
 
-  // CLOSER PULSE's trigger detection: only fires on a phase change that
+  // Milestone trigger detection only fires on a phase change that
   // actually happens during this live session, never on whatever phase a
   // resumed/reloaded game happens to land on. pulsePrevPhaseRef starts at
   // null and is set to the current phase on the first run after mount
@@ -489,10 +450,8 @@ export default function CloserGame() {
     const prev = pulsePrevPhaseRef.current;
     pulsePrevPhaseRef.current = s.phase;
     if (prev === null || prev === s.phase) return;
-    // Geeignete Trigger (FR8-04): Start des eigentlichen Spiels; jeder
-    // Aktabschluss; die abgeschlossene Secret-Question-Übergabe;
-    // Finale. Restart and any decline/skip/end path deliberately fire
-    // nothing -- "keine negative oder enttäuschte Animation" for those.
+    // Start, act completion, a completed private handoff, and the finale are
+    // positive milestones. Decline, pass, restart, and early exit never fire.
     if (prev === 'act' && s.phase === 'q' && s.qIndex === 0) {
       setPulseStage('start');
     } else if (s.phase === 'break' && s.breakAct === 0) {
@@ -519,10 +478,7 @@ export default function CloserGame() {
     }
   }, [s, mounted]);
 
-  // Keep the screen awake while the phone is lying between two people --
-  // only once a real question is actually up, not during setup (BF8-01: the
-  // old `s.phase !== 'start'` check requested a wake lock through the whole
-  // players/duration/mode/intro flow too).
+  // Keep the shared phone awake during a real run, never during setup.
   const wakeRef = useRef(null);
   useEffect(() => {
     const playing = mounted && s.hasStarted && !s.completed;
@@ -560,19 +516,10 @@ export default function CloserGame() {
   }, [lang]);
 
   /*
-   * Aktive Gespraechszeit statt Wandzeit (Iteration-9-Review P1-09,
-   * CR-P1-03).
-   *
-   * Vorher lief die Aktzeit ab `actStartedAt` einfach weiter: auf dem
-   * Resume-Screen, im Hintergrund, waehrend das Handy weggelegt war. Nach
-   * einer laengeren Unterbrechung zeigte ein fortgesetztes Spiel deshalb
-   * sofort eine unbrauchbare Overtime-Meldung.
-   *
-   * Jetzt wird nur akkumuliert, waehrend tatsaechlich gespielt wird:
-   * eine Frage steht auf dem Schirm, das Tab ist sichtbar, kein Dialog
-   * ist offen. `actElapsedMs` ist die gesicherte Summe, `runningSinceRef`
-   * der Beginn des laufenden Abschnitts (bewusst nicht persistiert -- ein
-   * Resume startet immer pausiert).
+   * Count active conversation time, not wall time. The clock runs only while
+   * a question is visible, the document is visible, and no dialog is open.
+   * `actElapsedMs` is persisted; the current segment intentionally is not,
+   * so a resumed game always starts paused.
    */
   const [runningSince, setRunningSince] = useState(null);
   const [visible, setVisible] = useState(true);
@@ -584,7 +531,8 @@ export default function CloserGame() {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
-  const timerRunning = s.timerEnabled && s.phase === 'q' && visible && !menuOpen;
+  const timerRunning =
+    s.timerEnabled && s.phase === 'q' && visible && !menuOpen && !pulseStage;
 
   useEffect(() => {
     if (!timerRunning) return undefined;
@@ -595,9 +543,8 @@ export default function CloserGame() {
     return () => {
       clearInterval(id);
       setRunningSince(null);
-      // Den gelaufenen Abschnitt in die gesicherte Summe uebernehmen.
-      // Funktionale Form, weil der Cleanup sonst einen veralteten Wert
-      // von actElapsedMs saehe.
+      // Fold the finished segment into persisted time with a functional
+      // update so cleanup never closes over a stale value.
       const ran = Date.now() - startedAt;
       if (ran > 0) {
         setS((prev) => ({ ...prev, actElapsedMs: (prev.actElapsedMs || 0) + ran }));
@@ -611,21 +558,11 @@ export default function CloserGame() {
   // doesn't recognise, so this never needs its own guard.
   const pack = getPack(s.packId);
   const route = getRoute(s.packId, s.routeId);
-  // The route-resolved acts (iteration 7, Phase 2) -- same shape as
-  // pack.acts, but each act's `questions` is filtered to the route's
-  // curated subset (identical to pack.acts, question-for-question, when
-  // s.routeId is DEFAULT_ROUTE_ID). Every act-rendering read below goes
-  // through this, never pack.acts directly, so a shortened route actually
-  // shows its own shortened acts rather than the pack's full ones.
+  // Route-resolved acts keep the pack shape but include only the curated
+  // questions selected for this duration.
   const acts = resolvedActs(s.packId, s.routeId);
   const total = totalQuestions(s.packId, s.routeId);
-  // Secret question / question 37 / ending all share the last act's look.
-  // Derived rather than the bare `finalStyle` this used to be
-  // (regression-test iteration 5, P1.2): every pack is validated to have
-  // exactly 3 acts (see ACTS_PER_PACK in closer.js), so the value is the
-  // same either way, but this stays correct on its own terms rather than
-  // coincidentally, and doesn't silently go out of bounds if that
-  // invariant were ever violated despite the test coverage.
+  // Private resolution, finale, and ending share the last act's look.
   const finalStyle = pack.actStyle[pack.actStyle.length - 1];
 
   const mode = useMemo(
@@ -658,13 +595,7 @@ export default function CloserGame() {
     setStep(tw && tw !== 'deeper' ? 'twist' : 'ask');
     setJustDeclined(false);
     setStaying(false);
-    setStayReady(false);
-    // A countdown's "Los."/"Go." used to linger in the offscreen status
-    // region for the rest of the game, not just past a restart (bugfix-
-    // report iteration 7, BF-07 -- the restart-only fix was regression-test
-    // iteration 5's P2.3). Every path into a new question goes through here,
-    // so clearing it here clears it before any later question could
-    // re-announce a stale result.
+    // Clear any countdown announcement before the next question can repeat it.
     setAnnounce('');
   }, []);
 
@@ -675,18 +606,14 @@ export default function CloserGame() {
   const goTo = useCallback(
     (index, patch = {}) => {
       const base = { ...s, ...patch };
+      const basePack = getPack(base.packId);
       const baseTotal = totalQuestions(base.packId, base.routeId);
       if (index >= baseTotal) {
         set({ ...patch, phase: 'all36' });
         return;
       }
-      // Route-relative act boundaries (iteration 7, Phase 2), not a bare
-      // `% QUESTIONS_PER_ACT`: a route's acts aren't necessarily 12
-      // questions each, so the break has to fire at wherever THIS route's
-      // acts actually start, not at every 12th absolute index.
-      // actStartIndices()[0] is always 0 (Act I's own start), so
-      // `boundaryActIdx > 0` below is exactly "this is the start of Act II
-      // or later, not the very first question."
+      // Act boundaries are route-relative because shorter routes do not have
+      // twelve questions per act. Index zero is the start, not a break.
       const starts = actStartIndices(base.packId, base.routeId);
       const boundaryActIdx = starts.indexOf(index);
       if (boundaryActIdx > 0) {
@@ -696,6 +623,7 @@ export default function CloserGame() {
       }
       if (
         base.routeId !== 'quick' &&
+        basePack.privateMoment !== 'none' &&
         index === secretAtIndexFor(base.packId, base.routeId) &&
         !base.secretSeen[0]
       ) {
@@ -749,19 +677,18 @@ export default function CloserGame() {
       });
     }, 1000);
   }, [t, tf]);
+
+  const passQuestion = useCallback(() => {
+    clearInterval(countRef.current);
+    clearTimeout(flipRef.current);
+    setAnnounce('');
+    buzz(14);
+    setJustDeclined(true);
+  }, []);
   useEffect(() => () => {
     clearInterval(countRef.current);
     clearTimeout(flipRef.current);
   }, []);
-
-  // STAY hides the game. CONTINUE appears once, quietly, and then waits as
-  // long as it has to -- no timer, nothing counting down.
-  useEffect(() => {
-    if (!staying) return undefined;
-    setStayReady(false);
-    const id = setTimeout(() => setStayReady(true), 6000);
-    return () => clearTimeout(id);
-  }, [staying]);
 
   // Passing is free and unlimited. A brief neutral beat prevents an
   // accidental double-tap from advancing more than one question.
@@ -774,12 +701,18 @@ export default function CloserGame() {
     return () => clearTimeout(id);
   }, [justDeclined, goTo, s.qIndex]);
 
-  // The closing sequence plays itself out, one line at a time.
+  // The standard closing sequence plays itself out one line at a time.
+  // A declined consent gate uses a dedicated neutral ending instead.
   useEffect(() => {
-    if (s.phase !== 'ending' || beat >= ENDING_BEATS.length - 1) return undefined;
+    if (
+      s.phase !== 'ending' ||
+      s.endReason === 'consentDeclined' ||
+      pulseStage ||
+      beat >= ENDING_BEATS.length - 1
+    ) return undefined;
     const id = setTimeout(() => setBeat((b) => b + 1), 2000);
     return () => clearTimeout(id);
-  }, [s.phase, beat]);
+  }, [s.phase, s.endReason, beat, pulseStage]);
 
   const [revealSecond, setRevealSecond] = useState(false);
   useEffect(() => {
@@ -799,34 +732,30 @@ export default function CloserGame() {
     setConfirmReset(false);
     setBeat(0);
     setStep('ask');
-    // Without this, a countdown's "Los."/"Go." lingered in the offscreen
-    // status region through a full restart -- silent visually, but a
-    // screen reader on the new game's first question could announce a
-    // leftover countdown result from the previous language (regression-
-    // test iteration 5, P2.3).
+    // A restart must not carry a stale countdown announcement into a new run.
     setAnnounce('');
     setMenuOpen(false);
     setMenuStep(null);
+    setStaying(false);
     setS((prev) => createInitialState({
       lang: prev.lang,
-      packId: prev.packId,
+      packId:
+        prev.packId === 'late-night' && !preferences.lateNightVisible
+          ? DEFAULT_PACK_ID
+          : prev.packId,
       routeId: prev.routeId,
       timerEnabled: prev.timerEnabled,
     }));
-  }, []);
+  }, [preferences.lateNightVisible]);
 
-  // Bugfix-report iteration 7, BF-06: while the flash overlay is the only
-  // thing on screen (see the early-return branch near the bottom of the
-  // question render), move focus onto its own message rather than leaving
-  // it on a Pass/decline button that's no longer in the DOM.
+  // While the pass flash is the only content, move focus to its message.
   useEffect(() => {
     if (justDeclined && flashRef.current) {
       flashRef.current.focus();
     }
   }, [justDeclined]);
 
-  // ...and once a new question actually lands, move focus onto it -- the
-  // same "danach auf die neue Frage" requirement, satisfied for every
+  // Once a new question lands, move focus onto it for every
   // transition into a question (a fresh skip/decline, an act break, a
   // secret-question handoff, resuming), not just the flash case above.
   useEffect(() => {
@@ -835,7 +764,7 @@ export default function CloserGame() {
     }
   }, [s.phase, s.qIndex, step]);
 
-  // Gesicherte Summe plus der gerade laufende Abschnitt.
+  // Persisted time plus the segment currently in progress.
   const elapsed =
     (s.actElapsedMs || 0) + (runningSince && now ? Math.max(0, now - runningSince) : 0);
   // The selected route owns the time promise; use the same per-act allocation
@@ -847,51 +776,99 @@ export default function CloserGame() {
 
   const handleDeleteLocalData = () => {
     deleteAllLocalData();
+    setPreferences(DEFAULT_PREFERENCES);
     setResumable(null);
     setMenuOpen(false);
     setMenuStep(null);
     setS(createInitialState({ lang: s.lang }));
   };
 
-  // Rendered inside every frame() call that passes { menu: true } -- see
-  // its call sites below. Kept as one shared implementation rather than
-  // duplicated per phase (bugfix-report iteration 7, BF-04).
-  // Jeder Menueschritt ist ein eigener Dialog mit eigener Ueberschrift --
-  // CloserDialog rendert sie selbst und haengt aria-labelledby daran, statt
-  // dass jeder Zweig sein eigenes <h2> mitbringt.
+  const setLateNightVisible = (visible) => {
+    const nextPreferences = { ...preferences, lateNightVisible: visible };
+    setPreferences(nextPreferences);
+    savePreferences(nextPreferences);
+
+    // Hiding the pack during setup must not leave an invisible selection
+    // active. An already-started or resumable LATE NIGHT run remains valid.
+    if (!visible && !s.hasStarted && s.packId === 'late-night') {
+      const fallback = getPack(DEFAULT_PACK_ID);
+      set({
+        phase: s.phase === 'pack' ? 'pack' : 'start',
+        packId: fallback.id,
+        routeId: fallback.defaultRouteId || DEFAULT_ROUTE_ID,
+        modeId: fallback.modes[0].id,
+      });
+    }
+  };
+
+  // Every menu view has its own dialog title. CloserDialog owns the heading
+  // and updates focus whenever a subview replaces the menu root.
   const menuTitle = {
     null: t('menuTitle'),
     end: t('menuEndConfirm'),
     restart: t('startOverConfirm'),
     delete: t('deleteLocalDataConfirm'),
+    additional: t('menuAdditionalContentTitle'),
+    imprint: LEGAL_TITLES.imprint[lang],
+    privacy: LEGAL_TITLES.privacy[lang],
   }[menuStep ?? 'null'];
 
   const menuOverlay = (
     <>
-      <MenuTrigger type="button" onClick={() => { setMenuStep(null); setMenuOpen(true); }}>
+      <MenuTrigger
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded={menuOpen}
+        onClick={() => { setMenuStep(null); setMenuOpen(true); }}
+      >
         {t('menuOpen')}
       </MenuTrigger>
       {menuOpen && (
-        <CloserDialog title={menuTitle} onClose={() => setMenuOpen(false)}>
+        <CloserDialog
+          title={menuTitle}
+          viewKey={menuStep ?? 'root'}
+          onClose={() => setMenuOpen(false)}
+        >
           <>
             {menuStep === null && (
               <>
-                <Toggle
-                  $on={s.timerEnabled}
-                  $accent={style.accent}
-                  aria-pressed={s.timerEnabled}
-                  onClick={() => set({ timerEnabled: !s.timerEnabled })}
-                >
-                  {t('timer')}
-                  <b>{s.timerEnabled ? t('on') : t('off')}</b>
-                </Toggle>
-                <div style={{ marginTop: '2rem' }}>
-                  <GhostButton onClick={() => setMenuStep('restart')}>
-                    {t('menuRestart')}
+                {s.phase !== 'start' && (
+                  <Toggle
+                    $on={s.timerEnabled}
+                    $accent={style.accent}
+                    aria-pressed={s.timerEnabled}
+                    onClick={() => set({ timerEnabled: !s.timerEnabled })}
+                  >
+                    {t('timer')}
+                    <b>{s.timerEnabled ? t('on') : t('off')}</b>
+                  </Toggle>
+                )}
+                {s.phase !== 'start' && (
+                  <div style={{ marginTop: '2rem' }}>
+                    <GhostButton onClick={() => setMenuStep('restart')}>
+                      {t('menuRestart')}
+                    </GhostButton>
+                  </div>
+                )}
+                {s.hasStarted && (
+                  <div style={{ marginTop: '1.2rem' }}>
+                    <GhostButton onClick={() => setMenuStep('end')}>{t('menuEnd')}</GhostButton>
+                  </div>
+                )}
+                <div style={{ marginTop: '1.2rem' }}>
+                  <GhostButton onClick={() => setMenuStep('additional')}>
+                    {t('menuAdditionalContent')}
                   </GhostButton>
                 </div>
                 <div style={{ marginTop: '1.2rem' }}>
-                  <GhostButton onClick={() => setMenuStep('end')}>{t('menuEnd')}</GhostButton>
+                  <GhostButton onClick={() => setMenuStep('privacy')}>
+                    {t('menuPrivacy')}
+                  </GhostButton>
+                </div>
+                <div style={{ marginTop: '1.2rem' }}>
+                  <GhostButton onClick={() => setMenuStep('imprint')}>
+                    {t('menuImprint')}
+                  </GhostButton>
                 </div>
                 <TextButton style={{ width: '100%', marginTop: '1.6rem' }} onClick={() => setMenuStep('delete')}>
                   {t('deleteLocalData')}
@@ -941,6 +918,30 @@ export default function CloserGame() {
                 </TextButton>
               </>
             )}
+            {menuStep === 'additional' && (
+              <>
+                <Small style={{ marginBottom: '1.4rem' }}>{t('lateNightMenuIntro')}</Small>
+                <Small style={{ marginBottom: '2.4rem' }}>
+                  {preferences.lateNightVisible ? t('lateNightShown') : t('lateNightHidden')}
+                </Small>
+                <GhostButton
+                  onClick={() => setLateNightVisible(!preferences.lateNightVisible)}
+                >
+                  {preferences.lateNightVisible ? t('lateNightHide') : t('lateNightShow')}
+                </GhostButton>
+                <TextButton style={{ width: '100%' }} onClick={() => setMenuStep(null)}>
+                  {t('goBack')}
+                </TextButton>
+              </>
+            )}
+            {(menuStep === 'imprint' || menuStep === 'privacy') && (
+              <>
+                <CloserLegal view={menuStep} lang={lang} accent={style.accent} />
+                <TextButton style={{ width: '100%', marginTop: '1.6rem' }} onClick={() => setMenuStep(null)}>
+                  {t('goBack')}
+                </TextButton>
+              </>
+            )}
           </>
         </CloserDialog>
       )}
@@ -950,12 +951,22 @@ export default function CloserGame() {
   const frame = (content, opts = {}) => (
     <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
       <CloserGlobal />
-      {content}
+      <FrameContent
+        ref={frameContentRef}
+        $blocked={Boolean(pulseStage)}
+        inert={pulseStage ? '' : undefined}
+        aria-hidden={pulseStage ? 'true' : undefined}
+        data-testid="closer-frame-content"
+      >
+        {content}
+      </FrameContent>
       {opts.menu && menuOverlay}
       {pulseStage && (
         <ClosePulse
           stage={pulseStage}
           accent={opts.accent || style.accent}
+          label={tf('milestoneLabel', pulseStage)}
+          detail={tf('milestoneDetail', pulseStage)}
           reducedMotion={prefersReducedMotion}
           onDone={dismissPulse}
         />
@@ -965,16 +976,18 @@ export default function CloserGame() {
 
   const A0 = pack.actStyle[0].accent;
 
-  // Bugfix-report iteration 7, BF-08/FR-07: only a person who actually
-  // formed a secret question (hasSecretQuestion !== false) gets the private
+  // Only a person who actually formed a saved question gets the private
   // "did they ask it?" check after "that's all 36" -- someone who chose
   // "Heute keine" has nothing to ask about, so their checkPass/check screens
   // are skipped entirely rather than asking a question that can't apply.
-  const secretQuestionApplicable = (i) => s.hasSecretQuestion[i] !== false;
+  const privateMomentEnabled = route.id !== 'quick' && pack.privateMoment !== 'none';
+  const secretQuestionApplicable = (i) =>
+    privateMomentEnabled && s.hasSecretQuestion[i] !== false;
   // Where the "that's all 36" continue button goes: the first applicable
   // person's handoff screen, or straight to Question 37 if neither has
   // anything to check.
   const nextCheckPhase = () => {
+    if (!privateMomentEnabled) return 'q37intro';
     if (secretQuestionApplicable(0)) return 'checkPass1';
     if (secretQuestionApplicable(1)) return 'checkPass2';
     return 'q37intro';
@@ -1002,7 +1015,7 @@ export default function CloserGame() {
             <TextButton onClick={() => setConfirmReset(false)}>{t('goBack')}</TextButton>
           </Foot>
         </>,
-        { accent: A0, glow: 0.3 }
+        { accent: A0, glow: 0.3, menu: true }
       );
     }
     return frame(
@@ -1046,7 +1059,7 @@ export default function CloserGame() {
         </Foot>
         <CloserInstallHint lang={lang} accent={A0} />
       </>,
-      { accent: A0, glow: 0.3 }
+      { accent: A0, glow: 0.3, menu: true }
     );
   }
 
@@ -1090,12 +1103,12 @@ export default function CloserGame() {
           <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
         </Foot>
       </>,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
   /* ================================================================== */
-  /* PACK (iteration 8 catalog rollout, FR8-03)                         */
+  /* PACK                                                              */
   /* ================================================================== */
 
   if (s.phase === 'pack') {
@@ -1105,7 +1118,11 @@ export default function CloserGame() {
           <Kicker $accent={A0}>{t('pickPack')}</Kicker>
           <CloserChoiceList
             accent={A0}
-            items={Object.values(PACKS).map((p) => ({
+            items={Object.values(PACKS)
+              .filter(
+                (p) => p.discoverability !== 'menu-unlock' || preferences.lateNightVisible
+              )
+              .map((p) => ({
               id: p.id,
               selected: s.packId === p.id,
               title: pick(p.title, lang),
@@ -1117,7 +1134,7 @@ export default function CloserGame() {
                   routeId: p.defaultRouteId || DEFAULT_ROUTE_ID,
                   modeId: p.modes[0].id,
                 }),
-            }))}
+              }))}
           />
         </Body>
         <Foot>
@@ -1126,12 +1143,12 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
   /* ================================================================== */
-  /* DURATION / ROUTE (iteration 7, Phase 2, FR-01/FR-02)               */
+  /* DURATION / ROUTE                                                  */
   /* ================================================================== */
 
   if (s.phase === 'duration') {
@@ -1179,7 +1196,7 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
@@ -1192,9 +1209,8 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Kicker $accent={A0}>{t('pickMode')}</Kicker>
-          {/* Scope/time shown once here, straight from the route picked on
-              the previous screen (BF8-03) -- style copy itself no longer
-              claims any fixed question count or duration. */}
+          {/* Route scope and time are shown here; style copy stays independent
+              of a fixed question count or duration. */}
           <Small style={{ textAlign: 'center', marginBottom: '2rem' }}>
             {pick(route.title, lang)} · {pick(routeSubtitleFor(s.packId, route.id), lang)}
           </Small>
@@ -1221,13 +1237,12 @@ export default function CloserGame() {
           </Button>
         </Foot>
       </>,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
   /* ================================================================== */
-  /* CONSENT GATE (dead today -- no registered pack sets consentGate;    */
-  /* see LATE_NIGHT_PACK in closer.js, deliberately not in PACKS yet)    */
+  /* CONSENT GATE — both people decide privately before entry            */
   /* ================================================================== */
 
   if (s.phase === 'consentGatePassA' || s.phase === 'consentGatePassB') {
@@ -1241,16 +1256,14 @@ export default function CloserGame() {
           set({ phase: s.phase === 'consentGatePassA' ? 'consentGateA' : 'consentGateB' })
         }
       />,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
   if (s.phase === 'consentGateA' || s.phase === 'consentGateB') {
     const me = s.phase === 'consentGateA' ? 0 : 1;
-    // Declining either gate ends the pack neutrally -- "Wird nicht zweimal
-    // aktiv zugestimmt, endet der Pack neutral" (the catalog's own words).
-    // Not a restart, not a delete -- the ordinary ending sequence, same as
-    // any other "End now" in the game.
+    // Either person can end here without explanation. This uses a dedicated
+    // neutral result rather than the completed-game ending sequence.
     const decide = (agreed) => {
       if (!agreed) {
         finish('consentDeclined');
@@ -1266,14 +1279,14 @@ export default function CloserGame() {
         </Body>
         <Foot>
           <Row>
-            <Button $accent={A0} onClick={() => decide(true)}>
+            <GhostButton onClick={() => decide(true)}>
               {t('consentAgree')}
-            </Button>
+            </GhostButton>
             <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
           </Row>
         </Foot>
       </>,
-      { accent: A0, glow: 0.28 }
+      { accent: A0, glow: 0.28, menu: true }
     );
   }
 
@@ -1296,7 +1309,7 @@ export default function CloserGame() {
           <Small style={{ textAlign: 'center' }}>{t('privacy')}</Small>
         </Foot>
       </>,
-      { accent: A0, glow: 0.24 }
+      { accent: A0, glow: 0.24, menu: true }
     );
   }
 
@@ -1326,10 +1339,8 @@ export default function CloserGame() {
                 qIndex: index,
                 actElapsedMs: 0,
                 hasStarted: true,
-                // Bei jedem Aktbeginn idempotent neu berechnet (wie
-                // hasStarted darueber) -- Pack und Route aendern sich im
-                // laufenden Spiel nicht, es ist also immer derselbe Wert,
-                // nur frueh genug geschrieben fuer den naechsten Resume.
+                // Recalculation is idempotent because pack and route cannot
+                // change during a run; store it before the next resume point.
                 runFingerprint: runFingerprintFor(s.packId, s.routeId),
                 contentVersion: CONTENT_VERSION,
               };
@@ -1382,8 +1393,7 @@ export default function CloserGame() {
   }
 
   /* ================================================================== */
-  /* CONSENT GATE -- renewed opt-in before Act II (dead today, see the   */
-  /* pre-pack gate's own comment above)                                 */
+  /* CONSENT GATE — renewed private opt-in before Act II                 */
   /* ================================================================== */
 
   if (s.phase === 'consentAct2PassA' || s.phase === 'consentAct2PassB') {
@@ -1410,9 +1420,8 @@ export default function CloserGame() {
         finish('consentDeclined');
         return;
       }
-      // Die Aktzeit wird nur auf dem Uebergang zurueckgesetzt, der
-      // lands on the act-intro screen (person 1 agreeing); person 0's own
-      // "yes" just moves on to the next handoff.
+      // Reset act time only when the second confirmation reaches the act
+      // introduction; the first confirmation only advances the handoff.
       if (me === 0) {
         set({ phase: 'consentAct2PassB' });
       } else {
@@ -1427,9 +1436,9 @@ export default function CloserGame() {
         </Body>
         <Foot>
           <Row>
-            <Button $accent={st.accent} onClick={() => decide(true)}>
+            <GhostButton onClick={() => decide(true)}>
               {t('consentAgree')}
-            </Button>
+            </GhostButton>
             <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
           </Row>
         </Foot>
@@ -1466,8 +1475,7 @@ export default function CloserGame() {
 
     if (p === 'secret1' || p === 'secret2') {
       const me = p === 'secret1' ? 0 : 1;
-      // "Heute keine" is an equally valid choice, not a fallback (bugfix-
-      // report iteration 7, BF-08/FR-07) -- both buttons advance the phone-
+      // Declining a saved question is an equal choice. Both actions advance the phone-
       // handoff sequence identically; only hasSecretQuestion[me] differs,
       // which later decides whether this person gets a private check-in
       // screen after "that's all 36" and whether Question 37 treats their
@@ -1552,7 +1560,7 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Question>{tf('allThirtySix', total)}</Question>
-          {revealSecond && !isQuick && secretCount > 0 && (
+          {revealSecond && privateMomentEnabled && secretCount > 0 && (
             <Lede style={{ marginTop: '3.2rem' }}>{tf('secretSummary', secretCount)}</Lede>
           )}
         </Body>
@@ -1635,8 +1643,7 @@ export default function CloserGame() {
     const finaleLabel = route.id === 'full' ? t('q37Label') : t('finalQuestionLabel');
     const finaleButton = route.id === 'full' ? t('q37Button') : t('finalQuestionButton');
     // Exactly one person's question went unasked -- that person asks it now.
-    // hasSecretQuestion is passed through as of bugfix-report iteration 7,
-    // BF-08/FR-07 -- a person who chose "Heute keine" never counts as
+    // A person who declined to save a question never counts as
     // "still waiting" for a question that was never formed.
     const { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion } = classifySecretAsked(
       s.secretAsked,
@@ -1646,7 +1653,9 @@ export default function CloserGame() {
     if (s.phase === 'q37intro') {
       let kicker = t('q37OneMore');
       let text = pick(pack.q37.neither, lang);
-      if (noneHaveSecretQuestion) {
+      if (!privateMomentEnabled) {
+        text = t('q37StillWantOne');
+      } else if (noneHaveSecretQuestion) {
         kicker = t('q37NoSecretQuestions');
         text = t('q37NoSecretQuestionsText');
       } else if (bothAsked) {
@@ -1663,7 +1672,7 @@ export default function CloserGame() {
             <Question>{text}</Question>
           </Body>
           <Foot>
-            {bothAsked || noneHaveSecretQuestion ? (
+            {bothAsked || noneHaveSecretQuestion || !privateMomentEnabled ? (
               // Nobody has a secret question waiting either way here --
               // "bothAsked" offers the ordinary bonus prompt, and so does
               // "noneHaveSecretQuestion" (there's nothing secret-question-
@@ -1675,8 +1684,7 @@ export default function CloserGame() {
                 </GhostButton>
               </Row>
             ) : (
-              // Every q37intro branch offers an end option now (iteration-6
-              // content review, P1) -- a self-chosen secret question can be
+              // Every finale branch offers an end option because a self-chosen question can be
               // more intimate than anything scripted, so nobody should be
               // funneled toward speaking it just because the UI only ever
               // offered "continue".
@@ -1710,8 +1718,7 @@ export default function CloserGame() {
           </Body>
           <Foot>
             {s.phase === 'q37a' ? (
-              // Bugfix-report iteration 7, BF-09: consent can change between
-              // the two people's turns -- q37a used to only offer
+              // Consent can change between the two people's turns, so the first turn offers
               // "continue" into q37b, with no way to stop before the second
               // person's turn.
               <Row>
@@ -1737,7 +1744,7 @@ export default function CloserGame() {
     // exactly one question left to ask (or, for 'both'/noneHaveSecretQuestion,
     // one optional bonus), so there is nothing to sequence.
     let prompt = pick(pack.q37.both, lang);
-    if (!neither && !bothAsked && !noneHaveSecretQuestion) {
+    if (privateMomentEnabled && !neither && !bothAsked && !noneHaveSecretQuestion) {
       prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
     }
 
@@ -1762,22 +1769,28 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase === 'ending') {
+    if (s.endReason === 'consentDeclined') {
+      return frame(
+        <>
+          <Body $center>
+            <Question>{t('consentDeclinedTitle')}</Question>
+            <Lede style={{ marginTop: '2.4rem' }}>{t('consentDeclinedBody')}</Lede>
+          </Body>
+          <Foot>
+            <TextButton onClick={restart}>{t('playAgain')}</TextButton>
+          </Foot>
+        </>,
+        { accent: finalStyle.accent, glow: 0.03, menu: true }
+      );
+    }
+
     const isFinal = beat === ENDING_BEATS.length - 1;
     const advance = () => setBeat((b) => b + 1);
     return frame(
       <>
-        {/*
-         * Refactoringplan Phase 4: vorher liess sich nur per Tap auf den
-         * Body vorspringen -- eine div hat kein Tastatur-Aequivalent, wer
-         * mit Tab/Enter unterwegs war, sass auf diesem Screen fest. Ein
-         * echter Button im Foot (siehe unten) deckt das jetzt ab; der Tap
-         * bleibt fuer Touch-Bedienung zusaetzlich erhalten.
-         *
-         * aria-live/aria-atomic auf diesem stabilen Wrapper, nicht auf dem
-         * per `key` neu gemounteten Question-Kind: eine Live-Region muss
-         * bestehen bleiben, damit ein Screenreader die Aenderung als
-         * Aenderung erkennt, statt sie zu verpassen.
-         */}
+        {/* Keep the live region on a stable wrapper so screen readers detect
+            each line change. The explicit footer button provides a keyboard
+            equivalent to tapping the body. */}
         <Body $center onClick={() => !isFinal && advance()} aria-live="polite" aria-atomic="true">
           <Question key={beat}>{t(ENDING_BEATS[beat])}</Question>
         </Body>
@@ -1792,7 +1805,7 @@ export default function CloserGame() {
           )}
         </Foot>
       </>,
-      { accent: finalStyle.accent, glow: isFinal ? 0.1 : 0.02 }
+      { accent: finalStyle.accent, glow: isFinal ? 0.1 : 0.02, menu: true }
     );
   }
 
@@ -1801,24 +1814,22 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (staying) {
-    return (
-      <Screen $accent={style.accent} $glow={0.02}>
-        <CloserGlobal />
+    return frame(
+      <>
         <Stay>
           <StayDot $accent={style.accent} />
           <Lede style={{ textAlign: 'center' }}>{t('stayTitle')}</Lede>
-          {stayReady && (
-            <TextButton
-              onClick={() => {
-                setStaying(false);
-                leaveQuestion();
-              }}
-            >
-              {t('continue')}
-            </TextButton>
-          )}
+          <TextButton
+            onClick={() => {
+              setStaying(false);
+              leaveQuestion();
+            }}
+          >
+            {t('continue')}
+          </TextButton>
         </Stay>
-      </Screen>
+      </>,
+      { accent: style.accent, glow: 0.02, menu: true }
     );
   }
 
@@ -1889,6 +1900,7 @@ export default function CloserGame() {
           <Button $accent={style.accent} onClick={() => runCountdown(3)}>
             {t('ready')}
           </Button>
+          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
         </Foot>
       </>
     );
@@ -1920,6 +1932,7 @@ export default function CloserGame() {
           >
             {t('ready')}
           </Button>
+          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
         </Foot>
       </>
     );
@@ -1928,24 +1941,29 @@ export default function CloserGame() {
     // with the count and stays put through to zero -- nobody answers
     // something they have not seen.
     inner = (
-      <Body $center>
-        <TwistLabel $accent={style.accent}>
-          {twist === 'both' ? t('bothLabel') : t('nothinkingLabel')}
-        </TwistLabel>
-        {badge}
-        <Question>{questionText}</Question>
-        {/* role="timer" describes what this is to assistive tech without
-            making it a live region -- see the `announce` state above for
-            the two announcements that actually get spoken. */}
-        <Counter
-          $accent={style.accent}
-          style={{ marginTop: '3.2rem' }}
-          role="timer"
-          aria-atomic="true"
-        >
-          {count}
-        </Counter>
-      </Body>
+      <>
+        <Body $center>
+          <TwistLabel $accent={style.accent}>
+            {twist === 'both' ? t('bothLabel') : t('nothinkingLabel')}
+          </TwistLabel>
+          {badge}
+          <Question>{questionText}</Question>
+          {/* role="timer" describes what this is to assistive tech without
+              making it a live region -- see the `announce` state above for
+              the two announcements that actually get spoken. */}
+          <Counter
+            $accent={style.accent}
+            style={{ marginTop: '3.2rem' }}
+            role="timer"
+            aria-atomic="true"
+          >
+            {count}
+          </Counter>
+        </Body>
+        <Foot>
+          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
+        </Foot>
+      </>
     );
   } else if (step === 'deeper') {
     inner = (
@@ -1982,8 +2000,7 @@ export default function CloserGame() {
             {questionText}
           </Question>
           {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
-          {/* Response Cards (iteration 8 catalog, FRIENDS/OLD FRIENDS/DEEP):
-              an optional listening hint attached to specific questions --
+          {/* Response cards are optional listening hints attached to specific questions --
               always visible when present, nothing to tap through, no
               button of its own. See its own note in CloserStyles.js. */}
           {question?.responseCard && (
@@ -2009,7 +2026,7 @@ export default function CloserGame() {
             </Button>
           )}
           {/* Free, unlimited and available on the last question too. */}
-          <TextButton onClick={() => { buzz(14); setJustDeclined(true); }}>
+          <TextButton onClick={passQuestion}>
             {t('declineToAnswer')}
           </TextButton>
         </Foot>

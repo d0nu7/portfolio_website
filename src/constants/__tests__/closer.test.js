@@ -114,27 +114,13 @@ describe('PACKS registry', () => {
     expect(getPack(undefined)).toBe(PACKS[DEFAULT_PACK_ID]);
   });
 
-  /*
-   * LATE NIGHT's content exists in closer.js (LATE_NIGHT_PACK) but is
-   * deliberately not exported or added here -- see that block's own
-   * comment: it needs a consent-gate UI CloserGame.js doesn't have yet,
-   * and the catalog's own outstanding Austrian legal review. This pins
-   * that gap so it can't be closed by accident (e.g. a stray registry
-   * entry added without also building the gate) without a test forcing
-   * someone to look at this comment first.
-   */
-  it('LATE NIGHT is not registered yet -- getPack("late-night") falls back to the default pack', () => {
-    expect(getPack('late-night')).toBe(PACKS[DEFAULT_PACK_ID]);
-    expect(PACKS['late-night']).toBeUndefined();
+  it('registers LATE NIGHT for saved-game recovery while marking it for discreet discovery', () => {
+    expect(getPack('late-night')).toBe(LATE_NIGHT_PACK);
+    expect(PACKS['late-night']).toBe(LATE_NIGHT_PACK);
+    expect(LATE_NIGHT_PACK.discoverability).toBe('menu-unlock');
+    expect(LATE_NIGHT_PACK.privateMoment).toBe('none');
   });
 
-  /*
-   * The consent-gate UI (CloserGame.js) is built and reads
-   * pack.consentGate generically, but LATE_NIGHT_PACK -- the only pack
-   * that sets it -- is still deliberately not in PACKS (see the test
-   * above). This pins the exported constant's own shape directly, since
-   * the registry-wide shape tests below never see it.
-   */
   it("LATE_NIGHT_PACK's consentGate has both required, non-empty prompts", () => {
     expect(LATE_NIGHT_PACK.consentGate).toBeDefined();
     expect(pick(LATE_NIGHT_PACK.consentGate.notice, 'de')).toBeTruthy();
@@ -143,10 +129,10 @@ describe('PACKS registry', () => {
     expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'en')).toBeTruthy();
   });
 
-  it('no currently registered pack sets consentGate -- the gate stays fully dead code until one does', () => {
-    Object.values(PACKS).forEach((pack) => {
-      expect(pack.consentGate).toBeUndefined();
-    });
+  it('only LATE NIGHT requires the additional consent gate', () => {
+    expect(Object.values(PACKS).filter((pack) => pack.consentGate)).toEqual([
+      LATE_NIGHT_PACK,
+    ]);
   });
 
   it('every registered pack has the shape CloserGame.js relies on', () => {
@@ -264,25 +250,18 @@ describe('questionIdFor / voiceSrc', () => {
     expect(questionIdFor('classic', 35)).toBe('classic-q36');
   });
 
-  /*
-   * Refactoringplan Phase 1: Die ID muss an der Frage haengen, nicht an
-   * ihrer Position. Ohne diese Zusicherung faellt der Resume-Schutz still
-   * auf das alte, positionsabgeleitete Verhalten zurueck -- und genau das
-   * war der Grund, warum CONTENT_VERSION vorher nichts invalidieren konnte
-   * (CR-P1-05). Auch LATE NIGHT wird geprueft, obwohl es nicht registriert
-   * ist: der Pack soll bei seiner Freigabe nicht erst IDs nachziehen muessen.
-   */
-  const ALL_PACKS = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
+  // Question IDs belong to content, not positions, so reordered routes and
+  // resumed games keep stable identities across every registered pack.
+  const ALL_PACKS = PACKS;
 
-  it('jede Frage jedes Packs traegt eine explizite id', () => {
-    // Fehlende IDs werden gesammelt statt einzeln geworfen -- so nennt ein
-    // Fehlschlag alle Fundstellen auf einmal, nicht nur die erste.
+  it('every question in every pack has an explicit id', () => {
+    // Collect missing IDs so a failure reports every location at once.
     const missing = [];
     Object.entries(ALL_PACKS).forEach(([packId, pack]) => {
       pack.acts.forEach((act, actIndex) => {
         act.questions.forEach((q, i) => {
           if (typeof q.id !== 'string' || q.id.length === 0) {
-            missing.push(`${packId} Akt ${actIndex + 1} Frage ${i + 1}`);
+            missing.push(`${packId} act ${actIndex + 1} question ${i + 1}`);
           }
         });
       });
@@ -290,7 +269,7 @@ describe('questionIdFor / voiceSrc', () => {
     expect(missing).toEqual([]);
   });
 
-  it('IDs sind global eindeutig und mit ihrem Pack praefixiert', () => {
+  it('IDs are globally unique and prefixed with their pack id', () => {
     const seen = new Set();
     Object.entries(ALL_PACKS).forEach(([packId, pack]) => {
       pack.acts.forEach((act) => {
@@ -304,7 +283,7 @@ describe('questionIdFor / voiceSrc', () => {
     expect(seen.size).toBe(324);
   });
 
-  it('questionIdFor stimmt fuer jede registrierte Frage mit ihrer id ueberein', () => {
+  it('questionIdFor matches the stored id of every registered question', () => {
     Object.keys(PACKS).forEach((packId) => {
       const total = totalQuestions(packId);
       for (let i = 0; i < total; i += 1) {
@@ -314,16 +293,15 @@ describe('questionIdFor / voiceSrc', () => {
   });
 
   /*
-   * Der Test darueber allein beweist NICHT, dass die explizite ID benutzt
-   * wird: die echten IDs wurden absichtlich positionsgleich vergeben, damit
-   * bestehende Spielstaende ihre gespeicherte runQuestionIds-Liste
-   * wiedererkennen. Beide Implementierungen -- explizit und positions-
-   * abgeleitet -- liefern dort dasselbe.
+   * The preceding test alone does not prove that the explicit ID is used.
+   * Real IDs intentionally match their positions so existing saves still
+   * recognize their stored runQuestionIds. Explicit and position-derived
+   * implementations therefore return the same values there.
    *
-   * Dieser Stub-Pack vergibt IDs bewusst quer zur Position. Nur wer die
-   * hinterlegte `id` liest, besteht ihn.
+   * This stub assigns IDs out of position. Only reading the stored `id`
+   * satisfies the assertions.
    */
-  it('questionIdFor liest die hinterlegte id, nicht die Position', () => {
+  it('questionIdFor reads the stored id rather than deriving the position', () => {
     const stub = {
       id: 'stub',
       acts: [
@@ -394,7 +372,7 @@ describe('routes (iteration 7, Phase 2)', () => {
    * you change about your upbringing") third and fourth in Quick -- too
    * steep an intensity jump for a 12-question on-ramp. This pins the
    * corrected selection verbatim against
-   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md's CLASSIC section, so
+   * docs/closer/content/question-catalog.de-en.md's CLASSIC section, so
    * a future edit to CLASSIC_ROUTES can't silently drift from the
    * redactionally-reviewed catalog without a test failing.
    */
@@ -423,8 +401,8 @@ describe('routes (iteration 7, Phase 2)', () => {
   /*
    * FIRST DATE (iteration 8 catalog rollout, FR8-01) -- same pinning
    * approach as CLASSIC's above, verbatim against
-   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 3's own
-   * "Kuratierte Routen" line.
+   * docs/closer/content/question-catalog.de-en.md section 3's curated-routes
+   * line.
    */
   it("FIRST DATE's quick and standard resolve to exactly the catalog's curated question IDs", () => {
     const idsFor = (routeId) => {
@@ -520,7 +498,7 @@ describe('routes (iteration 7, Phase 2)', () => {
    * packs (COUPLES, FRIENDS, OLD FRIENDS, CHAOS) deliberately end Quick/
    * Standard one or more questions short of that closer by the catalog's
    * own curation -- e.g. FRIENDS' Q36 is marked Full-only in
-   * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md, reserving its
+   * docs/closer/content/question-catalog.de-en.md, reserving its
    * closing "REFLECT" question for the complete experience. The app
    * itself never reads `.last` at runtime (CloserGame.js's `isLast` is
    * already route-relative, via finalQuestionIndex) -- this was always
@@ -620,10 +598,10 @@ describe('routes (iteration 7, Phase 2)', () => {
  * covered by Playwright in e2e/resume-validation.spec.js).
  */
 /*
- * Der Run-Fingerprint (Refactoringplan Phase 1) verdichtet Contentrevision,
- * Pack, Route und Frage-Reihenfolge. Die Tests pinnen beide Richtungen:
- * was ihn aendern MUSS (Reihenfolge, Route, Pack, ID) und was ihn
- * ausdruecklich NICHT aendern darf (reine Textkorrektur an derselben ID).
+ * The run fingerprint (refactoring roadmap phase 1) condenses the content
+ * revision, pack, route and question order. These tests cover both what must
+ * change it (order, route, pack and ID) and what must not (copy edits under
+ * the same ID).
  */
 describe('runFingerprintFor (Phase 1)', () => {
   const stubPack = (questions, routes) => ({
@@ -643,16 +621,16 @@ describe('runFingerprintFor (Phase 1)', () => {
   };
   const fullRoute = { full: { id: 'full', actIndices: [null] } };
 
-  it('ist stabil ueber wiederholte Aufrufe', () => {
+  it('is stable across repeated calls', () => {
     expect(runFingerprintFor('classic', 'quick')).toBe(runFingerprintFor('classic', 'quick'));
   });
 
-  it('unterscheidet Routen und Packs', () => {
+  it('distinguishes routes and packs', () => {
     expect(runFingerprintFor('classic', 'quick')).not.toBe(runFingerprintFor('classic', 'full'));
     expect(runFingerprintFor('classic', 'full')).not.toBe(runFingerprintFor('friends', 'full'));
   });
 
-  it('aendert sich, wenn zwei Fragen die Plaetze tauschen', () => {
+  it('changes when two questions swap positions', () => {
     const a = { id: 'fp-q01', de: 'a', en: 'a' };
     const b = { id: 'fp-q02', de: 'b', en: 'b' };
     const before = withStub(stubPack([a, b], fullRoute), () => runFingerprintFor('fp', 'full'));
@@ -660,7 +638,7 @@ describe('runFingerprintFor (Phase 1)', () => {
     expect(after).not.toBe(before);
   });
 
-  it('aendert sich, wenn eine Frage durch eine andere ID ersetzt wird', () => {
+  it('changes when a question is replaced with another ID', () => {
     const base = [{ id: 'fp-q01', de: 'a', en: 'a' }];
     const before = withStub(stubPack(base, fullRoute), () => runFingerprintFor('fp', 'full'));
     const after = withStub(stubPack([{ id: 'fp-q99', de: 'a', en: 'a' }], fullRoute), () =>
@@ -669,10 +647,9 @@ describe('runFingerprintFor (Phase 1)', () => {
     expect(after).not.toBe(before);
   });
 
-  it('aendert sich NICHT bei einer reinen Textkorrektur unter derselben ID', () => {
-    // Genau die Zusicherung aus dem Plan: "Copyfix kompatibel,
-    // Bedeutungsaenderung inkompatibel". Ein Tippfehlerfix darf laufende
-    // Spiele nicht wegwerfen.
+  it('does not change for a copy edit under the same ID', () => {
+    // Copy fixes remain compatible; meaning changes require an ID or version
+    // change. A typo fix must not invalidate active games.
     const before = withStub(stubPack([{ id: 'fp-q01', de: 'Tipfehler', en: 'typo' }], fullRoute), () =>
       runFingerprintFor('fp', 'full')
     );
@@ -682,49 +659,45 @@ describe('runFingerprintFor (Phase 1)', () => {
     expect(after).toBe(before);
   });
 
-  it('traegt die Contentrevision sichtbar im Praefix', () => {
-    // Der Bump von CONTENT_VERSION muss den Wert veraendern -- vorher war
-    // ein Versions-Bump wirkungslos (CR-P1-05).
+  it('includes the content revision in its prefix', () => {
+    // A CONTENT_VERSION bump must change the fingerprint (CR-P1-05).
     expect(runFingerprintFor('classic', 'full')).toMatch(new RegExp(`^r${CONTENT_VERSION}-`));
   });
 });
 
 /*
- * compileRun() (Refactoringplan Phase 3, Nacharbeit): eine neue Funktion,
- * die getrennt bestehende Bausteine (resolvedActs, routeTimingFor,
- * runFingerprintFor, originalIndexFor) zu einer RunDefinition
- * zusammensetzt. Diese Tests pruefen die Zusammensetzung gegen genau
- * diese Bausteine, statt einen erwarteten Wert von Hand vorzuschreiben --
- * driftet compileRun() von einem der Bausteine ab, faellt der jeweilige
- * Test, nicht nur ein globaler Schnappschussvergleich.
+ * compileRun() (refactoring roadmap phase 3) combines resolvedActs,
+ * routeTimingFor, runFingerprintFor and originalIndexFor into a RunDefinition.
+ * These tests compare the composition against its source functions instead
+ * of hard-coding one monolithic snapshot.
  */
 describe('compileRun (Phase 3, RunDefinition)', () => {
-  it('stimmt mit routeTimingFor()/runFingerprintFor() fuer dieselbe Route ueberein', () => {
+  it('matches routeTimingFor and runFingerprintFor for the same route', () => {
     const run = compileRun('classic', 'quick');
     expect(run.timing).toEqual(routeTimingFor('classic', 'quick'));
     expect(run.fingerprint).toBe(runFingerprintFor('classic', 'quick'));
     expect(run.contentRevision).toBe(CONTENT_VERSION);
   });
 
-  it('questions[] hat pro resolvedActs()-Frage genau einen Eintrag, in derselben Reihenfolge', () => {
+  it('questions has one entry per resolved question in the same order', () => {
     const run = compileRun('classic', 'quick');
     const flatIds = resolvedActs('classic', 'quick').flatMap((a) => a.questions.map((q) => q.id));
     expect(run.questions.map((q) => q.id)).toEqual(flatIds);
   });
 
-  it('actStarts stimmt mit actStartIndices() ueberein', () => {
+  it('actStarts matches actStartIndices', () => {
     const run = compileRun('classic', 'quick');
     expect(run.actStarts).toEqual(actStartIndices('classic', 'quick'));
   });
 
-  it('sourceIndex jeder Frage stimmt mit originalIndexFor() an derselben Route-Position ueberein', () => {
+  it('each sourceIndex matches originalIndexFor at the same route position', () => {
     const run = compileRun('classic', 'quick');
     run.questions.forEach((q, i) => {
       expect(q.sourceIndex).toBe(originalIndexFor('classic', i, 'quick'));
     });
   });
 
-  it('actIndex jeder Frage passt zu ihrer Position relativ zu actStarts', () => {
+  it('each actIndex matches its position relative to actStarts', () => {
     const run = compileRun('classic', 'quick');
     run.questions.forEach((q, i) => {
       const expectedActIndex = run.actStarts.filter((start) => start <= i).length - 1;
@@ -732,25 +705,25 @@ describe('compileRun (Phase 3, RunDefinition)', () => {
     });
   });
 
-  it('faellt ohne modeId auf den ersten Style des Packs zurueck; eine gueltige modeId bleibt erhalten', () => {
+  it('defaults to the first pack style and preserves a valid modeId', () => {
     expect(compileRun('classic', 'full').modeId).toBe(PACKS.classic.modes[0].id);
     const second = PACKS.classic.modes[1].id;
     expect(compileRun('classic', 'full', second).modeId).toBe(second);
-    // Eine ungueltige modeId faellt genauso zurueck wie eine fehlende --
-    // dieselbe Kanonisierung, die loadSaved() fuer eine gespeicherte
-    // modeId schon durchfuehrt.
+    // An invalid modeId falls back like a missing one, matching loadSaved()
+    // canonicalization for persisted values.
     expect(compileRun('classic', 'full', 'does-not-exist').modeId).toBe(PACKS.classic.modes[0].id);
   });
 
-  it('privateMoment ist noch null (Phase 5 nicht implementiert) und das Ergebnis ist eingefroren', () => {
+  it('carries pack private-moment policy and freezes the result', () => {
     const run = compileRun('classic', 'full');
     expect(run.privateMoment).toBeNull();
+    expect(compileRun('late-night', 'quick').privateMoment).toBe('none');
     expect(Object.isFrozen(run)).toBe(true);
     expect(Object.isFrozen(run.questions)).toBe(true);
     expect(Object.isFrozen(run.actStarts)).toBe(true);
   });
 
-  it('unterscheidet Packs und Routen', () => {
+  it('distinguishes packs and routes', () => {
     expect(compileRun('classic', 'quick').fingerprint).not.toBe(
       compileRun('classic', 'full').fingerprint
     );
@@ -910,9 +883,8 @@ describe('other constants', () => {
  * Response Cards (iteration 8 catalog: FRIENDS/OLD FRIENDS/DEEP). Every
  * question.responseCard, wherever one is attached, must have the shape
  * CloserGame.js's render branch expects -- a { de, en } label and a
- * { de, en } text, both non-empty. "Zählen nicht als Fragen" (don't
- * count as questions) in the catalog's own words -- confirmed here by
- * checking they never appear alone without their question's real text.
+ * { de, en } text, both non-empty. The catalog states that cards do not
+ * count as questions, confirmed here by requiring their question's real text.
  */
 describe('Response Cards', () => {
   it('every responseCard across every pack has a well-formed label and text', () => {

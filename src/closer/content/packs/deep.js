@@ -7,8 +7,8 @@ import {
 
 /* ======================================================================
  * DEEP (iteration 8 catalog rollout) -- content transcribed verbatim
- * from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 8.
- * Deliberately no Quick route ("keine Quick-Route" in the catalog) -- the
+ * from docs/closer/content/question-catalog.de-en.md section 8.
+ * Deliberately no Quick route, as specified by the catalog: the
  * pack is meant for a genuinely intensive conversation, not a fast
  * on-ramp. Unlike FRIENDS/OLD FRIENDS/COUPLES/CHAOS, Standard here DOES
  * include Q36 (`last: true`), so no route-vs-closer mismatch applies.
@@ -305,17 +305,13 @@ const DEEP_ROUTES = {
 
 // Introspective jewel tones -- deep indigo, deep violet, near-navy grey.
 /*
- * Alle drei Werte sind gegenueber dem urspruenglichen Katalog hochskaliert
- * (Refactoringplan Phase 4, Nacharbeit): TurnName/ActTitle/Kicker zeigen
- * `accent` direkt als Textfarbe, und die Originale lagen bei 3,11:1 bis
- * 1,77:1 auf #08090c -- unter WCAG AA (4,5:1). Jede Skalierung haelt den
- * Farbton (kein Wert wird "erfunden"), nur hell genug fuer >=5:1:
- *   Akt I:   #4A5EAA (3,29:1) -> #607ADD (5,06:1, k=1,30)
- *   Akt II:  #7B4B94 (3,11:1) -> #A665C8 (5,05:1, k=1,35)
- *   Akt III: #2E3A59 -> #6580C4 (5,16:1, aus einer frueheren Phase-4-Iteration)
- * Die gedaempfte Wirkung von Akt III gegenueber Akt I/II bleibt erhalten;
- * siehe src/constants/__tests__/contrast.test.js fuer die nachgerechneten
- * Zahlen.
+ * All three source colors were brightened for contrast while preserving
+ * their hue (refactoring roadmap phase 4). TurnName, ActTitle and Kicker use
+ * `accent` directly as text color, and the originals fell below WCAG AA:
+ *   Act I:   #4A5EAA (3.29:1) -> #607ADD (5.06:1)
+ *   Act II:  #7B4B94 (3.11:1) -> #A665C8 (5.05:1)
+ *   Act III: #2E3A59 -> #6580C4 (5.16:1)
+ * Act III remains visually quieter. The contrast tests verify the ratios.
  */
 const DEEP_ACT_STYLE = [
   { accent: '#607ADD', chrome: 1, progress: 'full', glow: 0.24 },

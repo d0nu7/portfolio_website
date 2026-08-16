@@ -7,7 +7,7 @@ import {
 /* ======================================================================
  * FIRST DATE (iteration 8 catalog rollout, FR8-01/FR8-03) -- the pilot
  * pack the holistic review recommended shipping first. Content is
- * transcribed verbatim from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md
+ * transcribed verbatim from docs/closer/content/question-catalog.de-en.md
  * section 3; that file is the source of truth for any future wording
  * change to this pack -- edit it there first, then mirror here.
  *
@@ -291,7 +291,7 @@ const FIRST_DATE_MODES = [
 const FIRST_DATE_SECRET_AT_INDEX = 27;
 
 /*
- * Curated routes, verbatim from the catalog's "Kuratierte Routen" section.
+ * Curated routes, verbatim from the catalog's curated-routes section.
  * Local (0-based, per-act) indices derived from the catalog's absolute
  * Q-numbers: Quick Q01,Q02,Q04,Q07 / Q13,Q15,Q17,Q21 / Q25,Q27,Q28,Q36;
  * Standard Q01-Q05,Q07,Q08,Q12 / Q13-Q17,Q19,Q21,Q24 / Q25,Q26,Q27,Q28,Q29,Q31,Q34,Q36.

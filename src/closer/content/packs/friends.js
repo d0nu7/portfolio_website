@@ -7,7 +7,7 @@ import {
 
 /* ======================================================================
  * FRIENDS (iteration 8 catalog rollout) -- content transcribed verbatim
- * from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 6.
+ * from docs/closer/content/question-catalog.de-en.md section 6.
  *
  * Quick/Standard end on Q34/Q35 -- Q36 (`last: true`) is marked Full-only
  * in the catalog's own per-question Route column, reserving its closing

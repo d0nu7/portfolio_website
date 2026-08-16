@@ -4,47 +4,12 @@ import {
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
 
-/* ======================================================================
- * LATE NIGHT (18+) -- content transcribed verbatim from
- * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 10, for a
- * future session to wire up. Every other iteration-8 pack above is
- * registered in PACKS below; this one deliberately ISN'T, and
- * LATE_NIGHT_PACK is not exported. Two things the catalog itself
- * requires are still missing:
- *
- *   1. A technical consent-gate UI this pack specifically needs and no
- *      other pack does: a pre-pack 18+ + voluntary-participation notice
- *      each person confirms SEPARATELY before any question is visible,
- *      and a SECOND, renewed opt-in before Act II specifically (before
- *      touch/fantasy/kink questions appear) -- see the catalog's
- *      "Verbindlicher Hinweis vor dem Pack" and "Erneuter Opt-in vor Akt
- *      II" sections. CloserGame.js has no generic per-pack gating
- *      mechanism today; every other pack only needs the ordinary style/
- *      route selection already built.
- *   2. The catalog's own explicit sign-off is conditional, not granted:
- *      "Vor öffentlicher Freigabe bleibt eine gesonderte österreichische
- *      Jugend-, Medien- und Datenschutzprüfung erforderlich; dieser
- *      Fragenkatalog ist keine rechtliche Freigabe." (A separate Austrian
- *      youth-protection/media/data-protection review is still required
- *      before public release; this catalog is not itself a legal
- *      clearance.) That review is RaDi's to commission, not something
- *      this session can satisfy.
- *
- * The holistic review's own recommended rollout order put LATE NIGHT
- * explicitly last, "nur mit 18+-/Consent-Abnahme aktivieren" (activate
- * only with the 18+/consent gate) -- keeping this pack's data present
- * but unregistered follows that instruction directly: nothing here is
- * reachable in the running app (getPack()'s fallback to `classic` means
- * an unregistered packId is simply treated as an unrecognised one, same
- * as a typo) until both gaps above are actually closed and the pack is
- * deliberately added to PACKS.
- *
- * Also disables `both` for anything touching boundaries/consent/safer
- * sex/fantasies/physical needs, per the catalog's own "Redaktionelle
- * Spielregeln" -- moot today since no question carries any twist yet
- * (same stance as every other iteration-8 pack), but noted here for
- * whoever builds the gate and revisits twists for this pack.
- * ====================================================================== */
+/*
+ * LATE NIGHT is an adults-only, consent-gated pack. It stays registered so
+ * the engine can resume saved games, while `discoverability` lets the UI keep
+ * it out of the ordinary selector until both players intentionally enable it.
+ * The renewed opt-in before Act II is part of the pack's consent contract.
+ */
 
 const LATE_NIGHT_CONSENT_NOTICE = {
   de: 'Nur für Erwachsene ab 18 Jahren. Beide Personen nehmen freiwillig teil und können jede Frage überspringen oder das Spiel jederzeit beenden. Eine Antwort beschreibt nur Gedanken, Gefühle oder Vorlieben. Sie ist niemals Zustimmung zu einer Handlung. Zustimmung muss außerhalb des Spiels konkret, freiwillig, informiert und jederzeit widerrufbar eingeholt werden.',
@@ -138,9 +103,7 @@ const LATE_NIGHT_ACTS = [
   {
     id: 'desire',
     title: { de: 'WUNSCH', en: 'DESIRE' },
-    // Requires the renewed opt-in above (LATE_NIGHT_ACT_II_OPT_IN) before
-    // this act's questions appear -- not yet enforced anywhere, since the
-    // gate itself doesn't exist yet (see the block comment above).
+    // The consent gate must collect a renewed opt-in before this act appears.
     intro: {
       de: 'Explizitere Fragen zu Wünschen und Fantasien. Ihr entscheidet erneut, ob ihr weitermacht.',
       en: "More explicit questions about desire and fantasy. You choose again whether to continue.",
@@ -310,20 +273,15 @@ const LATE_NIGHT_MODES = [
     title: { de: 'EXPLICIT', en: 'EXPLICIT' },
     meta: { de: 'Direkt und respektvoll', en: 'Direct and respectful' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    // PREDICT and NO THINKING are fully disabled for this pack per the
-    // catalog's own "Redaktionelle Spielregeln"; BOTH is disabled too for
-    // anything touching consent/boundaries/safer sex. Moot today since no
-    // question carries a twist yet (NO_TWISTS already covers that) --
-    // kept as its own note for whoever revisits twists for this pack.
+    // Conversation-pressure twists remain disabled for consent-sensitive content.
     twists: NO_TWISTS,
   },
 ];
 
 const LATE_NIGHT_SECRET_AT_INDEX = 27;
 
-// Front-loaded 4/4/4 (Quick) and 8/8/8 (Standard) per act -- the
-// catalog's own words: "vier Fragen zu Atmosphäre, vier zu Wünschen und
-// vier zu Vertrauen. [...] keine zufällige Auswahl expliziter Fragen."
+// Curated 4/4/4 (Quick) and 8/8/8 (Standard) routes preserve the pack's
+// deliberate escalation instead of sampling explicit questions randomly.
 const LATE_NIGHT_ROUTES = {
   quick: {
     ...ROUTE_PRESETS.quick,
@@ -350,31 +308,17 @@ const LATE_NIGHT_ROUTES = {
   },
 };
 
-/*
- * Alle drei Werte hochskaliert wie bei DEEP (Refactoringplan Phase 4,
- * Nacharbeit) -- die Originale lagen bei 3,42:1 bis 1,57:1 auf #08090c,
- * unter WCAG AA. LATE NIGHT ist weiterhin nicht in PACKS registriert
- * (siehe unten); der Fix betrifft nur die hinterlegte Farbe, nicht die
- * Registrierung selbst:
- *   Akt I:   #B03A5B (3,42:1) -> #E54B76 (5,31:1, k=1,30)
- *   Akt II:  #6B3A6B (2,32:1) -> #B663B6 (5,15:1, k=1,70)
- *   Akt III: #3A2E44 (1,57:1) -> #9475AD (5,14:1, k=2,55)
- */
+// Accents meet WCAG AA contrast against the CLOSER background.
 const LATE_NIGHT_ACT_STYLE = [
   { accent: '#E54B76', chrome: 1, progress: 'full', glow: 0.26 },
   { accent: '#B663B6', chrome: 0.5, progress: 'count', glow: 0.14 },
   { accent: '#9475AD', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
-// Deliberately NOT added to PACKS -- see the block comment above.
-// CloserGame.js's consent-gate UI is built and reads pack.consentGate
-// generically (so it's ready for this pack or any future one that needs
-// it), but this pack itself stays unregistered until the outstanding
-// legal review is actually done. Exported (unlike the rest of this
-// file's per-pack constants) only so closer.test.js can pin its shape
-// without duplicating it into the test file.
 export const LATE_NIGHT_PACK = {
   id: 'late-night',
+  discoverability: 'menu-unlock',
+  privateMoment: 'none',
   title: { de: 'LATE NIGHT', en: 'LATE NIGHT' },
   meta: { de: '18+ · Für zwei Erwachsene', en: '18+ · For two adults' },
   blurb: {
@@ -388,36 +332,9 @@ export const LATE_NIGHT_PACK = {
   secretAtIndex: LATE_NIGHT_SECRET_AT_INDEX,
   routes: LATE_NIGHT_ROUTES,
   defaultRouteId: 'standard',
-  // The generic consent-gate mechanism (CloserGame.js) activates for any
-  // pack that sets this -- LATE NIGHT is the only one today. `notice` gates
-  // entry to the pack at all (both people confirm separately before
-  // `intro`); `act2OptIn` gates entry to Act II specifically (both confirm
-  // again, separately, before touch/fantasy/kink questions appear). Either
-  // person declining either gate ends the pack neutrally.
+  // Both people confirm entry separately, then confirm again before Act II.
   consentGate: {
     notice: LATE_NIGHT_CONSENT_NOTICE,
     act2OptIn: LATE_NIGHT_ACT_II_OPT_IN,
   },
 };
-
-/*
- * The PACKS registry. Each entry is everything CloserGame.js needs to run a
- * full playthrough: acts (and their questions), style modes, per-act look,
- * question-37 wording, and where the secret question interrupts. `classic`
- * is CLOSER as it has always been; it is the default and the fallback for
- * any packId this registry doesn't recognise (including saves from before
- * packId existed -- see getPack()).
- *
- * Adding a pack means adding another entry here with its own acts/modes/
- * actStyle/q37/secretAtIndex -- nothing in CloserGame.js hardcodes `classic`
- * or assumes there is only one pack.
- *
- * `title`/`meta`/`blurb` are what the Pack-Auswahl screen (FR8-03) shows on
- * each pack's own card -- the same three-field shape routes and modes
- * already use. `defaultRouteId` is that screen's preselection for a freshly
- * chosen pack (e.g. CLASSIC still opens on Full, FIRST DATE opens on Quick,
- * per the catalog's own per-pack "Default" line) -- distinct from the
- * global DEFAULT_ROUTE_ID constant below, which is getRoute()'s technical
- * fallback for a routeId that's missing or doesn't exist at all, not a
- * per-pack editorial choice.
- */

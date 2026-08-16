@@ -1,9 +1,8 @@
 /*
- * Gemeinsame Content-Bausteine aller Packs (Refactoringplan Phase 2).
+ * Shared content building blocks for all packs (refactoring roadmap phase 2).
  *
- * Aus closer.js herausgeloest, inhaltlich unveraendert. Alles hier wird von
- * mehr als einem Pack benutzt -- pack-eigene Werte bleiben im jeweiligen
- * Packmodul.
+ * Extracted from closer.js without content changes. Everything here is used
+ * by more than one pack; pack-specific values remain in their pack modules.
  */
 
 const NO_TWISTS = { predict: false, both: false, nothinking: false, deeper: false, stay: false };
@@ -39,17 +38,13 @@ const RESPONSE_CARD_LABEL = {
 };
 
 /*
- * Die zwoelf Response Cards des Katalogs als vollstaendige, wiederverwendbare
- * Objekte (Refactoringplan Phase 1).
+ * The catalog's twelve response cards as complete reusable objects
+ * (refactoring roadmap phase 1).
  *
- * Vorher war nur das *Label* nach RESPONSE_CARD_LABEL ausgelagert, der Text
- * daneben stand wortwoertlich an jeder Fundstelle -- derselbe VALIDATE-Text
- * dreimal, vier weitere je zweimal. Label und Text gehoeren aber zusammen:
- * halb extrahiert driften sie beim naechsten redaktionellen Feinschliff
- * auseinander, weil niemand alle Fundstellen findet.
+ * Previously only the label was shared while the associated text was copied
+ * at every use. Keeping label and text together prevents editorial drift.
  *
- * Jede Frage referenziert jetzt genau eine dieser Karten. 19 Verwendungen
- * ueber FRIENDS, OLD FRIENDS und DEEP, zwoelf verschiedene Karten.
+ * Each applicable question now references one of these cards.
  */
 const RESPONSE_CARDS = {
   celebrateShare: {
@@ -139,13 +134,10 @@ const RESPONSE_CARDS = {
 };
 
 /*
- * Akt-Numeralia (Refactoringplan Phase 2).
+ * Act numerals (refactoring roadmap phase 2).
  *
- * Alle neun Packs benutzen dieselben drei Werte, und sie sind vollstaendig
- * aus dem Aktindex ableitbar. Statt sie 27-mal in die Packdaten zu
- * schreiben, setzt resolvedActs() sie ein -- ein Pack, das spaeter eigene
- * Numeralia braucht, kann `numeral` weiterhin selbst setzen und
- * ueberschreibt damit den Standard.
+ * Every pack uses the same three values, derived from the act index.
+ * resolvedActs() supplies them unless a pack explicitly overrides `numeral`.
  */
 const ACT_NUMERALS = [
   { de: 'AKT I', en: 'ACT I' },
@@ -154,18 +146,16 @@ const ACT_NUMERALS = [
 ];
 
 /*
- * Routen-Presets (Refactoringplan Phase 2).
+ * Route presets (refactoring roadmap phase 2).
  *
- * id, Titel und -- wo sie sich decken -- das Meta sind ueber alle Packs
- * gleich; unterschiedlich sind nur `minutes` und die kuratierten
- * `actIndices`. Ein Pack schreibt deshalb:
+ * IDs, titles and shared metadata are common across packs; only `minutes`
+ * and curated `actIndices` differ. A pack can therefore write:
  *
  *   quick: { ...ROUTE_PRESETS.quick, minutes: 15, actIndices: [...] }
  *
- * und ueberschreibt bei Bedarf einzelne Felder -- COUPLES nennt seine
- * Quick-Route bewusst "Check-in", LATE NIGHT "Eine sichere Steigerung".
- * `full` bringt sein `actIndices: [null, null, null]` gleich mit, weil es
- * fuer jeden Pack identisch ist.
+ * and override individual fields when needed. The full route includes
+ * `actIndices: [null, null, null]` because that value is identical for all
+ * packs.
  */
 const ROUTE_PRESETS = {
   quick: {

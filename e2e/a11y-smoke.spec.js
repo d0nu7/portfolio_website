@@ -1,36 +1,32 @@
 const { test, expect } = require('./fixtures');
 
 /*
- * Accessibility-/Keyboard-Smoke (Refactoringplan Phase 4).
+ * Accessibility and keyboard smoke coverage (refactoring roadmap, phase 4).
  *
- * dialog-a11y.spec.js prueft schon den Fokus-Mechanismus des Menues im
- * Detail; ending.spec.js die Tastaturaktion des Ending-Screens. Was noch
- * fehlte: ein Nachweis, dass der GESAMTE kritische Pfad -- vom Start bis
- * zur ersten Frage -- ohne Maus durchspielbar ist, statt sich Screen fuer
- * Screen isoliert auf einen Resume-Sprung zu verlassen (wie es die
- * uebrigen Specs per seedAndResume tun, was Tastaturbedienbarkeit gar
- * nicht pruefen kann -- sie ueberspringen ja gerade jede Interaktion).
+ * dialog-a11y.spec.js covers menu focus behavior in detail, while
+ * ending.spec.js covers the ending screen's keyboard action. These tests
+ * prove that the complete critical path, from Start to the first question,
+ * is usable without a mouse. Seeded resume tests cannot prove that because
+ * they deliberately bypass the interactions between screens.
  *
- * Bewusst kein Tab-Ketten-Nachbau (brittle bei jeder Layoutverschiebung).
- * Stattdessen: jede Aktion laeuft ueber einen rollenbasierten Locator
- * plus `.press('Enter')`/`.press(' ')` -- das setzt echten Tastaturfokus
- * UND loest den nativen Keydown-Handler des Elements aus. Ein <button>
- * ohne funktionierende Tastaturbedienung (z.B. divs mit nur onClick)
- * wuerde hier durchfallen, nicht nur optisch "sichtbar" sein.
+ * The tests intentionally avoid recreating a full Tab chain, which would
+ * be brittle after layout changes. Each action instead uses a role-based
+ * locator with `.press('Enter')` or `.press(' ')`, establishing real focus
+ * and triggering the element's native keyboard behavior.
  */
-test('der komplette Setup-Flow bis zur ersten Frage ist ohne Maus bedienbar', async ({ page }) => {
+test('the complete setup flow reaches the first question without a mouse', async ({ page }) => {
   await page.goto('/closer/');
 
   await page.getByRole('button', { name: 'Start' }).press('Enter');
 
-  // PLAYERS: echte <label>-Inputs, per Tab erreichbar und beschriftet.
+  // PLAYERS: real labelled inputs that are reachable by keyboard.
   await page.getByLabel('Person 1 – Name (optional)').focus();
   await page.keyboard.type('Alex');
   await page.keyboard.press('Tab');
   await page.keyboard.type('Sam');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
-  // PACK: eine Karte auswaehlen (Enter auf einer Choice, nicht Klick).
+  // PACK: select a choice with Enter, not a pointer click.
   await page.getByRole('button', { name: /CLASSIC/i }).press('Enter');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
@@ -38,27 +34,26 @@ test('der komplette Setup-Flow bis zur ersten Frage ist ohne Maus bedienbar', as
   await page.getByRole('button', { name: /VOLL/i }).press('Enter');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
-  // MODE (CLASSIC hat zwei Style-Optionen)
+  // MODE: CLASSIC offers two style options.
   const modeButtons = page.getByRole('button', { name: /ORIGINAL|PLAYFUL/i });
   await modeButtons.first().press('Enter');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
-  // INTRO ("Los geht's") -> AKT-I-INTRO ("Weiter")
+  // INTRO ("Los geht’s") -> ACT I INTRO ("Weiter")
   await page.getByRole('button', { name: 'Los geht’s' }).press('Enter');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
-  // Angekommen: die erste echte Frage steht auf dem Schirm.
+  // The first real question is now on screen.
   await expect(page.getByText('Alex', { exact: false }).first()).toBeVisible();
 });
 
 /*
- * Stichprobe statt Vollerhebung: keine der auf dem ersten Fragenscreen
- * sichtbaren interaktiven Kontrollen (Menu-Trigger, Pass/Weiter, ...) ist
- * ein Button ohne zugaenglichen Namen. getByRole('button') findet nur
- * Elemente, die ARIA ueberhaupt als Button erkennt; ein leerer Name
- * waere trotzdem ein Treffer mit accessibleName === ''.
+ * This focused sample checks that every visible button on the first
+ * question screen has an accessible name. getByRole('button') only finds
+ * elements exposed as buttons, but it still finds a button whose accessible
+ * name is empty.
  */
-test('keine sichtbare Schaltflaeche auf der ersten Frage ist namenlos', async ({ page }) => {
+test('every visible button on the first question has an accessible name', async ({ page }) => {
   await page.goto('/closer/');
   await page.getByRole('button', { name: 'Start' }).click();
   await page.getByRole('button', { name: 'Weiter' }).click();

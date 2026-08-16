@@ -1,22 +1,20 @@
 /*
- * Kontrastregression (Refactoringplan Phase 4, Iteration-9-Code-Review:
- * TextButton/Small/MenuTrigger standen bei 2,4:1 bis 3,3:1 auf dem
- * #08090c-Hintergrund, mehrere Pack-Akzente (DEEP, LATE NIGHT) zwischen
- * 1,57:1 und 3,42:1 -- alle deutlich unter WCAG AA (4,5:1 fuer normalen
- * Text).
+ * Contrast regression coverage (refactoring roadmap phase 4). TextButton,
+ * Small and MenuTrigger previously ranged from 2.4:1 to 3.3:1 against
+ * #08090c. Several pack accents ranged from 1.57:1 to 3.42:1, all below
+ * WCAG AA's 4.5:1 requirement for normal text.
  *
- * Die Werte werden hier NICHT gegen einen hartkodierten "sieht richtig
- * aus"-Schnappschuss geprueft, sondern die tatsaechliche WCAG-Formel wird
- * unabhaengig auf die echten Quellwerte angewendet -- MUTED_TEXT_ALPHA aus
- * CloserStyles.js und jeder actStyle.accent aus jedem Pack, LATE NIGHT
- * eingeschlossen, obwohl es nicht registriert ist (dieselbe Farbe wird
- * trotzdem verwendet, sobald der Pack einmal freigegeben wird -- siehe
- * closer-refactoring-deferred-items in den Projekt-Memories). Senkt jemand
- * einen dieser Werte spaeter wieder ab -- oder fuegt ein neuer Pack einen
- * zu dunklen Akzent hinzu -- faellt dieser Test, ohne dass jemand die
- * Zahl von Hand nachrechnen muss.
+ * Rather than comparing against a visual snapshot, these tests apply the
+ * WCAG formula independently to source values: MUTED_TEXT_ALPHA and every
+ * pack's actStyle.accent, including LATE NIGHT. Lowering an existing value
+ * or adding an insufficiently bright accent fails without manual arithmetic.
  */
-import { CLOSER_BG, CLOSER_FG, MUTED_TEXT_ALPHA } from '../../components/Closer/CloserStyles';
+import {
+  CHROME_TEXT_ALPHA,
+  CLOSER_BG,
+  CLOSER_FG,
+  MUTED_TEXT_ALPHA,
+} from '../../components/Closer/CloserStyles';
 import { PACKS, LATE_NIGHT_PACK } from '../../closer/content';
 
 function srgbToLinear(c) {
@@ -44,31 +42,33 @@ function blend(alpha, fg, bg) {
 const WCAG_AA_NORMAL_TEXT = 4.5;
 const bgRgb = hexToRgb(CLOSER_BG);
 
-describe('WCAG-Kontrast gedaempfter Textfarben (CLOSER)', () => {
-  it('MUTED_TEXT_ALPHA (Small/TextButton/MenuTrigger/InstallDismiss) erreicht mindestens 4,5:1', () => {
+describe('WCAG contrast for muted CLOSER text', () => {
+  it('MUTED_TEXT_ALPHA reaches at least 4.5:1', () => {
     const ratio = contrastRatio(blend(MUTED_TEXT_ALPHA, CLOSER_FG, bgRgb), bgRgb);
     expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
   });
 
-  // Die alte Regression: bei den vorherigen Werten (0.30-0.38) haette dieser
-  // Test durchfallen muessen. Haelt fest, dass die Pruefung selbst
-  // tatsaechlich diskriminiert und nicht triviell immer bestuende.
-  it('ein Alpha unter der Schwelle wuerde tatsaechlich durchfallen (Gegenprobe der Pruefmethode)', () => {
+  it('question count and elapsed-time chrome reach at least 4.5:1', () => {
+    const ratio = contrastRatio(blend(CHROME_TEXT_ALPHA, CLOSER_FG, bgRgb), bgRgb);
+    expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
+  });
+
+  // The previous 0.30-0.38 values must fail, proving that the calculation
+  // actually discriminates rather than passing every input.
+  it('an alpha below the threshold fails the calculation', () => {
     const ratio = contrastRatio(blend(0.32, CLOSER_FG, bgRgb), bgRgb);
     expect(ratio).toBeLessThan(WCAG_AA_NORMAL_TEXT);
   });
 
   /*
-   * Jeder actStyle.accent jedes Packs (TurnName/ActTitle/Kicker zeigen ihn
-   * direkt als Textfarbe) -- nicht nur DEEP Akt III, das bei der ersten
-   * Kontraste-Runde als einziges namentlich im Plan stand. Ein Fehlschlag
-   * hier nennt Pack und Akt direkt, statt dass jemand von Hand elf
-   * Packs durchrechnen muss.
+   * TurnName, ActTitle and Kicker use every pack's actStyle.accent directly
+   * as text color. A failure names the pack and act without requiring a
+   * manual audit of every pack.
    */
   const allPacks = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
   Object.entries(allPacks).forEach(([packId, pack]) => {
     pack.actStyle.forEach((style, actIdx) => {
-      it(`${packId} Akt ${actIdx + 1} (${style.accent}) erreicht mindestens 4,5:1`, () => {
+      it(`${packId} act ${actIdx + 1} (${style.accent}) reaches at least 4.5:1`, () => {
         const ratio = contrastRatio(hexToRgb(style.accent), bgRgb);
         expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
       });
@@ -76,12 +76,10 @@ describe('WCAG-Kontrast gedaempfter Textfarben (CLOSER)', () => {
   });
 
   /*
-   * Der neue :focus-visible-Ring (rgba(242, 243, 245, 0.85) auf #08090c)
-   * ist kein Text, sondern eine UI-Komponente -- WCAG 1.4.11 verlangt hier
-   * nur 3:1, nicht 4,5:1. Trotzdem geprueft, damit ein spaeter
-   * abgesenkter Wert nicht unbemerkt unter selbst diese Schwelle faellt.
+   * The :focus-visible ring is a UI component rather than text, so WCAG
+   * 1.4.11 requires 3:1. Keep it covered against later regressions.
    */
-  it('der :focus-visible-Ring erreicht mindestens 3:1 (WCAG 1.4.11, Nicht-Text)', () => {
+  it('the :focus-visible ring reaches at least 3:1', () => {
     const ratio = contrastRatio(blend(0.85, CLOSER_FG, bgRgb), bgRgb);
     expect(ratio).toBeGreaterThanOrEqual(3);
   });

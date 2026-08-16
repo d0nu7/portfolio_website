@@ -8,7 +8,7 @@ const CATALOG_PATH = path.join(
   'docs',
   'closer',
   'content',
-  'CLOSER_Fragenkatalog_DE_EN.md'
+  'question-catalog.de-en.md'
 );
 
 const HEADING_TO_PACK_ID = {

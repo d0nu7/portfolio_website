@@ -2,27 +2,25 @@ const { test, expect } = require('./fixtures');
 const { seedAndResume } = require('./helpers');
 
 /*
- * Fokus-/Dialog-Grundlagen (Refactoringplan Phase 0, Code Review CR-P1-08).
+ * Focus and dialog foundations (refactoring roadmap phase 0, CR-P1-08).
  *
- * Das In-Game-Menue war zuvor ein reines <div>-Overlay ohne Rolle, ohne
- * aria-modal und ohne Fokusmanagement: Screenreader kuendigten keinen
- * Dialog an, und der Tastaturfokus konnte hinter das geoeffnete Menue
- * wandern. Diese Tests halten die vier Grundlagen fest, damit sie beim
- * spaeteren Phase-4-Ausbau nicht unbemerkt verloren gehen.
+ * The in-game menu used to be a plain <div> overlay without a role,
+ * aria-modal or focus management. These tests preserve the four dialog
+ * fundamentals as the interface evolves.
  */
-test.describe('Dialog-Grundlagen (Menue)', () => {
-  test('das Menue ist ein semantischer, benannter Modal-Dialog', async ({ page }) => {
+test.describe('Menu dialog foundations', () => {
+  test('the menu is a named semantic modal dialog', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
 
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
-    // Der zugaengliche Name kommt aus der eigenen Ueberschrift des Dialogs.
+    // The dialog's own heading supplies its accessible name.
     await expect(dialog).toHaveAccessibleName('Menü');
   });
 
-  test('beim Oeffnen wandert der Fokus in den Dialog', async ({ page }) => {
+  test('opening the menu moves focus into the dialog', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
 
@@ -33,7 +31,7 @@ test.describe('Dialog-Grundlagen (Menue)', () => {
     expect(focusInside).toBe(true);
   });
 
-  test('Escape schliesst den Dialog', async ({ page }) => {
+  test('Escape closes the dialog', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
@@ -42,13 +40,12 @@ test.describe('Dialog-Grundlagen (Menue)', () => {
     await expect(page.getByRole('dialog')).toHaveCount(0);
   });
 
-  test('nach dem Schliessen kehrt der Fokus auf den Menue-Button zurueck', async ({ page }) => {
+  test('closing the dialog returns focus to the menu trigger', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
 
-    // Erst belegen, dass der Fokus den Ausloeser ueberhaupt verlassen hat --
-    // sonst wuerde dieser Test auch ohne Fokusrueckgabe bestehen, weil der
-    // Browser den geklickten Button ohnehin fokussiert laesst.
+    // First prove that focus left the trigger; otherwise the assertion could
+    // pass even without focus restoration because clicking focuses the button.
     const leftTrigger = await page.evaluate(
       () => document.activeElement?.textContent?.trim() !== 'Menü'
     );
@@ -62,12 +59,12 @@ test.describe('Dialog-Grundlagen (Menue)', () => {
     expect(backOnTrigger).toBe('Menü');
   });
 
-  test('Tab bleibt innerhalb des Dialogs gefangen', async ({ page }) => {
+  test('Tab remains trapped inside the dialog', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
 
-    // Deutlich mehr Tabs als der Dialog fokussierbare Elemente hat -- ohne
-    // Fokusfalle landet der Fokus dabei zwangslaeufig ausserhalb.
+    // Use more Tab presses than there are focusable elements. Without a focus
+    // trap, focus would necessarily escape the dialog.
     for (let i = 0; i < 12; i += 1) {
       await page.keyboard.press('Tab');
     }
@@ -79,7 +76,7 @@ test.describe('Dialog-Grundlagen (Menue)', () => {
     expect(stillInside).toBe(true);
   });
 
-  test('auch der Bestaetigungsschritt ist ein benannter Dialog', async ({ page }) => {
+  test('the confirmation step is also a named dialog', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2 });
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Spiel jetzt beenden' }).click();

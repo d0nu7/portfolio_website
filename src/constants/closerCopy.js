@@ -11,9 +11,7 @@ const COPY = {
     de: 'Zwei Menschen.\nEin Handy.\nKein Small Talk.',
     en: 'Two people.\nOne phone.\nNo small talk.',
   },
-  // No longer a single fixed estimate (iteration 7, Phase 2/FR-01): the
-  // actual length now depends on the route chosen on the very next screens,
-  // so this honestly gives the range rather than promising the old default.
+  // The landing page shows the complete range; each route gives its estimate.
   aboutMinutes: {
     de: 'Etwa 10–75 Minuten – ihr wählt Pack und Länge.',
     en: 'About 10–75 minutes — you choose the pack and length.',
@@ -50,10 +48,7 @@ const COPY = {
 
   /* players -------------------------------------------------------------- */
   whosPlaying: { de: 'Wer spielt?', en: "Who's playing?" },
-  // Symmetric, genderneutral labels (bugfix-report iteration 7, BF-11 /
-  // feature-request FR-08): "Dein Name"/"Ihr Name" was asymmetric, and "Ihr"
-  // reads ambiguously as a female possessive or a formal address. Person
-  // 1/2 match the existing playerOne/playerTwo fallback names below.
+  // Symmetric, gender-neutral labels match the fallback player names.
   yourName: { de: 'Person 1 – Name (optional)', en: 'Player 1 – name (optional)' },
   theirName: { de: 'Person 2 – Name (optional)', en: 'Player 2 – name (optional)' },
   continue: { de: 'Weiter', en: 'Continue' },
@@ -64,16 +59,15 @@ const COPY = {
   playerOne: { de: 'Person 1', en: 'Player 1' },
   playerTwo: { de: 'Person 2', en: 'Player 2' },
 
-  /* pack (iteration 8 catalog rollout, FR8-03) ---------------------------- */
+  /* pack ----------------------------------------------------------------- */
   pickPack: { de: 'Welches Pack?', en: 'Which pack?' },
 
-  /* duration / route (iteration 7, Phase 2, FR-01/FR-02) ------------------ */
+  /* duration / route ----------------------------------------------------- */
   pickDuration: { de: 'Wie viel Zeit habt ihr?', en: 'How much time do you have?' },
 
   /* mode ----------------------------------------------------------------- */
   pickMode: { de: 'Modus wählen', en: 'Pick a mode' },
-  // Renamed from "Timer" (feature-request FR-04): this only ever shows
-  // elapsed time, never counts down or alarms, so "Timer" overpromised.
+  // This shows elapsed time only; it never counts down or alarms.
   timer: { de: 'Zeit anzeigen', en: 'Show time' },
   on: { de: 'An', en: 'On' },
   off: { de: 'Aus', en: 'Off' },
@@ -83,17 +77,12 @@ const COPY = {
     de: 'Legt das Handy zwischen euch.\n\nAntwortet laut.\n\nTippt nichts ein.\n\nEs gibt keine richtigen Antworten.',
     en: "Put the phone between you.\n\nAnswer out loud.\n\nDon't type anything.\n\nThere are no right answers.",
   },
-  // "Jede und jeder" -> "Alle" (BF-11/FR-08): same meaning, one word,
-  // genderneutral without sounding like a deliberate correction.
+  // Passing language is inclusive and applies equally to both people.
   introPass: {
     de: 'Jede Frage darf ohne Begründung ausgelassen werden.\n\nEine Grenze kostet nichts.',
     en: 'Either of you may pass on any question without explanation.\n\nA boundary never costs anything.',
   },
-  // Rewritten to actually match what's stored (bugfix-report iteration 7,
-  // BF-01): the previous "the game only remembers where you are" undersold
-  // it -- localStorage also holds both optional names, language, pack/
-  // style, skip/secret-question state and timer status. What's still true,
-  // and stays true: answers are never typed in, recorded, or stored.
+  // This summary must stay aligned with the complete Privacy menu view.
   privacy: {
     de: 'Eure Antworten werden weder eingegeben noch aufgenommen.\nAuf diesem Gerät speichert CLOSER eure optionalen Namen, Einstellungen und den Spielfortschritt, damit ihr fortsetzen könnt.\nMit „Von vorne“ oder „Lokale Spieldaten löschen“ werden diese Daten entfernt.',
     en: "Your answers are never typed in or recorded.\nOn this device, CLOSER stores your optional names, settings and game progress so you can continue later.\n“Start over” or “Delete local data” removes this data.",
@@ -143,10 +132,7 @@ const COPY = {
     en: "Forget the game for a moment.\n\nAsk whatever you're curious about.",
   },
 
-  // Reworded per the iteration-6 content review's P2 finding: STAY shows up
-  // on the most emotionally loaded questions, and "Bleiben"/"Stay" read too
-  // easily as an instruction to keep talking about the hard thing rather
-  // than what it actually is -- the app quietly getting out of the way.
+  // STAY gives quiet space; it never instructs people to keep disclosing.
   stayTitle: {
     de: 'BLEIBEN gibt euch einfach Raum.\n\nIhr müsst nicht weiterreden und könnt jederzeit fortfahren.',
     en: "STAY just gives you space.\n\nYou don't have to keep talking, and you can continue whenever you're ready.",
@@ -160,13 +146,7 @@ const COPY = {
   countdownGo: { de: 'Los.', en: 'Go.' },
 
   /* timer ------------------------------------------------------------------ */
-  // Bugfix-report iteration 7, BF-05: the previous wording ("the next act
-  // is ready whenever you are") stated something false whenever the couple
-  // hadn't actually reached the act boundary yet -- the state machine still
-  // requires the remaining questions in this act regardless of elapsed
-  // time. This is the short-term fix (an honest, non-committal message);
-  // real "finish act now" / "keep going" controls are future work (FR-01/
-  // FR-04, once routes exist to jump to a real act boundary).
+  // Overtime is guidance only; it never implies that the current act is done.
   timerOver: {
     de: 'Ihr seid über der geplanten Zeit. Spielt in eurem Tempo weiter.',
     en: "You're past the planned time. Keep going at your own pace.",
@@ -186,11 +166,7 @@ const COPY = {
       ? `Denk an eine Frage, die du ${other} später gerne stellen möchtest.\n\nSag sie nicht laut.\n\nTipp sie nirgends ein.\n\nMerk sie dir einfach.`
       : `Think of one question you would like to ask ${other} later.\n\nDon't say it out loud.\n\nDon't type it anywhere.\n\nJust remember it.`,
   iHaveOne: { de: 'Ich hab eine', en: 'I have one' },
-  // Equally-valid second path (bugfix-report iteration 7, BF-08): the
-  // screen used to force "Ich hab eine" -- nobody could honestly continue
-  // without either having a question ready or pretending to. No judgment,
-  // no follow-up prompt -- see the noSecretToday-branch handling in
-  // CloserGame.js and Question 37's own dedicated copy below.
+  // Declining to form a saved question is an equal, no-follow-up choice.
   noSecretToday: { de: 'Heute keine', en: 'Not today' },
   passPhone: { de: 'GIB DAS HANDY WEITER', en: 'PASS THE PHONE' },
   passPhoneText: (lang, other, hasQuestion) =>
@@ -210,10 +186,7 @@ const COPY = {
   /* finale ------------------------------------------------------------------ */
   oneLastQuestion: { de: 'LETZTE RUNDE', en: 'FINAL ROUND' },
   reveal: { de: 'Zeigen', en: 'Reveal' },
-  // A function of the route's own total (iteration 7, Phase 2): a `quick`
-  // playthrough only ever asked 12 questions, so a hardcoded "36" would be
-  // false for it. Called via tf(), the same pattern as passPhoneTo/iAm
-  // below, not t().
+  // Route totals vary, so the completion line is generated dynamically.
   allThirtySix: (lang, total) =>
     lang === 'de' ? `Das waren alle ${total}.` : `That's all ${total}.`,
   secretSummary: (lang, count) =>
@@ -233,22 +206,14 @@ const COPY = {
   no: { de: 'Nein', en: 'No' },
 
   q37OneMore: { de: 'NOCH EINE?', en: 'ONE MORE?' },
-  // Bugfix-report iteration 7, BF-08: shown instead of the above when
-  // hasSecretQuestion is false for both people -- there is no "still
-  // waiting" secret question to prompt about, so the neither/one/both
-  // copy above would misdescribe what happened. Question 37 itself, if
-  // taken, reuses the ordinary shared "both" bonus prompt (nothing
-  // secret-question-specific to ask about instead).
+  // When both people declined the private prompt, do not invent a question.
   q37NoSecretQuestions: { de: 'KEINE GEHEIMFRAGEN', en: 'NO SECRET QUESTIONS' },
   q37NoSecretQuestionsText: {
     de: 'Ihr hattet heute beide keine Geheimfrage.\n\nTrotzdem noch eine Frage 37?',
     en: "Neither of you had a secret question today.\n\nStill want a Question 37?",
   },
   q37OneRemains: { de: 'EINE FRAGE FEHLT NOCH', en: 'ONE QUESTION REMAINS' },
-  // Deliberately name-free: earlier wording named a person here and, for one
-  // of the two possible cases, named the wrong one (whoever already asked
-  // vs. whoever's question was already asked are two different people).
-  // Not worth the risk a second time.
+  // Deliberately name-free because ownership and asking roles differ.
   q37OneText: {
     de: 'Eine vorgemerkte Frage wartet noch.',
     en: 'One saved question is still waiting.',
@@ -265,27 +230,21 @@ const COPY = {
     lang === 'de' ? `${who} stellt die vorgemerkte Frage.` : `${who} asks the saved question.`,
   end: { de: 'Ende', en: 'End' },
 
-  /* per-pack consent gate (dead today -- no registered pack sets
-     pack.consentGate; kept for whenever one does, e.g. LATE NIGHT) ------- */
+  /* per-pack consent gates --------------------------------------------- */
   consentAgree: { de: 'Ich stimme zu', en: 'I agree' },
-  // Deliberately its own key, not a reuse of `end` -- the catalog wants
-  // this button visually equal to "I agree", not a lesser/secondary
-  // option, and "Hier enden" reads as a complete, calm sentence rather
-  // than the terser "Ende".
+  // Its separate label and equal styling keep decline calm and unambiguous.
   endHere: { de: 'Hier enden', en: 'End here' },
+  consentDeclinedTitle: {
+    de: 'Alles gut.',
+    en: 'All good.',
+  },
+  consentDeclinedBody: {
+    de: 'Ohne zweimalige Zustimmung startet oder vertieft sich LATE NIGHT nicht. Ihr müsst nichts erklären.',
+    en: 'Without two separate yeses, LATE NIGHT does not begin or deepen. No explanation is needed.',
+  },
 
   /* in-game menu -------------------------------------------------------- */
-  // Bugfix-report iteration 7, BF-04: Act III promised "skip or end the
-  // game anytime", but no general end path existed outside Question 37's
-  // own end buttons -- closing the PWA is not an equivalent, legible way
-  // to stop. This reachable-everywhere menu (every question, countdown,
-  // act break, secret-question and Q37 phase; deliberately not shown
-  // during STAY, which is meant to stay a single, uncluttered space) is
-  // the fix. "Spiel jetzt beenden" reuses the existing ending sequence
-  // (not a separate screen) -- its copy (endingOne..Four below) is already
-  // blame-free/neutral, and Question 37's own end buttons already routed
-  // an early stop through the same phase, so this stays consistent with
-  // that precedent rather than inventing a second kind of "the end".
+  // The global menu remains reachable from setup, play, STAY, and finales.
   menuOpen: { de: 'Menü', en: 'Menu' },
   menuTitle: { de: 'Menü', en: 'Menu' },
   menuResume: { de: 'Weiterspielen', en: 'Keep playing' },
@@ -293,24 +252,73 @@ const COPY = {
   menuEndConfirm: { de: 'Spiel jetzt beenden?', en: 'End the game now?' },
   menuEndSub: { de: 'Ohne Begründung.', en: 'No explanation needed.' },
   menuRestart: { de: 'Von vorne beginnen', en: 'Start over' },
-  // Distinct from "Von vorne" (which restarts into a fresh game): this
-  // wipes CLOSER's local data and returns to the plain start screen,
-  // matching BF-01's storage-copy promise literally.
+  menuAdditionalContent: { de: 'Zusätzliche Inhalte', en: 'Additional content' },
+  menuAdditionalContentTitle: { de: 'Zusätzliche Inhalte', en: 'Additional content' },
+  lateNightMenuIntro: {
+    de: 'LATE NIGHT ist ein ausdrücklich sexueller Gesprächsmodus für zwei Erwachsene (18+). Er bleibt standardmäßig verborgen. Sichtbarkeit ersetzt keine Zustimmung: Vor dem Start und vor Akt II entscheiden beide Personen jeweils privat und unabhängig.',
+    en: 'LATE NIGHT is an explicitly sexual conversation mode for two adults (18+). It stays hidden by default. Visibility is not consent: before starting and before Act II, both people decide privately and independently.',
+  },
+  lateNightShow: { de: 'LATE NIGHT anzeigen', en: 'Show LATE NIGHT' },
+  lateNightHide: { de: 'LATE NIGHT wieder verbergen', en: 'Hide LATE NIGHT again' },
+  lateNightShown: {
+    de: 'LATE NIGHT ist jetzt in der Spielauswahl sichtbar.',
+    en: 'LATE NIGHT is now visible in the game selection.',
+  },
+  lateNightHidden: {
+    de: 'LATE NIGHT bleibt in der Spielauswahl verborgen.',
+    en: 'LATE NIGHT remains hidden from the game selection.',
+  },
+  menuImprint: { de: 'Impressum', en: 'Imprint' },
+  menuPrivacy: { de: 'Datenschutz', en: 'Privacy' },
+  // Unlike restart, this removes every local CLOSER key and preference.
   deleteLocalData: { de: 'Lokale Spieldaten löschen', en: 'Delete local data' },
   deleteLocalDataConfirm: {
     de: 'Lokale Spieldaten löschen?',
     en: 'Delete local data?',
   },
-  // "Cache leeren" alone doesn't reliably clear localStorage in most
-  // browsers, which is why this used to confuse people who'd tried exactly
-  // that and still saw their save (iteration-8 holistic review, BF8-05) --
-  // spelled out here, on the confirm step, rather than on the plain start
-  // screen, which stays free of the technical distinction.
+  // Explain that browser cache and persistent site data are separate.
   deleteLocalDataSub: {
     de: 'Browser-Cache und lokaler Spielstand sind getrennt: „Cache leeren" allein entfernt euren Spielstand meist nicht. Diese Aktion entfernt eure optionalen Namen, Einstellungen und den Spielfortschritt von diesem Gerät. Eure Antworten waren nie gespeichert.',
     en: "Browser cache and local game data are separate: clearing your cache alone usually won't remove your save. This removes your optional names, settings and game progress from this device. Your answers were never stored.",
   },
   menuClose: { de: 'Schließen', en: 'Close' },
+
+  /* milestone celebration --------------------------------------------- */
+  milestoneLabel: (lang, stage) => {
+    const labels = {
+      start: { de: 'Los geht’s', en: "Let's begin" },
+      actI: { de: 'Akt I geschafft', en: 'Act I complete' },
+      actII: { de: 'Akt II geschafft', en: 'Act II complete' },
+      secret: { de: 'Ein Stück näher', en: 'One step closer' },
+      finale: { de: 'Dieser Moment gehört euch', en: 'This moment is yours' },
+    };
+    return labels[stage]?.[lang] || labels.start[lang];
+  },
+  milestoneDetail: (lang, stage) => {
+    const details = {
+      start: {
+        de: 'Zwei Menschen. Ein gemeinsamer Anfang.',
+        en: 'Two people. One shared beginning.',
+      },
+      actI: {
+        de: 'Die erste Verbindung steht.',
+        en: 'The first connection is in place.',
+      },
+      actII: {
+        de: 'Das Spiel wird leiser. Euer Gespräch bleibt.',
+        en: 'The game gets quieter. Your conversation remains.',
+      },
+      secret: {
+        de: 'Eine private Frage wartet auf den richtigen Moment.',
+        en: 'A private question is waiting for the right moment.',
+      },
+      finale: {
+        de: 'Kein Score. Nur das, was zwischen euch entstanden ist.',
+        en: 'No score. Just what the two of you created.',
+      },
+    };
+    return details[stage]?.[lang] || details.start[lang];
+  },
 
   /* ending ------------------------------------------------------------------ */
   endingOne: { de: 'Das war’s.', en: "That's it." },

@@ -6,7 +6,7 @@ import {
 
 /* ======================================================================
  * DATE NIGHT (iteration 8 catalog rollout) -- content transcribed
- * verbatim from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section
+ * verbatim from docs/closer/content/question-catalog.de-en.md section
  * 4. Same no-twists-yet stance as FIRST_DATE above (no question is marked
  * with a twist in the catalog); a single WARM style for now.
  * ====================================================================== */
@@ -275,7 +275,7 @@ const DATE_NIGHT_SECRET_AT_INDEX = 27;
  * Q01,Q02,Q05,Q09 / Q13,Q14,Q18,Q24 / Q25,Q28,Q33,Q36 (Quick);
  * Q01-Q02,Q04-Q06,Q09-Q10,Q12 / Q13-Q15,Q18,Q20,Q21,Q23,Q24 /
  * Q25,Q26,Q28-Q30,Q32,Q33,Q36 (Standard) -- verbatim from the catalog's
- * "Kuratierte Routen" list.
+ * curated-routes list.
  */
 const DATE_NIGHT_ROUTES = {
   quick: {

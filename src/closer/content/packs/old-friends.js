@@ -7,7 +7,7 @@ import {
 
 /* ======================================================================
  * OLD FRIENDS (iteration 8 catalog rollout) -- content transcribed
- * verbatim from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md
+ * verbatim from docs/closer/content/question-catalog.de-en.md
  * section 7. Same route-column shape as FRIENDS (every third question
  * per act); Quick/Standard end on Q34/Q35, Q36 is Full-only -- see the
  * relaxed "ends on last:true" test in closer.test.js.

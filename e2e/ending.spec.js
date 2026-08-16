@@ -2,28 +2,20 @@ const { test, expect } = require('./fixtures');
 const { seedAndResume } = require('./helpers');
 
 /*
- * Refactoringplan Phase 4: der Ending-Screen liess sich bisher nur per Tap
- * auf den Body vorspringen -- eine div hat kein Tastatur-Aequivalent. Wer
- * mit Tab/Enter unterwegs war, sass auf jedem der vier Beats fest, bis der
- * 2-Sekunden-Timer selbst weiterschaltete.
+ * Refactoring roadmap phase 4: the ending could previously advance only by
+ * tapping the body. A div has no keyboard equivalent, so keyboard users had
+ * to wait for the two-second timer at every beat.
  *
- * Diese Tests pruefen die explizite Tastaturaktion direkt, nicht ueber den
- * Timer: sie warten nicht 2 Sekunden und schauen, ob es weitergeht -- das
- * wuerde auch ohne jeden Fix bestehen. Sie druecken Enter auf dem
- * Weiter-Button und verlangen einen SOFORTIGEN Sprung.
+ * These tests exercise the explicit keyboard action directly rather than
+ * waiting for the timer. Enter on the Continue button must advance at once.
  */
 /*
- * completed bleibt hier bewusst false, obwohl finish() es beim echten
- * Erreichen von 'ending' zusammen mit der Phase auf true setzt: ein
- * abgeschlossener Spielstand ist per Design nie resumable (loadSaved()
- * lehnt saved.completed rundweg ab, derselbe Mechanismus, der einen
- * beendeten Spielstand ueberhaupt erst aus dem Storage entfernt). Um den
- * Screen isoliert zu pruefen, wird trotzdem direkt auf die Phase gesetzt --
- * dasselbe Muster wie in secret-question.spec.js & Co. fuer andere
- * Zwischenscreens.
+ * `completed` intentionally remains false here. A naturally reached ending
+ * sets it to true, and completed games are never resumable. Seeding the phase
+ * directly isolates this screen, as other interstitial tests do.
  */
 test.describe('Ending', () => {
-  test('Enter auf dem Weiter-Button springt sofort zum naechsten Beat, ohne auf den Timer zu warten', async ({
+  test('Enter on Continue advances immediately without waiting for the timer', async ({
     page,
   }) => {
     await seedAndResume(page, { phase: 'ending', endReason: 'completed' });
@@ -32,28 +24,33 @@ test.describe('Ending', () => {
     await page.getByRole('button', { name: 'Weiter' }).focus();
     await page.keyboard.press('Enter');
 
-    // Sofort nach dem Enter geprueft (kein waitForTimeout vor der
-    // Assertion) -- bestuende dieser Test auch nach 2 Sekunden noch, waere
-    // das nur der Timer, nicht der Tastatur-Fix.
+    // Assert immediately, without waitForTimeout, so the timer cannot make
+    // this pass independently of the keyboard action.
     const second = await page.locator('main p, main h1, main h2').first().textContent();
     expect(second).not.toBe(first);
   });
 
-  test('der Weiter-Button ist ohne Maus erreichbar (Tab-Reihenfolge)', async ({ page }) => {
+  test('the Continue button is reachable without a mouse', async ({ page }) => {
     await seedAndResume(page, { phase: 'ending', endReason: 'completed' });
     const button = page.getByRole('button', { name: 'Weiter' });
     await expect(button).toBeVisible();
-    // Direktes .focus() statt Tab-Ketten durch den Rest des Screens --
-    // die Erreichbarkeit selbst ist mit toBeVisible() plus dem
-    // role=button-Locator schon gedeckt; hier zaehlt, dass der Fokus auch
-    // tatsaechlich sichtbar ankommt.
+    // Direct focus avoids coupling the test to unrelated Tab-order changes.
+    // Visibility and the button role already cover semantic reachability.
     await button.focus();
     await expect(button).toBeFocused();
   });
 
-  test('der Ending-Text steht in einer aria-live-Region', async ({ page }) => {
+  test('the ending text is inside an aria-live region', async ({ page }) => {
     await seedAndResume(page, { phase: 'ending', endReason: 'completed' });
     const live = page.locator('[aria-live="polite"]');
     await expect(live).toBeVisible();
+  });
+
+  test('the global menu and legal information remain reachable on the ending', async ({ page }) => {
+    await seedAndResume(page, { phase: 'ending', endReason: 'completed' });
+    await page.getByRole('button', { name: 'Menü' }).click();
+    await page.getByRole('button', { name: 'Datenschutz' }).click();
+    await expect(page.getByRole('dialog', { name: 'Datenschutz' }))
+      .toContainText('Verantwortlicher');
   });
 });

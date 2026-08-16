@@ -14,16 +14,12 @@ export const CLOSER_BG = '#08090c';
 export const CLOSER_FG = [242, 243, 245];
 
 /*
- * Kontrastschwelle fuer gedaempften Text (Refactoringplan Phase 4,
- * Iteration-9-Code-Review, TextButton/Small/MenuTrigger).
- *
- * Alle drei standen vorher bei 0.30-0.38 Alpha auf #08090c -- 2,4:1 bis
- * 3,3:1, deutlich unter WCAG AA (4,5:1 fuer normalen Text). 0.5 ergibt
- * rechnerisch 4,90:1 (siehe src/constants/__tests__/contrast.test.js, das
- * denselben Wert unabhaengig nachrechnet, damit eine spaetere Aenderung
- * hier nicht stillschweigend wieder unter die Schwelle rutscht).
+ * Muted text previously used 0.30-0.38 alpha on #08090c, which fell below
+ * WCAG AA. This shared value resolves to 4.90:1 and is guarded by the
+ * independent contrast test.
  */
 export const MUTED_TEXT_ALPHA = 0.5;
+export const CHROME_TEXT_ALPHA = 0.5;
 
 export const CloserGlobal = createGlobalStyle`
   html, body {
@@ -108,6 +104,17 @@ export const Screen = styled.main`
   }
 `;
 
+/* The celebration visually replaces the current scene for a moment. Keep
+   covered controls out of pointer, keyboard, and accessibility interaction;
+   the global Menu remains a separate sibling above this layer. */
+export const FrameContent = styled.div`
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: ${({ $blocked }) => ($blocked ? 'none' : 'auto')};
+`;
+
 export const Body = styled.div`
   flex: 1;
   display: flex;
@@ -137,15 +144,19 @@ export const TopBar = styled.header`
   align-items: center;
   justify-content: space-between;
   gap: 1.6rem;
+  /* Reserve the menu's real 44px touch target plus breathing room. The
+     timer used to occupy almost exactly the same pixels at 390px wide. */
+  padding-right: 5.6rem;
   min-height: 2.4rem;
-  opacity: ${({ $chrome }) => ($chrome === undefined ? 1 : $chrome)};
-  transition: opacity 1.2s ease;
+  /* Text must retain its own contrast. Later acts reduce game presence via
+     progress treatment and glow, not by fading functional chrome. */
+  opacity: 1;
 `;
 
 export const Count = styled.span`
   font-size: 1.3rem;
   letter-spacing: 0.18em;
-  color: rgba(242, 243, 245, 0.45);
+  color: rgba(242, 243, 245, ${CHROME_TEXT_ALPHA});
   font-variant-numeric: tabular-nums;
 `;
 
@@ -310,11 +321,11 @@ export const TwistLabel = styled.p`
   margin: 0 0 2.4rem;
 `;
 
-/* ---------- response card (iteration 8 catalog: optional listening hint) --
+/* ---------- response card: optional listening hint ------------------------
  * Quiet by design -- a thin accent-colored left rule, muted body text, no
  * button and no separate screen. It sits with the question, not between
- * two questions, matching the catalog's own "zählen nicht als Fragen"
- * (doesn't count as a question) framing: nothing to tap through, nothing
+ * two questions, matching the catalog rule that response cards do not count
+ * as questions: nothing to tap through, nothing
  * that can be "answered wrong". */
 export const ResponseCard = styled.div`
   margin-top: 2.4rem;
@@ -349,14 +360,8 @@ const base = css`
     cursor: default;
   }
 
-  /*
-   * Refactoringplan Phase 4: ein sichtbarer Fokusring fuer Tastatur- und
-   * Switch-Bedienung, unabhaengig vom jeweiligen Pack-Akzent (der teils
-   * selbst zu wenig Kontrast hat, um als Ring zu taugen). :focus-visible
-   * statt :focus, damit ein Antippen keinen Ring hinterlaesst -- nur
-   * echte Tastaturnavigation zeigt ihn. rgba(242, 243, 245, 0.85) liegt
-   * bei ueber 9:1 auf #08090c (siehe contrast.test.js).
-   */
+  /* The neutral focus ring remains visible regardless of pack accent.
+     :focus-visible avoids leaving a ring behind after a touch gesture. */
   &:focus {
     outline: none;
   }
@@ -414,8 +419,8 @@ export const TextButton = styled.button`
 `;
 
 /*
- * Unobtrusive corner trigger for the in-game menu (bugfix-report iteration
- * 7, BF-04) -- deliberately not part of the flex flow (position: absolute)
+ * Unobtrusive corner trigger for the global menu. It is deliberately outside
+ * the flex flow
  * so it never competes with a question's own Foot controls for thumb reach,
  * and stays in the same corner across every phase that shows it. 44px+
  * touch target, safe-area aware like the rest of CLOSER's chrome.
@@ -423,7 +428,7 @@ export const TextButton = styled.button`
 export const MenuTrigger = styled.button`
   ${base};
   position: absolute;
-  z-index: 3;
+  z-index: 30;
   top: calc(1.6rem + env(safe-area-inset-top));
   right: calc(1.6rem + env(safe-area-inset-right));
   min-width: 4.4rem;
@@ -465,9 +470,7 @@ export const Field = styled.label`
     font-size: 1.1rem;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    /* War 0.35 (~2,9:1) -- derselbe Fund wie TextButton/Small/MenuTrigger,
-       nur bei der ersten Phase-4-Kontraste-Runde nicht mit erfasst, weil
-       der refactoring.md-Plan sie nicht namentlich nannte. */
+    /* Uses the same AA-safe muted value as other secondary copy. */
     color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
     margin-bottom: 1rem;
   }
@@ -573,6 +576,8 @@ export const LangSwitch = styled.div`
   position: relative;
   z-index: 2;
   align-self: flex-end;
+  /* The global menu shares the top edge on setup screens. */
+  margin-right: 5.6rem;
   display: inline-flex;
   border: 1px solid rgba(242, 243, 245, 0.14);
   border-radius: 999px;
@@ -609,7 +614,7 @@ export const LangSwitch = styled.div`
 export const Sheet = styled.div`
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -623,6 +628,8 @@ export const SheetPanel = styled.div`
   border-radius: 24px 24px 0 0;
   padding: 3.2rem 2.4rem calc(2.4rem + env(safe-area-inset-bottom));
   max-width: 640px;
+  max-height: min(88vh, 88dvh);
+  overflow-y: auto;
   width: 100%;
   margin: 0 auto;
   animation: ${riseIn} 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -673,7 +680,7 @@ export const StayDot = styled.div`
 export const Elapsed = styled.p`
   font-size: 1.2rem;
   letter-spacing: ${({ $long }) => ($long ? '0.02em' : '0.2em')};
-  color: rgba(242, 243, 245, 0.26);
+  color: rgba(242, 243, 245, ${CHROME_TEXT_ALPHA});
   margin: 0;
   font-variant-numeric: tabular-nums;
   text-align: right;

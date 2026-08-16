@@ -1,9 +1,7 @@
 /*
- * Die Pack-Registry (Refactoringplan Phase 2).
- *
- * Der Inhalt jedes Packs liegt in packs/<id>.js; hier wird nur noch
- * zusammengesetzt, welche Packs im Spiel erreichbar sind. LATE NIGHT wird
- * bewusst importiert, aber NICHT registriert -- siehe sein eigenes Modul.
+ * The pack registry. Pack content lives in packs/<id>.js; this module only
+ * defines which packs the engine can resolve. Selector visibility is a UI
+ * concern, so discreet packs remain registered for saved-game recovery.
  */
 
 import {
@@ -205,6 +203,7 @@ export const PACKS = {
     routes: CHAOS_ROUTES,
     defaultRouteId: 'quick',
   },
+  'late-night': LATE_NIGHT_PACK,
 };
 
 export { LATE_NIGHT_PACK };

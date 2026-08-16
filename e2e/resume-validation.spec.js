@@ -121,21 +121,17 @@ test.describe('Resume-state validation (BF-12)', () => {
   });
 
   /*
-   * Refactoringplan Phase 1: Neue Spielstaende speichern statt der vollen
-   * ID-Liste den kompakten runFingerprint. Die Liste bleibt als Altformat
-   * gueltig (Test darueber), aber der Fingerprint hat Vorrang, sobald er
-   * vorhanden ist.
+   * Refactoring roadmap phase 1: new saves store the compact runFingerprint
+   * instead of the complete ID list. The list remains valid as a legacy
+   * format, but the fingerprint takes precedence whenever it is present.
    *
-   * Der erwartete Wert wird hier nicht hartkodiert: er haengt an
-   * CONTENT_VERSION und der Routenkuration und wuerde bei jeder legitimen
-   * Contentaenderung brechen. Stattdessen wird ein echtes Spiel gestartet,
-   * der von der App selbst geschriebene Fingerprint ausgelesen und einmal
-   * unveraendert, einmal verfaelscht zurueckgespielt.
+   * The expected value is not hard-coded because it depends on
+   * CONTENT_VERSION and route curation. Instead, a real game creates the
+   * fingerprint, which is then replayed unchanged and tampered with.
    */
-  test('ein Spielstand mit passendem runFingerprint wird fortgesetzt', async ({ page }) => {
-    // Der Fingerprint entsteht beim Aktbeginn ('act' -> 'q'), nicht beim
-    // blossen Fortsetzen in eine Frage hinein. Deshalb wird hier ein
-    // Akt-Intro mit echtem Fortschritt geladen und einmal weitergeklickt.
+  test('a save with the matching runFingerprint resumes', async ({ page }) => {
+    // The fingerprint is created when an act begins ('act' -> 'q'), not when
+    // resuming directly into a question. Load a progressed act intro first.
     await seedRaw(page, {
       ...BASE_STATE,
       phase: 'act',
@@ -150,8 +146,8 @@ test.describe('Resume-state validation (BF-12)', () => {
       const raw = window.localStorage.getItem(key);
       return raw ? JSON.parse(raw).runFingerprint : null;
     }, STORAGE_KEY);
-    // Nicht nachgebaut, sondern von der App selbst erzeugt -- der Test
-    // bleibt damit gueltig, wenn sich Kuration oder CONTENT_VERSION aendern.
+    // Let the app create the value so legitimate curation or version changes
+    // do not require updating this test fixture.
     expect(typeof written).toBe('string');
     expect(written.length).toBeGreaterThan(0);
 
@@ -160,7 +156,7 @@ test.describe('Resume-state validation (BF-12)', () => {
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
   });
 
-  test('ein Spielstand mit fremdem runFingerprint faellt auf den Startscreen zurueck', async ({
+  test('a save with a foreign runFingerprint falls back to the start screen', async ({
     page,
   }) => {
     await seedRaw(page, {
@@ -171,10 +167,9 @@ test.describe('Resume-state validation (BF-12)', () => {
     await expectFreshStartScreen(page);
   });
 
-  test('der Fingerprint hat Vorrang vor einer noch passenden Alt-ID-Liste', async ({ page }) => {
-    // Beides gesetzt, aber widerspruechlich: die Liste stimmt, der
-    // Fingerprint nicht. Ohne Vorrangregel wuerde der Spielstand faelschlich
-    // fortgesetzt.
+  test('the fingerprint takes precedence over a still-matching legacy ID list', async ({ page }) => {
+    // Both values are present but disagree: the list matches and the
+    // fingerprint does not. The save must still be rejected.
     const runQuestionIds = Array.from({ length: 36 }, (_, i) =>
       `classic-q${String(i + 1).padStart(2, '0')}`
     );

@@ -1,0 +1,159 @@
+# CLOSER – feature requests
+
+**Updated:** 16 August 2026
+**Status convention:** Proposed, Planned, In progress, Verification pending, or Delivered
+
+## P0 – release requirements
+
+### FR-001 – Discreet Late Night discovery
+
+**Status:** Delivered
+
+Keep Late Night hidden from the default pack selector. Make it discoverable through **Menu → Additional content**, where an adult can show or hide it after a neutral 18+ explanation.
+
+Requirements:
+
+- Visibility is a versioned preference separate from game progress.
+- Hiding the pack does not make a valid in-progress Late Night save unresolvable.
+- Deleting local CLOSER data also deletes the preference.
+- Revealing the pack does not bypass either in-session consent gate.
+- No suggestive thumbnail, copy, or surprise reveal appears in the normal selector.
+
+### FR-002 – In-app imprint and privacy information
+
+**Status:** Delivered; operator/legal review remains required
+
+Add bilingual Imprint and Privacy views to the global CLOSER menu so installed-PWA users can reach them without returning to the portfolio footer.
+
+Requirements:
+
+- Include the real operator name, geographical address, and direct email contact.
+- Describe locally stored names/settings/progress, state that answers are not stored, and explain deletion.
+- Describe hosting/request-log processing accurately without claiming that the app controls a provider’s exact retention policy.
+- State purposes, legal basis, recipients/transfers where applicable, retention logic, rights, and the Austrian data-protection complaint route.
+- Keep the links constantly, easily, and directly accessible.
+- Obtain owner and, where appropriate, professional legal review before treating the text as final legal advice.
+
+### FR-003 – Deployment security headers
+
+**Status:** Configuration delivered; deployed-header verification pending
+
+The current worktree configures headers at the Vercel/static-hosting layer because a static Next.js export cannot reliably add runtime response headers itself. Deployment verification remains required.
+
+Minimum review set:
+
+- Content Security Policy compatible with the current self-hosted assets and required inline runtime behavior;
+- `Strict-Transport-Security`;
+- `X-Content-Type-Options: nosniff`;
+- strict referrer policy;
+- restrictive permissions policy;
+- framing protection.
+
+Verify the deployed responses, not only configuration files.
+
+## P1 – product quality
+
+### FR-004 – CLOSER milestone celebration
+
+**Status:** Delivered; physical-device validation remains required
+
+Replace the tiny pulse with a full, calm, pack-colored milestone scene that creates a brief sense of reward between acts while leaving conversation screens quiet.
+
+Trigger only on meaningful transitions: start, act completion, an earned private transition, and natural finale. Do not use points, streaks, confetti, disclosure ratings, or rewards after consent decline/early end.
+
+See the visual contract in [gameplay-and-safety.md](../product/gameplay-and-safety.md#8-milestone-celebration).
+
+### FR-005 – Pack-specific private moments
+
+**Status:** Proposed
+
+Replace the universal saved-question ritual with a small library of safe, pack-appropriate asymmetric moments.
+
+Editorial directions:
+
+| Pack | Suitable private direction |
+|---|---|
+| Classic | Preserve the original saved-question behavior only where the route justifies it. |
+| First Date | Choose one harmless curiosity to ask later; no prediction of consent or attraction. |
+| Date Night | Privately choose an appreciation or future-date detail to reveal. |
+| Couples | Select a listening intention or one positive quality to name. |
+| Friends | Choose a memory category or celebration to bring into the finale. |
+| Old Friends | Privately recall one detail, then compare memories without seeking a “correct” version. |
+| Deep | Choose whether listening, reflection, or space would feel most supportive. |
+| Chaos | Use a short secret spark or constraint for a co-created answer. |
+| Late Night | No secret sexual/physical tasks; readiness and consent checks only. |
+
+Every card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
+
+### FR-006 – Curated replacement-question joker
+
+**Status:** Proposed; blocked by editorial content
+
+After sufficient replacement questions exist, add an optional limited **Another question** action. It must not replace or weaken the unconditional Pass action.
+
+Requirements:
+
+- replacement pool keyed by pack, act, intensity, route, and language;
+- no repeats or current-run duplicates;
+- deterministic selection persisted across resume;
+- no penalty, heart, or moral framing;
+- disabled when no valid replacement exists.
+
+### FR-007 – Setup simplification and navigation
+
+**Status:** Partially delivered
+
+Singleton style and route screens are skipped. Remaining work:
+
+- provide an internal Back action at every setup stage;
+- keep Menu available from the landing screen onward;
+- preserve user choices when moving back;
+- distinguish pack, route, and style consistently in UI and code.
+
+### FR-008 – Duration calibration
+
+**Status:** Proposed
+
+Run moderated sessions for every pack and route. Record completion time, number of prompts reached, pass frequency, and whether participants felt rushed. Update catalog ranges from observed medians and spread without storing in-product answers or adding behavioral analytics by default.
+
+## P2 – platform and future work
+
+### FR-009 – Offline-capable PWA
+
+**Status:** Decision required
+
+The manifest can remove the address bar in an installed display mode, but installability does not guarantee offline operation. Add a service worker only if offline use is a real product requirement.
+
+Before implementation, define:
+
+- which app-shell assets and content are precached;
+- how a new content revision invalidates old caches;
+- how users are informed about an available update;
+- how a stale installed version recovers;
+- how the worker is tested on Android and iOS.
+
+### FR-010 – Dedicated `closer.radi.solutions` project
+
+**Status:** Proposed
+
+A separate Vercel project is technically feasible and can improve deployment isolation, PWA identity, security headers, and release cadence. It is not required for the game to function.
+
+Migration requirements:
+
+- create the subdomain project and preserve the static-export behavior;
+- update canonical URLs, manifest scope/start URL, metadata, and tests;
+- add an intentional redirect from `/closer/`;
+- explain that existing `localStorage` progress and installed-PWA identity cannot move automatically across origins;
+- verify links back to the main portfolio, imprint, and privacy information.
+
+### FR-011 – Run-definition and transition-core integration
+
+**Status:** Planned
+
+Wire the existing `compileRun()` into the runtime, then migrate phase transitions incrementally to a pure transition core. This is an engineering quality feature because it makes consent, resume, and finale behavior auditable. Detailed sequencing is in the [refactoring roadmap](../engineering/refactoring-roadmap.md).
+
+### FR-012 – TTS integration
+
+**Status:** Deferred to the separate voice branch
+
+Use stable question IDs and a versioned audio manifest. Do not merge or generate voice artifacts as incidental work on the game review branch.

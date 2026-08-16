@@ -38,9 +38,8 @@ const BASE_STATE = {
   hasSecretQuestion: [null, null],
   secretAsked: [null, null],
   starterOffset: 0,
-  // Aktive Gespraechszeit des laufenden Akts. Ersetzt das fruehere
-  // actStartedAt (Wandzeit-Startpunkt) -- siehe Timer-Effekt in
-  // CloserGame.js.
+  // Active conversation time for the current act. This replaces the old
+  // wall-clock `actStartedAt`; see the timer effect in CloserGame.js.
   actElapsedMs: 0,
   completed: false,
 };

@@ -14,6 +14,21 @@ test.describe('Act timer', () => {
     await expect(page.locator('text=/^\\d+:\\d\\d$/')).toBeVisible();
   });
 
+  for (const width of [320, 360, 390, 430]) {
+    test(`timer and menu never overlap at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width === 320 ? 568 : 844 });
+      await seedAndResume(page, { qIndex: 2, timerEnabled: true, actElapsedMs: 0 });
+
+      const timer = page.locator('text=/^\\d+:\\d\\d$/');
+      const menu = page.getByRole('button', { name: 'Menü' });
+      await expect(timer).toBeVisible();
+      const [timerBox, menuBox] = await Promise.all([timer.boundingBox(), menu.boundingBox()]);
+      expect(timerBox).not.toBeNull();
+      expect(menuBox).not.toBeNull();
+      expect(timerBox.x + timerBox.width).toBeLessThanOrEqual(menuBox.x - 8);
+    });
+  }
+
   // Bugfix-report iteration 7, BF-05: the previous wording falsely implied
   // the next act was ready regardless of how far through the current one
   // the couple actually was. This pins the corrected, honest copy.
@@ -21,8 +36,8 @@ test.describe('Act timer', () => {
     await seedAndResume(page, {
       qIndex: 2,
       timerEnabled: true,
-      // Aktive Zeit, nicht mehr ein Startzeitpunkt in der Vergangenheit:
-      // deutlich ueber dem 15-Minuten-Budget des Akts.
+      // Active time, not a wall-clock start timestamp: comfortably beyond
+      // this act's 15-minute budget.
       actElapsedMs: 20 * 60 * 1000,
     });
     await page.waitForTimeout(1200);
@@ -39,28 +54,25 @@ test.describe('Act timer', () => {
   });
 
   /*
-   * Iteration-9-Review P1-09, live reproduziert: Die Aktzeit lief ab
-   * `actStartedAt` als reine Wandzeit weiter -- auch waehrend das Spiel auf
-   * dem Resume-Screen wartete oder im Hintergrund lag. Nach einer laengeren
-   * Unterbrechung zeigte ein fortgesetztes Spiel sofort Overtime.
+   * Iteration 9 review P1-09: act time used to advance as wall-clock time
+   * from `actStartedAt`, including while the game waited on the resume screen
+   * or remained in the background. A resumed game could therefore show
+   * overtime immediately.
    *
-   * Jetzt zaehlt nur aktiv gespielte Zeit. Diese Tests halten beide Seiten
-   * fest: die Uhr steht, solange nicht gespielt wird, und sie laeuft
-   * weiter, sobald wieder eine Frage auf dem Schirm ist.
+   * Only active play time now counts. These tests cover both sides: the clock
+   * pauses outside play and continues once a question is open again.
    */
-  test('die Aktzeit laeuft auf dem Resume-Screen nicht weiter', async ({ page }) => {
-    // Bewusst ueber die SICHTBARE Uhr geprueft, nicht ueber das gespeicherte
-    // Feld: ein Test auf actElapsedMs besteht auch gegen die alte
-    // Wandzeit-Logik, weil die den Wert unveraendert durchreicht. Was
-    // zaehlt, ist was die Spielenden nach der Pause sehen.
+  test('act time does not advance on the resume screen', async ({ page }) => {
+    // Check the visible clock rather than only the stored field. The old
+    // wall-clock implementation also preserved actElapsedMs unchanged; the
+    // player-visible value after the pause is what matters.
     const clock = page.locator('text=/^\\d+:\\d\\d$/');
 
     await seedAndResume(page, { qIndex: 2, timerEnabled: true, actElapsedMs: 0 });
     await page.waitForTimeout(1200);
     const beforePause = await clock.textContent();
 
-    // Zurueck auf den Resume-Screen und dort deutlich laenger warten als
-    // zuvor gespielt wurde.
+    // Return to the resume screen and wait much longer than the active play.
     await page.reload();
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
     await page.waitForTimeout(4000);
@@ -68,12 +80,11 @@ test.describe('Act timer', () => {
 
     const afterPause = await clock.textContent();
     const seconds = (v) => Number(v.split(':')[0]) * 60 + Number(v.split(':')[1]);
-    // Die Wartezeit darf nicht in der Aktzeit auftauchen. Ein Spielraum von
-    // zwei Sekunden deckt die kurze Spielzeit vor und nach dem Reload ab.
+    // Allow two seconds for the brief active periods around the reload.
     expect(seconds(afterPause)).toBeLessThanOrEqual(seconds(beforePause) + 2);
   });
 
-  test('die Aktzeit laeuft weiter, sobald wieder eine Frage offen ist', async ({ page }) => {
+  test('act time advances again once a question is open', async ({ page }) => {
     await seedAndResume(page, { qIndex: 2, timerEnabled: true, actElapsedMs: 0 });
     await page.waitForTimeout(1200);
     const first = await page.locator('text=/^\\d+:\\d\\d$/').textContent();

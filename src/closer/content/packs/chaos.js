@@ -6,7 +6,7 @@ import {
 
 /* ======================================================================
  * CHAOS (iteration 8 catalog rollout) -- content transcribed verbatim
- * from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 9.
+ * from docs/closer/content/question-catalog.de-en.md section 9.
  * Front-loaded route shape (Quick = first 4 of each act, mostly; Standard
  * = first 8), unlike FRIENDS/OLD FRIENDS' every-third pattern -- see the
  * per-question Route column in the catalog. Quick/Standard end on Q31/

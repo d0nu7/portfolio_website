@@ -1,76 +1,76 @@
-# CLOSER – vollständiger Fragenkatalog DE/EN
+# CLOSER – complete question catalog DE/EN
 
-**Stand:** 16.08.2026
-**Status:** Redaktionelle Content-Spezifikation für die Implementierung  
-**Umfang:** 9 Packs · 324 Master-Fragen · Deutsch und Englisch · kuratierte Zeitrouten · pack-spezifische Frage 37
+**Updated:** 16 August 2026
+**Status:** Editorial content specification for implementation
+**Scope:** 9 packs · 324 master questions · German and English · curated duration routes · pack-specific finales
 
 ---
 
-## 1. Verbindliche Lesart
+## 1. Authoritative interpretation
 
-- **Pack/Modus** bestimmt, *was* gefragt wird: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, `late-night`.
-- **Style** bestimmt nur, *wie* gespielt wird: zum Beispiel `CALM` oder `PLAYFUL`. Styles erhalten keine eigenen, duplizierten Fragenlisten.
-- Jedes Pack besitzt eine Master-Bank aus **3 Akten mit je 12 Fragen**.
-- Die stabile Implementierungs-ID setzt sich aus Pack und Tabellen-ID zusammen, zum Beispiel `first-date-q01`, `friends-q24` oder `late-night-q36`.
-- `quick`, `standard` und `full` sind **feste kuratierte Routen**. Es wird niemals zufällig aus der Bank ausgewählt.
-- Wenn nicht ausdrücklich anders angegeben, beantworten beide Personen dieselbe Frage; wer beginnt, wechselt von Frage zu Frage.
-- Jede Frage kann ohne Begründung übersprungen werden. Gute Gespräche haben Vorrang vor dem Abarbeiten der Liste.
-- Die neuen Packs sind **forschungsinformiert**, aber nicht als einzelne Fragen oder Gesamtverfahren wissenschaftlich validiert.
-- Die deutschen und englischen Fassungen sind sinngleiche redaktionelle Versionen. Sie sollen nicht Wort für Wort, sondern im jeweiligen Sprachraum natürlich klingen.
+- A **pack/mode** determines *what* is asked: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, or `late-night`.
+- A **style** only determines *how* the game is played, for example `CALM` or `PLAYFUL`. Styles do not own duplicate question lists.
+- Every pack has a master bank of **3 acts with 12 questions each**.
+- A stable implementation ID combines the pack and table ID, for example `first-date-q01`, `friends-q24`, or `late-night-q36`.
+- `quick`, `standard`, and `full` are **fixed curated routes**. Questions are never selected randomly from the master bank.
+- Unless stated otherwise, both people answer the same question; the starting person alternates between questions.
+- Either person may pass on any question without explaining why. A worthwhile conversation matters more than completing the list.
+- The new packs are **research-informed**, but neither their individual questions nor the complete experiences have been scientifically validated.
+- The German and English versions are editorial equivalents. They should sound natural in each language rather than matching word for word.
 
-### Routen
+### Routes
 
-| Route | Umfang | Grundprinzip |
+| Route | Scope | Principle |
 |---|---:|---|
-| Quick | 12 Fragen, 4 je Akt | eigenständiger kurzer Spannungsbogen |
-| Standard | 24 Fragen, 8 je Akt | Default für die meisten Packs |
-| Full | 36 Fragen, 12 je Akt | vollständige Master-Bank |
+| Quick | 12 questions, 4 per act | self-contained short arc |
+| Standard | 24 questions, 8 per act | default for most packs |
+| Full | 36 questions, 12 per act | complete master bank |
 
-In Tabellen mit einer Spalte **Route** bedeutet `Q/S/F`: Quick, Standard und Full; `S/F`: Standard und Full; `F`: nur Full. Die Reihenfolge der ausgewählten IDs bleibt immer erhalten.
+In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `S/F` means Standard and Full; and `F` means Full only. Selected IDs always retain their listed order.
 
-`DEEP` bietet bewusst keine Quick-Route. `CLASSIC Full` ist die vollständige ursprüngliche CLOSER-Erfahrung; kürzere Classic-Routen sind klar als kuratierte Auszüge zu bezeichnen.
+`DEEP` intentionally has no Quick route. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts.
 
-### Private vorgemerkte Frage
+### Privately saved question
 
-In Standard und Full erhält jede Person privat diese Wahl. Quick lässt die mehrstufige Übergabe bewusst aus:
+In Standard and Full, each person privately receives this choice unless the pack explicitly sets `privateMoment: 'none'`. Quick intentionally omits the multi-step handoff. Late Night currently opts out on every route:
 
 - **DE:** „Denk an eine Frage, die du deinem Gegenüber später gerne stellen würdest. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
 - **EN:** “Think of one question you would like to ask the other person later. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
 
-Gleichwertige Alternative: **„Heute keine“ / “Not today”**. Die pack-spezifische Frage 37 am Ende berücksichtigt, ob keine, eine oder beide tatsächlich vorhandenen Geheimfragen noch offen sind.
+Equal alternative: **„Heute keine“ / “Not today”**. The pack-specific Question 37 accounts for whether zero, one, or two genuinely saved questions remain open.
 
-**Verbindlicher State-Vertrag:** „Heute keine“ darf nicht als `false` in `secretAsked` gespeichert werden; dort bedeutet `false`, dass eine vorhandene Frage noch offen ist. Die aktuelle Implementierung löst das bereits korrekt mit zwei getrennten Angaben pro Person:
+**Authoritative state contract:** „Heute keine“ must not be stored as `false` in `secretAsked`; there, `false` means an existing question is still open. The current implementation correctly represents this with two separate values per person:
 
-- `hasSecretQuestion: true | false | null` – wurde überhaupt eine Frage vorgemerkt?
-- `secretAsked: true | false | null` – hat die Person ihre eigene vorgemerkte Frage im Gespräch bereits gestellt?
+- `hasSecretQuestion: true | false | null` – was a question saved at all?
+- `secretAsked: true | false | null` – has the person already asked their own saved question during the conversation?
 
-Damit gilt semantisch: `hasSecretQuestion === false` → `none`; vorhandene Frage plus `secretAsked === false` → `pending`; vorhandene Frage plus `secretAsked === true` → `asked`. Ein späterer Enum-Refactor auf `none | pending | asked` ist möglich, aber nicht Voraussetzung. Aus dem bestehenden Modell werden die offenen Fragen und die drei Branches abgeleitet:
+Semantically, `hasSecretQuestion === false` → `none`; existing question plus `secretAsked === false` → `pending`; and existing question plus `secretAsked === true` → `asked`. A later enum refactor to `none | pending | asked` is possible but not required. The current model derives the open questions and three branches as follows:
 
-- `neither`: zwei vorhandene Geheimfragen sind noch offen;
-- `one`: genau eine vorhandene Geheimfrage ist noch offen;
-- `both`: keine vorhandene Geheimfrage ist mehr offen; es erscheint nur die freiwillige pack-spezifische Bonusfrage. Das umfasst bereits gestellte und ausdrücklich abgelehnte Geheimfragen. Wenn beide **Heute keine** gewählt haben, darf die Oberfläche zusätzlich die vorhandene spezielle No-Secret-Copy zeigen.
+- `neither`: two saved questions remain open;
+- `one`: exactly one saved question remains open;
+- `both`: no saved question remains open; only the optional pack-specific bonus question appears. This includes questions already asked or explicitly declined. If both people selected **Heute keine**, the UI may additionally show the existing no-secret copy.
 
-`Question 37` kann intern als Mechanikname bestehen bleiben. Full zeigt **FRAGE 37 / QUESTION 37**, Standard neutral **FINALE**. Quick endet nach seiner letzten regulären Frage ohne private Übergaberunde. Aufgeführte Response Cards sind optionale Zuhörimpulse und zählen nicht als Fragen.
+`Question 37` may remain as the internal mechanic name for packs that support the saved-question finale. Full displays **FRAGE 37 / QUESTION 37**; Standard uses the neutral label **FINALE**. Quick ends after its last regular question without a private handoff, and packs with `privateMoment: 'none'` use their own direct finale. Listed response cards are optional listening cues and do not count as questions.
 
-Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach echten Nutzertests kalibriert und erzeugen niemals automatischen Fortschritt oder sichtbaren Zeitdruck.
+The stated durations are **pilot ranges**, not promises. They must be calibrated through real user testing and must never trigger automatic progress or visible time pressure.
 
 ---
 
 ## 2. CLASSIC
 
-**Ziel:** Die bestehende 36-Fragen-Erfahrung in Inhalt, Bedeutung und Reihenfolge bewahren.  
-**Akte:** NEUGIERIG → NÄHER → OFFEN  
-**Zeit:** Quick-Auszug 20–30 Min. · Standard-Auszug 35–50 Min. · Full 45–75 Min.  
-**Default:** Full  
-**Hinweis:** Die nachstehende Fassung entspricht dem aktuellen Branch. Lediglich fünf deutsche Formulierungen wurden minimal genderneutral gefasst (Q01, Q06, Q27, Q28, Q36); Frageinhalt, Intensität und Reihenfolge bleiben unverändert.
+**Goal:** Preserve the existing 36-question experience in content, meaning, and order.
+**Acts:** NEUGIERIG → NÄHER → OFFEN
+**Duration:** Quick extract 20–30 min · Standard extract 35–50 min · Full 45–75 min
+**Default:** Full
+**Note:** The version below matches the current branch. Only five German phrasings were minimally made gender-neutral (Q01, Q06, Q27, Q28, Q36); question content, intensity, and order remain unchanged.
 
-### Kuratierte Routen
+### Curated routes
 
 - **Quick:** Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
 - **Standard:** Q01, Q02, Q03, Q04, Q08, Q09, Q11, Q12 · Q13, Q14, Q15, Q16, Q17, Q18, Q20, Q21 · Q25, Q26, Q27, Q28, Q29, Q30, Q31, Q36
-- **Full:** Q01–Q36 in der nachstehenden Reihenfolge
+- **Full:** Q01–Q36 in the order shown below
 
-### Akt I – NEUGIERIG / CURIOUS
+### Act I – NEUGIERIG / CURIOUS
 
 | ID | Deutsch | English |
 |---|---|---|
@@ -87,7 +87,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q11 | Erzähle deinem Gegenüber innerhalb von vier Minuten deine Lebensgeschichte – so detailreich wie möglich! | Tell the other person your life story in four minutes — in as much detail as you can. |
 | Q12 | Wenn du morgen aufwachst und eine Eigenschaft oder Fähigkeit dazugewonnen hast, welche hättest du dann gerne? | If you woke up tomorrow having gained one quality or ability, which would you want? |
 
-### Akt II – NÄHER / CLOSER
+### Act II – NÄHER / CLOSER
 
 | ID | Deutsch | English |
 |---|---|---|
@@ -104,7 +104,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q23 | Wie nahe und warmherzig ist deine Familie? Glaubst du, dass deine Kindheit glücklicher war als die anderer Menschen? | How close and warm is your family? Do you think your childhood was happier than most people's? |
 | Q24 | Wie ist die Beziehung zu deiner Mutter? | What is your relationship with your mother like? |
 
-### Akt III – OFFEN / OPEN
+### Act III – OFFEN / OPEN
 
 | ID | Deutsch | English |
 |---|---|---|
@@ -121,9 +121,9 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q35 | Von all den Menschen in deiner Familie, wessen Tod würde dich am meisten treffen? Warum? | Of everyone in your family, whose death would affect you most? Why? |
 | Q36 | Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber außerdem darum, zu spiegeln, wie du dich mit dem Problem zu fühlen scheinst. | Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose. |
 
-### Frage 37 / Question 37
+### Question 37
 
-| Fall | Deutsch | English |
+| Case | German | English |
 |---|---|---|
 | `neither` – beide vorgemerkten Fragen sind noch offen | Stellt euch nacheinander eure vorgemerkten Fragen. | Take turns asking the questions you saved for later. |
 | `one` – genau eine ist noch offen | **[Name]**, stell **[anderer Name]** deine vorgemerkte Frage. | **[Name]**, ask **[other name]** the question you saved for later. |
@@ -133,12 +133,12 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 ## 3. FIRST DATE
 
-**Dramaturgie:** NEUGIER → SIGNAL → KLARHEIT  
-**Ziel:** Interesse, Chemie und Werte erkunden, ohne früh Trauma, Tod, frühere Beziehungen oder Sexualität aufzurufen.  
-**Zeit:** Quick 15–20 Min. · Standard 25–35 Min. · Full 45–60 Min.  
+**Arc:** NEUGIER → SIGNAL → KLARHEIT
+**Goal:** Explore interest, chemistry, and values without introducing trauma, death, past relationships, or sexuality too early.
+**Duration:** Quick 15–20 min · Standard 25–35 min · Full 45–60 min
 **Default:** Quick
 
-### Akt I – NEUGIER / CURIOSITY
+### Act I – NEUGIER / CURIOSITY
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -155,7 +155,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q11 | Was würdest du gern nur zum Vergnügen lernen? | What would you love to learn purely for the fun of it? |
 | Q12 | Welche kleine Entscheidung hat dir in letzter Zeit überraschend gutgetan? | What small decision has turned out surprisingly well for you lately? |
 
-### Akt II – SIGNAL / SIGNALS
+### Act II – SIGNAL / SIGNALS
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -172,7 +172,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q23 | Welche Mischung aus Planung und Spontaneität passt gut zu dir? | What balance of planning and spontaneity suits you best? |
 | Q24 | Welche Version von dir lernen neue Menschen meistens zuerst kennen? | Which version of you do new people usually meet first? |
 
-### Akt III – KLARHEIT / CLARITY
+### Act III – KLARHEIT / CLARITY
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -189,22 +189,22 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q35 | Was hilft dir, ehrlich Nein zu sagen, ohne dich für die Stimmung verantwortlich zu fühlen? | What helps you say an honest no without feeling responsible for the mood? |
 | Q36 | Was würde diesen Abend für dich gut und druckfrei abrunden? | What would make this evening feel complete and pressure-free for you? |
 
-### Kuratierte Routen
+### Curated routes
 
 - **Quick (12):** `Q01, Q02, Q04, Q07` → `Q13, Q15, Q17, Q21` → `Q25, Q27, Q28, Q36`
 - **Standard (24):** `Q01, Q02, Q03, Q04, Q05, Q07, Q08, Q12` → `Q13, Q14, Q15, Q16, Q17, Q19, Q21, Q24` → `Q25, Q26, Q27, Q28, Q29, Q31, Q34, Q36`
 - **Full (36):** `Q01–Q36`
 
-### Frage 37 / Question 37
+### Question 37
 
 
-- **neither / beide vorgemerkten Fragen sind noch offen**
+- **`neither` / both saved questions remain open**
   - DE: „Stellt euch nacheinander eure vorgemerkten Fragen – ohne Erwartungsdruck.“
   - EN: “Take turns asking the questions you saved for later — without pressure.”
-- **one / eine vorgemerkte Frage ist noch offen**
+- **`one` / one saved question remains open**
   - DE: „{who}, stell {other} deine vorgemerkte Frage – ohne Erwartungsdruck.“
   - EN: “{who}, ask {other} the question you saved for later — without pressure.”
-- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
+- **`both` / no saved question remains open; optional bonus question**
   - DE: „Stellt euch noch eine Frage, die diesen ersten Abend gut abrundet.“
   - EN: “Ask each other one more question that would bring this first evening to a good close.”
 
@@ -212,12 +212,12 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 ## 4. DATE NIGHT
 
-**Dramaturgie:** FUNKE → SPANNUNG → OFFEN  
-**Ziel:** Wärme, Anziehung, spielerische Neuheit und sinnliche Nähe zwischen zwei Erwachsenen; prickelnd, aber nicht explizit und ohne Handlungsdruck.  
-**Zeit:** Quick 15–20 Min. · Standard 25–40 Min. · Full 45–70 Min.  
+**Arc:** FUNKE → SPANNUNG → OFFEN
+**Goal:** Warmth, attraction, playful novelty, and sensual closeness between two adults; suggestive but not explicit and without pressure to act.
+**Duration:** Quick 15–20 min · Standard 25–40 min · Full 45–70 min
 **Default:** Standard
 
-### Akt I – FUNKE / SPARK
+### Act I – FUNKE / SPARK
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -234,7 +234,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q11 | Welche Art von Vorfreude genießt du besonders? | What kind of anticipation do you enjoy most? |
 | Q12 | Welche Kleinigkeit an deinem Gegenüber ist dir heute positiv aufgefallen? | What small thing about the person across from you have you appreciated tonight? |
 
-### Akt II – SPANNUNG / TENSION
+### Act II – SPANNUNG / TENSION
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -251,7 +251,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q23 | Welches Tempo lässt Anziehung für dich wachsen? | What pace allows attraction to grow for you? |
 | Q24 | Was lässt Anziehung für dich verspielt statt druckvoll wirken? | What makes attraction feel playful rather than pressured to you? |
 
-### Akt III – OFFEN / OPENNESS
+### Act III – OFFEN / OPENNESS
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -268,22 +268,22 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q35 | Welche kleine neue Erfahrung würdest du bei einem nächsten Date gern teilen? | What small new experience would you enjoy sharing on a future date? |
 | Q36 | Welcher Gedanke aus diesem Abend soll noch ein wenig nachklingen? | What thought from tonight would you like to linger a little longer? |
 
-### Kuratierte Routen
+### Curated routes
 
 - **Quick (12):** `Q01, Q02, Q05, Q09` → `Q13, Q14, Q18, Q24` → `Q25, Q28, Q33, Q36`
 - **Standard (24):** `Q01, Q02, Q04, Q05, Q06, Q09, Q10, Q12` → `Q13, Q14, Q15, Q18, Q20, Q21, Q23, Q24` → `Q25, Q26, Q28, Q29, Q30, Q32, Q33, Q36`
 - **Full (36):** `Q01–Q36`
 
-### Frage 37 / Question 37
+### Question 37
 
 
-- **neither / beide vorgemerkten Fragen sind noch offen**
+- **`neither` / both saved questions remain open**
   - DE: „Stellt euch nacheinander eure vorgemerkten Fragen, wenn es sich für euch gut anfühlt.“
   - EN: “Take turns asking the questions you saved, if that feels good to both of you.”
-- **one / eine vorgemerkte Frage ist noch offen**
+- **`one` / one saved question remains open**
   - DE: „{who}, stell {other} deine vorgemerkte Frage, wenn es sich für euch gut anfühlt.“
   - EN: “{who}, ask {other} the question you saved, if that feels good to both of you.”
-- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
+- **`both` / no saved question remains open; optional bonus question**
   - DE: „Stellt euch noch eine Frage, die den Funken dieses Abends mit in morgen nimmt.“
   - EN: “Ask each other one more question that carries tonight’s spark into tomorrow.”
 
@@ -291,12 +291,12 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 ## 5. COUPLES
 
-**Dramaturgie:** SEHEN → REPARIEREN → WÄHLEN  
-**Ziel:** Eine bestehende Partnerschaft pflegen, Positives sichtbar machen, Unterstützung besser verstehen und erst danach vorsichtig Reparatur und Zukunft öffnen; kein Therapieersatz.  
-**Zeit:** Quick/Check-in 12–18 Min. · Standard 25–40 Min. · Full 50–75 Min.  
+**Arc:** SEHEN → REPARIEREN → WÄHLEN
+**Goal:** Care for an existing relationship, make positive experiences visible, understand support preferences, and only then carefully open repair and future topics; not a substitute for therapy.
+**Duration:** Quick/check-in 12–18 min · Standard 25–40 min · Full 50–75 min
 **Default:** Quick/Check-in
 
-### Akt I – SEHEN / NOTICING
+### Act I – SEHEN / NOTICING
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -313,7 +313,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q11 | Welche Seite von dir kommt in eurer Beziehung leichter zum Vorschein? | What part of you comes out more easily in your relationship? |
 | Q12 | Welches ehrliche Kompliment über eure Beziehung kannst du gut annehmen? | What sincere compliment about your relationship can you truly accept? |
 
-### Akt II – REPARIEREN / REPAIR
+### Act II – REPARIEREN / REPAIR
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -330,7 +330,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q23 | Welche kleine Veränderung würde in eurem Alltag gerade spürbar Druck herausnehmen? | What small change would noticeably ease the pressure in your everyday life right now? |
 | Q24 | Was soll dein Gegenüber verstehen, bevor diese Person versucht, ein Problem für dich zu lösen? | What would you like your partner to understand before they try to solve a problem for you? |
 
-### Akt III – WÄHLEN / CHOOSING
+### Act III – WÄHLEN / CHOOSING
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -347,22 +347,22 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q35 | Welche Unterstützung deines Gegenübers würde dir bei einem aktuellen Ziel wirklich helfen? | What support from your partner would genuinely help with one of your current goals? |
 | Q36 | Welcher Satz aus diesem Gespräch soll euch morgen noch begleiten? | What line from this conversation would you like to carry into tomorrow? |
 
-### Kuratierte Routen
+### Curated routes
 
 - **Quick (12):** `Q01, Q02, Q05, Q09` → `Q14, Q17, Q20, Q24` → `Q25, Q28, Q29, Q35`
 - **Standard (24):** `Q01, Q02, Q03, Q04, Q05, Q06, Q09, Q10` → `Q13, Q14, Q15, Q16, Q17, Q19, Q20, Q24` → `Q25, Q26, Q27, Q28, Q29, Q31, Q34, Q35`
 - **Full (36):** `Q01–Q36`
 
-### Frage 37 / Question 37
+### Question 37
 
 
-- **neither / beide vorgemerkten Fragen sind noch offen**
+- **`neither` / both saved questions remain open**
   - DE: „Stellt euch nacheinander eure vorgemerkten Fragen. Zuhören reicht; ihr müsst nichts sofort lösen.“
   - EN: “Take turns asking the questions you saved. Listening is enough; nothing has to be solved now.”
-- **one / eine vorgemerkte Frage ist noch offen**
+- **`one` / one saved question remains open**
   - DE: „{who}, stell {other} deine vorgemerkte Frage. Zuhören reicht; ihr müsst nichts sofort lösen.“
   - EN: “{who}, ask {other} the question you saved. Listening is enough; nothing has to be solved now.”
-- **both / keine vorgemerkte Frage ist mehr offen; freiwillige Bonusfrage**
+- **`both` / no saved question remains open; optional bonus question**
   - DE: „Stellt euch noch eine Frage, die euch auch morgen an etwas Wertvolles zwischen euch erinnert.“
   - EN: “Ask each other one more question that will remind you tomorrow of something valuable between you.”
 
@@ -370,13 +370,13 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 
 ## 6. FRIENDS
 
-**Aktbogen:** LEICHT → DA SEIN → WEITER  
-**Englische Akt-Namen:** LIGHT → SHOWING UP → AHEAD  
-**Ziel:** Humor, Wertschätzung, Loyalität, Unterstützung und gemeinsame Zukunft – ausdrücklich freundschaftlich, ohne romantische Rahmung.  
-**Zeit:** Quick 15–20 Min. · Standard 30–45 Min. · Full 50–70 Min.  
+**Act arc:** LEICHT → DA SEIN → WEITER
+**English act names:** LIGHT → SHOWING UP → AHEAD
+**Goal:** Humor, appreciation, loyalty, support, and a shared future—explicitly platonic, without romantic framing.
+**Duration:** Quick 15–20 min · Standard 30–45 min · Full 50–70 min
 **Default:** Standard
 
-### Akt I – LEICHT / LIGHT
+### Act I – LEICHT / LIGHT
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -393,7 +393,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q11 | S/F | Welche Seite von dir hat sich verändert, seit wir uns kennen? | What side of you has changed since we have known each other? |
 | Q12 | F | Über welchen Teil deines Lebens würdest du dir von befreundeten Menschen mehr neugierige Fragen wünschen? | What part of your life would you like your friends to ask more curious questions about? |
 
-### Akt II – DA SEIN / SHOWING UP
+### Act II – DA SEIN / SHOWING UP
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -410,7 +410,7 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q23 | S/F | Welche Grenze macht Freundschaften für dich verlässlicher und sicherer? | What boundary makes friendships feel more reliable and safe to you? |
 | Q24 | F | Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen? | What are you dealing with right now that a friend can simply sit with you in, without having to solve it? |
 
-### Akt III – WEITER / AHEAD
+### Act III – WEITER / AHEAD
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -427,18 +427,18 @@ Die angegebenen Zeiten sind **Pilotspannen**, keine Zusagen. Sie werden nach ech
 | Q35 | S/F | Was hilft unserer Freundschaft, auch in vollen oder anstrengenden Zeiten Raum zu behalten? | What helps our friendship keep a place in our lives when things are busy or difficult? |
 | Q36 | F | Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus? | What would you like to thank the other person for today, and what does it say about who they are? |
 
-### FRIENDS – empfohlene Response Cards
+### FRIENDS – recommended response cards
 
-- Nach Q08 oder Q33: **CELEBRATE** – „Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.“ / “Take a moment to celebrate with them before sharing your own story.”
-- Nach Q18: **FOLLOW UP** – „Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.“ / “Ask for one specific detail that helps you understand the answer better.”
-- Nach Q21 oder Q24: **VALIDATE** – „Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.“ / “No solution is needed. First, show that you heard them.”
-- Nach Q36: **REFLECT** – „Sag in einem Satz, was du an der Antwort verstanden hast.“ / “In one sentence, say what you understood from the answer.”
+- After Q08 or Q33: **CELEBRATE** – „Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.“ / “Take a moment to celebrate with them before sharing your own story.”
+- After Q18: **FOLLOW UP** – „Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.“ / “Ask for one specific detail that helps you understand the answer better.”
+- After Q21 or Q24: **VALIDATE** – „Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.“ / “No solution is needed. First, show that you heard them.”
+- After Q36: **REFLECT** – „Sag in einem Satz, was du an der Antwort verstanden hast.“ / “In one sentence, say what you understood from the answer.”
 
-### FRIENDS – dynamische Q37-Copy
+### FRIENDS – dynamic Q37 copy
 
-Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorgemerkten Fragen warten noch; `one` = genau eine wartet noch; `both` = keine vorgemerkte Frage ist mehr offen und die angezeigte Frage ist ein optionaler Bonus.
+The keys follow the existing pack structure: `neither` means both saved questions remain; `one` means exactly one remains; `both` means no saved question remains and the displayed question is an optional bonus.
 
-| Fall | Deutsch | English |
+| Case | German | English |
 |---|---|---|
 | `neither` | Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are waiting. If it feels right, ask them one at a time now. No answer is owed. |
 | `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
@@ -448,13 +448,13 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 
 ## 7. OLD FRIENDS
 
-**Aktbogen:** DAMALS → DAZWISCHEN → WIEDER  
-**Englische Akt-Namen:** THEN → IN BETWEEN → AGAIN  
-**Ziel:** konkrete gemeinsame Geschichte reaktivieren und zugleich die heutige Person kennenlernen – ohne Nähe, Versöhnung oder eine bestimmte Zukunft zu erzwingen.  
-**Zeit:** Quick 15–20 Min. · Standard 25–40 Min. · Full 50–75 Min.  
+**Act arc:** DAMALS → DAZWISCHEN → WIEDER
+**English act names:** THEN → IN BETWEEN → AGAIN
+**Goal:** Reactivate a specific shared history while also getting to know the person as they are today—without forcing closeness, reconciliation, or any particular future.
+**Duration:** Quick 15–20 min · Standard 25–40 min · Full 50–75 min
 **Default:** Standard
 
-### Akt I – DAMALS / THEN
+### Act I – DAMALS / THEN
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -471,7 +471,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q11 | S/F | Welche konkrete Erinnerung zeigt, wann wir als Team besonders gut funktioniert haben? | What specific memory shows a time when we worked especially well as a team? |
 | Q12 | F | Welche gemeinsame Erinnerung erzählen wir unterschiedlich – und was ist an beiden Versionen interessant? | Which shared memory do we tell differently, and what is interesting about both versions? |
 
-### Akt II – DAZWISCHEN / IN BETWEEN
+### Act II – DAZWISCHEN / IN BETWEEN
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -488,7 +488,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q23 | S/F | Wie hat sich die Art von Unterstützung verändert, die dir heute wirklich hilft? | How has the kind of support that genuinely helps you changed over time? |
 | Q24 | F | Welcher Teil deines heutigen Lebens würde mich vermutlich am meisten überraschen? | What part of your life today would probably surprise me most? |
 
-### Akt III – WIEDER / AGAIN
+### Act III – WIEDER / AGAIN
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -505,16 +505,16 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q35 | S/F | Welche Seite der anderen Person möchtest du heute neu kennenlernen? | What side of the other person would you like to get to know again as they are today? |
 | Q36 | F | Welche Eigenschaft schätzt du an der Person vor dir heute – unabhängig von eurer gemeinsamen Geschichte? | What quality do you appreciate in the person in front of you today, apart from your shared history? |
 
-### OLD FRIENDS – empfohlene Response Cards
+### OLD FRIENDS – recommended response cards
 
-- Nach Q02 oder Q04: **FOLLOW UP** – „Frag nach einem einzigen Detail aus dieser Szene.“ / “Ask for one detail from that moment.”
-- Nach Q12: **REFLECT** – „Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.“ / “Do not look for the correct version. Name what each memory means to you.”
-- Nach Q20 oder Q30: **VALIDATE** – „Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.“ / “You do not need to justify or repair anything. First, show that you heard them.”
-- Nach Q34: **FOLLOW UP** – „Was wäre ein kleiner, realistischer erster Schritt?“ / “What would be one small, realistic first step?”
+- After Q02 or Q04: **FOLLOW UP** – „Frag nach einem einzigen Detail aus dieser Szene.“ / “Ask for one detail from that moment.”
+- After Q12: **REFLECT** – „Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.“ / “Do not look for the correct version. Name what each memory means to you.”
+- After Q20 or Q30: **VALIDATE** – „Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.“ / “You do not need to justify or repair anything. First, show that you heard them.”
+- After Q34: **FOLLOW UP** – „Was wäre ein kleiner, realistischer erster Schritt?“ / “What would be one small, realistic first step?”
 
-### OLD FRIENDS – dynamische Q37-Copy
+### OLD FRIENDS – dynamic Q37 copy
 
-| Fall | Deutsch | English |
+| Case | German | English |
 |---|---|---|
 | `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are still open. If it feels right, ask them one at a time. No answer is owed. |
 | `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
@@ -524,15 +524,15 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 
 ## 8. DEEP
 
-**Aktbogen:** DARUNTER → WAHRHEIT → MITNEHMEN  
-**Englische Akt-Namen:** BENEATH → TRUTH → CARRY FORWARD  
-**Ziel:** ein bewusst intensives Gespräch über Identität, Bedeutung, Gefühle, Verstandenwerden und Hoffnung – ohne Tiefe mit Trauma gleichzusetzen oder therapeutische Wirkung zu behaupten.  
-**Zeit:** Standard 30–45 Min. · Full 60–90 Min.  
-**Default:** Standard; keine Quick-Route
+**Act arc:** DARUNTER → WAHRHEIT → MITNEHMEN
+**English act names:** BENEATH → TRUTH → CARRY FORWARD
+**Goal:** A deliberately intense conversation about identity, meaning, emotions, feeling understood, and hope—without equating depth with trauma or claiming therapeutic effects.
+**Duration:** Standard 30–45 min · Full 60–90 min
+**Default:** Standard; no Quick route
 
-**Routen:** Kein Quick. `S/F` bildet die kuratierte Standard-Route mit 24 Fragen; zusammen mit `F` entsteht Full mit 36 Fragen.
+**Routes:** No Quick route. `S/F` forms the curated Standard route with 24 questions; combined with `F`, it forms Full with 36 questions.
 
-### Akt I – DARUNTER / BENEATH
+### Act I – DARUNTER / BENEATH
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -549,7 +549,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q11 | S/F | Was schützt du manchmal mit Humor oder Schweigen? | What do you sometimes protect with humor or silence? |
 | Q12 | S/F | Welche Hoffnung beeinflusst gerade mehr deiner Entscheidungen, als andere vermutlich merken? | What hope is shaping more of your decisions right now than other people probably realize? |
 
-### Akt II – WAHRHEIT / TRUTH
+### Act II – WAHRHEIT / TRUTH
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -566,7 +566,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q23 | F | Welche Frage über dein Leben beschäftigt dich gerade, ohne eine schnelle Antwort zu brauchen? | What question about your life is on your mind right now without needing a quick answer? |
 | Q24 | S/F | Was bedeutet Unterstützung für dich, wenn es keine Lösung gibt? | What does support mean to you when there is no solution? |
 
-### Akt III – MITNEHMEN / CARRY FORWARD
+### Act III – MITNEHMEN / CARRY FORWARD
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -583,16 +583,16 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q35 | F | Welchen Satz oder Gedanken möchtest du aus diesem Gespräch mitnehmen? | What sentence or thought would you like to carry with you from this conversation? |
 | Q36 | S/F | Was möchtest du dir selbst nach diesem Gespräch mit etwas mehr Freundlichkeit zugestehen? | After this conversation, what would you like to allow yourself with a little more kindness? |
 
-### DEEP – empfohlene Response Cards
+### DEEP – recommended response cards
 
-- Nach Q01 oder Q21: **CELEBRATE** – „Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.“ / “Take a moment to honor what that moment cost the person or meant to them.”
-- Nach Q13: **FOLLOW UP** – „Frag, welches konkrete Verhalten den Unterschied gemacht hat.“ / “Ask what specific behavior made the difference.”
-- Nach Q17, Q19 oder Q24: **VALIDATE** – „Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.“ / “No solution and no judgment. First, show that you heard them.”
-- Nach Q34: **REFLECT** – „Sag in einem Satz, was du künftig beachten möchtest.“ / “In one sentence, say what you would like to keep in mind from now on.”
+- After Q01 or Q21: **CELEBRATE** – „Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.“ / “Take a moment to honor what that moment cost the person or meant to them.”
+- After Q13: **FOLLOW UP** – „Frag, welches konkrete Verhalten den Unterschied gemacht hat.“ / “Ask what specific behavior made the difference.”
+- After Q17, Q19 or Q24: **VALIDATE** – „Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.“ / “No solution and no judgment. First, show that you heard them.”
+- After Q34: **REFLECT** – „Sag in einem Satz, was du künftig beachten möchtest.“ / “In one sentence, say what you would like to keep in mind from now on.”
 
-### DEEP – dynamische Q37-Copy
+### DEEP – dynamic Q37 copy
 
-| Fall | Deutsch | English |
+| Case | German | English |
 |---|---|---|
 | `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig. | Two saved questions are still open. If it feels right, ask them one at a time now. Every question and every answer remains optional. |
 | `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
@@ -602,11 +602,11 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 
 ## 9. CHAOS
 
-**Ziel:** Gemeinsames Erfinden, affiliatives Lachen, Neuheit und überraschend echte Tiefe. CHAOS setzt weder Romantik noch eine bestimmte Beziehungsform voraus. Niemand wird bloßgestellt; es gibt keine öffentlichen Aufgaben, Demütigungen, Körperbewertungen oder Witze auf Kosten der anderen Person.  
-**Zeit:** Quick 8–12 Min. · Standard 18–25 Min. · Full 30–40 Min.  
+**Goal:** Shared invention, affiliative laughter, novelty, and unexpectedly genuine depth. CHAOS assumes neither romance nor any particular relationship type. No one is exposed or ridiculed; there are no public tasks, humiliations, body judgments, or jokes at the other person’s expense.
+**Duration:** Quick 8–12 min · Standard 18–25 min · Full 30–40 min
 **Default:** Quick
 
-### Akt I – SELTSAM / WEIRD
+### Act I – SELTSAM / WEIRD
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -623,7 +623,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q11 | F | Welcher Alltagsgegenstand verdient ein dramatisches Biopic – und wie heißt der Film? | Which everyday object deserves a dramatic biopic—and what is the film called? |
 | Q12 | F | Welche absurd spezifische Auszeichnung würdest du dir selbst verleihen? | What absurdly specific award would you give yourself? |
 
-### Akt II – MUTIG / BOLD
+### Act II – MUTIG / BOLD
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -640,7 +640,7 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q23 | F | Welchen harmlosen Plot-Twist würdest du dir für den nächsten Monat wünschen? | What harmless plot twist would you like the next month to bring? |
 | Q24 | F | Plant ein tatsächlich machbares Mini-Abenteuer für höchstens zehn Euro – ohne Mutprobe und ohne jemanden bloßzustellen. | Plan a genuinely doable mini-adventure for no more than ten euros—with no dares and no embarrassing anyone. |
 
-### Akt III – ÜBERRASCHEND ECHT / SURPRISINGLY REAL
+### Act III – ÜBERRASCHEND ECHT / SURPRISINGLY REAL
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -657,11 +657,11 @@ Die Schlüssel entsprechen der bestehenden Pack-Struktur: `neither` = beide vorg
 | Q35 | F | Woran würdest du dich von diesem Gespräch gern erinnern? | What would you like to remember about this conversation? |
 | Q36 | F | Erfindet ein kleines Ritual, mit dem ihr euch eure Neugier aufeinander bewahren könnt. | Invent a small ritual that could help you stay curious about each other. |
 
-### Frage 37 / Question 37
+### Question 37
 
-Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bereits selbst gestellt haben. Wurde „Heute keine“ gewählt, existiert für diese Person keine offene Frage. Sind insgesamt keine mehr offen, wird nur die freiwillige Bonusfrage angeboten. Neben **Weiter** bleibt immer **Hier enden / End here** sichtbar.
+The branches reflect whether each person has already asked their own saved question. If someone selected „Heute keine“, that person has no open question. If none remain in total, only the optional bonus question is offered. **Hier enden / End here** always remains visible next to **Weiter**.
 
-#### `neither` – beide vorgemerkten Fragen sind noch offen
+#### `neither` – both saved questions remain open
 
 **DE**
 
@@ -671,7 +671,7 @@ Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bere
 
 > Two saved questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be passed without explanation — and you can end here at any time.
 
-#### `one` – genau eine vorgemerkte Frage ist noch offen
+#### `one` – exactly one saved question remains open
 
 **DE**
 
@@ -681,7 +681,7 @@ Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bere
 
 > One saved question is still waiting. If continuing still feels good to both of you, **{questionOwner}** may ask **{otherPerson}** now. **{otherPerson}** may pass without giving a reason. You can also simply end here.
 
-#### `both` – keine vorgemerkte Frage ist mehr offen
+#### `both` – no saved question remains open
 
 **DE**
 
@@ -695,11 +695,11 @@ Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bere
 
 ## 10. LATE NIGHT (18+)
 
-**Ziel:** Ausdrücklich sexuelle und intime Gespräche für zwei freiwillig teilnehmende Erwachsene. Der Pack fördert gute Kommunikation über Anziehung, Lust, Vorlieben, Fantasien, Grenzen, Safer Sex und Aftercare – ohne eine Handlung zu verlangen oder eine bestimmte Erfahrung, Beziehung, Orientierung, Geschlechtsidentität, Körperlichkeit oder Exklusivität vorauszusetzen.  
-**Zeit:** Quick 15–20 Min. · Standard 25–40 Min. · Full 40–60 Min.  
+**Goal:** Explicit sexual and intimate conversation for two voluntarily participating adults. The pack supports good communication about attraction, desire, preferences, fantasies, boundaries, safer sex, and aftercare—without asking anyone to act or assuming any particular experience, relationship, orientation, gender identity, body, or exclusivity.
+**Duration:** Quick 15–20 min · Standard 25–40 min · Full 40–60 min
 **Default:** Standard
 
-### Verbindlicher Hinweis vor dem Pack
+### Required notice before the pack
 
 **DE**
 
@@ -709,18 +709,18 @@ Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bere
 
 > For adults aged 18 and over only. Both people are taking part voluntarily and may skip any question or end the game at any time. An answer only describes thoughts, feelings or preferences. It is never consent to an action. Consent must be sought outside the game and must be specific, voluntary, informed and withdrawable at any time.
 
-### Redaktionelle Spielregeln
+### Editorial game rules
 
-- Jede Person bestätigt 18+ und freiwillige Teilnahme separat, bevor eine Frage sichtbar wird.
-- Jede Frage ist einzeln und ohne Begründung überspringbar; ein Skip löst keinen Nachfragedruck aus.
-- Alle Antworten erfolgen nacheinander. Für diesen Pack sind `PREDICT` und `NO THINKING` vollständig deaktiviert.
-- Bei Grenzen, Zustimmung, Safer Sex, Fantasien und körperlichen Bedürfnissen ist auch der Twist `BOTH` deaktiviert; niemand antwortet gleichzeitig oder stellvertretend.
-- Es gibt keine Berührungsaufgaben, Dares oder Aufforderungen, das Besprochene umzusetzen.
-- Die Quick-Route ist eine eigenständig sichere Steigerung: vier Fragen zu Atmosphäre, vier zu Wünschen und vier zu Vertrauen. Sie ist keine zufällige Auswahl expliziter Fragen.
-- Antworten dürfen auf eigener Erfahrung beruhen, hypothetisch sein oder schlicht „für mich nicht relevant“ lauten.
-- Die Zeitspanne dient nur der Auswahl vor dem Spiel. Während LATE NIGHT gibt es keinen sichtbaren Countdown und keinen Zeitdruck.
+- Each person separately confirms that they are 18 or older and participating voluntarily before any question is shown.
+- Either person may pass on each question individually without explanation; passing must not create pressure to justify the choice.
+- Answers are always sequential. `PREDICT` and `NO THINKING` are completely disabled for this pack.
+- `BOTH` is also disabled for boundaries, consent, safer sex, fantasies, and physical needs; nobody answers simultaneously or on another person’s behalf.
+- There are no touch tasks, dares, or prompts to act on anything discussed.
+- The Quick route is a self-contained safe progression: four questions about atmosphere, four about wishes, and four about trust. It is not a random sample of explicit questions.
+- Answers may draw on personal experience, be hypothetical, or simply be “not relevant to me.”
+- The duration estimate is only used when selecting a route. LATE NIGHT has no visible countdown or time pressure during play.
 
-### Akt I – ATMOSPHÄRE / ATMOSPHERE
+### Act I – ATMOSPHÄRE / ATMOSPHERE
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -737,16 +737,16 @@ Die Branches beziehen sich darauf, ob die Personen ihre vorgemerkten Fragen bere
 | Q11 | F | Wodurch kannst du dich begehrt fühlen, ohne dich unter Druck gesetzt zu fühlen? | What can make you feel desired without making you feel pressured? |
 | Q12 | F | Was hilft dir, während wachsender Intimität präsent und mit dir selbst verbunden zu bleiben? | What helps you stay present and connected to yourself as intimacy builds? |
 
-### Erneuter Opt-in vor Akt II / Renewed opt-in before Act II
+### Renewed opt-in before Act II
 
-Bevor explizite Fragen zu Berührung, Sex, Fantasien und Kinks erscheinen, bestätigen beide Personen erneut und getrennt:
+Before explicit questions about touch, sex, fantasies, and kinks appear, both people confirm again and separately:
 
 - **DE:** „Ich möchte freiwillig mit expliziteren Gesprächsfragen fortfahren. Ich kann jede Frage überspringen oder hier beenden.“
 - **EN:** “I freely choose to continue with more explicit conversation prompts. I may skip any question or end here.”
 
-**Hier beenden / End here** ist gleichwertig und nicht visuell untergeordnet. Wird nicht zweimal aktiv zugestimmt, endet der Pack neutral.
+**Hier beenden / End here** has equal prominence and is not visually subordinate. If active consent is not given twice, the pack ends neutrally.
 
-### Akt II – WUNSCH / DESIRE
+### Act II – WUNSCH / DESIRE
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -763,7 +763,7 @@ Bevor explizite Fragen zu Berührung, Sex, Fantasien und Kinks erscheinen, best�
 | Q23 | F | Wie zeigst du gern, dass sich etwas besonders gut anfühlt? | How do you like to show that something feels especially good? |
 | Q24 | F | Was würde es dir leichter machen, darüber zu sprechen, was du in einer sexuellen Situation häufiger, seltener oder anders erleben möchtest – falls das für dich relevant ist? | What would make it easier to talk about something you might want more often, less often or differently in a sexual situation, if that is relevant to you? |
 
-### Akt III – VERTRAUEN / TRUST
+### Act III – VERTRAUEN / TRUST
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
@@ -780,11 +780,11 @@ Bevor explizite Fragen zu Berührung, Sex, Fantasien und Kinks erscheinen, best�
 | Q35 | F | Wie wünschst du dir einen Check-in am nächsten Tag – wenn überhaupt? | How would you like to check in the next day, if at all? |
 | Q36 | F | Welche eine Sache soll dein Gegenüber aus diesem Gespräch mitnehmen, ohne daraus eine Erwartung für heute oder später abzuleiten? | What is one thing you want the other person to take from this conversation without turning it into an expectation for today or later? |
 
-### Frage 37 / Question 37
+### Question 37
 
-Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderung**. Vor dem Eintritt und erneut vor einem zweiten Personenwechsel steht eine gleichwertige Ende-Option. Jede vorgemerkte Frage und jede Antwort kann abgelehnt werden. Die Oberfläche wiederholt unmittelbar: **Eine Antwort ist niemals Zustimmung zu einer Handlung.**
+**Inactive editorial archive:** Late Night currently sets `privateMoment: 'none'` and must not enter a saved-question or secret-handoff flow on any route. The bilingual variants below are preserved verbatim for editorial traceability but must not be rendered. Any future Late Night finale still needs explicit opt-in, an equally prominent end option, and the repeated rule that **an answer is never consent to an action**.
 
-#### `neither` – beide vorgemerkten Fragen sind noch offen
+#### `neither` – both saved questions remain open
 
 **DE**
 
@@ -794,7 +794,7 @@ Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderun
 
 > Two saved questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be passed. An answer is information, never consent to an action.
 
-#### `one` – genau eine vorgemerkte Frage ist noch offen
+#### `one` – exactly one saved question remains open
 
 **DE**
 
@@ -804,7 +804,7 @@ Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderun
 
 > One saved question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may **{questionOwner}** ask **{otherPerson}**. **{otherPerson}** may pass without giving a reason. An answer is information, never consent to an action.
 
-#### `both` – keine vorgemerkte Frage ist mehr offen
+#### `both` – no saved question remains open
 
 **DE**
 
@@ -814,12 +814,12 @@ Question 37 ist in diesem Pack **keine Eskalation und keine Handlungsaufforderun
 
 > You can end here. If you both want one optional final conversation prompt: What would make future conversations about sex feel even more honest and safe for you? You may skip this question too; no answer creates an expectation of action.
 
-### Redaktionelle Schlussprüfung für LATE NIGHT
+### Final editorial checks for LATE NIGHT
 
-- Keine Frage setzt voraus, dass die beiden Personen miteinander Sex haben, hatten oder später haben werden.
-- Keine Frage setzt Geschlecht, Orientierung, Anatomie, Orgasmusfähigkeit, Erfahrung, Monogamie oder eine aktuelle Beziehung voraus.
-- Keine Frage fragt nach Übergriffen, Trauma, Anzahl früherer Kontakte oder einem „schlimmsten“ sexuellen Erlebnis.
-- Fantasien und Kinks werden als Gesprächsinhalt behandelt, nie als Vorschlag oder implizites Angebot.
-- Safer Sex umfasst je nach Situation Tests, Barrieren, Verhütung, weitere Schutzmaßnahmen, relevante Absprachen und Zugänglichkeit; Schwangerschaftsrisiko wird nicht universell vorausgesetzt.
-- Alle Fragen bleiben auch nach einer früheren positiven Antwort einzeln skipbar. Zustimmung wird nicht aus früheren Antworten, Körpersprache oder dem Start des Packs abgeleitet.
-- Vor öffentlicher Freigabe bleibt eine gesonderte österreichische Jugend-, Medien- und Datenschutzprüfung erforderlich; dieser Fragenkatalog ist keine rechtliche Freigabe.
+- No question assumes that the two people have had, are having, or will have sex with each other.
+- No question assumes gender, orientation, anatomy, ability to orgasm, experience, monogamy, or a current relationship.
+- No question asks about assault, trauma, number of previous partners, or a “worst” sexual experience.
+- Fantasies and kinks are treated as conversation topics, never as suggestions or implied offers.
+- Depending on the situation, safer sex includes testing, barriers, contraception, other protective measures, relevant agreements, and accessibility; pregnancy risk is not assumed universally.
+- Every question remains individually passable even after an earlier positive answer. Consent is not inferred from earlier answers, body language, or starting the pack.
+- A separate Austrian youth-protection, media-law, and privacy review remains required before public release; this question catalog is not legal approval.

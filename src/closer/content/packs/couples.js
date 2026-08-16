@@ -6,7 +6,7 @@ import {
 
 /* ======================================================================
  * COUPLES (iteration 8 catalog rollout) -- content transcribed verbatim
- * from docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md section 5.
+ * from docs/closer/content/question-catalog.de-en.md section 5.
  *
  * Quick and Standard deliberately end on Q35, one question short of the
  * pack's real closer (Q36, `last: true`) -- the catalog's own curation,
@@ -278,7 +278,7 @@ const COUPLES_SECRET_AT_INDEX = 27;
 /*
  * Q01,Q02,Q05,Q09 / Q14,Q17,Q20,Q24 / Q25,Q28,Q29,Q35 (Quick);
  * Q01-Q06,Q09,Q10 / Q13-Q17,Q19,Q20,Q24 / Q25,Q26,Q27,Q28,Q29,Q31,Q34,Q35
- * (Standard) -- verbatim from the catalog's "Kuratierte Routen" list. Both
+ * (Standard) -- verbatim from the catalog's curated-routes list. Both
  * end on Q35, not Q36 -- see the block comment above COUPLES_ACTS.
  */
 const COUPLES_ROUTES = {

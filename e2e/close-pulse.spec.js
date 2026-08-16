@@ -2,14 +2,11 @@ const { test, expect } = require('./fixtures');
 const { seedAndResume, BASE_STATE, STORAGE_KEY } = require('./helpers');
 
 /*
- * CLOSER PULSE (iteration 8 feature requests, FR8-04). The overlay is
- * transient by design (auto-dismisses within ~800ms, or ~160ms under
- * reduced motion) and purely decorative -- these pin that it actually
- * appears at the right milestones, tap-to-skip works, reduced motion
- * takes the short flash instead of the full animation, and -- just as
- * important per the spec's own "keine negative oder enttäuschte
- * Animation" -- that it does NOT fire on skip/decline, or on a plain
- * resume/reload.
+ * Milestone celebrations are deliberately large and perceptible, but never
+ * block access to the global menu. Covered scene controls are deliberately
+ * inert until the celebration clears. These tests cover triggers, duration,
+ * timing isolation, mobile geometry, real movement, reduced motion, and the
+ * absence of reward language on decline or early exit.
  */
 const PULSE = '[data-testid="close-pulse"]';
 
@@ -55,7 +52,15 @@ test.describe('CLOSER PULSE', () => {
   test('fires after a naturally completed finale (stage "finale")', async ({ page }) => {
     await seedAndResume(page, { phase: 'q37', secretAsked: [true, true] });
     await page.getByRole('button', { name: 'Fertig' }).click();
-    await expect(page.locator(`${PULSE}[data-stage="finale"]`)).toBeVisible();
+    const pulse = page.locator(`${PULSE}[data-stage="finale"]`);
+    await expect(pulse).toBeVisible();
+    await expect(page.getByText('Das war’s.')).toBeVisible();
+
+    // The first ending beat must not elapse behind the opaque celebration.
+    await page.waitForTimeout(2200);
+    await expect(pulse).toBeVisible();
+    await expect(page.getByText('Das war’s.')).toBeVisible();
+    await expect(pulse).toHaveCount(0, { timeout: 1500 });
     await expect(page.getByText('Das war’s.')).toBeVisible();
   });
 
@@ -68,22 +73,89 @@ test.describe('CLOSER PULSE', () => {
     await expect(page.getByText('Das war’s.')).toBeVisible();
   });
 
-  test('tapping the overlay dismisses it immediately (tap-to-skip)', async ({ page }) => {
+  test('is large, moves, blocks covered controls, and never blocks the menu', async ({ page }) => {
     await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3 });
     await page.getByRole('button', { name: 'Weiter' }).click();
     const pulse = page.locator(PULSE);
     await expect(pulse).toBeVisible();
-    await pulse.click({ force: true });
-    await expect(pulse).toHaveCount(0);
+
+    const visual = page.getByTestId('milestone-visual');
+    const box = await visual.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(280);
+    await expect(pulse).toHaveAttribute('data-duration', '2100');
+    expect(await pulse.evaluate((node) => getComputedStyle(node).pointerEvents)).toBe('none');
+
+    const scene = page.getByTestId('closer-frame-content');
+    await expect(scene).toHaveAttribute('inert', '');
+    await expect(scene).toHaveAttribute('aria-hidden', 'true');
+
+    const left = page.getByTestId('milestone-left-light');
+    const startX = (await left.boundingBox()).x;
+    await page.waitForTimeout(700);
+    const laterX = (await left.boundingBox()).x;
+    expect(laterX).toBeGreaterThan(startX + 12);
+
+    // A tap where the visually covered Continue button sits must not advance
+    // the act-break screen. The global Menu is a separate, usable sibling.
+    const coveredContinue = scene.locator('button').filter({ hasText: 'Weiter' });
+    const coveredBox = await coveredContinue.boundingBox();
+    expect(coveredBox).not.toBeNull();
+    await page.mouse.click(
+      coveredBox.x + coveredBox.width / 2,
+      coveredBox.y + coveredBox.height / 2
+    );
+    await expect(page.getByText('ABGESCHLOSSEN')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Menü' }).click();
+    await expect(page.getByRole('dialog', { name: 'Menü' })).toBeVisible();
   });
 
-  test('reduced motion shows the short flash variant, not the full animation', async ({
+  test('does not count celebration time as active conversation time', async ({ page }) => {
+    await page.goto('/closer/');
+    await page.evaluate(
+      ({ key, value }) => window.localStorage.setItem(key, JSON.stringify(value)),
+      {
+        key: STORAGE_KEY,
+        value: {
+          ...BASE_STATE,
+          phase: 'secretPassBack',
+          qIndex: 27,
+          pending: 27,
+          timerEnabled: true,
+          actElapsedMs: 0,
+          secretSeen: [true, true],
+          hasSecretQuestion: [true, true],
+        },
+      }
+    );
+    await page.reload();
+    await page.getByText('Spiel fortsetzen').click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+
+    const scene = page.getByTestId('closer-frame-content');
+    await expect(page.locator(`${PULSE}[data-stage="secret"]`)).toBeVisible();
+    await expect(scene.getByText('0:00', { exact: true })).toBeVisible();
+    await page.waitForTimeout(1300);
+    await expect(scene.getByText('0:00', { exact: true })).toBeVisible();
+
+    await expect(page.locator(PULSE)).toHaveCount(0, { timeout: 1500 });
+    await expect(scene.getByText('0:01', { exact: true })).toBeVisible({ timeout: 2500 });
+  });
+
+  test('reduced motion shows a full-sized stable scene', async ({
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await seedAndResume(page, { routeId: 'quick', modeId: 'original', qIndex: 3 });
     await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.locator(`${PULSE}[data-reduced="true"]`)).toBeVisible();
+    const pulse = page.locator(`${PULSE}[data-reduced="true"]`);
+    await expect(pulse).toBeVisible();
+    await expect(pulse).toHaveAttribute('data-duration', '1200');
+    const box = await page.getByTestId('milestone-visual').boundingBox();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(280);
+    expect(await pulse.evaluate((node) => Number(getComputedStyle(node).opacity))).toBeGreaterThan(0.9);
   });
 
   test('does not fire on a plain resume/reload', async ({ page }) => {

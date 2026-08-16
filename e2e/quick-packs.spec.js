@@ -8,6 +8,7 @@ const QUICK_PACKS = [
   { packId: 'friends', modeId: 'easy', formerSecretIndex: 8 },
   { packId: 'old-friends', modeId: 'easy', formerSecretIndex: 8 },
   { packId: 'chaos', modeId: 'playful', formerSecretIndex: 9 },
+  { packId: 'late-night', modeId: 'explicit', formerSecretIndex: 9 },
 ];
 
 test.describe('Quick pack flow', () => {

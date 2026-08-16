@@ -12,11 +12,9 @@ const CLASSIC_ACTS = [
       de: 'Fangt neugierig an. Einige Fragen werden schon hier persönlicher. Ihr könnt jederzeit weitergehen.',
       en: "Start with curiosity. Some questions here already get personal. You can move on whenever you're ready.",
     },
-    // Time-neutral on purpose (iteration-8 holistic review, BF8-04): "vor
-    // 15 Minuten" was always wrong for a shorter route's Act I, which is
-    // only a few minutes long, and even in Full, pacing varies enough
-    // between couples that a specific elapsed time is a claim the app
-    // can't actually back up.
+    // Time-neutral on purpose (iteration 8 holistic review, BF8-04). The
+    // previous 15-minute reference was wrong for shorter routes, and pacing
+    // varies too much to make that claim even for Full.
     breakText: {
       de: 'Ihr wisst jetzt wahrscheinlich Dinge voneinander, die ihr vor diesem Akt noch nicht wusstet.',
       en: "You probably know things about each other now that you didn't know before this act.",
@@ -206,16 +204,14 @@ const CLASSIC_ACTS = [
         twist: 'deeper',
       },
       {
-        // Genderneutral rewording (bugfix-report iteration 7, BF-11/FR-08):
-        // "für sie oder ihn" -> "für diese Person". Content, order and
-        // meaning are unchanged -- only the binary pronoun is gone. English
-        // was already neutral ("them").
+        // Gender-neutral rewording (iteration 7, BF-11/FR-08): the binary
+        // German pronoun was replaced without changing meaning or order.
         id: 'classic-q27',
         de: 'Wenn du mit deinem Gegenüber eng befreundet wärst: Was wäre für diese Person wichtig, über dich zu wissen?',
         en: 'If you were to become a close friend of the other person, what would be important for them to know about you?',
       },
       {
-        // Same rewording as above: "an ihm oder ihr" -> "an dieser Person".
+        // Same gender-neutral German rewording as above.
         id: 'classic-q28',
         de: 'Sag deinem Gegenüber, was du an dieser Person magst. Sei dabei sehr ehrlich und sag etwas, das du wahrscheinlich nicht zu jemandem sagen würdest, den du gerade getroffen hast.',
         en: 'Tell the other person what you like about them. Be very honest — say something you probably would not say to someone you had just met.',
@@ -259,8 +255,7 @@ const CLASSIC_ACTS = [
         stayEnabled: true,
       },
       {
-        // Same rewording as questions 27/28: "wie er oder sie" -> "wie
-        // diese Person".
+        // Same gender-neutral German rewording as questions 27 and 28.
         id: 'classic-q36',
         de: 'Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber außerdem darum, zu spiegeln, wie du dich mit dem Problem zu fühlen scheinst.',
         en: 'Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose.',
@@ -296,7 +291,7 @@ const CLASSIC_MODES = [
     title: { de: 'ORIGINAL', en: 'ORIGINAL' },
     meta: { de: 'Zurückhaltend', en: 'Understated' },
     // Route-neutral on purpose (iteration-8 holistic review, BF8-03): a
-    // hardcoded "36 Fragen/45 Minuten" here contradicted whatever route
+    // hardcoded 36-question, 45-minute claim contradicted whatever route
     // (Quick/Standard/Full) was actually chosen one screen earlier. Scope
     // and time live on the route object and are shown once from there --
     // see routeSubtitleFor() and the duration screen in CloserGame.js.
@@ -342,8 +337,8 @@ const CLASSIC_SECRET_AT_INDEX = 27;
 
 /*
  * Time routes for CLASSIC (iteration 7, Phase 2). Curated by hand against
- * the same "kuratierter Auszug, nicht algorithmisch" requirement the
- * review itself sets: each shortened route keeps a taste of all three acts
+ * the review's requirement for editorial rather than algorithmic curation:
+ * each shortened route keeps a taste of all three acts
  * (curious -> closer -> open) rather than just truncating the end, keeps a
  * mix of twist types rather than dropping them all, and keeps local index
  * 11 (the closing, `last: true` question) as Act III's final entry.
@@ -361,7 +356,7 @@ const CLASSIC_SECRET_AT_INDEX = 27;
  * upbringing) third and fourth in Quick's Act I -- too hard an intensity
  * jump for a 12-question route meant as a light on-ramp. These indices are
  * the redactionally-reviewed selection in
- * docs/closer/content/CLOSER_Fragenkatalog_DE_EN.md and are the single
+ * docs/closer/content/question-catalog.de-en.md and are the single
  * source of truth for any future change to this curation -- edit the
  * catalog first, then mirror it here.
  */

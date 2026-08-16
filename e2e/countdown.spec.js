@@ -37,6 +37,21 @@ test.describe('NO THINKING / BOTH countdown', () => {
     await expect(page.getByText(/90 leben/)).toBeVisible();
   });
 
+  test('a twist can be passed before its countdown begins', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 1 });
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+    await expect(page.getByText('Weiter ohne Antwort.')).toBeVisible();
+  });
+
+  test('a running countdown can be passed immediately', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 1 });
+    await page.getByRole('button', { name: 'Bereit' }).click();
+    await expect(page.getByRole('timer')).toBeVisible();
+    await page.getByRole('button', { name: 'Lieber nicht' }).click();
+    await expect(page.getByRole('timer')).toHaveCount(0);
+    await expect(page.getByText('Weiter ohne Antwort.')).toBeVisible();
+  });
+
   test('the countdown live region announces start and zero, never per tick', async ({ page }) => {
     await seedAndResume(page, { qIndex: 1 });
     await page.getByRole('button', { name: 'Bereit' }).click();
