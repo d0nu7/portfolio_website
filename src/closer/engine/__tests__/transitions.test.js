@@ -1,10 +1,12 @@
 import { compileRun } from '../../../constants/closer';
 import {
+  CONSENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
   transitionSetup,
+  transitionConsent,
 } from '../transitions';
 
 const state = (patch = {}) => ({ secretSeen: [false, false], ...patch });
@@ -146,5 +148,59 @@ describe('setup transition core', () => {
     expect(transitionSetup(classic, { phase: 'q' }, { type: SETUP_EVENTS.CONTINUE }))
       .toBeNull();
     expect(transitionSetup(classic, { phase: 'start' }, { type: 'UNKNOWN' })).toBeNull();
+  });
+});
+
+describe('consent transition core', () => {
+  const lateNight = compileRun('late-night', 'standard', 'explicit');
+  const classic = compileRun('classic', 'standard', 'original');
+
+  it.each([
+    ['consentGatePassA', 'consentGateA'],
+    ['consentGatePassB', 'consentGateB'],
+    ['consentAct2PassA', 'consentAct2A'],
+    ['consentAct2PassB', 'consentAct2B'],
+  ])('confirms the private handoff from %s to %s', (phase, nextPhase) => {
+    expect(transitionConsent(lateNight, { phase }, {
+      type: CONSENT_EVENTS.HANDOFF_CONFIRMED,
+    })).toEqual({ phase: nextPhase });
+  });
+
+  it.each([
+    ['consentGateA', { phase: 'consentGatePassB' }],
+    ['consentGateB', { phase: 'intro' }],
+    ['consentAct2A', { phase: 'consentAct2PassB' }],
+    ['consentAct2B', { phase: 'act', actElapsedMs: 0 }],
+  ])('continues the consent sequence from %s', (phase, expected) => {
+    expect(transitionConsent(lateNight, { phase }, {
+      type: CONSENT_EVENTS.CONFIRM_CONSENT,
+    })).toEqual(expected);
+  });
+
+  it.each(['consentGateA', 'consentGateB', 'consentAct2A', 'consentAct2B'])(
+    'ends neutrally when consent is declined from %s',
+    (phase) => {
+      expect(transitionConsent(lateNight, { phase }, {
+        type: CONSENT_EVENTS.DECLINE_CONSENT,
+      })).toEqual({ phase: 'ending', completed: true, endReason: 'consentDeclined' });
+    }
+  );
+
+  it('rejects consent events for runs without a consent gate', () => {
+    expect(transitionConsent(classic, { phase: 'consentGateA' }, {
+      type: CONSENT_EVENTS.CONFIRM_CONSENT,
+    })).toBeNull();
+  });
+
+  it('rejects events that do not belong to the current consent phase', () => {
+    expect(transitionConsent(lateNight, { phase: 'consentGatePassA' }, {
+      type: CONSENT_EVENTS.CONFIRM_CONSENT,
+    })).toBeNull();
+    expect(transitionConsent(lateNight, { phase: 'consentGateA' }, {
+      type: CONSENT_EVENTS.HANDOFF_CONFIRMED,
+    })).toBeNull();
+    expect(transitionConsent(lateNight, { phase: 'q' }, {
+      type: CONSENT_EVENTS.DECLINE_CONSENT,
+    })).toBeNull();
   });
 });

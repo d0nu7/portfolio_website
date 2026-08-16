@@ -15,10 +15,12 @@ import {
   starterFor,
 } from '../../constants/closer';
 import {
+  CONSENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
+  transitionConsent,
   transitionSetup,
 } from '../../closer/engine/transitions';
 import COPY from '../../constants/closerCopy';
@@ -1084,6 +1086,10 @@ export default function CloserGame() {
     const patch = transitionSetup(run, s, event);
     if (patch) set(patch);
   };
+  const dispatchConsent = (event) => {
+    const patch = transitionConsent(run, s, event);
+    if (patch) set(patch);
+  };
 
   /* ================================================================== */
   /* START                                                              */
@@ -1356,9 +1362,7 @@ export default function CloserGame() {
         accent={A0}
         kicker={tf('passPhoneTo', nameOf(who))}
         action={tf('iAm', nameOf(who))}
-        onAction={() =>
-          set({ phase: s.phase === 'consentGatePassA' ? 'consentGateA' : 'consentGateB' })
-        }
+        onAction={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
       />,
       { accent: A0, glow: 0.28, menu: true }
     );
@@ -1366,15 +1370,6 @@ export default function CloserGame() {
 
   if (s.phase === 'consentGateA' || s.phase === 'consentGateB') {
     const me = s.phase === 'consentGateA' ? 0 : 1;
-    // Either person can end here without explanation. This uses a dedicated
-    // neutral result rather than the completed-game ending sequence.
-    const decide = (agreed) => {
-      if (!agreed) {
-        finish('consentDeclined');
-        return;
-      }
-      set({ phase: me === 0 ? 'consentGatePassB' : 'intro' });
-    };
     return frame(
       <>
         <Body $center>
@@ -1383,10 +1378,16 @@ export default function CloserGame() {
         </Body>
         <Foot>
           <Row>
-            <GhostButton onClick={() => decide(true)}>
+            <GhostButton
+              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
+            >
               {t('consentAgree')}
             </GhostButton>
-            <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
+            <GhostButton
+              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
+            >
+              {t('endHere')}
+            </GhostButton>
           </Row>
         </Foot>
       </>,
@@ -1494,7 +1495,7 @@ export default function CloserGame() {
             $accent={st.accent}
             onClick={() =>
               set({
-                phase: pack.consentGate && s.breakAct === 0 ? 'consentAct2PassA' : 'act',
+                phase: run.requiresConsent && s.breakAct === 0 ? 'consentAct2PassA' : 'act',
                 actElapsedMs: 0,
               })
             }
@@ -1519,9 +1520,7 @@ export default function CloserGame() {
         accent={st.accent}
         kicker={tf('passPhoneTo', nameOf(who))}
         action={tf('iAm', nameOf(who))}
-        onAction={() =>
-          set({ phase: s.phase === 'consentAct2PassA' ? 'consentAct2A' : 'consentAct2B' })
-        }
+        onAction={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
       />,
       { accent: st.accent, glow: st.glow, menu: true }
     );
@@ -1530,19 +1529,6 @@ export default function CloserGame() {
   if (s.phase === 'consentAct2A' || s.phase === 'consentAct2B') {
     const me = s.phase === 'consentAct2A' ? 0 : 1;
     const st = pack.actStyle[1];
-    const decide = (agreed) => {
-      if (!agreed) {
-        finish('consentDeclined');
-        return;
-      }
-      // Reset act time only when the second confirmation reaches the act
-      // introduction; the first confirmation only advances the handoff.
-      if (me === 0) {
-        set({ phase: 'consentAct2PassB' });
-      } else {
-        set({ phase: 'act', actElapsedMs: 0 });
-      }
-    };
     return frame(
       <>
         <Body $center>
@@ -1551,10 +1537,16 @@ export default function CloserGame() {
         </Body>
         <Foot>
           <Row>
-            <GhostButton onClick={() => decide(true)}>
+            <GhostButton
+              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
+            >
               {t('consentAgree')}
             </GhostButton>
-            <GhostButton onClick={() => decide(false)}>{t('endHere')}</GhostButton>
+            <GhostButton
+              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
+            >
+              {t('endHere')}
+            </GhostButton>
           </Row>
         </Foot>
       </>,

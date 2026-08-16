@@ -18,6 +18,47 @@ export const SETUP_EVENTS = Object.freeze({
   BEGIN_RUN: 'BEGIN_RUN',
 });
 
+export const CONSENT_EVENTS = Object.freeze({
+  HANDOFF_CONFIRMED: 'HANDOFF_CONFIRMED',
+  CONFIRM_CONSENT: 'CONFIRM_CONSENT',
+  DECLINE_CONSENT: 'DECLINE_CONSENT',
+});
+
+export function transitionConsent(run, state, event) {
+  if (!run.requiresConsent || !event || typeof event.type !== 'string') return null;
+
+  const handoffTarget = {
+    consentGatePassA: 'consentGateA',
+    consentGatePassB: 'consentGateB',
+    consentAct2PassA: 'consentAct2A',
+    consentAct2PassB: 'consentAct2B',
+  }[state.phase];
+  if (event.type === CONSENT_EVENTS.HANDOFF_CONFIRMED) {
+    return handoffTarget ? { phase: handoffTarget } : null;
+  }
+
+  const decisionPhases = new Set([
+    'consentGateA',
+    'consentGateB',
+    'consentAct2A',
+    'consentAct2B',
+  ]);
+  if (!decisionPhases.has(state.phase)) return null;
+
+  if (event.type === CONSENT_EVENTS.DECLINE_CONSENT) {
+    return { phase: 'ending', completed: true, endReason: 'consentDeclined' };
+  }
+  if (event.type !== CONSENT_EVENTS.CONFIRM_CONSENT) return null;
+
+  const confirmedTarget = {
+    consentGateA: { phase: 'consentGatePassB' },
+    consentGateB: { phase: 'intro' },
+    consentAct2A: { phase: 'consentAct2PassB' },
+    consentAct2B: { phase: 'act', actElapsedMs: 0 },
+  }[state.phase];
+  return confirmedTarget || null;
+}
+
 export function transitionSetup(run, state, event) {
   if (!event || typeof event.type !== 'string') return null;
 
