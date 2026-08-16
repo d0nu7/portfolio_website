@@ -50,6 +50,7 @@ import {
 } from '../../closer/infrastructure/storage';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
+import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
 import CloserDialog from './CloserDialog';
 import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
@@ -915,46 +916,27 @@ export default function CloserGame() {
   }
 
   /* ================================================================== */
-  /* CONSENT GATE — both people decide privately before entry            */
+  /* CONSENT                                                           */
   /* ================================================================== */
 
-  if (s.phase === 'consentGatePassA' || s.phase === 'consentGatePassB') {
-    const who = s.phase === 'consentGatePassA' ? 0 : 1;
+  if (CONSENT_VIEW_PHASES.has(s.phase)) {
+    const consentStyle = s.phase.startsWith('consentAct2')
+      ? pack.actStyle[1]
+      : { accent: A0, glow: 0.28 };
     return frame(
-      <CloserHandoff
-        accent={A0}
-        kicker={tf('passPhoneTo', nameOf(who))}
-        action={tf('iAm', nameOf(who))}
-        onAction={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
+      <CloserConsentView
+        state={s}
+        pack={pack}
+        lang={lang}
+        accent={consentStyle.accent}
+        nameOf={nameOf}
+        t={t}
+        tf={tf}
+        onHandoff={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
+        onConfirm={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
+        onDecline={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
       />,
-      { accent: A0, glow: 0.28, menu: true }
-    );
-  }
-
-  if (s.phase === 'consentGateA' || s.phase === 'consentGateB') {
-    const me = s.phase === 'consentGateA' ? 0 : 1;
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{tf('forOnly', nameOf(me))}</Kicker>
-          <Lede>{pick(pack.consentGate.notice, lang)}</Lede>
-        </Body>
-        <Foot>
-          <Row>
-            <GhostButton
-              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
-            >
-              {t('consentAgree')}
-            </GhostButton>
-            <GhostButton
-              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
-            >
-              {t('endHere')}
-            </GhostButton>
-          </Row>
-        </Foot>
-      </>,
-      { accent: A0, glow: 0.28, menu: true }
+      { accent: consentStyle.accent, glow: consentStyle.glow, menu: true }
     );
   }
 
@@ -1042,52 +1024,6 @@ export default function CloserGame() {
           >
             {t('continue')}
           </Button>
-        </Foot>
-      </>,
-      { accent: st.accent, glow: st.glow, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* CONSENT GATE — renewed private opt-in before Act II                 */
-  /* ================================================================== */
-
-  if (s.phase === 'consentAct2PassA' || s.phase === 'consentAct2PassB') {
-    const who = s.phase === 'consentAct2PassA' ? 0 : 1;
-    const st = pack.actStyle[1];
-    return frame(
-      <CloserHandoff
-        accent={st.accent}
-        kicker={tf('passPhoneTo', nameOf(who))}
-        action={tf('iAm', nameOf(who))}
-        onAction={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
-      />,
-      { accent: st.accent, glow: st.glow, menu: true }
-    );
-  }
-
-  if (s.phase === 'consentAct2A' || s.phase === 'consentAct2B') {
-    const me = s.phase === 'consentAct2A' ? 0 : 1;
-    const st = pack.actStyle[1];
-    return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={st.accent}>{tf('forOnly', nameOf(me))}</Kicker>
-          <Lede>{pick(pack.consentGate.act2OptIn, lang)}</Lede>
-        </Body>
-        <Foot>
-          <Row>
-            <GhostButton
-              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
-            >
-              {t('consentAgree')}
-            </GhostButton>
-            <GhostButton
-              onClick={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
-            >
-              {t('endHere')}
-            </GhostButton>
-          </Row>
         </Foot>
       </>,
       { accent: st.accent, glow: st.glow, menu: true }

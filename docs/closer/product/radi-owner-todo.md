@@ -154,6 +154,7 @@ Technical groundwork already delivered:
 - [x] Route supported language and timer changes through characterized global transition events.
 - [x] Route normal completion and free Pass through one characterized question-transition contract.
 - [x] Begin declarative rendering extraction with a pure setup view for players, packs, routes, and styles.
+- [x] Consolidate entry and Act II private opt-in presentation in one consent view without changing consent events.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 
