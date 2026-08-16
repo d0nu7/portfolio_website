@@ -18,6 +18,8 @@ import {
   ACT_EFFECTS,
   ACT_EVENTS,
   CONSENT_EVENTS,
+  FINALE_EVENTS,
+  GLOBAL_EVENTS,
   PRIVATE_MOMENT_EFFECTS,
   PRIVATE_MOMENT_EVENTS,
   Q37_EVENTS,
@@ -27,6 +29,8 @@ import {
   resolveQuestionDestination,
   transitionAct,
   transitionConsent,
+  transitionFinale,
+  transitionGlobal,
   transitionPrivateMoment,
   transitionQ37,
   transitionSetup,
@@ -494,10 +498,12 @@ export default function CloserGame() {
   }, []);
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
-  const finish = useCallback(
-    (endReason = 'completed') => set({ phase: 'ending', completed: true, endReason }),
-    [set]
-  );
+  const finish = useCallback((endReason = 'completed') => {
+    setS((prev) => {
+      const patch = transitionGlobal(prev, { type: GLOBAL_EVENTS.END_RUN, reason: endReason });
+      return patch ? { ...prev, ...patch } : prev;
+    });
+  }, []);
 
   const lang = s.lang;
   const t = useCallback((key) => pick(COPY[key], lang), [lang]);
@@ -1111,6 +1117,15 @@ export default function CloserGame() {
     const patch = transitionQ37(run, s, event);
     if (patch) set(patch);
   };
+  const dispatchFinale = (event) => {
+    const result = transitionFinale(run, s, event);
+    if (!result) return;
+    if (result.effect === QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION) {
+      const next = { ...s, ...result.patch };
+      setS(next);
+      enterQuestion(next.qIndex, next);
+    }
+  };
 
   /* ================================================================== */
   /* START                                                              */
@@ -1635,12 +1650,7 @@ export default function CloserGame() {
         </Body>
         <Foot>
           <GhostButton
-            onClick={() => {
-              const index = s.pending;
-              const next = { ...s, phase: 'q', qIndex: index };
-              setS(next);
-              enterQuestion(index, next);
-            }}
+            onClick={() => dispatchFinale({ type: FINALE_EVENTS.REVEAL_LAST })}
           >
             {t('reveal')}
           </GhostButton>

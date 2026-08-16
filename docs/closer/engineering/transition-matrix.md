@@ -11,8 +11,9 @@ subview, or an animation frame is not persisted and is listed only where it
 changes the next game event.
 
 Implementation status: setup/entry, consent, act-entry/break, private-moment
-capture/resolution, Question 37, and compiled question destinations are pure and
-characterized in `src/closer/engine/transitions.js`.
+capture/resolution, final-question reveal, Question 37, end-run reasons, and
+compiled question destinations are pure and characterized in
+`src/closer/engine/transitions.js`.
 
 ## Global events
 
@@ -67,9 +68,10 @@ characterized in `src/closer/engine/transitions.js`.
 | `lastIntro` | `REVEAL_LAST` | `q` | Enter the stored `pending` index |
 
 Setup/entry, consent, act-entry/break, private-moment capture/resolution,
-Question 37, and compiled question destinations are implemented in
-`src/closer/engine/transitions.js`. Ending and global rows still live in the
-controller until their own characterization slice is complete.
+final-question reveal, Question 37, end-run reasons, and compiled question
+destinations are implemented in `src/closer/engine/transitions.js`. Canonical
+restart, resume orchestration, global preferences, and the screen-local ending
+timeline remain outside the transition core.
 
 ## Private moment and finale
 

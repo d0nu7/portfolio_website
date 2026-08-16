@@ -11,6 +11,34 @@ export const QUESTION_DESTINATION_EFFECTS = Object.freeze({
   ENTER_QUESTION: 'enter-question',
 });
 
+export const GLOBAL_EVENTS = Object.freeze({
+  END_RUN: 'END_RUN',
+});
+
+const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
+
+export function transitionGlobal(state, event) {
+  if (!event || event.type !== GLOBAL_EVENTS.END_RUN || !END_REASONS.has(event.reason)) {
+    return null;
+  }
+  return { phase: 'ending', completed: true, endReason: event.reason };
+}
+
+export const FINALE_EVENTS = Object.freeze({
+  REVEAL_LAST: 'REVEAL_LAST',
+});
+
+export function transitionFinale(run, state, event) {
+  if (!event || event.type !== FINALE_EVENTS.REVEAL_LAST || state.phase !== 'lastIntro') {
+    return null;
+  }
+  if (!Number.isInteger(state.pending) || !run.questions[state.pending]) return null;
+  return {
+    patch: { phase: 'q', qIndex: state.pending },
+    effect: QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION,
+  };
+}
+
 export const SETUP_EVENTS = Object.freeze({
   START_SETUP: 'START_SETUP',
   CONTINUE: 'CONTINUE',
@@ -81,7 +109,7 @@ export function transitionQ37(run, state, event) {
 
   if (event.type === Q37_EVENTS.END_OPTIONAL) {
     if (state.phase !== 'q37intro' && state.phase !== 'q37a') return null;
-    return { phase: 'ending', completed: true, endReason: 'userEnded' };
+    return transitionGlobal(state, { type: GLOBAL_EVENTS.END_RUN, reason: 'userEnded' });
   }
 
   if (event.type === Q37_EVENTS.ACCEPT_FINALE && state.phase === 'q37intro') {
@@ -94,7 +122,7 @@ export function transitionQ37(run, state, event) {
   }
 
   if (event.type === Q37_EVENTS.COMPLETE && (state.phase === 'q37' || state.phase === 'q37b')) {
-    return { phase: 'ending', completed: true, endReason: 'completed' };
+    return transitionGlobal(state, { type: GLOBAL_EVENTS.END_RUN, reason: 'completed' });
   }
 
   return null;
@@ -154,7 +182,7 @@ export function transitionPrivateMoment(run, state, event) {
   ) {
     if (run.routeId === 'quick') {
       return {
-        patch: { phase: 'ending', completed: true, endReason: 'completed' },
+        patch: transitionGlobal(state, { type: GLOBAL_EVENTS.END_RUN, reason: 'completed' }),
         effect: PRIVATE_MOMENT_EFFECTS.NONE,
       };
     }
@@ -238,7 +266,10 @@ export function transitionConsent(run, state, event) {
   if (!decisionPhases.has(state.phase)) return null;
 
   if (event.type === CONSENT_EVENTS.DECLINE_CONSENT) {
-    return { phase: 'ending', completed: true, endReason: 'consentDeclined' };
+    return transitionGlobal(state, {
+      type: GLOBAL_EVENTS.END_RUN,
+      reason: 'consentDeclined',
+    });
   }
   if (event.type !== CONSENT_EVENTS.CONFIRM_CONSENT) return null;
 

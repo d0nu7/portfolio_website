@@ -3,6 +3,8 @@ import {
   ACT_EFFECTS,
   ACT_EVENTS,
   CONSENT_EVENTS,
+  FINALE_EVENTS,
+  GLOBAL_EVENTS,
   PRIVATE_MOMENT_EFFECTS,
   PRIVATE_MOMENT_EVENTS,
   Q37_EVENTS,
@@ -12,6 +14,8 @@ import {
   resolveQuestionDestination,
   transitionSetup,
   transitionConsent,
+  transitionFinale,
+  transitionGlobal,
   transitionPrivateMoment,
   transitionQ37,
   transitionAct,
@@ -481,5 +485,46 @@ describe('Question 37 transition core', () => {
     expect(transitionQ37(full, q37State({ phase: 'q37intro' }), {
       type: Q37_EVENTS.COMPLETE,
     })).toBeNull();
+  });
+});
+
+describe('final-question and global transition core', () => {
+  const run = compileRun('classic', 'full', 'original');
+
+  it('reveals the pending final question through the standard enter effect', () => {
+    const pending = run.questions.length - 1;
+    expect(transitionFinale(run, { phase: 'lastIntro', pending }, {
+      type: FINALE_EVENTS.REVEAL_LAST,
+    })).toEqual({
+      patch: { phase: 'q', qIndex: pending },
+      effect: QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION,
+    });
+  });
+
+  it('rejects an invalid final-question reveal', () => {
+    expect(transitionFinale(run, { phase: 'q', pending: run.questions.length - 1 }, {
+      type: FINALE_EVENTS.REVEAL_LAST,
+    })).toBeNull();
+    expect(transitionFinale(run, { phase: 'lastIntro', pending: run.questions.length }, {
+      type: FINALE_EVENTS.REVEAL_LAST,
+    })).toBeNull();
+  });
+
+  it.each(['completed', 'userEnded', 'consentDeclined'])(
+    'ends a run with the supported reason %s',
+    (reason) => {
+      expect(transitionGlobal({ phase: 'q' }, {
+        type: GLOBAL_EVENTS.END_RUN,
+        reason,
+      })).toEqual({ phase: 'ending', completed: true, endReason: reason });
+    }
+  );
+
+  it('rejects an unknown end reason or unrelated event', () => {
+    expect(transitionGlobal({ phase: 'q' }, {
+      type: GLOBAL_EVENTS.END_RUN,
+      reason: 'unknown',
+    })).toBeNull();
+    expect(transitionGlobal({ phase: 'q' }, { type: 'UNKNOWN' })).toBeNull();
   });
 });
