@@ -24,6 +24,7 @@ import {
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
+import CloserDialog from './CloserDialog';
 import CloserInstallHint from './CloserInstallHint';
 import {
   ActNumeral,
@@ -745,17 +746,26 @@ export default function CloserGame() {
   // Rendered inside every frame() call that passes { menu: true } -- see
   // its call sites below. Kept as one shared implementation rather than
   // duplicated per phase (bugfix-report iteration 7, BF-04).
+  // Jeder Menueschritt ist ein eigener Dialog mit eigener Ueberschrift --
+  // CloserDialog rendert sie selbst und haengt aria-labelledby daran, statt
+  // dass jeder Zweig sein eigenes <h2> mitbringt.
+  const menuTitle = {
+    null: t('menuTitle'),
+    end: t('menuEndConfirm'),
+    restart: t('startOverConfirm'),
+    delete: t('deleteLocalDataConfirm'),
+  }[menuStep ?? 'null'];
+
   const menuOverlay = (
     <>
       <MenuTrigger type="button" onClick={() => { setMenuStep(null); setMenuOpen(true); }}>
         {t('menuOpen')}
       </MenuTrigger>
       {menuOpen && (
-        <Sheet onClick={() => setMenuOpen(false)}>
-          <SheetPanel onClick={(e) => e.stopPropagation()}>
+        <CloserDialog title={menuTitle} onClose={() => setMenuOpen(false)}>
+          <>
             {menuStep === null && (
               <>
-                <h2>{t('menuTitle')}</h2>
                 <Toggle
                   $on={s.timerEnabled}
                   $accent={style.accent}
@@ -783,7 +793,6 @@ export default function CloserGame() {
             )}
             {menuStep === 'end' && (
               <>
-                <h2>{t('menuEndConfirm')}</h2>
                 <Small style={{ marginBottom: '2.4rem' }}>{t('menuEndSub')}</Small>
                 <Button
                   $accent={style.accent}
@@ -802,7 +811,6 @@ export default function CloserGame() {
             )}
             {menuStep === 'restart' && (
               <>
-                <h2>{t('startOverConfirm')}</h2>
                 <Small style={{ marginBottom: '2.4rem' }}>{t('startOverWarn')}</Small>
                 <Button $accent={style.accent} onClick={restart}>
                   {t('startOver')}
@@ -814,7 +822,6 @@ export default function CloserGame() {
             )}
             {menuStep === 'delete' && (
               <>
-                <h2>{t('deleteLocalDataConfirm')}</h2>
                 <Small style={{ marginBottom: '2.4rem' }}>{t('deleteLocalDataSub')}</Small>
                 <Button $accent={style.accent} onClick={handleDeleteLocalData}>
                   {t('deleteLocalData')}
@@ -824,8 +831,8 @@ export default function CloserGame() {
                 </TextButton>
               </>
             )}
-          </SheetPanel>
-        </Sheet>
+          </>
+        </CloserDialog>
       )}
     </>
   );
