@@ -148,7 +148,7 @@ Status dieser Iteration:
 - [x] reine Setup-Screens extrahieren, ohne Flowlogik in Präsentationskomponenten zu verteilen
 - [x] Text-/Aktionsfarben auf mindestens 4,5:1 bringen (+ :focus-visible-Ring; weitere Pack-Akzente unter 4,5:1 als Folgeposten, siehe Abschlusszusammenfassung)
 - [x] Ending mit expliziter Tastaturaktion und stabiler Live-Region
-- [ ] WebKit-Critical-Paths, Keyboard- und Accessibility-Smokes ergänzen
+- [x] Keyboard- und Accessibility-Smokes ergänzt, globaler Console-Guard; WebKit lokal nicht installiert (Download nicht ungefragt ausgelöst) -- als Folgeposten offen
 
 ### Phase 5 – neue Spielmechanik
 

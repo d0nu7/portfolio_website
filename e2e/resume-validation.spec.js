@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./fixtures');
 const { BASE_STATE, STORAGE_KEY } = require('./helpers');
 
 /*
