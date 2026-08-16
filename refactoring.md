@@ -135,8 +135,8 @@ Status dieser Iteration:
 - [ ] `createInitialState(options)` zentralisiert; `compileRun(options)` steht noch aus
 - [ ] Events und erlaubte Phasenwechsel in einen reinen Reducer verschieben
 - [ ] versionierten Save-Parser als diskriminierte Zustände implementieren
-- [ ] aktive statt verstrichener Wandzeit speichern; Background/Resume pausieren
-- [ ] abgeschlossene Runs löschen; Sprache/Installpräferenzen getrennt minimal speichern
+- [x] aktive statt verstrichener Wandzeit speichern; Background/Resume pausieren
+- [x] abgeschlossene Runs löschen (Persistenz erst ab `hasStarted`); getrennte Präferenzspeicherung steht noch aus
 - [x] Wake Lock nach `visibilitychange` erneut anfordern
 
 **Abnahme:** Transition-Matrix, ungültige Saves, Background-Timer und Restart sind als Unit-Tests beweisbar.

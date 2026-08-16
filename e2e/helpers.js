@@ -38,16 +38,15 @@ const BASE_STATE = {
   hasSecretQuestion: [null, null],
   secretAsked: [null, null],
   starterOffset: 0,
-  actStartedAt: null,
+  // Aktive Gespraechszeit des laufenden Akts. Ersetzt das fruehere
+  // actStartedAt (Wandzeit-Startpunkt) -- siehe Timer-Effekt in
+  // CloserGame.js.
+  actElapsedMs: 0,
   completed: false,
 };
 
 async function seedAndResume(page, overrides = {}) {
-  const state = {
-    ...BASE_STATE,
-    ...overrides,
-    actStartedAt: overrides.actStartedAt !== undefined ? overrides.actStartedAt : Date.now(),
-  };
+  const state = { ...BASE_STATE, ...overrides };
   await page.goto('/closer/');
   await page.evaluate(
     ({ key, value }) => window.localStorage.setItem(key, JSON.stringify(value)),

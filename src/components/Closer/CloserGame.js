@@ -133,7 +133,8 @@ function createInitialState(options = {}) {
   hasSecretQuestion: [null, null],
   secretAsked: [null, null],
   starterOffset: 0,
-  actStartedAt: null,
+  // Aktive Gespraechszeit des laufenden Akts (siehe Timer-Effekt).
+  actElapsedMs: 0,
   completed: false,
   endReason: null,
   // Whether the first real question has actually begun -- distinct from
@@ -144,7 +145,7 @@ function createInitialState(options = {}) {
   // (no names entered, no route/style picked yet, first question not
   // started) lands back on a normal Start, not a resume of nothing. Set
   // once, true for the rest of the game, at the same 'act' -> 'q'
-  // transition that starts actStartedAt for real.
+  // transition that starts the act timer for real.
   hasStarted: false,
   // FR8-06 / Refactoringplan Phase 1: beim tatsaechlichen Spielstart
   // festgehalten (derselbe Moment, in dem hasStarted true wird).
@@ -180,9 +181,8 @@ function isPlausibleSaved(saved) {
     return false;
   }
   if (
-    saved.actStartedAt !== undefined &&
-    saved.actStartedAt !== null &&
-    !(typeof saved.actStartedAt === 'number' && Number.isFinite(saved.actStartedAt))
+    saved.actElapsedMs !== undefined &&
+    !(typeof saved.actElapsedMs === 'number' && Number.isFinite(saved.actElapsedMs) && saved.actElapsedMs >= 0)
   ) {
     return false;
   }
@@ -503,12 +503,51 @@ export default function CloserGame() {
     document.documentElement.lang = lang === 'de' ? 'de' : 'en';
   }, [lang]);
 
+  /*
+   * Aktive Gespraechszeit statt Wandzeit (Iteration-9-Review P1-09,
+   * CR-P1-03).
+   *
+   * Vorher lief die Aktzeit ab `actStartedAt` einfach weiter: auf dem
+   * Resume-Screen, im Hintergrund, waehrend das Handy weggelegt war. Nach
+   * einer laengeren Unterbrechung zeigte ein fortgesetztes Spiel deshalb
+   * sofort eine unbrauchbare Overtime-Meldung.
+   *
+   * Jetzt wird nur akkumuliert, waehrend tatsaechlich gespielt wird:
+   * eine Frage steht auf dem Schirm, das Tab ist sichtbar, kein Dialog
+   * ist offen. `actElapsedMs` ist die gesicherte Summe, `runningSinceRef`
+   * der Beginn des laufenden Abschnitts (bewusst nicht persistiert -- ein
+   * Resume startet immer pausiert).
+   */
+  const [runningSince, setRunningSince] = useState(null);
+  const [visible, setVisible] = useState(true);
   useEffect(() => {
-    if (!s.timerEnabled || !s.actStartedAt) return undefined;
+    if (typeof document === 'undefined') return undefined;
+    const onVisibility = () => setVisible(!document.hidden);
+    onVisibility();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  const timerRunning = s.timerEnabled && s.phase === 'q' && visible && !menuOpen;
+
+  useEffect(() => {
+    if (!timerRunning) return undefined;
+    const startedAt = Date.now();
+    setRunningSince(startedAt);
     const id = setInterval(() => setNow(Date.now()), 1000);
     setNow(Date.now());
-    return () => clearInterval(id);
-  }, [s.timerEnabled, s.actStartedAt]);
+    return () => {
+      clearInterval(id);
+      setRunningSince(null);
+      // Den gelaufenen Abschnitt in die gesicherte Summe uebernehmen.
+      // Funktionale Form, weil der Cleanup sonst einen veralteten Wert
+      // von actElapsedMs saehe.
+      const ran = Date.now() - startedAt;
+      if (ran > 0) {
+        setS((prev) => ({ ...prev, actElapsedMs: (prev.actElapsedMs || 0) + ran }));
+      }
+    };
+  }, [timerRunning]);
 
   // Everything pack-specific (acts, style modes, per-act look, question-37
   // wording, secret-question placement) is looked up once per render from
@@ -740,12 +779,14 @@ export default function CloserGame() {
     }
   }, [s.phase, s.qIndex, step]);
 
-  const elapsed = s.actStartedAt && now ? now - s.actStartedAt : 0;
+  // Gesicherte Summe plus der gerade laufende Abschnitt.
+  const elapsed =
+    (s.actElapsedMs || 0) + (runningSince && now ? Math.max(0, now - runningSince) : 0);
   // The selected route owns the time promise; use the same per-act allocation
   // as the route copy so slow, reflective packs and fast, playful packs do not
   // inherit CLASSIC's pacing by accident.
   const actMs = routeTimingFor(s.packId, s.routeId).actMinutes[actIdx] * 60 * 1000;
-  const overtime = s.timerEnabled && s.actStartedAt && elapsed > actMs;
+  const overtime = s.timerEnabled && elapsed > actMs;
   const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
   const handleDeleteLocalData = () => {
@@ -1241,7 +1282,7 @@ export default function CloserGame() {
                 ...s,
                 phase: 'q',
                 qIndex: index,
-                actStartedAt: Date.now(),
+                actElapsedMs: 0,
                 hasStarted: true,
                 // Bei jedem Aktbeginn idempotent neu berechnet (wie
                 // hasStarted darueber) -- Pack und Route aendern sich im
@@ -1286,7 +1327,7 @@ export default function CloserGame() {
             onClick={() =>
               set({
                 phase: pack.consentGate && s.breakAct === 0 ? 'consentAct2PassA' : 'act',
-                actStartedAt: null,
+                actElapsedMs: 0,
               })
             }
           >
@@ -1336,13 +1377,13 @@ export default function CloserGame() {
         finish('consentDeclined');
         return;
       }
-      // actStartedAt only needs resetting on the transition that actually
+      // Die Aktzeit wird nur auf dem Uebergang zurueckgesetzt, der
       // lands on the act-intro screen (person 1 agreeing); person 0's own
       // "yes" just moves on to the next handoff.
       if (me === 0) {
         set({ phase: 'consentAct2PassB' });
       } else {
-        set({ phase: 'act', actStartedAt: null });
+        set({ phase: 'act', actElapsedMs: 0 });
       }
     };
     return frame(
@@ -1966,7 +2007,7 @@ export default function CloserGame() {
                 ? String(s.qIndex + 1).padStart(2, '0')
                 : `${String(s.qIndex + 1).padStart(2, '0')} / ${total}`}
             </Count>
-            {s.timerEnabled && s.actStartedAt ? (
+            {s.timerEnabled && s.hasStarted ? (
               <Elapsed $long={overtime}>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>
             ) : null}
           </TopBar>
