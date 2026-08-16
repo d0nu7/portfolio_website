@@ -134,7 +134,7 @@ Status dieser Iteration:
 
 - [ ] `createInitialState(options)` zentralisiert; `compileRun(options)` steht noch aus
 - [ ] Events und erlaubte Phasenwechsel in einen reinen Reducer verschieben
-- [ ] versionierten Save-Parser als diskriminierte Zustände implementieren
+- [x] versionierten Save-Parser als diskriminierte Zustände implementieren
 - [x] aktive statt verstrichener Wandzeit speichern; Background/Resume pausieren
 - [x] abgeschlossene Runs löschen (Persistenz erst ab `hasStarted`); getrennte Präferenzspeicherung steht noch aus
 - [x] Wake Lock nach `visibilitychange` erneut anfordern

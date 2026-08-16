@@ -251,74 +251,128 @@ function hasRealProgress(saved) {
   return true;
 }
 
+/*
+ * Ein Spielstand-Parse-Ergebnis als diskriminierter Zustand statt eines
+ * nackten `null` (Refactoringplan Phase 3, verbindliche Entscheidung 7:
+ * "Saves werden gegen Zustandsinvarianten und Contentrevision geprüft,
+ * nicht nur gegen oberflächliche Feldtypen").
+ *
+ * Vorher liefen alle Ablehnungsgruende in loadSaved() auf dasselbe
+ * `return null` hinaus -- von aussen ununterscheidbar von "es liegt gar
+ * kein Spielstand vor". Das machte die Pruefung nur noch ueber Playwright
+ * testbar (man sieht den Startscreen, aber nicht WARUM), nicht direkt in
+ * Jest. `parseSaved()` gibt stattdessen `{ ok: true, value }` oder
+ * `{ ok: false, reason }` zurueck; `reason` ist einer der unten benannten,
+ * stabilen Gruende -- exportiert, damit ein Test przise gegen den echten
+ * Ablehnungsgrund pruefen kann statt nur gegen "kommt kein Resume".
+ *
+ * Die eigentlichen Pruefungen sind unveraendert (isPlausibleSaved(),
+ * hasRealProgress(), Contentdrift-Schutz, Pack-/Routen-Kanonisierung,
+ * Grenzenpruefung) -- dies ist eine Struktur-, keine Verhaltensaenderung.
+ */
+export const SAVE_REJECT_REASONS = Object.freeze({
+  EMPTY: 'empty',
+  INVALID_JSON: 'invalid-json',
+  IMPLAUSIBLE_SHAPE: 'implausible-shape',
+  SETUP_PHASE: 'setup-phase',
+  COMPLETED: 'completed',
+  NO_PROGRESS: 'no-progress',
+  CONTENT_VERSION_MISMATCH: 'content-version-mismatch',
+  CONSENT_PHASE_WITHOUT_GATE: 'consent-phase-without-gate',
+  CONTENT_DRIFT: 'content-drift',
+  INDEX_OUT_OF_RANGE: 'index-out-of-range',
+  BREAK_ACT_OUT_OF_RANGE: 'break-act-out-of-range',
+});
+
+export function parseSaved(raw) {
+  if (!raw) return { ok: false, reason: SAVE_REJECT_REASONS.EMPTY };
+  let saved;
+  try {
+    saved = JSON.parse(raw);
+  } catch (err) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.INVALID_JSON };
+  }
+  if (!isPlausibleSaved(saved)) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.IMPLAUSIBLE_SHAPE };
+  }
+  if (saved.phase === 'start') return { ok: false, reason: SAVE_REJECT_REASONS.SETUP_PHASE };
+  if (saved.completed) return { ok: false, reason: SAVE_REJECT_REASONS.COMPLETED };
+  if (!hasRealProgress(saved)) return { ok: false, reason: SAVE_REJECT_REASONS.NO_PROGRESS };
+  if (saved.contentVersion !== CONTENT_VERSION) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_VERSION_MISMATCH };
+  }
+
+  const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
+  delete merged.skipsRemaining;
+  // hasRealProgress() just proved this game is genuinely underway, so
+  // write that back explicitly rather than leaving a pre-BF8-01 save's
+  // missing field to fall through to initialState's `false` -- otherwise
+  // a resumed legacy save would (harmlessly, but incorrectly) skip the
+  // wake lock for the rest of whatever act it resumed into.
+  merged.hasStarted = true;
+  // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
+  // (regression-test iteration 5, P2.4): a hand-edited save, an old save
+  // whose packId pointed at a pack since removed from the registry, or a
+  // modeId that doesn't exist in the resolved pack could otherwise pair
+  // "classic" content with a foreign id, or land on a style screen with
+  // nothing marked active. getPack() already falls back silently for
+  // reads elsewhere in this file, but the *stored* packId itself was
+  // never corrected -- this fixes that once, on load, rather than at
+  // every call site.
+  const pack = getPack(merged.packId);
+  merged.packId = pack.id;
+  // Same canonicalization, extended to routeId (iteration 7, Phase 2):
+  // getRoute() already falls back to DEFAULT_ROUTE_ID for an unrecognised
+  // id, same as getPack() does for packId -- this just makes the
+  // *stored* value correct too, not just every read of it.
+  merged.routeId = getRoute(pack.id, merged.routeId).id;
+  if (!pack.modes.some((m) => m.id === merged.modeId)) {
+    merged.modeId = pack.modes[0].id;
+  }
+  const consentPhases = merged.phase.startsWith('consent');
+  if (consentPhases && !pack.consentGate) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
+  }
+  // Contentdrift-Schutz. Weicht der Lauf von dem ab, der beim Start
+  // festgehalten wurde -- Frage umsortiert, ersetzt, aus der Route
+  // gefallen -- wird der Spielstand verworfen statt still auf
+  // verschobenem Inhalt fortgesetzt.
+  //
+  // Zwei Formate, weil bereits ausgelieferte Spielstaende weiterlaufen
+  // sollen: neu ist der kompakte runFingerprint, alt die volle ID-Liste.
+  // Ein Spielstand ganz ohne beides (vor FR8-06) ueberspringt die
+  // Pruefung; ihn deckt der CONTENT_VERSION-Vergleich weiter oben ab.
+  if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
+    if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId)) {
+      return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
+    }
+  } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
+    const expected = runQuestionIdsFor(merged.packId, merged.routeId);
+    const matchesExpected =
+      expected.length === saved.runQuestionIds.length &&
+      expected.every((id, i) => id === saved.runQuestionIds[i]);
+    if (!matchesExpected) return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
+  }
+  const lastQuestion = finalQuestionIndex(pack.id, merged.routeId);
+  if (merged.qIndex > lastQuestion || merged.pending > lastQuestion) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.INDEX_OUT_OF_RANGE };
+  }
+  if (merged.breakAct > 1) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.BREAK_ACT_OUT_OF_RANGE };
+  }
+  return { ok: true, value: merged };
+}
+
 // `{ ...initialState, ...saved }` is the resume-state migration for a save
 // written before packId existed: it simply has no such key, so the spread
 // leaves initialState's `DEFAULT_PACK_ID` in place untouched. The
-// canonicalization below handles the other case -- a packId/modeId that IS
+// canonicalization above handles the other case -- a packId/modeId that IS
 // present but no longer valid.
 function loadSaved() {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const saved = JSON.parse(raw);
-    if (!isPlausibleSaved(saved)) return null;
-    if (saved.phase === 'start' || saved.completed) return null;
-    if (!hasRealProgress(saved)) return null;
-    if (saved.contentVersion !== CONTENT_VERSION) return null;
-    const merged = { ...initialState, ...saved, stateVersion: STATE_VERSION };
-    delete merged.skipsRemaining;
-    // hasRealProgress() just proved this game is genuinely underway, so
-    // write that back explicitly rather than leaving a pre-BF8-01 save's
-    // missing field to fall through to initialState's `false` -- otherwise
-    // a resumed legacy save would (harmlessly, but incorrectly) skip the
-    // wake lock for the rest of whatever act it resumed into.
-    merged.hasStarted = true;
-    // Canonicalize packId/modeId/qIndex rather than trusting them verbatim
-    // (regression-test iteration 5, P2.4): a hand-edited save, an old save
-    // whose packId pointed at a pack since removed from the registry, or a
-    // modeId that doesn't exist in the resolved pack could otherwise pair
-    // "classic" content with a foreign id, or land on a style screen with
-    // nothing marked active. getPack() already falls back silently for
-    // reads elsewhere in this file, but the *stored* packId itself was
-    // never corrected -- this fixes that once, on load, rather than at
-    // every call site.
-    const pack = getPack(merged.packId);
-    merged.packId = pack.id;
-    // Same canonicalization, extended to routeId (iteration 7, Phase 2):
-    // getRoute() already falls back to DEFAULT_ROUTE_ID for an unrecognised
-    // id, same as getPack() does for packId -- this just makes the
-    // *stored* value correct too, not just every read of it.
-    merged.routeId = getRoute(pack.id, merged.routeId).id;
-    if (!pack.modes.some((m) => m.id === merged.modeId)) {
-      merged.modeId = pack.modes[0].id;
-    }
-    const consentPhases = merged.phase.startsWith('consent');
-    if (consentPhases && !pack.consentGate) return null;
-    // Contentdrift-Schutz. Weicht der Lauf von dem ab, der beim Start
-    // festgehalten wurde -- Frage umsortiert, ersetzt, aus der Route
-    // gefallen -- wird der Spielstand verworfen statt still auf
-    // verschobenem Inhalt fortgesetzt.
-    //
-    // Zwei Formate, weil bereits ausgelieferte Spielstaende weiterlaufen
-    // sollen: neu ist der kompakte runFingerprint, alt die volle ID-Liste.
-    // Ein Spielstand ganz ohne beides (vor FR8-06) ueberspringt die
-    // Pruefung; ihn deckt der CONTENT_VERSION-Vergleich weiter oben ab.
-    if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
-      if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId)) {
-        return null;
-      }
-    } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
-      const expected = runQuestionIdsFor(merged.packId, merged.routeId);
-      const matchesExpected =
-        expected.length === saved.runQuestionIds.length &&
-        expected.every((id, i) => id === saved.runQuestionIds[i]);
-      if (!matchesExpected) return null;
-    }
-    const lastQuestion = finalQuestionIndex(pack.id, merged.routeId);
-    if (merged.qIndex > lastQuestion || merged.pending > lastQuestion) return null;
-    if (merged.breakAct > 1) return null;
-    return merged;
+    const result = parseSaved(window.localStorage.getItem(STORAGE_KEY));
+    return result.ok ? result.value : null;
   } catch (err) {
     return null;
   }
