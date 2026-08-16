@@ -159,6 +159,7 @@ Technical groundwork already delivered:
 - [x] Consolidate private-question capture and post-run check presentation without weakening individual handoffs.
 - [x] Extract last-question staging, all Q37 branches, and ending beats into one finale view.
 - [x] Extract question, twist, countdown, free-pass, response-card, and stay presentation without changing gameplay timing or controls.
+- [x] Centralize the shared screen, accessibility-blocking, menu, and milestone layers.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 

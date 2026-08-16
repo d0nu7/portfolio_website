@@ -47,7 +47,6 @@ import {
   persistPreferences,
 } from '../../closer/infrastructure/storage';
 import COPY from '../../constants/closerCopy';
-import ClosePulse from './ClosePulse';
 import CloserActView, { ACT_VIEW_PHASES, actViewStyle } from './CloserActView';
 import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
 import CloserDialog from './CloserDialog';
@@ -62,21 +61,19 @@ import CloserPrivateMomentView, {
   PRIVATE_MOMENT_VIEW_PHASES,
 } from './CloserPrivateMomentView';
 import CloserQuestionView, { questionFrameOptions } from './CloserQuestionView';
+import CloserScreenFrame from './CloserScreenFrame';
 import CloserSetupView from './CloserSetupView';
 import {
   Body,
   Button,
-  CloserGlobal,
   Choice,
   Foot,
-  FrameContent,
   GhostButton,
   Kicker,
   LangSwitch,
   Lede,
   MenuTrigger,
   Question,
-  Screen,
   Sheet,
   SheetPanel,
   Small,
@@ -694,38 +691,22 @@ export default function CloserGame() {
     </>
   );
 
-  // Covered whenever something else owns the screen: the milestone
-  // celebration, or the menu dialog. menuOverlay renders as FrameContent's
-  // sibling, not its child, so this only hides what's actually behind it --
-  // it also stops an ambiguous accessible name behind the dialog (e.g. a
-  // setup screen's own "Go back") from matching alongside the dialog's own
-  // control of the same name.
-  const contentCovered = Boolean(pulseStage) || menuOpen;
-
   const frame = (content, opts = {}) => (
-    <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
-      <CloserGlobal />
-      <FrameContent
-        ref={frameContentRef}
-        $blocked={contentCovered}
-        inert={contentCovered ? '' : undefined}
-        aria-hidden={contentCovered ? 'true' : undefined}
-        data-testid="closer-frame-content"
-      >
-        {content}
-      </FrameContent>
-      {opts.menu && menuOverlay}
-      {pulseStage && (
-        <ClosePulse
-          stage={pulseStage}
-          accent={opts.accent || style.accent}
-          label={tf('milestoneLabel', pulseStage)}
-          detail={tf('milestoneDetail', pulseStage)}
-          reducedMotion={prefersReducedMotion}
-          onDone={dismissPulse}
-        />
-      )}
-    </Screen>
+    <CloserScreenFrame
+      accent={opts.accent || style.accent}
+      glow={opts.glow ?? style.glow}
+      frameContentRef={frameContentRef}
+      menuOpen={menuOpen}
+      menuOverlay={menuOverlay}
+      showMenu={opts.menu}
+      pulseStage={pulseStage}
+      pulseLabel={pulseStage ? tf('milestoneLabel', pulseStage) : null}
+      pulseDetail={pulseStage ? tf('milestoneDetail', pulseStage) : null}
+      prefersReducedMotion={prefersReducedMotion}
+      onPulseDone={dismissPulse}
+    >
+      {content}
+    </CloserScreenFrame>
   );
 
   const A0 = pack.actStyle[0].accent;

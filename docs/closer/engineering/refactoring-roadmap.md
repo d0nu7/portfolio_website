@@ -53,6 +53,7 @@ src/components/Closer/
   CloserPrivateMomentView.js   # private capture and post-run check handoffs
   CloserFinaleView.js          # last question, Q37 branches, and ending beats
   CloserQuestionView.js        # question, twist, countdown, pass, and stay presentation
+  CloserScreenFrame.js         # shared background, blocking, menu, and celebration layers
 src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
 
