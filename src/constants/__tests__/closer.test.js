@@ -608,6 +608,7 @@ describe('runFingerprintFor (Phase 1)', () => {
     id: 'fp',
     acts: [{ questions }],
     routes,
+    modes: [{ id: 'default' }],
   });
   const withStub = (pack, fn) => {
     const original = PACKS.fp;
@@ -662,6 +663,28 @@ describe('runFingerprintFor (Phase 1)', () => {
   it('includes the content revision in its prefix', () => {
     // A CONTENT_VERSION bump must change the fingerprint (CR-P1-05).
     expect(runFingerprintFor('classic', 'full')).toMatch(new RegExp(`^r${CONTENT_VERSION}-`));
+  });
+
+  /*
+   * BUG-007: style/mode identity was missing from the fingerprint, so a
+   * resumed run could look compatible after a behavior-relevant style
+   * change even though twists would now play differently.
+   */
+  it('distinguishes styles (BUG-007)', () => {
+    const [first, second] = PACKS.classic.modes;
+    expect(first.id).not.toBe(second.id);
+    expect(runFingerprintFor('classic', 'full', first.id)).not.toBe(
+      runFingerprintFor('classic', 'full', second.id)
+    );
+  });
+
+  it('resolves a missing or unrecognised modeId to the pack\'s first style, matching compileRun()', () => {
+    const firstModeId = PACKS.classic.modes[0].id;
+    const omitted = runFingerprintFor('classic', 'full');
+    const explicit = runFingerprintFor('classic', 'full', firstModeId);
+    const invalid = runFingerprintFor('classic', 'full', 'does-not-exist');
+    expect(omitted).toBe(explicit);
+    expect(invalid).toBe(explicit);
   });
 });
 
@@ -729,6 +752,13 @@ describe('compileRun (Phase 3, RunDefinition)', () => {
     );
     expect(compileRun('classic', 'full').fingerprint).not.toBe(
       compileRun('friends', 'full').fingerprint
+    );
+  });
+
+  it('distinguishes styles in its fingerprint (BUG-007)', () => {
+    const [first, second] = PACKS.classic.modes;
+    expect(compileRun('classic', 'full', first.id).fingerprint).not.toBe(
+      compileRun('classic', 'full', second.id).fingerprint
     );
   });
 });

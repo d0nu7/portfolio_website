@@ -222,16 +222,26 @@ export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
 }
 
 /*
- * Hashes content revision, pack, route and ordered question IDs into a stable
- * run fingerprint. Question text is intentionally excluded so copy fixes do
- * not invalidate saves. FNV-1a is used for compact deterministic drift
- * detection, not as a security mechanism.
+ * Hashes content revision, pack, route, style and ordered question IDs into a
+ * stable run fingerprint. Question text is intentionally excluded so copy
+ * fixes do not invalidate saves. FNV-1a is used for compact deterministic
+ * drift detection, not as a security mechanism.
+ *
+ * modeId (BUG-007) is included because it is behavior-defining: it turns
+ * twists on and off, so a resumed run under a different style would silently
+ * play by different rules even though pack/route/questions still match. An
+ * omitted or invalid modeId resolves to the pack's first style, matching
+ * compileRun()'s own resolution, so callers that do not track style yet
+ * (or pass an unrecognised one) still get a stable, well-defined fingerprint.
  */
-export function runFingerprintFor(packId, routeId = DEFAULT_ROUTE_ID) {
+export function runFingerprintFor(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
+  const pack = getPack(packId);
+  const resolvedModeId = pack.modes.some((m) => m.id === modeId) ? modeId : pack.modes[0].id;
   const payload = [
     CONTENT_VERSION,
     packId,
     routeId,
+    resolvedModeId,
     runQuestionIdsFor(packId, routeId).join(','),
   ].join('|');
 
@@ -286,7 +296,7 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
     timing,
     privateMoment: pack.privateMoment ?? null,
     contentRevision: CONTENT_VERSION,
-    fingerprint: runFingerprintFor(pack.id, route.id),
+    fingerprint: runFingerprintFor(pack.id, route.id, resolvedModeId),
   });
 }
 

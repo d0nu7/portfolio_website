@@ -279,7 +279,9 @@ export function parseSaved(raw) {
   // Reject content drift instead of resuming at a shifted question. Current
   // saves use a compact fingerprint; older saves may carry the full ID list.
   if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
-    if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId)) {
+    // merged.modeId is already canonicalized above, so a style that no
+    // longer exists cannot slip past this check as if nothing changed.
+    if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId, merged.modeId)) {
       return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
     }
   } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
@@ -1339,9 +1341,11 @@ export default function CloserGame() {
                 qIndex: index,
                 actElapsedMs: 0,
                 hasStarted: true,
-                // Recalculation is idempotent because pack and route cannot
-                // change during a run; store it before the next resume point.
-                runFingerprint: runFingerprintFor(s.packId, s.routeId),
+                // Recalculation is idempotent because pack, route, and style
+                // cannot change during a run; store it before the next resume
+                // point. Style is included (BUG-007) since it changes twist
+                // behavior even when the questions themselves match.
+                runFingerprint: runFingerprintFor(s.packId, s.routeId, s.modeId),
                 contentVersion: CONTENT_VERSION,
               };
               buzz(16);

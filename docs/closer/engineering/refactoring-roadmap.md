@@ -93,14 +93,14 @@ Acceptance: lint, unit tests, static build, and complete Chromium E2E suite pass
 
 ### Phase 1 – content identity and fidelity
 
-Status: complete, with one fingerprint correction open.
+Status: complete.
 
 - [x] Assign explicit stable IDs to all 324 German/English questions.
 - [x] Enforce exact pack, act, ID, route, and wording fidelity against the bilingual catalog.
 - [x] Deduplicate response-card objects.
 - [x] Model route durations numerically.
 - [x] Add a versioned ordered run fingerprint.
-- [ ] Include every behavior-defining selection, including style/mode identity, in the fingerprint.
+- [x] Include every behavior-defining selection, including style/mode identity, in the fingerprint (BUG-007).
 
 Acceptance: any drift between the catalog and source content fails the test suite.
 

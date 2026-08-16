@@ -147,11 +147,11 @@ Acceptance:
 
 ### BUG-007 – Run fingerprint omits a behavior-defining selection
 
-**Status:** Open
+**Status:** Closed
 
-The fingerprint includes content revision, pack, route, and question order but not the selected style/mode identity. A resumed run can therefore appear compatible after a behavior-relevant style change.
+The fingerprint included content revision, pack, route, and question order but not the selected style/mode identity. A resumed run could therefore appear compatible after a behavior-relevant style change.
 
-Recommended fix: include the stable style ID and any other behavior-defining run option in the canonical fingerprint input.
+`runFingerprintFor()` now takes a `modeId` and folds it into the hashed payload; an omitted or unrecognised value resolves to the pack's first style, matching `compileRun()`'s own resolution so the two never disagree. Both the write site (`CloserGame.js`, act-start snapshot) and the resume check pass the already-canonicalized `modeId`. Covered by direct fingerprint tests (`closer.test.js`) asserting two styles of the same pack/route produce different fingerprints, and that an omitted/invalid style resolves identically to the pack's first style.
 
 ### BUG-008 – Persisted-state validation is not genuinely phase-discriminated
 
