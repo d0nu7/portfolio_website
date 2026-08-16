@@ -465,7 +465,10 @@ export const Field = styled.label`
     font-size: 1.1rem;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: rgba(242, 243, 245, 0.35);
+    /* War 0.35 (~2,9:1) -- derselbe Fund wie TextButton/Small/MenuTrigger,
+       nur bei der ersten Phase-4-Kontraste-Runde nicht mit erfasst, weil
+       der refactoring.md-Plan sie nicht namentlich nannte. */
+    color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
     margin-bottom: 1rem;
   }
 

@@ -1,18 +1,23 @@
 /*
  * Kontrastregression (Refactoringplan Phase 4, Iteration-9-Code-Review:
  * TextButton/Small/MenuTrigger standen bei 2,4:1 bis 3,3:1 auf dem
- * #08090c-Hintergrund, DEEP Akt III bei 1,77:1 -- alle deutlich unter
- * WCAG AA (4,5:1 fuer normalen Text).
+ * #08090c-Hintergrund, mehrere Pack-Akzente (DEEP, LATE NIGHT) zwischen
+ * 1,57:1 und 3,42:1 -- alle deutlich unter WCAG AA (4,5:1 fuer normalen
+ * Text).
  *
  * Die Werte werden hier NICHT gegen einen hartkodierten "sieht richtig
  * aus"-Schnappschuss geprueft, sondern die tatsaechliche WCAG-Formel wird
  * unabhaengig auf die echten Quellwerte angewendet -- MUTED_TEXT_ALPHA aus
- * CloserStyles.js und DEEP_ACT_STYLE[2].accent aus dem Packmodul. Senkt
- * jemand einen dieser Werte spaeter wieder ab, faellt dieser Test, ohne
- * dass jemand die Zahl von Hand nachrechnen muss.
+ * CloserStyles.js und jeder actStyle.accent aus jedem Pack, LATE NIGHT
+ * eingeschlossen, obwohl es nicht registriert ist (dieselbe Farbe wird
+ * trotzdem verwendet, sobald der Pack einmal freigegeben wird -- siehe
+ * closer-refactoring-deferred-items in den Projekt-Memories). Senkt jemand
+ * einen dieser Werte spaeter wieder ab -- oder fuegt ein neuer Pack einen
+ * zu dunklen Akzent hinzu -- faellt dieser Test, ohne dass jemand die
+ * Zahl von Hand nachrechnen muss.
  */
 import { CLOSER_BG, CLOSER_FG, MUTED_TEXT_ALPHA } from '../../components/Closer/CloserStyles';
-import { DEEP_ACT_STYLE } from '../../closer/content/packs/deep';
+import { PACKS, LATE_NIGHT_PACK } from '../../closer/content';
 
 function srgbToLinear(c) {
   const v = c / 255;
@@ -53,10 +58,21 @@ describe('WCAG-Kontrast gedaempfter Textfarben (CLOSER)', () => {
     expect(ratio).toBeLessThan(WCAG_AA_NORMAL_TEXT);
   });
 
-  it('DEEP Akt III (TurnName/ActTitle/Kicker-Text) erreicht mindestens 4,5:1', () => {
-    const actIII = DEEP_ACT_STYLE[DEEP_ACT_STYLE.length - 1];
-    const ratio = contrastRatio(hexToRgb(actIII.accent), bgRgb);
-    expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
+  /*
+   * Jeder actStyle.accent jedes Packs (TurnName/ActTitle/Kicker zeigen ihn
+   * direkt als Textfarbe) -- nicht nur DEEP Akt III, das bei der ersten
+   * Kontraste-Runde als einziges namentlich im Plan stand. Ein Fehlschlag
+   * hier nennt Pack und Akt direkt, statt dass jemand von Hand elf
+   * Packs durchrechnen muss.
+   */
+  const allPacks = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
+  Object.entries(allPacks).forEach(([packId, pack]) => {
+    pack.actStyle.forEach((style, actIdx) => {
+      it(`${packId} Akt ${actIdx + 1} (${style.accent}) erreicht mindestens 4,5:1`, () => {
+        const ratio = contrastRatio(hexToRgb(style.accent), bgRgb);
+        expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
+      });
+    });
   });
 
   /*

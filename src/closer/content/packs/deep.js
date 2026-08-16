@@ -305,17 +305,21 @@ const DEEP_ROUTES = {
 
 // Introspective jewel tones -- deep indigo, deep violet, near-navy grey.
 /*
- * Akt III war urspruenglich #2E3A59 -- rechnerisch 1,77:1 auf dem
- * #08090c-Hintergrund, weit unter WCAG AA (4,5:1), obwohl TurnName und
- * ActTitle diesen Wert direkt als Textfarbe zeigen (Iteration-9-Review,
- * Refactoringplan Phase 4). #6580C4 ist derselbe Farbton (Skalierungsfaktor
- * 2,2 auf den Originalwert), nur hell genug, um 5,16:1 zu erreichen -- die
- * gedaempfte Wirkung von Akt III bleibt gegenueber Akt I/II erhalten, siehe
- * src/constants/__tests__/contrast.test.js fuer die nachgerechnete Zahl.
+ * Alle drei Werte sind gegenueber dem urspruenglichen Katalog hochskaliert
+ * (Refactoringplan Phase 4, Nacharbeit): TurnName/ActTitle/Kicker zeigen
+ * `accent` direkt als Textfarbe, und die Originale lagen bei 3,11:1 bis
+ * 1,77:1 auf #08090c -- unter WCAG AA (4,5:1). Jede Skalierung haelt den
+ * Farbton (kein Wert wird "erfunden"), nur hell genug fuer >=5:1:
+ *   Akt I:   #4A5EAA (3,29:1) -> #607ADD (5,06:1, k=1,30)
+ *   Akt II:  #7B4B94 (3,11:1) -> #A665C8 (5,05:1, k=1,35)
+ *   Akt III: #2E3A59 -> #6580C4 (5,16:1, aus einer frueheren Phase-4-Iteration)
+ * Die gedaempfte Wirkung von Akt III gegenueber Akt I/II bleibt erhalten;
+ * siehe src/constants/__tests__/contrast.test.js fuer die nachgerechneten
+ * Zahlen.
  */
 const DEEP_ACT_STYLE = [
-  { accent: '#4A5EAA', chrome: 1, progress: 'full', glow: 0.24 },
-  { accent: '#7B4B94', chrome: 0.5, progress: 'count', glow: 0.13 },
+  { accent: '#607ADD', chrome: 1, progress: 'full', glow: 0.24 },
+  { accent: '#A665C8', chrome: 0.5, progress: 'count', glow: 0.13 },
   { accent: '#6580C4', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 

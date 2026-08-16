@@ -350,10 +350,20 @@ const LATE_NIGHT_ROUTES = {
   },
 };
 
+/*
+ * Alle drei Werte hochskaliert wie bei DEEP (Refactoringplan Phase 4,
+ * Nacharbeit) -- die Originale lagen bei 3,42:1 bis 1,57:1 auf #08090c,
+ * unter WCAG AA. LATE NIGHT ist weiterhin nicht in PACKS registriert
+ * (siehe unten); der Fix betrifft nur die hinterlegte Farbe, nicht die
+ * Registrierung selbst:
+ *   Akt I:   #B03A5B (3,42:1) -> #E54B76 (5,31:1, k=1,30)
+ *   Akt II:  #6B3A6B (2,32:1) -> #B663B6 (5,15:1, k=1,70)
+ *   Akt III: #3A2E44 (1,57:1) -> #9475AD (5,14:1, k=2,55)
+ */
 const LATE_NIGHT_ACT_STYLE = [
-  { accent: '#B03A5B', chrome: 1, progress: 'full', glow: 0.26 },
-  { accent: '#6B3A6B', chrome: 0.5, progress: 'count', glow: 0.14 },
-  { accent: '#3A2E44', chrome: 0.22, progress: 'number', glow: 0.05 },
+  { accent: '#E54B76', chrome: 1, progress: 'full', glow: 0.26 },
+  { accent: '#B663B6', chrome: 0.5, progress: 'count', glow: 0.14 },
+  { accent: '#9475AD', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
 // Deliberately NOT added to PACKS -- see the block comment above.
