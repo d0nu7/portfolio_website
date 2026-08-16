@@ -1,8 +1,10 @@
 import { compileRun } from '../../../constants/closer';
 import {
   QUESTION_DESTINATION_EFFECTS,
+  SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
+  transitionSetup,
 } from '../transitions';
 
 const state = (patch = {}) => ({ secretSeen: [false, false], ...patch });
@@ -75,5 +77,74 @@ describe('question destination transition core', () => {
     const before = JSON.stringify(full);
     resolveQuestionDestination(full, current, 1);
     expect(JSON.stringify(full)).toBe(before);
+  });
+});
+
+describe('setup transition core', () => {
+  const classic = compileRun('classic', 'full', 'original');
+  const firstDate = compileRun('first-date', 'quick', 'calm');
+  const lateNight = compileRun('late-night', 'quick', 'explicit');
+
+  it('starts setup and moves through players and pack', () => {
+    expect(transitionSetup(classic, { phase: 'start' }, { type: SETUP_EVENTS.START_SETUP }))
+      .toEqual({ phase: 'players' });
+    expect(transitionSetup(classic, { phase: 'players' }, {
+      type: SETUP_EVENTS.CONTINUE,
+      starterOffset: 1,
+    })).toEqual({ phase: 'pack', starterOffset: 1 });
+    expect(transitionSetup(classic, { phase: 'pack' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toEqual({ phase: 'duration' });
+  });
+
+  it('rejects a player transition without a valid starter offset', () => {
+    expect(transitionSetup(classic, { phase: 'players' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toBeNull();
+    expect(transitionSetup(classic, { phase: 'players' }, {
+      type: SETUP_EVENTS.CONTINUE,
+      starterOffset: 2,
+    })).toBeNull();
+  });
+
+  it('keeps the style screen only when the compiled run has a real choice', () => {
+    expect(classic.hasStyleChoice).toBe(true);
+    expect(transitionSetup(classic, { phase: 'duration' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toEqual({ modeId: 'original', phase: 'mode' });
+
+    expect(firstDate.hasStyleChoice).toBe(false);
+    expect(transitionSetup(firstDate, { phase: 'duration' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toEqual({ modeId: 'calm', phase: 'intro' });
+  });
+
+  it('routes a consent-gated run through its private entry gate', () => {
+    expect(lateNight.requiresConsent).toBe(true);
+    expect(transitionSetup(lateNight, { phase: 'duration' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toEqual({ modeId: 'explicit', phase: 'consentGatePassA' });
+    expect(transitionSetup(lateNight, { phase: 'mode' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toEqual({ phase: 'consentGatePassA' });
+  });
+
+  it('walks Back through exactly the screens the forward flow can show', () => {
+    expect(transitionSetup(classic, { phase: 'players' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'start' });
+    expect(transitionSetup(classic, { phase: 'pack' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'players' });
+    expect(transitionSetup(classic, { phase: 'duration' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'pack' });
+    expect(transitionSetup(classic, { phase: 'mode' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'duration' });
+    expect(transitionSetup(classic, { phase: 'intro' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'mode' });
+    expect(transitionSetup(firstDate, { phase: 'intro' }, { type: SETUP_EVENTS.BACK }))
+      .toEqual({ phase: 'duration' });
+    expect(transitionSetup(lateNight, { phase: 'intro' }, { type: SETUP_EVENTS.BACK }))
+      .toBeNull();
+  });
+
+  it('enters the first act from intro and rejects unrelated phase/event pairs', () => {
+    expect(transitionSetup(classic, { phase: 'intro' }, { type: SETUP_EVENTS.BEGIN_RUN }))
+      .toEqual({ phase: 'act', pending: 0, qIndex: 0 });
+    expect(transitionSetup(classic, { phase: 'q' }, { type: SETUP_EVENTS.CONTINUE }))
+      .toBeNull();
+    expect(transitionSetup(classic, { phase: 'start' }, { type: 'UNKNOWN' })).toBeNull();
   });
 });

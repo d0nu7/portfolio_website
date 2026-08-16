@@ -15,7 +15,7 @@ test.describe('Setup Back navigation', () => {
     await expect(page.getByText('Wer spielt?')).toBeVisible();
 
     await page.getByRole('button', { name: 'Zurück' }).click();
-    await expect(page.getByText('CLOSER')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'CLOSER' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
   });
 

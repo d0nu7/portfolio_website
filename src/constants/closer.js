@@ -291,6 +291,8 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
     packId: pack.id,
     routeId: route.id,
     modeId: resolvedModeId,
+    hasStyleChoice: pack.modes.length > 1,
+    requiresConsent: Boolean(pack.consentGate),
     questions: Object.freeze(questions),
     acts: Object.freeze(acts),
     actStarts: Object.freeze(actStarts),

@@ -11,6 +11,58 @@ export const QUESTION_DESTINATION_EFFECTS = Object.freeze({
   ENTER_QUESTION: 'enter-question',
 });
 
+export const SETUP_EVENTS = Object.freeze({
+  START_SETUP: 'START_SETUP',
+  CONTINUE: 'CONTINUE',
+  BACK: 'BACK',
+  BEGIN_RUN: 'BEGIN_RUN',
+});
+
+export function transitionSetup(run, state, event) {
+  if (!event || typeof event.type !== 'string') return null;
+
+  if (event.type === SETUP_EVENTS.START_SETUP && state.phase === 'start') {
+    return { phase: 'players' };
+  }
+
+  if (event.type === SETUP_EVENTS.BACK) {
+    if (state.phase === 'intro') {
+      if (run.requiresConsent) return null;
+      return { phase: run.hasStyleChoice ? 'mode' : 'duration' };
+    }
+    const target = {
+      players: 'start',
+      pack: 'players',
+      duration: 'pack',
+      mode: 'duration',
+    }[state.phase];
+    return target ? { phase: target } : null;
+  }
+
+  if (event.type === SETUP_EVENTS.BEGIN_RUN && state.phase === 'intro') {
+    return { phase: 'act', pending: 0, qIndex: 0 };
+  }
+
+  if (event.type !== SETUP_EVENTS.CONTINUE) return null;
+
+  if (state.phase === 'players') {
+    if (event.starterOffset !== 0 && event.starterOffset !== 1) return null;
+    return { phase: 'pack', starterOffset: event.starterOffset };
+  }
+  if (state.phase === 'pack') return { phase: 'duration' };
+  if (state.phase === 'duration') {
+    return {
+      modeId: run.modeId,
+      phase: run.hasStyleChoice ? 'mode' : run.requiresConsent ? 'consentGatePassA' : 'intro',
+    };
+  }
+  if (state.phase === 'mode') {
+    return { phase: run.requiresConsent ? 'consentGatePassA' : 'intro' };
+  }
+
+  return null;
+}
+
 export function actIndexAt(run, questionIndex) {
   let result = 0;
   for (let i = 0; i < run.actStarts.length; i += 1) {

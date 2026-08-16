@@ -16,8 +16,10 @@ import {
 } from '../../constants/closer';
 import {
   QUESTION_DESTINATION_EFFECTS,
+  SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
+  transitionSetup,
 } from '../../closer/engine/transitions';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
@@ -1078,6 +1080,11 @@ export default function CloserGame() {
   // applicable, otherwise straight to the shared handoff-back screen.
   const afterCheck1 = () => (secretQuestionApplicable(1) ? 'checkPass2' : 'checkPassBack');
 
+  const dispatchSetup = (event) => {
+    const patch = transitionSetup(run, s, event);
+    if (patch) set(patch);
+  };
+
   /* ================================================================== */
   /* START                                                              */
   /* ================================================================== */
@@ -1132,7 +1139,10 @@ export default function CloserGame() {
             </>
           ) : (
             <>
-              <Button $accent={A0} onClick={() => set({ phase: 'players' })}>
+              <Button
+                $accent={A0}
+                onClick={() => dispatchSetup({ type: SETUP_EVENTS.START_SETUP })}
+              >
                 {t('start')}
               </Button>
               <Small style={{ textAlign: 'center' }}>{t('aboutMinutes')}</Small>
@@ -1159,17 +1169,7 @@ export default function CloserGame() {
    * confirmations, and reversing into that flow is a distinct, safety-
    * sensitive concern this feature does not take on.
    */
-  const goBackFromSetup = () => {
-    if (s.phase === 'intro') {
-      if (pack.consentGate) return;
-      set({ phase: pack.modes.length > 1 ? 'mode' : 'duration' });
-      return;
-    }
-    const target = { players: 'start', pack: 'players', duration: 'pack', mode: 'duration' }[
-      s.phase
-    ];
-    if (target) set({ phase: target });
-  };
+  const goBackFromSetup = () => dispatchSetup({ type: SETUP_EVENTS.BACK });
 
   /* ================================================================== */
   /* PLAYER SETUP                                                       */
@@ -1202,9 +1202,10 @@ export default function CloserGame() {
         <Foot>
           <Button
             $accent={A0}
-            onClick={() =>
-              set({ phase: 'pack', starterOffset: Math.random() < 0.5 ? 0 : 1 })
-            }
+            onClick={() => dispatchSetup({
+              type: SETUP_EVENTS.CONTINUE,
+              starterOffset: Math.random() < 0.5 ? 0 : 1,
+            })}
           >
             {t('continue')}
           </Button>
@@ -1247,7 +1248,10 @@ export default function CloserGame() {
           />
         </Body>
         <Foot>
-          <Button $accent={A0} onClick={() => set({ phase: 'duration' })}>
+          <Button
+            $accent={A0}
+            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
+          >
             {t('continue')}
           </Button>
           <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
@@ -1290,17 +1294,7 @@ export default function CloserGame() {
         <Foot>
           <Button
             $accent={A0}
-            onClick={() => {
-              const hasStyleChoice = pack.modes.length > 1;
-              set({
-                modeId: hasStyleChoice ? s.modeId : pack.modes[0].id,
-                phase: hasStyleChoice
-                  ? 'mode'
-                  : pack.consentGate
-                  ? 'consentGatePassA'
-                  : 'intro',
-              });
-            }}
+            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
           >
             {t('continue')}
           </Button>
@@ -1340,9 +1334,7 @@ export default function CloserGame() {
         <Foot>
           <Button
             $accent={A0}
-            onClick={() =>
-              set({ phase: pack.consentGate ? 'consentGatePassA' : 'intro' })
-            }
+            onClick={() => dispatchSetup({ type: SETUP_EVENTS.CONTINUE })}
           >
             {t('continue')}
           </Button>
@@ -1415,7 +1407,10 @@ export default function CloserGame() {
           <Lede style={{ marginTop: '3.2rem' }}>{t('introPass')}</Lede>
         </Body>
         <Foot>
-          <Button $accent={A0} onClick={() => set({ phase: 'act', pending: 0, qIndex: 0 })}>
+          <Button
+            $accent={A0}
+            onClick={() => dispatchSetup({ type: SETUP_EVENTS.BEGIN_RUN })}
+          >
             {t('begin')}
           </Button>
           {/* No Back button when a consent gate is involved -- this

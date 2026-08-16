@@ -10,6 +10,9 @@ coverage. Screen-local presentation state such as a countdown tick, a menu
 subview, or an animation frame is not persisted and is listed only where it
 changes the next game event.
 
+Implementation status: the setup/entry family and compiled question-destination
+family are pure and characterized in `src/closer/engine/transitions.js`.
+
 ## Global events
 
 | Event | Valid from | Result |
@@ -62,9 +65,10 @@ changes the next game event.
 | `consentAct2A/B` | `DECLINE_CONSENT` | `ending` | `endReason=consentDeclined` |
 | `lastIntro` | `REVEAL_LAST` | `q` | Enter the stored `pending` index |
 
-The compiled-destination family is implemented in
-`src/closer/engine/transitions.js`. All other rows still live in the controller
-until their own characterization slice is complete.
+The setup/entry and compiled-destination families are implemented in
+`src/closer/engine/transitions.js`. Consent, act-entry/break, private-moment,
+finale, and global rows still live in the controller until their own
+characterization slice is complete.
 
 ## Private moment and finale
 
