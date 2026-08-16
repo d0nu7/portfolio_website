@@ -34,6 +34,106 @@ export const ACT_EFFECTS = Object.freeze({
   ENTER_QUESTION: 'enter-question',
 });
 
+export const PRIVATE_MOMENT_EVENTS = Object.freeze({
+  HANDOFF_CONFIRMED: 'HANDOFF_CONFIRMED',
+  SET_PRIVATE_QUESTION: 'SET_PRIVATE_QUESTION',
+  CONTINUE_AFTER_QUESTIONS: 'CONTINUE_AFTER_QUESTIONS',
+  SET_QUESTION_ASKED: 'SET_QUESTION_ASKED',
+});
+
+export const PRIVATE_MOMENT_EFFECTS = Object.freeze({
+  NONE: null,
+  ENTER_QUESTION: 'enter-question',
+});
+
+function privateMomentEnabled(run) {
+  return run.routeId !== 'quick' && run.privateMoment !== 'none';
+}
+
+function hasApplicablePrivateQuestion(run, state, playerIndex) {
+  return privateMomentEnabled(run) && state.hasSecretQuestion[playerIndex] !== false;
+}
+
+export function transitionPrivateMoment(run, state, event) {
+  if (!event || typeof event.type !== 'string') return null;
+  const privatePhase = state.phase.startsWith('secret') || state.phase.startsWith('check');
+  if (privatePhase && !privateMomentEnabled(run)) return null;
+
+  if (event.type === PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED) {
+    const simpleTarget = {
+      secretPass1: 'secret1',
+      secretPass2: 'secret2',
+      checkPass1: 'check1',
+      checkPass2: 'check2',
+      checkPassBack: 'q37intro',
+    }[state.phase];
+    if (simpleTarget) {
+      return { patch: { phase: simpleTarget }, effect: PRIVATE_MOMENT_EFFECTS.NONE };
+    }
+    if (state.phase === 'secretPassBack') {
+      if (!Number.isInteger(state.pending) || !run.questions[state.pending]) return null;
+      return {
+        patch: { phase: 'q', qIndex: state.pending },
+        effect: PRIVATE_MOMENT_EFFECTS.ENTER_QUESTION,
+      };
+    }
+    return null;
+  }
+
+  if (event.type === PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION) {
+    if (typeof event.hasQuestion !== 'boolean') return null;
+    const playerIndex = state.phase === 'secret1' ? 0 : state.phase === 'secret2' ? 1 : null;
+    if (playerIndex === null) return null;
+    const secretSeen = [...state.secretSeen];
+    const hasSecretQuestion = [...state.hasSecretQuestion];
+    secretSeen[playerIndex] = true;
+    hasSecretQuestion[playerIndex] = event.hasQuestion;
+    return {
+      patch: {
+        secretSeen,
+        hasSecretQuestion,
+        phase: playerIndex === 0 ? 'secretPass2' : 'secretPassBack',
+      },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    };
+  }
+
+  if (
+    event.type === PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS &&
+    state.phase === 'all36'
+  ) {
+    if (run.routeId === 'quick') {
+      return {
+        patch: { phase: 'ending', completed: true, endReason: 'completed' },
+        effect: PRIVATE_MOMENT_EFFECTS.NONE,
+      };
+    }
+    const phase = hasApplicablePrivateQuestion(run, state, 0)
+      ? 'checkPass1'
+      : hasApplicablePrivateQuestion(run, state, 1)
+      ? 'checkPass2'
+      : 'q37intro';
+    return { patch: { phase }, effect: PRIVATE_MOMENT_EFFECTS.NONE };
+  }
+
+  if (event.type === PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED) {
+    if (typeof event.asked !== 'boolean') return null;
+    const playerIndex = state.phase === 'check1' ? 0 : state.phase === 'check2' ? 1 : null;
+    if (playerIndex === null || !hasApplicablePrivateQuestion(run, state, playerIndex)) return null;
+    const secretAsked = [...state.secretAsked];
+    secretAsked[playerIndex] = event.asked;
+    const phase = playerIndex === 0 && hasApplicablePrivateQuestion(run, state, 1)
+      ? 'checkPass2'
+      : 'checkPassBack';
+    return {
+      patch: { secretAsked, phase },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    };
+  }
+
+  return null;
+}
+
 export function transitionAct(run, state, event) {
   if (!event || typeof event.type !== 'string') return null;
 

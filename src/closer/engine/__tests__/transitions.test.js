@@ -3,12 +3,15 @@ import {
   ACT_EFFECTS,
   ACT_EVENTS,
   CONSENT_EVENTS,
+  PRIVATE_MOMENT_EFFECTS,
+  PRIVATE_MOMENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
   transitionSetup,
   transitionConsent,
+  transitionPrivateMoment,
   transitionAct,
 } from '../transitions';
 
@@ -267,6 +270,144 @@ describe('act transition core', () => {
     })).toBeNull();
     expect(transitionAct(classic, { phase: 'q', pending: 1 }, {
       type: ACT_EVENTS.START_ACT,
+    })).toBeNull();
+  });
+});
+
+describe('private-moment transition core', () => {
+  const full = compileRun('classic', 'full', 'original');
+  const quick = compileRun('classic', 'quick', 'original');
+  const noPrivateMoment = compileRun('late-night', 'standard', 'explicit');
+  const privateState = (patch = {}) => ({
+    phase: 'secretPass1',
+    pending: full.secretAtIndex,
+    secretSeen: [false, false],
+    hasSecretQuestion: [null, null],
+    secretAsked: [null, null],
+    ...patch,
+  });
+
+  it.each([
+    ['secretPass1', 'secret1'],
+    ['secretPass2', 'secret2'],
+    ['checkPass1', 'check1'],
+    ['checkPass2', 'check2'],
+    ['checkPassBack', 'q37intro'],
+  ])('confirms the private handoff from %s to %s', (phase, nextPhase) => {
+    expect(transitionPrivateMoment(full, privateState({ phase }), {
+      type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+    })).toEqual({
+      patch: { phase: nextPhase },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+  });
+
+  it('returns from the private capture to the pending compiled question', () => {
+    expect(transitionPrivateMoment(full, privateState({ phase: 'secretPassBack' }), {
+      type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+    })).toEqual({
+      patch: { phase: 'q', qIndex: full.secretAtIndex },
+      effect: PRIVATE_MOMENT_EFFECTS.ENTER_QUESTION,
+    });
+  });
+
+  it.each([
+    ['secret1', 0, 'secretPass2'],
+    ['secret2', 1, 'secretPassBack'],
+  ])('records the private choice for %s without mutating state', (phase, player, nextPhase) => {
+    const current = privateState({ phase });
+    const result = transitionPrivateMoment(full, current, {
+      type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
+      hasQuestion: false,
+    });
+    expect(result.patch.secretSeen).toEqual(player === 0 ? [true, false] : [false, true]);
+    expect(result.patch.hasSecretQuestion).toEqual(player === 0 ? [false, null] : [null, false]);
+    expect(result.patch.phase).toBe(nextPhase);
+    expect(current.secretSeen).toEqual([false, false]);
+    expect(current.hasSecretQuestion).toEqual([null, null]);
+  });
+
+  it('ends Quick directly after its regular questions', () => {
+    expect(transitionPrivateMoment(quick, privateState({ phase: 'all36' }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({
+      patch: { phase: 'ending', completed: true, endReason: 'completed' },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+  });
+
+  it.each([
+    [[true, true], 'checkPass1'],
+    [[false, true], 'checkPass2'],
+    [[false, false], 'q37intro'],
+  ])('selects the first applicable post-game check for %j', (hasSecretQuestion, phase) => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'all36',
+      hasSecretQuestion,
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({ patch: { phase }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
+  });
+
+  it('preserves legacy null as an applicable private question', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'all36',
+      hasSecretQuestion: [null, null],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    }).patch.phase).toBe('checkPass1');
+  });
+
+  it('skips private checks for a pack whose compiled policy disables them', () => {
+    expect(transitionPrivateMoment(noPrivateMoment, privateState({
+      phase: 'all36',
+      hasSecretQuestion: [true, true],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({
+      patch: { phase: 'q37intro' },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+    expect(transitionPrivateMoment(noPrivateMoment, privateState({ phase: 'secretPass1' }), {
+      type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+    })).toBeNull();
+  });
+
+  it('records check answers and skips a non-applicable second check', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'check1',
+      hasSecretQuestion: [true, false],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+      asked: true,
+    })).toEqual({
+      patch: { secretAsked: [true, null], phase: 'checkPassBack' },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'check1',
+      hasSecretQuestion: [true, true],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+      asked: false,
+    }).patch).toEqual({ secretAsked: [false, null], phase: 'checkPass2' });
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'check2',
+      hasSecretQuestion: [false, true],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+      asked: true,
+    }).patch).toEqual({ secretAsked: [null, true], phase: 'checkPassBack' });
+  });
+
+  it('rejects malformed choices and phase/event mismatches', () => {
+    expect(transitionPrivateMoment(full, privateState({ phase: 'secret1' }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
+      hasQuestion: 'yes',
+    })).toBeNull();
+    expect(transitionPrivateMoment(full, privateState({ phase: 'q' }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+      asked: true,
     })).toBeNull();
   });
 });

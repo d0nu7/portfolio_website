@@ -147,7 +147,7 @@ Technical groundwork already delivered:
 - [x] Checkpoint active timer segments across lifecycle boundaries.
 - [x] Keep non-game preferences in a separately versioned record.
 - [x] Make `compileRun()` the controller and save parser's runtime source.
-- [x] Establish the complete transition matrix and characterize setup/entry, consent, act-entry/break, and question-destination transition families.
+- [x] Establish the complete transition matrix and characterize setup/entry, consent, act-entry/break, private-moment, and question-destination transition families.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 

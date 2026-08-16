@@ -18,12 +18,15 @@ import {
   ACT_EFFECTS,
   ACT_EVENTS,
   CONSENT_EVENTS,
+  PRIVATE_MOMENT_EFFECTS,
+  PRIVATE_MOMENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
   transitionAct,
   transitionConsent,
+  transitionPrivateMoment,
   transitionSetup,
 } from '../../closer/engine/transitions';
 import COPY from '../../constants/closerCopy';
@@ -1069,21 +1072,7 @@ export default function CloserGame() {
   // "did they ask it?" check after "that's all 36" -- someone who chose
   // "Heute keine" has nothing to ask about, so their checkPass/check screens
   // are skipped entirely rather than asking a question that can't apply.
-  const privateMomentEnabled = route.id !== 'quick' && pack.privateMoment !== 'none';
-  const secretQuestionApplicable = (i) =>
-    privateMomentEnabled && s.hasSecretQuestion[i] !== false;
-  // Where the "that's all 36" continue button goes: the first applicable
-  // person's handoff screen, or straight to Question 37 if neither has
-  // anything to check.
-  const nextCheckPhase = () => {
-    if (!privateMomentEnabled) return 'q37intro';
-    if (secretQuestionApplicable(0)) return 'checkPass1';
-    if (secretQuestionApplicable(1)) return 'checkPass2';
-    return 'q37intro';
-  };
-  // Where check1 goes once person 0 has answered: person 1's own handoff if
-  // applicable, otherwise straight to the shared handoff-back screen.
-  const afterCheck1 = () => (secretQuestionApplicable(1) ? 'checkPass2' : 'checkPassBack');
+  const privateMomentEnabled = run.routeId !== 'quick' && run.privateMoment !== 'none';
 
   const dispatchSetup = (event) => {
     const patch = transitionSetup(run, s, event);
@@ -1099,6 +1088,17 @@ export default function CloserGame() {
     if (result.effect === ACT_EFFECTS.ENTER_QUESTION) {
       const next = { ...s, ...result.patch };
       buzz(16);
+      setS(next);
+      enterQuestion(next.qIndex, next);
+      return;
+    }
+    set(result.patch);
+  };
+  const dispatchPrivateMoment = (event) => {
+    const result = transitionPrivateMoment(run, s, event);
+    if (!result) return;
+    if (result.effect === PRIVATE_MOMENT_EFFECTS.ENTER_QUESTION) {
+      const next = { ...s, ...result.patch };
       setS(next);
       enterQuestion(next.qIndex, next);
       return;
@@ -1566,7 +1566,9 @@ export default function CloserGame() {
               : null
           }
           action={p === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
-          onAction={() => set({ phase: p === 'secretPass1' ? 'secret1' : 'secret2' })}
+          onAction={() => dispatchPrivateMoment({
+            type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+          })}
         />,
         { accent: st.accent, glow: st.glow, menu: true }
       );
@@ -1579,17 +1581,10 @@ export default function CloserGame() {
       // which later decides whether this person gets a private check-in
       // screen after "that's all 36" and whether Question 37 treats their
       // slot as pending.
-      const choose = (has) => {
-        const seen = [...s.secretSeen];
-        seen[me] = true;
-        const have = [...s.hasSecretQuestion];
-        have[me] = has;
-        set({
-          secretSeen: seen,
-          hasSecretQuestion: have,
-          phase: me === 0 ? 'secretPass2' : 'secretPassBack',
-        });
-      };
+      const choose = (hasQuestion) => dispatchPrivateMoment({
+        type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
+        hasQuestion,
+      });
       return frame(
         <>
           <Body $center>
@@ -1614,12 +1609,9 @@ export default function CloserGame() {
         kicker={t('passPhoneBack')}
         body={t('passPhoneBackText')}
         action={t('continue')}
-        onAction={() => {
-          const index = s.pending;
-          const next = { ...s, phase: 'q', qIndex: index };
-          setS(next);
-          enterQuestion(index, next);
-        }}
+        onAction={() => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+        })}
       />,
       { accent: st.accent, glow: st.glow, menu: true }
     );
@@ -1666,7 +1658,9 @@ export default function CloserGame() {
         <Foot>
           {revealSecond && (
             <GhostButton
-              onClick={() => (isQuick ? finish('completed') : set({ phase: nextCheckPhase() }))}
+              onClick={() => dispatchPrivateMoment({
+                type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+              })}
             >
               {isQuick ? t('end') : t('continue')}
             </GhostButton>
@@ -1691,7 +1685,9 @@ export default function CloserGame() {
         accent={finalStyle.accent}
         kicker={tf('passPhoneTo', nameOf(who))}
         action={tf('iAm', nameOf(who))}
-        onAction={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
+        onAction={() => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+        })}
       />,
       { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
@@ -1704,7 +1700,9 @@ export default function CloserGame() {
         kicker={t('passPhoneBack')}
         body={t('passPhoneBackText')}
         action={t('continue')}
-        onAction={() => set({ phase: 'q37intro' })}
+        onAction={() => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
+        })}
       />,
       { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
@@ -1712,11 +1710,10 @@ export default function CloserGame() {
 
   if (s.phase === 'check1' || s.phase === 'check2') {
     const me = s.phase === 'check1' ? 0 : 1;
-    const answer = (value) => {
-      const asked = [...s.secretAsked];
-      asked[me] = value;
-      set({ secretAsked: asked, phase: me === 0 ? afterCheck1() : 'checkPassBack' });
-    };
+    const answer = (asked) => dispatchPrivateMoment({
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
+      asked,
+    });
     return frame(
       <>
         <Body $center>
