@@ -103,12 +103,13 @@ Requirements:
 
 **Status:** Partially delivered
 
-Singleton style and route screens are skipped. Remaining work:
+Singleton style and route screens are skipped. Menu was already available from the landing screen onward.
 
-- provide an internal Back action at every setup stage;
-- keep Menu available from the landing screen onward;
-- preserve user choices when moving back;
-- distinguish pack, route, and style consistently in UI and code.
+Delivered: an internal Back action at every core setup stage (players, pack, duration, style), mirroring each stage's own singleton-skip logic in reverse so Back never lands on a screen the forward flow would have skipped. User choices already survive a step back and forward again, since phase changes alone never clear `players`/`packId`/`routeId`/`modeId`. Deliberately no Back button on Intro for a pack with a consent gate (Late Night): that Intro is only ever reached after both required consent confirmations, and reversing into that flow is a distinct, safety-sensitive concern this change does not take on. Covered by `e2e/setup-back-navigation.spec.js`.
+
+While implementing this, found and fixed an unrelated pre-existing gap: the setup screens stayed reachable in the accessibility tree while the global menu dialog was open on top of them (a background "Go back" and the dialog's own same-named control were both matchable at once). The screen behind an open dialog is now `inert`, matching the treatment the milestone celebration overlay already had.
+
+Remaining work: distinguish pack, route, and style consistently in UI and code. The internal field is still named `modeId` throughout the codebase and the persisted save shape (matching the pre-refactor "mode" terminology); renaming it is a larger, save-compatibility-sensitive change than this pass, not something to fold into a navigation fix.
 
 ### FR-008 – Duration calibration
 

@@ -1041,14 +1041,22 @@ export default function CloserGame() {
     </>
   );
 
+  // Covered whenever something else owns the screen: the milestone
+  // celebration, or the menu dialog. menuOverlay renders as FrameContent's
+  // sibling, not its child, so this only hides what's actually behind it --
+  // it also stops an ambiguous accessible name behind the dialog (e.g. a
+  // setup screen's own "Go back") from matching alongside the dialog's own
+  // control of the same name.
+  const contentCovered = Boolean(pulseStage) || menuOpen;
+
   const frame = (content, opts = {}) => (
     <Screen $accent={opts.accent || style.accent} $glow={opts.glow ?? style.glow}>
       <CloserGlobal />
       <FrameContent
         ref={frameContentRef}
-        $blocked={Boolean(pulseStage)}
-        inert={pulseStage ? '' : undefined}
-        aria-hidden={pulseStage ? 'true' : undefined}
+        $blocked={contentCovered}
+        inert={contentCovered ? '' : undefined}
+        aria-hidden={contentCovered ? 'true' : undefined}
         data-testid="closer-frame-content"
       >
         {content}
@@ -1156,6 +1164,32 @@ export default function CloserGame() {
     );
   }
 
+  /*
+   * FR-007: internal Back navigation through setup. Choices already made
+   * (players, packId, routeId, modeId) are never cleared by a phase change
+   * alone, so stepping back and then forward again shows them exactly as
+   * left. The reverse mapping mirrors each forward transition's own
+   * singleton-skip logic (the style screen is skipped whenever a pack has
+   * only one style) so Back never lands on a screen that would immediately
+   * skip itself.
+   *
+   * Deliberately no Back button on 'intro' for a pack with a consent gate:
+   * that 'intro' is only ever reached after both required consent
+   * confirmations, and reversing into that flow is a distinct, safety-
+   * sensitive concern this feature does not take on.
+   */
+  const goBackFromSetup = () => {
+    if (s.phase === 'intro') {
+      if (pack.consentGate) return;
+      set({ phase: pack.modes.length > 1 ? 'mode' : 'duration' });
+      return;
+    }
+    const target = { players: 'start', pack: 'players', duration: 'pack', mode: 'duration' }[
+      s.phase
+    ];
+    if (target) set({ phase: target });
+  };
+
   /* ================================================================== */
   /* PLAYER SETUP                                                       */
   /* ================================================================== */
@@ -1193,6 +1227,7 @@ export default function CloserGame() {
           >
             {t('continue')}
           </Button>
+          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
           <Small style={{ textAlign: 'center' }}>{t('namesOptional')}</Small>
         </Foot>
       </>,
@@ -1234,6 +1269,7 @@ export default function CloserGame() {
           <Button $accent={A0} onClick={() => set({ phase: 'duration' })}>
             {t('continue')}
           </Button>
+          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
         </Foot>
       </>,
       { accent: A0, glow: 0.28, menu: true }
@@ -1287,6 +1323,7 @@ export default function CloserGame() {
           >
             {t('continue')}
           </Button>
+          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
         </Foot>
       </>,
       { accent: A0, glow: 0.28, menu: true }
@@ -1328,6 +1365,7 @@ export default function CloserGame() {
           >
             {t('continue')}
           </Button>
+          <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
         </Foot>
       </>,
       { accent: A0, glow: 0.28, menu: true }
@@ -1399,6 +1437,12 @@ export default function CloserGame() {
           <Button $accent={A0} onClick={() => set({ phase: 'act', pending: 0, qIndex: 0 })}>
             {t('begin')}
           </Button>
+          {/* No Back button when a consent gate is involved -- this
+              screen is only reached after both required confirmations;
+              see goBackFromSetup()'s own comment. */}
+          {!pack.consentGate && (
+            <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
+          )}
           <Small style={{ textAlign: 'center' }}>{t('privacy')}</Small>
         </Foot>
       </>,
