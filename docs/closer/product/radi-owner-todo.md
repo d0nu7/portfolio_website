@@ -14,7 +14,7 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 4. Define and approve pack-specific private moments.
 5. Build and approve replacement-question pools.
 6. Run moderated sessions and recalibrate duration estimates.
-7. Keep the approved product freeze in place while FR-011 is implemented incrementally.
+7. Keep the approved product freeze in place through FR-011 release verification.
 
 ## Immediate release decisions
 
@@ -174,20 +174,20 @@ RaDi decisions before engineering starts:
 - [x] Require incremental, reviewable commits rather than a controller rewrite in one change.
 - [x] Define the automated release gate: full lint, unit/catalog, build, and E2E suite. Physical smoke checks remain required before public release.
 
-Recommended engineering sequence:
+Completed engineering sequence:
 
 1. Completed: make `compileRun()` the runtime source without changing visible behavior.
-2. In progress: add transition characterization tests for every phase and event.
-3. In progress: move one phase family at a time into a pure transition function.
+2. Completed: characterize every persisted phase and event family before moving it.
+3. Completed: move one phase family at a time into pure transition functions.
 4. Completed for the verified save families: extract persistence parsing and enforce phase-specific validation without changing save compatibility.
-5. Remove compatibility code only after migrated saves and restart paths are verified.
+5. Completed for FR-011: preserve compatibility exports and the stored `modeId` field; do not perform an unrelated save migration.
 
 Done when: runtime behavior derives from one immutable run definition, transitions are explicit and testable, invalid saved states fail safely, and no user-visible behavior changes unintentionally.
 
 ## Explicitly separate work
 
 - **FR-012 / TTS:** shelved indefinitely. The voice branch is not planned for merge and is not a constraint or dependency for FR-011. Reopening it requires a new explicit decision.
-- **Pack/route/style terminology:** fold the save-compatible `modeId` migration into FR-011 or a separately planned migration; do not rename it casually.
+- **Pack/route/style terminology:** defer the persisted `modeId` rename to a separately approved save migration; FR-011 deliberately preserves it.
 
 ## Decision log
 
@@ -197,4 +197,5 @@ Done when: runtime behavior derives from one immutable run definition, transitio
 | 2026-08-16 | FR-002 | Do not publish IBAN/BIC | No payment flow or identified Imprint requirement justifies the additional public disclosure | Complete |
 | 2026-08-16 | FR-011 | Freeze all product behavior and authorize incremental run-definition and transition-core work | A stable target and characterization coverage reduce the risk of changing fragile phase paths during the refactor | Engineering |
 | 2026-08-16 | FR-012 | Shelve TTS indefinitely; do not merge the existing voice branch | TTS is not currently planned and must not complicate the active engine refactor | Reopen only by explicit RaDi decision |
+| 2026-08-16 | FR-011 | Complete the incremental transition, persistence, storage, and view extraction without product changes | The characterized slices pass the automated release gate and preserve save compatibility | Physical-device release verification |
 |  |  |  |  |  |

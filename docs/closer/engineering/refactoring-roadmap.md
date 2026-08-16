@@ -71,21 +71,24 @@ After pack, route, and style resolution, compile one immutable definition:
 {
   packId,
   routeId,
-  styleId,
+  modeId,
+  hasStyleChoice,
+  requiresConsent,
   questions: [{ id, actIndex, sourceIndex, content }],
   actStarts: [0, 4, 8],
   timing: { totalMinutes, actMinutes },
-  privateMoment: null,
+  secretAtIndex,
+  privateMoment,
   contentRevision,
   fingerprint
 }
 ```
 
-`compileRun()` is now wired into the controller and save parser as the single
-runtime source for run structure. The first pure transition slice resolves
-question destinations from that definition. Continue one characterized phase
-family at a time; do not combine the remaining controller migration into one
-large patch.
+`compileRun()` is wired into the controller and save parser as the single
+runtime source for run structure. Every persisted navigation family is routed
+through characterized pure transitions. Screen-local countdown, focus,
+animation, visibility, Wake Lock, and timer effects remain intentionally in the
+controller.
 
 ## 3. Work phases
 
@@ -140,9 +143,9 @@ Status: complete in code; physical-device verification remains part of the relea
 
 **Execution freeze (16 August 2026):** routes, content, private moments,
 finales, consent, Pass, setup navigation, animation, legal copy, PWA behavior,
-and infrastructure are frozen while FR-011 is in progress. Only
-behavior-preserving engine extraction, its tests, and directly related
-documentation are in scope.
+and infrastructure remained frozen throughout FR-011. Keep that freeze through
+release verification; any later product work starts as a separately approved
+scope.
 
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [x] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory and implemented families live in the [transition matrix](transition-matrix.md).

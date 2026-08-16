@@ -3,7 +3,7 @@
 **Updated:** 16 August 2026
 **Status convention:** Proposed, Planned, In progress, Verification pending, Delivered, or Shelved
 
-Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 is the only active implementation workstream during the approved product freeze.
+Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 implementation is complete; the approved product freeze remains in place through release verification.
 
 ## P0 – release requirements
 
@@ -143,17 +143,19 @@ Migration requirements:
 
 ### FR-011 – Run-definition and transition-core integration
 
-**Status:** In progress under a product and feature freeze
+**Status:** Verification pending
 
-`compileRun()` now drives runtime run structure and save validation. Migrate the
-remaining phase transitions incrementally to the pure transition core. This is
-an engineering quality feature because it makes consent, resume, and finale
-behavior auditable. Detailed sequencing is in the [refactoring roadmap](../engineering/refactoring-roadmap.md)
-and the [transition matrix](../engineering/transition-matrix.md).
+`compileRun()` drives runtime run structure and save validation. All persisted
+phase transitions are characterized in the pure transition core, persistence
+and browser storage have explicit boundaries, and phase presentation is split
+into focused views. This makes consent, resume, question routing, private
+handoffs, and finale behavior auditable. The completed sequence is recorded in
+the [refactoring roadmap](../engineering/refactoring-roadmap.md) and the
+[transition matrix](../engineering/transition-matrix.md).
 
 Frozen on 16 August 2026: no concurrent content, game-mechanic, animation,
 legal, PWA, infrastructure, or TTS changes. Characterization tests must precede
-each transition-family extraction, and visible behavior must remain unchanged.
+each transition-family extraction, and visible behavior remained unchanged.
 
 ### FR-012 – TTS integration
 

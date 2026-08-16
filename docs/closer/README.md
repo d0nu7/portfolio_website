@@ -7,7 +7,7 @@ This directory contains the current product, content, review, and engineering do
 | Area | Document | Authority |
 |---|---|---|
 | Product behavior and safety | [Gameplay and safety contract](product/gameplay-and-safety.md) | Desired user-visible behavior, consent rules, route semantics, and release acceptance |
-| Product-owner actions | [RaDi owner TODO](product/radi-owner-todo.md) | Legal approval, editorial work, user sessions, infrastructure decisions, and FR-011 commissioning |
+| Product-owner actions | [RaDi owner TODO](product/radi-owner-todo.md) | Legal approval, editorial work, user sessions, infrastructure decisions, and release sign-off |
 | Questions and routes | [Question catalog DE/EN](content/question-catalog.de-en.md) | Exact bilingual wording, stable IDs, route membership, pack finales, and pilot durations |
 | Editorial rationale | [Question-design research](content/question-design-research.md) | Research synthesis, limitations, question criteria, and pack-specific editorial guidance |
 | Current assessment | [Holistic review](reviews/current-review.md) | Latest product/code assessment and priorities |
@@ -26,7 +26,7 @@ Product code and automated tests remain the technical source of truth for what t
 - Quick, Standard, and Full are curated routes. Packs with one valid style skip the style screen.
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
 - Pack content is modularized under `src/closer/content/`; the compiled run still originates in `src/constants/closer.js` while the new pure transition core lives under `src/closer/engine/`.
-- `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Migration of the remaining phase families into the transition core is still open.
+- `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Persisted transitions, persistence parsing, browser storage, and phase presentation now have explicit tested boundaries.
 - The active iteration repairs mobile control spacing, milestone presentation, dialog subview focus, Late Night discovery/consent behavior, STAY safety, and in-app legal reachability. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
 - TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.
 

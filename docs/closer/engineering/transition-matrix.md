@@ -2,7 +2,7 @@
 
 **Updated:** 16 August 2026
 **Scope:** persisted game phases and the events that may leave them
-**Product state:** frozen while FR-011 is in progress
+**Product state:** FR-011 implementation complete; release verification pending
 
 This matrix is the behavioral contract for the transition-core migration. A
 transition family moves only after its current behavior has characterization
@@ -17,7 +17,9 @@ compiled question destinations, question completion/pass, language, and timer ch
 save parsing are pure and characterized in `src/closer/engine/persistence.js`;
 the guarded browser-storage boundary is isolated in
 `src/closer/infrastructure/storage.js`. Canonical restart and resume-state
-preparation are pure; their screen-local effects remain in the controller.
+preparation are pure; their screen-local effects remain in the controller. All
+phase presentation is isolated in focused view components that emit callbacks
+to this event layer.
 
 ## Global events
 

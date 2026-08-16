@@ -8,13 +8,13 @@
 
 CLOSER is now a coherent product rather than a single 36-question prototype. Its strongest qualities are the shared-device focus, quiet question screens, bilingual content fidelity, curated route structure, unconditional passing, and a thoughtful set of relationship-specific packs. The content is generally strong enough for broader moderated testing.
 
-The current worktree closes the most visible defects: timer/Menu collision, undersized milestone animation, dialog subview focus, STAY lockout, discreet Late Night discovery and consent, the Late Night no-secret finale, and in-app legal reachability. Lint, unit/catalog tests, the production static build, and the complete local Chromium E2E suite pass. It is not yet fully release-verified because the new build is not deployed and physical Android/iOS plus assistive-technology checks remain. The largest technical risk is now the phase controller and persisted-state model, not bundle size or content-file size.
+The current worktree closes the most visible defects: timer/Menu collision, undersized milestone animation, dialog subview focus, STAY lockout, discreet Late Night discovery and consent, the Late Night no-secret finale, and in-app legal reachability. FR-011 also replaces the monolithic phase controller with a compiled run definition, characterized pure transitions, explicit persistence/storage boundaries, and focused presentation components. Lint, unit/catalog tests, the production static build, and the complete local Chromium E2E suite pass. It is not yet fully release-verified because the new build is not deployed and physical Android/iOS plus assistive-technology checks remain.
 
 Recommended release decision:
 
 - **Normal packs:** suitable for a controlled public beta after deployment smoke testing and physical-device checks.
 - **Late Night:** suitable for explicit testing now in the local build; broad release still waits for owner/legal review and physical-device checks.
-- **Architecture:** no big-bang rewrite before the UI iteration ships. Integrate the existing run compiler first, then move transitions in tested slices.
+- **Architecture:** FR-011 is complete in code through small behavior-preserving slices; retain the characterization suite as the contract for future changes.
 
 ## 2. Evidence and limitations
 
@@ -83,7 +83,7 @@ The legal material must identify the operator and explain processing, but this r
 
 ### P2 – engineering resilience
 
-1. Continue the transition-core migration one characterized phase family at a time; `compileRun()` is now wired into runtime.
+1. Keep the completed transition core and compiled run definition as the required path for future persisted navigation.
 2. Include style identity in the run fingerprint.
 3. Replace broad persisted-state parsing with genuinely phase-specific validation.
 4. Checkpoint the current timer segment on safe lifecycle boundaries.
@@ -129,7 +129,7 @@ The full wording, route membership, and duration estimates live in the [question
 2. Test the deployed build on a real Android PWA and iOS Add to Home Screen; verify safe areas and system navigation rather than trying to hide them.
 3. Conduct moderated sessions across all packs and routes; calibrate duration and question quality.
 4. Design pack-specific private moments and only then consider a replacement-question joker.
-5. Continue the pure transition-core migration according to the frozen transition matrix.
+5. Treat the frozen transition matrix and characterization suite as change-control contracts rather than reopening the controller refactor.
 6. Decide on offline support and a separate `closer.radi.solutions` project after product behavior stabilizes.
 
 ## 8. Documentation decision
