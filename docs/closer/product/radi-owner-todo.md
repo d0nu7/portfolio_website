@@ -14,7 +14,7 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 4. Define and approve pack-specific private moments.
 5. Build and approve replacement-question pools.
 6. Run moderated sessions and recalibrate duration estimates.
-7. Schedule FR-011 as a dedicated engineering effort after product behavior is stable.
+7. Keep the approved product freeze in place while FR-011 is implemented incrementally.
 
 ## Immediate release decisions
 
@@ -146,20 +146,23 @@ Technical groundwork already delivered:
 - [x] Add scoped phase-discriminated save validation.
 - [x] Checkpoint active timer segments across lifecycle boundaries.
 - [x] Keep non-game preferences in a separately versioned record.
+- [x] Make `compileRun()` the controller and save parser's runtime source.
+- [x] Establish the complete transition matrix and characterize the first pure transition family.
 
-The remaining compiler/reducer integration is still a dedicated high-blast-radius effort.
+The remaining transition-core integration is still a dedicated high-blast-radius effort.
 
 RaDi decisions before engineering starts:
 
-- [ ] Freeze the intended behavior for routes, private moments, finales, consent, Pass, and setup navigation for the duration of the refactor.
-- [ ] Approve a dedicated branch or workstream with no concurrent TTS merge.
-- [ ] Require a transition matrix and characterization tests before moving logic.
-- [ ] Require incremental, reviewable commits rather than a controller rewrite in one change.
-- [ ] Define the release gate: full unit/catalog/E2E suite plus physical smoke checks on the final integration.
+- [x] Freeze the intended behavior for routes, private moments, finales, consent, Pass, setup navigation, animations, legal copy, PWA behavior, and infrastructure for the duration of the refactor.
+- [x] Authorize FR-011 as the only active implementation workstream.
+- [x] Shelve TTS indefinitely and confirm that the existing voice branch is not planned for merge.
+- [x] Require a transition matrix and characterization tests before moving logic.
+- [x] Require incremental, reviewable commits rather than a controller rewrite in one change.
+- [x] Define the automated release gate: full lint, unit/catalog, build, and E2E suite. Physical smoke checks remain required before public release.
 
 Recommended engineering sequence:
 
-1. Make `compileRun()` the runtime source without changing visible behavior.
+1. Completed: make `compileRun()` the runtime source without changing visible behavior.
 2. Add transition characterization tests for every phase and event.
 3. Move one phase family at a time into a pure transition function.
 4. Replace broad persistence checks with phase-specific validation.
@@ -169,7 +172,7 @@ Done when: runtime behavior derives from one immutable run definition, transitio
 
 ## Explicitly separate work
 
-- **FR-012 / TTS:** remains on the dedicated voice branch. Do not combine it with FR-011 or editorial catalog changes.
+- **FR-012 / TTS:** shelved indefinitely. The voice branch is not planned for merge and is not a constraint or dependency for FR-011. Reopening it requires a new explicit decision.
 - **Pack/route/style terminology:** fold the save-compatible `modeId` migration into FR-011 or a separately planned migration; do not rename it casually.
 
 ## Decision log
@@ -178,4 +181,6 @@ Done when: runtime behavior derives from one immutable run definition, transitio
 |---|---|---|---|---|
 | 2026-08-16 | FR-002 | Publish supplied phone number and VAT ID; use `radomir.dinic@radi.solutions` | Real operator details and existing identifiers belong in the Imprint | Complete |
 | 2026-08-16 | FR-002 | Do not publish IBAN/BIC | No payment flow or identified Imprint requirement justifies the additional public disclosure | Complete |
+| 2026-08-16 | FR-011 | Freeze all product behavior and authorize incremental run-definition and transition-core work | A stable target and characterization coverage reduce the risk of changing fragile phase paths during the refactor | Engineering |
+| 2026-08-16 | FR-012 | Shelve TTS indefinitely; do not merge the existing voice branch | TTS is not currently planned and must not complicate the active engine refactor | Reopen only by explicit RaDi decision |
 |  |  |  |  |  |

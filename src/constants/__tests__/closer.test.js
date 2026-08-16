@@ -737,13 +737,18 @@ describe('compileRun (Phase 3, RunDefinition)', () => {
     expect(compileRun('classic', 'full', 'does-not-exist').modeId).toBe(PACKS.classic.modes[0].id);
   });
 
-  it('carries pack private-moment policy and freezes the result', () => {
+  it('carries route structure and private-moment policy in the frozen result', () => {
     const run = compileRun('classic', 'full');
+    expect(run.acts).toEqual(resolvedActs('classic', 'full'));
+    expect(run.secretAtIndex).toBe(secretAtIndexFor('classic', 'full'));
     expect(run.privateMoment).toBeNull();
     expect(compileRun('late-night', 'quick').privateMoment).toBe('none');
     expect(Object.isFrozen(run)).toBe(true);
     expect(Object.isFrozen(run.questions)).toBe(true);
+    expect(run.questions.every(Object.isFrozen)).toBe(true);
+    expect(Object.isFrozen(run.acts)).toBe(true);
     expect(Object.isFrozen(run.actStarts)).toBe(true);
+    expect(Object.isFrozen(run.timing)).toBe(true);
   });
 
   it('distinguishes packs and routes', () => {

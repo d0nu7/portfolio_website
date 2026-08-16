@@ -2,7 +2,7 @@
 
 **Updated:** 16 August 2026
 **Basis:** independent code review, the consolidated Claude refactoring analysis, product review, and current regression findings
-**Goal:** improve correctness and maintainability incrementally without a high-risk rewrite or interference with the separate voice/TTS work
+**Goal:** improve correctness and maintainability incrementally without a high-risk rewrite or unrelated product changes
 
 This is the only active refactoring roadmap. Dated iteration reports were removed after their durable findings were folded into this document and the living review trackers.
 
@@ -17,11 +17,14 @@ This is the only active refactoring roadmap. Dated iteration reports were remove
 7. **Persistence is versioned and invariant-aware.** A save is valid only when its content version, run definition, and phase state agree.
 8. **Milestones celebrate shared time, not disclosure.** Animation must never reward intensity, speed, or consent.
 9. **Late Night discovery and consent are separate.** A discreet menu preference may reveal the pack; both adults must still consent independently for every session.
-10. **TTS follows stable content IDs.** Voice assets remain isolated until content IDs and the run definition are stable.
+10. **TTS is not part of the active product scope.** The existing voice branch is not planned for merge and must not influence FR-011 architecture, tests, or release decisions. Reconsidering TTS requires a new explicit product decision.
 
 ## 2. Current architecture
 
-Content has already been split from the public facade:
+Content has already been split from the public facade. Engine helpers and
+`compileRun()` still live in the compatibility facade; the previously documented
+`src/closer/engine/` directory was a target layout, not the repository's actual
+state on 16 August 2026.
 
 ```text
 src/closer/
@@ -38,12 +41,9 @@ src/closer/
       chaos.js
       late-night.js
     index.js
-  engine/
-    run-definition.js
-    timing.js
-    persistence.js
 src/components/Closer/
-src/constants/closer.js        # compatibility facade
+  CloserGame.js                # controller, persistence, transitions, rendering
+src/constants/closer.js        # content-resolution helpers and compileRun()
 ```
 
 The remaining architectural problem is not bundle size. It is that `CloserGame.js` still owns a large number of phase-specific render branches and performs transitions through direct state updates. This makes consent, handoffs, resume, and finale behavior harder to reason about as a system.
@@ -66,7 +66,11 @@ After pack, route, and style resolution, compile one immutable definition:
 }
 ```
 
-`compileRun()` already exists and is tested, but the runtime still reads multiple helpers independently. Wire the existing compiler into the current controller first; do not wait for a reducer and do not combine both changes in one large patch.
+`compileRun()` is now wired into the controller and save parser as the single
+runtime source for run structure. The first pure transition slice resolves
+question destinations from that definition. Continue one characterized phase
+family at a time; do not combine the remaining controller migration into one
+large patch.
 
 ## 3. Work phases
 
@@ -119,13 +123,19 @@ The modularization exists for reviewability and maintenance, not as a claimed pe
 
 Status: partially complete. This is the largest remaining engineering task.
 
-1. [ ] Make `compileRun()` the runtime source for question order, act boundaries, timing, and fingerprinting.
-2. [ ] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`.
-3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function.
+**Execution freeze (16 August 2026):** routes, content, private moments,
+finales, consent, Pass, setup navigation, animation, legal copy, PWA behavior,
+and infrastructure are frozen while FR-011 is in progress. Only
+behavior-preserving engine extraction, its tests, and directly related
+documentation are in scope.
+
+1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
+2. [ ] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory now lives in the [transition matrix](transition-matrix.md); event migration remains incremental.
+3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function. The compiled question-destination family is migrated and characterized in `src/closer/engine/transitions.js`; setup, consent, private resolution, and finale families remain in the controller.
 4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
 5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
-7. [ ] Keep non-run preferences in a separately versioned preference record.
+7. [x] Keep non-run preferences in a separately versioned preference record.
 8. [x] Pause active time while the page is hidden and request Wake Lock again after visibility returns.
 
 Do this in small, behavior-preserving slices. Consent and private handoffs need dedicated tests before each transition is moved.
@@ -180,11 +190,15 @@ Moving origins does not migrate `localStorage` saves or an installed PWA identit
 
 ### Phase 7 – TTS
 
-Status: explicitly out of scope for this branch.
+Status: shelved indefinitely by product decision on 16 August 2026.
 
-- [ ] Integrate only after question IDs and content revision are stable.
-- [ ] Map audio through a versioned ID-based manifest.
-- [ ] Merge the separate ElevenLabs/voice work only after normal CLOSER changes are settled and its tests pass.
+- The existing voice branch is not planned for merge.
+- FR-011 must not preserve speculative TTS requirements beyond existing stable
+  content IDs and backward-compatible public exports.
+- Do not generate, migrate, review, or clean up voice artifacts as part of the
+  active roadmap.
+- Resume TTS work only after a new explicit product decision creates a separate
+  scope, privacy review, and delivery plan.
 
 ## 4. Test strategy
 
@@ -206,7 +220,7 @@ Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already
 ## 5. Cleanup rules
 
 - Remove only demonstrably unused files, exports, comments, and duplicate documentation.
-- Do not modify or merge voice artifacts as incidental cleanup.
+- Do not modify or merge voice artifacts. TTS is outside the active product scope.
 - Do not rewrite published Git history merely to translate old commit messages.
 - New documentation, source comments, test descriptions, and commit messages are English. Localized product copy and the bilingual question catalog remain German/English by design.
 - Keep one living document per purpose. Git history preserves superseded iteration reports.
@@ -221,3 +235,4 @@ Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already
 - [Gameplay and safety contract](../product/gameplay-and-safety.md)
 - [Bilingual question catalog](../content/question-catalog.de-en.md)
 - [Question-design research](../content/question-design-research.md)
+- [Transition matrix](transition-matrix.md)

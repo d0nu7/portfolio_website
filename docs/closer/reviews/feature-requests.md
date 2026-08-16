@@ -1,9 +1,9 @@
 # CLOSER – feature requests
 
 **Updated:** 16 August 2026
-**Status convention:** Proposed, Planned, In progress, Verification pending, or Delivered
+**Status convention:** Proposed, Planned, In progress, Verification pending, Delivered, or Shelved
 
-Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 remains a separately scheduled engineering effort.
+Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 is the only active implementation workstream during the approved product freeze.
 
 ## P0 – release requirements
 
@@ -143,12 +143,23 @@ Migration requirements:
 
 ### FR-011 – Run-definition and transition-core integration
 
-**Status:** Planned
+**Status:** In progress under a product and feature freeze
 
-Wire the existing `compileRun()` into the runtime, then migrate phase transitions incrementally to a pure transition core. This is an engineering quality feature because it makes consent, resume, and finale behavior auditable. Detailed sequencing is in the [refactoring roadmap](../engineering/refactoring-roadmap.md).
+`compileRun()` now drives runtime run structure and save validation. Migrate the
+remaining phase transitions incrementally to the pure transition core. This is
+an engineering quality feature because it makes consent, resume, and finale
+behavior auditable. Detailed sequencing is in the [refactoring roadmap](../engineering/refactoring-roadmap.md)
+and the [transition matrix](../engineering/transition-matrix.md).
+
+Frozen on 16 August 2026: no concurrent content, game-mechanic, animation,
+legal, PWA, infrastructure, or TTS changes. Characterization tests must precede
+each transition-family extraction, and visible behavior must remain unchanged.
 
 ### FR-012 – TTS integration
 
-**Status:** Deferred to the separate voice branch
+**Status:** Shelved indefinitely; no merge planned
 
-Use stable question IDs and a versioned audio manifest. Do not merge or generate voice artifacts as incidental work on the game review branch.
+TTS is no longer considered by the active CLOSER roadmap. The existing voice
+branch is not planned for merge and must not shape FR-011 implementation choices.
+Do not generate, migrate, review, or clean up voice artifacts. Reopening FR-012
+requires a new explicit product decision and a separately scoped effort.

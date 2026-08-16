@@ -14,6 +14,7 @@ This directory contains the current product, content, review, and engineering do
 | Defects | [Bug tracker](reviews/bugs.md) | Reproducible bugs, status, and acceptance criteria |
 | Enhancements | [Feature requests](reviews/feature-requests.md) | Product additions and platform improvements |
 | Architecture | [Refactoring roadmap](engineering/refactoring-roadmap.md) | Incremental structural plan and verification strategy |
+| State transitions | [Transition matrix](engineering/transition-matrix.md) | Frozen phase/event contract and migration status |
 
 Product code and automated tests remain the technical source of truth for what the current branch actually ships. When implementation and these documents disagree, record the mismatch in the bug tracker and resolve it deliberately; do not silently rewrite the desired behavior to match a regression.
 
@@ -24,10 +25,10 @@ Product code and automated tests remain the technical source of truth for what t
 - All 324 German/English questions have stable IDs and automated exact catalog-fidelity coverage.
 - Quick, Standard, and Full are curated routes. Packs with one valid style skip the style screen.
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
-- Pack content is modularized under `src/closer/content/`; `src/constants/closer.js` remains a compatibility facade.
-- `compileRun()` exists but is not yet the sole runtime source. Reducer extraction and phase-discriminated persistence remain open architecture work.
+- Pack content is modularized under `src/closer/content/`; the compiled run still originates in `src/constants/closer.js` while the new pure transition core lives under `src/closer/engine/`.
+- `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Migration of the remaining phase families into the transition core is still open.
 - The active iteration repairs mobile control spacing, milestone presentation, dialog subview focus, Late Night discovery/consent behavior, STAY safety, and in-app legal reachability. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
-- Voice/TTS work remains isolated on its separate branch until the content identity and normal game changes are stable.
+- TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.
 
 ## Documentation conventions
 

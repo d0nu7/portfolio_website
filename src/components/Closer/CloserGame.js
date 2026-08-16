@@ -6,23 +6,19 @@ import {
   DEFAULT_ROUTE_ID,
   LANGS,
   PACKS,
-  actIndexFor,
-  actStartIndices,
   classifySecretAsked,
-  finalQuestionIndex,
+  compileRun,
   getPack,
   getRoute,
   pick,
-  questionAt,
-  resolvedActs,
   routeSubtitleFor,
-  routeTimingFor,
-  runFingerprintFor,
-  runQuestionIdsFor,
-  secretAtIndexFor,
   starterFor,
-  totalQuestions,
 } from '../../constants/closer';
+import {
+  QUESTION_DESTINATION_EFFECTS,
+  actIndexAt,
+  resolveQuestionDestination,
+} from '../../closer/engine/transitions';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
 import CloserChoiceList from './CloserChoiceList';
@@ -318,6 +314,7 @@ export function parseSaved(raw) {
   if (!pack.modes.some((m) => m.id === merged.modeId)) {
     merged.modeId = pack.modes[0].id;
   }
+  const run = compileRun(merged.packId, merged.routeId, merged.modeId);
 
   // Stage 2: the immutable run reference. Once pack/route/style are
   // canonicalized, reject a save whose stored fingerprint no longer matches
@@ -326,18 +323,18 @@ export function parseSaved(raw) {
   if (typeof saved.runFingerprint === 'string' && saved.runFingerprint.length > 0) {
     // merged.modeId is already canonicalized above, so a style that no
     // longer exists cannot slip past this check as if nothing changed.
-    if (saved.runFingerprint !== runFingerprintFor(merged.packId, merged.routeId, merged.modeId)) {
+    if (saved.runFingerprint !== run.fingerprint) {
       return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
     }
   } else if (Array.isArray(saved.runQuestionIds) && saved.runQuestionIds.length > 0) {
     // Legacy saves predate the fingerprint and carried the full ID list.
-    const expected = runQuestionIdsFor(merged.packId, merged.routeId);
+    const expected = run.questions.map((question) => question.id);
     const matchesExpected =
       expected.length === saved.runQuestionIds.length &&
       expected.every((id, i) => id === saved.runQuestionIds[i]);
     if (!matchesExpected) return { ok: false, reason: SAVE_REJECT_REASONS.CONTENT_DRIFT };
   }
-  const lastQuestion = finalQuestionIndex(pack.id, merged.routeId);
+  const lastQuestion = run.questions.length - 1;
   if (merged.qIndex > lastQuestion || merged.pending > lastQuestion) {
     return { ok: false, reason: SAVE_REJECT_REASONS.INDEX_OUT_OF_RANGE };
   }
@@ -355,7 +352,7 @@ export function parseSaved(raw) {
     return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
   }
   if (PRIVATE_MOMENT_PHASES.has(merged.phase)) {
-    const privateMomentEnabled = merged.routeId !== 'quick' && pack.privateMoment !== 'none';
+    const privateMomentEnabled = run.routeId !== 'quick' && run.privateMoment !== 'none';
     if (!privateMomentEnabled) {
       return { ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE };
     }
@@ -645,27 +642,28 @@ export default function CloserGame() {
     };
   }, [timerRunning]);
 
-  // Everything pack-specific (acts, style modes, per-act look, question-37
-  // wording, secret-question placement) is looked up once per render from
-  // s.packId -- getPack() falls back to the default pack for any packId it
-  // doesn't recognise, so this never needs its own guard.
-  const pack = getPack(s.packId);
-  const route = getRoute(s.packId, s.routeId);
-  // Route-resolved acts keep the pack shape but include only the curated
-  // questions selected for this duration.
-  const acts = resolvedActs(s.packId, s.routeId);
-  const total = totalQuestions(s.packId, s.routeId);
+  // Compile every behavior-defining selection once. Runtime question order,
+  // act boundaries, timing, private-moment placement and fingerprinting now
+  // share this immutable definition instead of resolving parallel helpers.
+  const run = useMemo(
+    () => compileRun(s.packId, s.routeId, s.modeId),
+    [s.packId, s.routeId, s.modeId]
+  );
+  const pack = getPack(run.packId);
+  const route = getRoute(run.packId, run.routeId);
+  const acts = run.acts;
+  const total = run.questions.length;
   // Private resolution, finale, and ending share the last act's look.
   const finalStyle = pack.actStyle[pack.actStyle.length - 1];
 
   const mode = useMemo(
-    () => pack.modes.find((m) => m.id === s.modeId) || pack.modes[0],
-    [pack, s.modeId]
+    () => pack.modes.find((m) => m.id === run.modeId) || pack.modes[0],
+    [pack, run.modeId]
   );
-  const actIdx = actIndexFor(s.packId, s.qIndex, s.routeId);
+  const actIdx = actIndexAt(run, s.qIndex);
   const style = pack.actStyle[actIdx];
-  const question = questionAt(s.packId, s.qIndex, s.routeId);
-  const isLast = s.qIndex === finalQuestionIndex(s.packId, s.routeId);
+  const question = run.questions[s.qIndex]?.content || null;
+  const isLast = s.qIndex === total - 1;
 
   const nameOf = useCallback(
     (i) =>
@@ -680,9 +678,10 @@ export default function CloserGame() {
   const canStay = Boolean(question?.stayEnabled && mode.twists.stay);
 
   const enterQuestion = useCallback((index, state) => {
-    const p = getPack(state.packId);
-    const q = questionAt(state.packId, index, state.routeId);
-    const m = p.modes.find((x) => x.id === state.modeId) || p.modes[0];
+    const nextRun = compileRun(state.packId, state.routeId, state.modeId);
+    const p = getPack(nextRun.packId);
+    const q = nextRun.questions[index]?.content || null;
+    const m = p.modes.find((x) => x.id === nextRun.modeId) || p.modes[0];
     const tw = q?.twist && m.twists[q.twist] ? q.twist : null;
     // 'deeper' is a post-answer twist; the rest open with a lead-in screen.
     setStep(tw && tw !== 'deeper' ? 'twist' : 'ask');
@@ -699,37 +698,19 @@ export default function CloserGame() {
   const goTo = useCallback(
     (index, patch = {}) => {
       const base = { ...s, ...patch };
-      const basePack = getPack(base.packId);
-      const baseTotal = totalQuestions(base.packId, base.routeId);
-      if (index >= baseTotal) {
-        set({ ...patch, phase: 'all36' });
-        return;
-      }
-      // Act boundaries are route-relative because shorter routes do not have
-      // twelve questions per act. Index zero is the start, not a break.
-      const starts = actStartIndices(base.packId, base.routeId);
-      const boundaryActIdx = starts.indexOf(index);
-      if (boundaryActIdx > 0) {
+      const nextRun = compileRun(base.packId, base.routeId, base.modeId);
+      const destination = resolveQuestionDestination(nextRun, base, index);
+
+      if (destination.effect === QUESTION_DESTINATION_EFFECTS.ACT_BREAK) {
         buzz([18, 60, 18]);
-        set({ ...patch, phase: 'break', breakAct: boundaryActIdx - 1, pending: index });
-        return;
-      }
-      if (
-        base.routeId !== 'quick' &&
-        basePack.privateMoment !== 'none' &&
-        index === secretAtIndexFor(base.packId, base.routeId) &&
-        !base.secretSeen[0]
-      ) {
-        set({ ...patch, phase: 'secretPass1', pending: index });
-        return;
-      }
-      if (index === baseTotal - 1) {
+      } else if (destination.effect === QUESTION_DESTINATION_EFFECTS.LAST_QUESTION) {
         buzz(20);
-        set({ ...patch, phase: 'lastIntro', pending: index });
-        return;
       }
-      set({ ...patch, phase: 'q', qIndex: index });
-      enterQuestion(index, base);
+
+      set({ ...patch, ...destination.patch });
+      if (destination.effect === QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION) {
+        enterQuestion(index, base);
+      }
     },
     [s, set, enterQuestion]
   );
@@ -863,7 +844,7 @@ export default function CloserGame() {
   // The selected route owns the time promise; use the same per-act allocation
   // as the route copy so slow, reflective packs and fast, playful packs do not
   // inherit CLASSIC's pacing by accident.
-  const actMs = routeTimingFor(s.packId, s.routeId).actMinutes[actIdx] * 60 * 1000;
+  const actMs = run.timing.actMinutes[actIdx] * 60 * 1000;
   const overtime = s.timerEnabled && elapsed > actMs;
   const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
@@ -1455,7 +1436,7 @@ export default function CloserGame() {
   /* ================================================================== */
 
   if (s.phase === 'act') {
-    const idx = actIndexFor(s.packId, s.pending, s.routeId);
+    const idx = actIndexAt(run, s.pending);
     const act = acts[idx];
     const st = pack.actStyle[idx];
     return frame(
@@ -1480,7 +1461,7 @@ export default function CloserGame() {
                 // cannot change during a run; store it before the next resume
                 // point. Style is included (BUG-007) since it changes twist
                 // behavior even when the questions themselves match.
-                runFingerprint: runFingerprintFor(s.packId, s.routeId, s.modeId),
+                runFingerprint: run.fingerprint,
                 contentVersion: CONTENT_VERSION,
               };
               buzz(16);

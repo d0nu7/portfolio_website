@@ -264,7 +264,7 @@ export function voiceSrc(packId, lang, questionId) {
  * Compiles pack, route and style into the immutable RunDefinition targeted by
  * the engine architecture. CloserGame can adopt this pure API incrementally.
  * Question content stays intact, while sourceIndex points to its position in
- * the full pack for stable persistence and pack-scoped voice assets.
+ * the full pack for stable persistence and content identity.
  */
 export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
   const pack = getPack(packId);
@@ -278,12 +278,12 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
   acts.forEach((act, actIndex) => {
     act.questions.forEach((q, localIndex) => {
       const routeRelativeIndex = actStarts[actIndex] + localIndex;
-      questions.push({
+      questions.push(Object.freeze({
         id: q.id,
         actIndex,
         sourceIndex: originalIndexFor(pack.id, routeRelativeIndex, route.id),
         content: q,
-      });
+      }));
     });
   });
 
@@ -292,8 +292,10 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
     routeId: route.id,
     modeId: resolvedModeId,
     questions: Object.freeze(questions),
+    acts: Object.freeze(acts),
     actStarts: Object.freeze(actStarts),
-    timing,
+    timing: Object.freeze(timing),
+    secretAtIndex: secretAtIndexFor(pack.id, route.id),
     privateMoment: pack.privateMoment ?? null,
     contentRevision: CONTENT_VERSION,
     fingerprint: runFingerprintFor(pack.id, route.id, resolvedModeId),

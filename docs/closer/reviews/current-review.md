@@ -83,7 +83,7 @@ The legal material must identify the operator and explain processing, but this r
 
 ### P2 – engineering resilience
 
-1. Wire `compileRun()` into runtime before beginning reducer extraction.
+1. Continue the transition-core migration one characterized phase family at a time; `compileRun()` is now wired into runtime.
 2. Include style identity in the run fingerprint.
 3. Replace broad persisted-state parsing with genuinely phase-specific validation.
 4. Checkpoint the current timer segment on safe lifecycle boundaries.
@@ -129,7 +129,7 @@ The full wording, route membership, and duration estimates live in the [question
 2. Test the deployed build on a real Android PWA and iOS Add to Home Screen; verify safe areas and system navigation rather than trying to hide them.
 3. Conduct moderated sessions across all packs and routes; calibrate duration and question quality.
 4. Design pack-specific private moments and only then consider a replacement-question joker.
-5. Integrate `compileRun()` and refactor transitions incrementally.
+5. Continue the pure transition-core migration according to the frozen transition matrix.
 6. Decide on offline support and a separate `closer.radi.solutions` project after product behavior stabilizes.
 
 ## 8. Documentation decision
