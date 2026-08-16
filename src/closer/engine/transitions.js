@@ -13,15 +13,25 @@ export const QUESTION_DESTINATION_EFFECTS = Object.freeze({
 
 export const GLOBAL_EVENTS = Object.freeze({
   END_RUN: 'END_RUN',
+  SET_LANGUAGE: 'SET_LANGUAGE',
+  SET_TIMER: 'SET_TIMER',
 });
 
 const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
+const SUPPORTED_LANGUAGES = new Set(['de', 'en']);
 
 export function transitionGlobal(state, event) {
-  if (!event || event.type !== GLOBAL_EVENTS.END_RUN || !END_REASONS.has(event.reason)) {
-    return null;
+  if (!event || typeof event.type !== 'string') return null;
+  if (event.type === GLOBAL_EVENTS.SET_LANGUAGE) {
+    return SUPPORTED_LANGUAGES.has(event.lang) ? { lang: event.lang } : null;
   }
-  return { phase: 'ending', completed: true, endReason: event.reason };
+  if (event.type === GLOBAL_EVENTS.SET_TIMER) {
+    return typeof event.enabled === 'boolean' ? { timerEnabled: event.enabled } : null;
+  }
+  if (event.type === GLOBAL_EVENTS.END_RUN && END_REASONS.has(event.reason)) {
+    return { phase: 'ending', completed: true, endReason: event.reason };
+  }
+  return null;
 }
 
 export const FINALE_EVENTS = Object.freeze({

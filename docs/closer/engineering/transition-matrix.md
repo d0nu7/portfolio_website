@@ -12,7 +12,7 @@ changes the next game event.
 
 Implementation status: setup/entry, consent, act-entry/break, private-moment
 capture/resolution, final-question reveal, Question 37, end-run reasons, and
-compiled question destinations are pure and characterized in
+compiled question destinations, language, and timer changes are pure and characterized in
 `src/closer/engine/transitions.js`. Canonical state creation and discriminated
 save parsing are pure and characterized in `src/closer/engine/persistence.js`;
 the guarded browser-storage boundary is isolated in
@@ -27,8 +27,8 @@ preparation are pure; their screen-local effects remain in the controller.
 | `END_RUN(userEnded)` | Any started run through Menu | `ending`, completed, no completion reward |
 | `END_RUN(consentDeclined)` | Either consent decision screen | Neutral `ending`, completed, no completion reward |
 | `RESUME` | Valid persisted phase | Restore the same compiled run and phase; otherwise reject safely |
-| `SET_LANGUAGE` | Every rendered phase | Same phase and run, different supported language |
-| `SET_TIMER` | Every phase where Menu exposes it | Same phase and run, updated timer preference |
+| `SET_LANGUAGE` | Every rendered phase | Pure `transitionGlobal()` patch; same phase and run, different supported language |
+| `SET_TIMER` | Every phase where Menu exposes it | Pure `transitionGlobal()` patch; same phase and run, updated timer preference |
 
 ## Setup and entry
 

@@ -180,12 +180,15 @@ export default function CloserGame() {
   }, []);
 
   const set = useCallback((patch) => setS((prev) => ({ ...prev, ...patch })), []);
-  const finish = useCallback((endReason = 'completed') => {
+  const dispatchGlobal = useCallback((event) => {
     setS((prev) => {
-      const patch = transitionGlobal(prev, { type: GLOBAL_EVENTS.END_RUN, reason: endReason });
+      const patch = transitionGlobal(prev, event);
       return patch ? { ...prev, ...patch } : prev;
     });
   }, []);
+  const finish = useCallback((endReason = 'completed') => {
+    dispatchGlobal({ type: GLOBAL_EVENTS.END_RUN, reason: endReason });
+  }, [dispatchGlobal]);
 
   const lang = s.lang;
   const t = useCallback((key) => pick(COPY[key], lang), [lang]);
@@ -202,8 +205,8 @@ export default function CloserGame() {
     setMounted(true);
     const saved = loadSavedGame(storage);
     setResumable(saved);
-    if (saved) set({ lang: saved.lang });
-  }, [set]);
+    if (saved) dispatchGlobal({ type: GLOBAL_EVENTS.SET_LANGUAGE, lang: saved.lang });
+  }, [dispatchGlobal]);
 
   // Milestone trigger detection only fires on a phase change that
   // actually happens during this live session, never on whatever phase a
@@ -592,7 +595,10 @@ export default function CloserGame() {
                     $on={s.timerEnabled}
                     $accent={style.accent}
                     aria-pressed={s.timerEnabled}
-                    onClick={() => set({ timerEnabled: !s.timerEnabled })}
+                    onClick={() => dispatchGlobal({
+                      type: GLOBAL_EVENTS.SET_TIMER,
+                      enabled: !s.timerEnabled,
+                    })}
                   >
                     {t('timer')}
                     <b>{s.timerEnabled ? t('on') : t('off')}</b>
@@ -816,7 +822,12 @@ export default function CloserGame() {
       <>
         <LangSwitch $accent={A0}>
           {LANGS.map((l) => (
-            <button key={l} type="button" aria-pressed={lang === l} onClick={() => set({ lang: l })}>
+            <button
+              key={l}
+              type="button"
+              aria-pressed={lang === l}
+              onClick={() => dispatchGlobal({ type: GLOBAL_EVENTS.SET_LANGUAGE, lang: l })}
+            >
               {l}
             </button>
           ))}
@@ -991,7 +1002,10 @@ export default function CloserGame() {
             $on={s.timerEnabled}
             $accent={A0}
             aria-pressed={s.timerEnabled}
-            onClick={() => set({ timerEnabled: !s.timerEnabled })}
+            onClick={() => dispatchGlobal({
+              type: GLOBAL_EVENTS.SET_TIMER,
+              enabled: !s.timerEnabled,
+            })}
           >
             {t('timer')}
             <b>{s.timerEnabled ? t('on') : t('off')}</b>

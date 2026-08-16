@@ -527,4 +527,26 @@ describe('final-question and global transition core', () => {
     })).toBeNull();
     expect(transitionGlobal({ phase: 'q' }, { type: 'UNKNOWN' })).toBeNull();
   });
+
+  it('sets only supported interface languages', () => {
+    expect(transitionGlobal({ lang: 'de' }, {
+      type: GLOBAL_EVENTS.SET_LANGUAGE,
+      lang: 'en',
+    })).toEqual({ lang: 'en' });
+    expect(transitionGlobal({ lang: 'de' }, {
+      type: GLOBAL_EVENTS.SET_LANGUAGE,
+      lang: 'fr',
+    })).toBeNull();
+  });
+
+  it('sets the timer only from an explicit boolean value', () => {
+    expect(transitionGlobal({ timerEnabled: true }, {
+      type: GLOBAL_EVENTS.SET_TIMER,
+      enabled: false,
+    })).toEqual({ timerEnabled: false });
+    expect(transitionGlobal({ timerEnabled: true }, {
+      type: GLOBAL_EVENTS.SET_TIMER,
+      enabled: 'false',
+    })).toBeNull();
+  });
 });
