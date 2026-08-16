@@ -26,6 +26,7 @@ import {
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
 import CloserDialog from './CloserDialog';
+import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
 import {
   ActNumeral,
@@ -1184,21 +1185,14 @@ export default function CloserGame() {
   if (s.phase === 'consentGatePassA' || s.phase === 'consentGatePassB') {
     const who = s.phase === 'consentGatePassA' ? 0 : 1;
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={A0}>{tf('passPhoneTo', nameOf(who))}</Kicker>
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() =>
-              set({ phase: s.phase === 'consentGatePassA' ? 'consentGateA' : 'consentGateB' })
-            }
-          >
-            {tf('iAm', nameOf(who))}
-          </Button>
-        </Foot>
-      </>,
+      <CloserHandoff
+        accent={A0}
+        kicker={tf('passPhoneTo', nameOf(who))}
+        action={tf('iAm', nameOf(who))}
+        onAction={() =>
+          set({ phase: s.phase === 'consentGatePassA' ? 'consentGateA' : 'consentGateB' })
+        }
+      />,
       { accent: A0, glow: 0.28 }
     );
   }
@@ -1348,23 +1342,14 @@ export default function CloserGame() {
     const who = s.phase === 'consentAct2PassA' ? 0 : 1;
     const st = pack.actStyle[1];
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={st.accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
-        </Body>
-        <Foot>
-          <Button
-            $accent={st.accent}
-            onClick={() =>
-              set({
-                phase: s.phase === 'consentAct2PassA' ? 'consentAct2A' : 'consentAct2B',
-              })
-            }
-          >
-            {tf('iAm', nameOf(who))}
-          </Button>
-        </Foot>
-      </>,
+      <CloserHandoff
+        accent={st.accent}
+        kicker={tf('passPhoneTo', nameOf(who))}
+        action={tf('iAm', nameOf(who))}
+        onAction={() =>
+          set({ phase: s.phase === 'consentAct2PassA' ? 'consentAct2A' : 'consentAct2B' })
+        }
+      />,
       { accent: st.accent, glow: st.glow, menu: true }
     );
   }
@@ -1416,24 +1401,17 @@ export default function CloserGame() {
     if (p === 'secretPass1' || p === 'secretPass2') {
       const who = p === 'secretPass1' ? 0 : 1;
       return frame(
-        <>
-          <Body $center>
-            <Kicker $accent={st.accent}>
-              {p === 'secretPass1' ? tf('passPhoneTo', nameOf(0)) : t('passPhone')}
-            </Kicker>
-            {p === 'secretPass2' && (
-              <Lede>{tf('passPhoneText', nameOf(1), s.hasSecretQuestion[0] === true)}</Lede>
-            )}
-          </Body>
-          <Foot>
-            <Button
-              $accent={st.accent}
-              onClick={() => set({ phase: p === 'secretPass1' ? 'secret1' : 'secret2' })}
-            >
-              {p === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
-            </Button>
-          </Foot>
-        </>,
+        <CloserHandoff
+          accent={st.accent}
+          kicker={p === 'secretPass1' ? tf('passPhoneTo', nameOf(0)) : t('passPhone')}
+          body={
+            p === 'secretPass2'
+              ? tf('passPhoneText', nameOf(1), s.hasSecretQuestion[0] === true)
+              : null
+          }
+          action={p === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
+          onAction={() => set({ phase: p === 'secretPass1' ? 'secret1' : 'secret2' })}
+        />,
         { accent: st.accent, glow: st.glow, menu: true }
       );
     }
@@ -1476,25 +1454,18 @@ export default function CloserGame() {
 
     // secretPassBack
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={st.accent}>{t('passPhoneBack')}</Kicker>
-          <Lede>{t('passPhoneBackText')}</Lede>
-        </Body>
-        <Foot>
-          <Button
-            $accent={st.accent}
-            onClick={() => {
-              const index = s.pending;
-              const next = { ...s, phase: 'q', qIndex: index };
-              setS(next);
-              enterQuestion(index, next);
-            }}
-          >
-            {t('continue')}
-          </Button>
-        </Foot>
-      </>,
+      <CloserHandoff
+        accent={st.accent}
+        kicker={t('passPhoneBack')}
+        body={t('passPhoneBackText')}
+        action={t('continue')}
+        onAction={() => {
+          const index = s.pending;
+          const next = { ...s, phase: 'q', qIndex: index };
+          setS(next);
+          enterQuestion(index, next);
+        }}
+      />,
       { accent: st.accent, glow: st.glow, menu: true }
     );
   }
@@ -1561,36 +1532,25 @@ export default function CloserGame() {
   if (s.phase === 'checkPass1' || s.phase === 'checkPass2') {
     const who = s.phase === 'checkPass1' ? 0 : 1;
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={finalStyle.accent}>{tf('passPhoneTo', nameOf(who))}</Kicker>
-        </Body>
-        <Foot>
-          <Button
-            $accent={finalStyle.accent}
-            onClick={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
-          >
-            {tf('iAm', nameOf(who))}
-          </Button>
-        </Foot>
-      </>,
+      <CloserHandoff
+        accent={finalStyle.accent}
+        kicker={tf('passPhoneTo', nameOf(who))}
+        action={tf('iAm', nameOf(who))}
+        onAction={() => set({ phase: who === 0 ? 'check1' : 'check2' })}
+      />,
       { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }
 
   if (s.phase === 'checkPassBack') {
     return frame(
-      <>
-        <Body $center>
-          <Kicker $accent={finalStyle.accent}>{t('passPhoneBack')}</Kicker>
-          <Lede>{t('passPhoneBackText')}</Lede>
-        </Body>
-        <Foot>
-          <Button $accent={finalStyle.accent} onClick={() => set({ phase: 'q37intro' })}>
-            {t('continue')}
-          </Button>
-        </Foot>
-      </>,
+      <CloserHandoff
+        accent={finalStyle.accent}
+        kicker={t('passPhoneBack')}
+        body={t('passPhoneBackText')}
+        action={t('continue')}
+        onAction={() => set({ phase: 'q37intro' })}
+      />,
       { accent: finalStyle.accent, glow: 0.03, menu: true }
     );
   }

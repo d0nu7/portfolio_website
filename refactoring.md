@@ -144,7 +144,7 @@ Status dieser Iteration:
 ### Phase 4 – UI und Accessibility
 
 - [x] gemeinsames semantisches Dialog-/Bottom-Sheet mit Fokusfalle, Escape und Fokusrückgabe (`src/components/Closer/CloserDialog.js`; in Phase 0 vorgezogen, weil das Menü ohnehin darauf umgestellt werden musste – der Consent-Gate-Pfad nutzt es noch nicht)
-- [ ] wiederholte Handoff-Screens extrahieren
+- [x] wiederholte Handoff-Screens extrahieren
 - [ ] reine Setup-Screens extrahieren, ohne Flowlogik in Präsentationskomponenten zu verteilen
 - [ ] Text-/Aktionsfarben auf mindestens 4,5:1 bringen
 - [ ] Ending mit expliziter Tastaturaktion und stabiler Live-Region
