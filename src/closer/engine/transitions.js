@@ -24,6 +24,48 @@ export const CONSENT_EVENTS = Object.freeze({
   DECLINE_CONSENT: 'DECLINE_CONSENT',
 });
 
+export const ACT_EVENTS = Object.freeze({
+  START_ACT: 'START_ACT',
+  CONTINUE_FROM_BREAK: 'CONTINUE_FROM_BREAK',
+});
+
+export const ACT_EFFECTS = Object.freeze({
+  NONE: null,
+  ENTER_QUESTION: 'enter-question',
+});
+
+export function transitionAct(run, state, event) {
+  if (!event || typeof event.type !== 'string') return null;
+
+  if (event.type === ACT_EVENTS.START_ACT && state.phase === 'act') {
+    if (!Number.isInteger(state.pending) || !run.questions[state.pending]) return null;
+    return {
+      patch: {
+        phase: 'q',
+        qIndex: state.pending,
+        actElapsedMs: 0,
+        hasStarted: true,
+        runFingerprint: run.fingerprint,
+        contentVersion: run.contentRevision,
+      },
+      effect: ACT_EFFECTS.ENTER_QUESTION,
+    };
+  }
+
+  if (event.type === ACT_EVENTS.CONTINUE_FROM_BREAK && state.phase === 'break') {
+    if (state.breakAct !== 0 && state.breakAct !== 1) return null;
+    return {
+      patch: {
+        phase: run.requiresConsent && state.breakAct === 0 ? 'consentAct2PassA' : 'act',
+        actElapsedMs: 0,
+      },
+      effect: ACT_EFFECTS.NONE,
+    };
+  }
+
+  return null;
+}
+
 export function transitionConsent(run, state, event) {
   if (!run.requiresConsent || !event || typeof event.type !== 'string') return null;
 

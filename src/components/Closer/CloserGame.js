@@ -15,11 +15,14 @@ import {
   starterFor,
 } from '../../constants/closer';
 import {
+  ACT_EFFECTS,
+  ACT_EVENTS,
   CONSENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
+  transitionAct,
   transitionConsent,
   transitionSetup,
 } from '../../closer/engine/transitions';
@@ -1090,6 +1093,18 @@ export default function CloserGame() {
     const patch = transitionConsent(run, s, event);
     if (patch) set(patch);
   };
+  const dispatchAct = (event) => {
+    const result = transitionAct(run, s, event);
+    if (!result) return;
+    if (result.effect === ACT_EFFECTS.ENTER_QUESTION) {
+      const next = { ...s, ...result.patch };
+      buzz(16);
+      setS(next);
+      enterQuestion(next.qIndex, next);
+      return;
+    }
+    set(result.patch);
+  };
 
   /* ================================================================== */
   /* START                                                              */
@@ -1445,25 +1460,7 @@ export default function CloserGame() {
         <Foot>
           <Button
             $accent={st.accent}
-            onClick={() => {
-              const index = s.pending;
-              const next = {
-                ...s,
-                phase: 'q',
-                qIndex: index,
-                actElapsedMs: 0,
-                hasStarted: true,
-                // Recalculation is idempotent because pack, route, and style
-                // cannot change during a run; store it before the next resume
-                // point. Style is included (BUG-007) since it changes twist
-                // behavior even when the questions themselves match.
-                runFingerprint: run.fingerprint,
-                contentVersion: CONTENT_VERSION,
-              };
-              buzz(16);
-              setS(next);
-              enterQuestion(index, next);
-            }}
+            onClick={() => dispatchAct({ type: ACT_EVENTS.START_ACT })}
           >
             {t('continue')}
           </Button>
@@ -1493,12 +1490,7 @@ export default function CloserGame() {
         <Foot>
           <Button
             $accent={st.accent}
-            onClick={() =>
-              set({
-                phase: run.requiresConsent && s.breakAct === 0 ? 'consentAct2PassA' : 'act',
-                actElapsedMs: 0,
-              })
-            }
+            onClick={() => dispatchAct({ type: ACT_EVENTS.CONTINUE_FROM_BREAK })}
           >
             {t('continue')}
           </Button>

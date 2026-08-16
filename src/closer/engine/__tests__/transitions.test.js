@@ -1,5 +1,7 @@
 import { compileRun } from '../../../constants/closer';
 import {
+  ACT_EFFECTS,
+  ACT_EVENTS,
   CONSENT_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   SETUP_EVENTS,
@@ -7,6 +9,7 @@ import {
   resolveQuestionDestination,
   transitionSetup,
   transitionConsent,
+  transitionAct,
 } from '../transitions';
 
 const state = (patch = {}) => ({ secretSeen: [false, false], ...patch });
@@ -201,6 +204,69 @@ describe('consent transition core', () => {
     })).toBeNull();
     expect(transitionConsent(lateNight, { phase: 'q' }, {
       type: CONSENT_EVENTS.DECLINE_CONSENT,
+    })).toBeNull();
+  });
+});
+
+describe('act transition core', () => {
+  const classic = compileRun('classic', 'standard', 'original');
+  const lateNight = compileRun('late-night', 'standard', 'explicit');
+
+  it('starts the pending question with the compiled run identity', () => {
+    expect(transitionAct(classic, { phase: 'act', pending: 8 }, {
+      type: ACT_EVENTS.START_ACT,
+    })).toEqual({
+      patch: {
+        phase: 'q',
+        qIndex: 8,
+        actElapsedMs: 0,
+        hasStarted: true,
+        runFingerprint: classic.fingerprint,
+        contentVersion: classic.contentRevision,
+      },
+      effect: ACT_EFFECTS.ENTER_QUESTION,
+    });
+  });
+
+  it('rejects an act start without a valid compiled question', () => {
+    expect(transitionAct(classic, { phase: 'act', pending: -1 }, {
+      type: ACT_EVENTS.START_ACT,
+    })).toBeNull();
+    expect(transitionAct(classic, { phase: 'act', pending: classic.questions.length }, {
+      type: ACT_EVENTS.START_ACT,
+    })).toBeNull();
+  });
+
+  it('continues an ordinary break to the next act and resets elapsed time', () => {
+    expect(transitionAct(classic, { phase: 'break', breakAct: 0 }, {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'act', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+  });
+
+  it('routes only the first Late Night break through renewed consent', () => {
+    expect(transitionAct(lateNight, { phase: 'break', breakAct: 0 }, {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'consentAct2PassA', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+    expect(transitionAct(lateNight, { phase: 'break', breakAct: 1 }, {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'act', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+  });
+
+  it('rejects invalid break state and unrelated event/phase pairs', () => {
+    expect(transitionAct(classic, { phase: 'break', breakAct: 2 }, {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toBeNull();
+    expect(transitionAct(classic, { phase: 'q', pending: 1 }, {
+      type: ACT_EVENTS.START_ACT,
     })).toBeNull();
   });
 });

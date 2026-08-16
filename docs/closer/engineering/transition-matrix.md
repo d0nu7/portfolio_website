@@ -10,8 +10,9 @@ coverage. Screen-local presentation state such as a countdown tick, a menu
 subview, or an animation frame is not persisted and is listed only where it
 changes the next game event.
 
-Implementation status: setup/entry, consent, and compiled question destinations
-are pure and characterized in `src/closer/engine/transitions.js`.
+Implementation status: setup/entry, consent, act-entry/break, and compiled
+question destinations are pure and characterized in
+`src/closer/engine/transitions.js`.
 
 ## Global events
 
@@ -65,8 +66,8 @@ are pure and characterized in `src/closer/engine/transitions.js`.
 | `consentAct2A/B` | `DECLINE_CONSENT` | `ending` | `endReason=consentDeclined` |
 | `lastIntro` | `REVEAL_LAST` | `q` | Enter the stored `pending` index |
 
-Setup/entry, consent, and compiled question destinations are implemented in
-`src/closer/engine/transitions.js`. Act-entry/break, private-moment, finale, and
+Setup/entry, consent, act-entry/break, and compiled question destinations are
+implemented in `src/closer/engine/transitions.js`. Private-moment, finale, and
 global rows still live in the controller until their own characterization slice
 is complete.
 
