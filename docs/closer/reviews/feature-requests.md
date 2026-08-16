@@ -23,18 +23,19 @@ Requirements:
 
 ### FR-002 – In-app imprint and privacy information
 
-**Status:** Delivered; operator/legal review remains required
+**Status:** Delivered; owner-supplied operator details incorporated 2026-08-16; professional legal review still recommended, not yet obtained
 
 Add bilingual Imprint and Privacy views to the global CLOSER menu so installed-PWA users can reach them without returning to the portfolio footer.
 
 Requirements:
 
-- Include the real operator name, geographical address, and direct email contact.
-- Describe locally stored names/settings/progress, state that answers are not stored, and explain deletion.
-- Describe hosting/request-log processing accurately without claiming that the app controls a provider’s exact retention policy.
-- State purposes, legal basis, recipients/transfers where applicable, retention logic, rights, and the Austrian data-protection complaint route.
-- Keep the links constantly, easily, and directly accessible.
-- Obtain owner and, where appropriate, professional legal review before treating the text as final legal advice.
+- Include the real operator name, geographical address, and direct email contact. — Done; also added the VAT ID (`ATU77589478`) and phone number RaDi supplied, since Austrian ECG §5 requires both where they exist and the Imprint previously omitted them. The contact email was corrected from a placeholder (`contact@radi.solutions`, the general portfolio address) to RaDi's actual address for this business (`radomir.dinic@radi.solutions`).
+- Describe locally stored names/settings/progress, state that answers are not stored, and explain deletion. — Verified directly against the current code, not just the existing text's own claim: exactly three `localStorage` keys exist (`closer:v1` save state, `closer:preferences:v1` for the Late Night visibility preference, `closer:installHintDismissed`), no analytics/tracking dependency is in `package.json`, and `src/styles/fonts.css` confirms fonts are genuinely self-hosted via `@fontsource` rather than fetched from Google. The existing text's claims held up; no correction was needed here.
+- Describe hosting/request-log processing accurately without claiming that the app controls a provider's exact retention policy. — The current wording is already deliberately hedged ("can depend on the Vercel service and settings applicable at that time") rather than naming a specific plan tier, so it doesn't need updating for the fact the project is on Vercel's free (Hobby) plan specifically — a plan-tier change wouldn't make the existing generic wording inaccurate, only a change to what Vercel processes at the platform level would.
+- Deliberately NOT added: bank details (IBAN/BIC), even though RaDi supplied them. Austrian ECG §5 does not require payment/banking details in an Imprint, CLOSER takes no payments, and publishing IBAN/BIC on a public legal page is an avoidable disclosure with no legal upside here — flagged rather than silently included or silently dropped.
+- State purposes, legal basis, recipients/transfers where applicable, retention logic, rights, and the Austrian data-protection complaint route. — Unchanged; already present in the existing draft.
+- Keep the links constantly, easily, and directly accessible. — Unchanged; already delivered.
+- Obtain owner and, where appropriate, professional legal review before treating the text as final legal advice. — **Still open.** RaDi asked directly whether a broader legal review is needed and doesn't know either; this is not something either of us can determine with confidence here. Given the site now discloses a VAT ID (indicating a registered business, not purely personal use), includes an explicit 18+ content path (Late Night), and operates under Austrian/EU jurisdiction, a short review by an Austrian lawyer or a DSGVO-focused service is a reasonable precaution before wide release — but this is judgment, not a verified legal conclusion, and the actual decision belongs to RaDi.
 
 ### FR-003 – Deployment security headers
 

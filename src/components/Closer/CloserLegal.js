@@ -78,14 +78,18 @@ function Imprint({ lang, accent }) {
           Radomir Dinic BSc MSc{`\n`}
           Pingitzzerkai 6a/6{`\n`}
           A-5400 Hallein{`\n`}
-          Austria
+          Austria{`\n`}
+          {isGerman ? 'UID-Nr.: ' : 'VAT ID: '}ATU77589478
         </p>
       </section>
 
       <section>
         <h3>{isGerman ? 'Kontakt' : 'Contact'}</h3>
         <p>
-          <a href="mailto:contact@radi.solutions">contact@radi.solutions</a>
+          {isGerman ? 'Telefon' : 'Phone'}: +43 699 10867695{`\n`}
+          <a href="mailto:radomir.dinic@radi.solutions">radomir.dinic@radi.solutions</a>
+          {`\n`}
+          <a href="https://radi.solutions">radi.solutions</a>
         </p>
       </section>
 
@@ -114,7 +118,7 @@ function Privacy({ lang, accent }) {
           <p>
             Radomir Dinic BSc MSc{`\n`}
             Pingitzzerkai 6a/6, A-5400 Hallein, Österreich{`\n`}
-            <a href="mailto:contact@radi.solutions">contact@radi.solutions</a>
+            <a href="mailto:radomir.dinic@radi.solutions">radomir.dinic@radi.solutions</a>
           </p>
         </section>
 
@@ -192,7 +196,7 @@ function Privacy({ lang, accent }) {
         <p>
           Radomir Dinic BSc MSc{`\n`}
           Pingitzzerkai 6a/6, A-5400 Hallein, Austria{`\n`}
-          <a href="mailto:contact@radi.solutions">contact@radi.solutions</a>
+          <a href="mailto:radomir.dinic@radi.solutions">radomir.dinic@radi.solutions</a>
         </p>
       </section>
 

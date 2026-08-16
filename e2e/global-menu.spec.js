@@ -65,8 +65,10 @@ test.describe('Global menu', () => {
     await page.getByRole('button', { name: 'Impressum' }).click();
     const imprint = page.getByRole('dialog', { name: 'Impressum' });
     await expect(imprint.getByText('Radomir Dinic BSc MSc')).toBeVisible();
-    await expect(imprint.getByRole('link', { name: 'contact@radi.solutions' }))
-      .toHaveAttribute('href', 'mailto:contact@radi.solutions');
+    await expect(imprint.getByText('ATU77589478')).toBeVisible();
+    await expect(imprint.getByText('+43 699 10867695')).toBeVisible();
+    await expect(imprint.getByRole('link', { name: 'radomir.dinic@radi.solutions' }))
+      .toHaveAttribute('href', 'mailto:radomir.dinic@radi.solutions');
   });
 
   test('STAY keeps an immediate exit and the global menu available', async ({ page }) => {
