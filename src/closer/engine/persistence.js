@@ -58,6 +58,26 @@ export function createInitialState(options = {}) {
   };
 }
 
+export function createRestartState(currentState = {}, preferences = {}) {
+  const hiddenLateNight =
+    currentState.packId === 'late-night' && preferences.lateNightVisible !== true;
+
+  return createInitialState({
+    lang: currentState.lang,
+    packId: hiddenLateNight ? DEFAULT_PACK_ID : currentState.packId,
+    routeId: currentState.routeId,
+    timerEnabled: currentState.timerEnabled,
+  });
+}
+
+export function resumeSavedState(savedState, lang) {
+  if (!savedState || typeof savedState !== 'object') return null;
+  return {
+    ...savedState,
+    lang: LANGS.includes(lang) ? lang : savedState.lang,
+  };
+}
+
 const initialState = createInitialState();
 
 function isPlausibleSaved(saved) {

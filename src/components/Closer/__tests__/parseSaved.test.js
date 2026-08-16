@@ -1,7 +1,9 @@
 import {
   SAVE_REJECT_REASONS,
   createInitialState,
+  createRestartState,
   parseSaved,
+  resumeSavedState,
 } from '../../../closer/engine/persistence';
 import { CONTENT_VERSION, runFingerprintFor } from '../../../constants/closer';
 
@@ -43,6 +45,59 @@ describe('createInitialState', () => {
       contentVersion: CONTENT_VERSION,
       runFingerprint: null,
     }));
+  });
+
+  it('restarts from canonical state while retaining supported session choices', () => {
+    const state = createRestartState({
+      lang: 'en',
+      packId: 'first-date',
+      routeId: 'quick',
+      timerEnabled: false,
+      phase: 'q',
+      qIndex: 8,
+      hasStarted: true,
+    }, { lateNightVisible: false });
+
+    expect(state).toEqual(expect.objectContaining({
+      phase: 'start',
+      lang: 'en',
+      packId: 'first-date',
+      routeId: 'quick',
+      timerEnabled: false,
+      qIndex: 0,
+      hasStarted: false,
+    }));
+  });
+
+  it('falls back from a hidden Late Night pack during restart', () => {
+    const hidden = createRestartState({
+      lang: 'de',
+      packId: 'late-night',
+      routeId: 'standard',
+      timerEnabled: true,
+    }, { lateNightVisible: false });
+    const visible = createRestartState({
+      lang: 'de',
+      packId: 'late-night',
+      routeId: 'standard',
+      timerEnabled: true,
+    }, { lateNightVisible: true });
+
+    expect(hidden.packId).toBe('classic');
+    expect(visible.packId).toBe('late-night');
+  });
+});
+
+describe('resumeSavedState', () => {
+  it('restores the parsed state in the language selected on the resume screen', () => {
+    const saved = { ...BASE, lang: 'de', packId: 'classic' };
+    expect(resumeSavedState(saved, 'en')).toEqual({ ...saved, lang: 'en' });
+    expect(saved.lang).toBe('de');
+  });
+
+  it('rejects a missing state and ignores an unsupported language', () => {
+    expect(resumeSavedState(null, 'de')).toBeNull();
+    expect(resumeSavedState({ ...BASE, lang: 'de' }, 'fr').lang).toBe('de');
   });
 });
 

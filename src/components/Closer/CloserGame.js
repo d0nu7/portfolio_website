@@ -34,7 +34,11 @@ import {
   transitionQ37,
   transitionSetup,
 } from '../../closer/engine/transitions';
-import { createInitialState } from '../../closer/engine/persistence';
+import {
+  createInitialState,
+  createRestartState,
+  resumeSavedState,
+} from '../../closer/engine/persistence';
 import {
   DEFAULT_PREFERENCES,
   clearAllCloserData,
@@ -496,16 +500,8 @@ export default function CloserGame() {
     setMenuOpen(false);
     setMenuStep(null);
     setStaying(false);
-    setS((prev) => createInitialState({
-      lang: prev.lang,
-      packId:
-        prev.packId === 'late-night' && !preferences.lateNightVisible
-          ? DEFAULT_PACK_ID
-          : prev.packId,
-      routeId: prev.routeId,
-      timerEnabled: prev.timerEnabled,
-    }));
-  }, [preferences.lateNightVisible]);
+    setS((prev) => createRestartState(prev, preferences));
+  }, [preferences]);
 
   // While the pass flash is the only content, move focus to its message.
   useEffect(() => {
@@ -836,7 +832,8 @@ export default function CloserGame() {
               <Button
                 $accent={A0}
                 onClick={() => {
-                  const r = { ...resumable, lang };
+                  const r = resumeSavedState(resumable, lang);
+                  if (!r) return;
                   setS(r);
                   setResumable(null);
                   if (r.phase === 'q') enterQuestion(r.qIndex, r);
