@@ -118,7 +118,7 @@ The milestone animation should create a brief sense of reward at the start, act 
 It must:
 
 - fill enough of a mobile viewport to read as a deliberate scene rather than a tiny icon;
-- have a clear arrival, connection, and release over roughly 1.8–2.5 seconds;
+- have a clear arrival, connection, and release over roughly 4.2–5 seconds (RaDi, 2026-08-16: the original 1.8–2.5s read as beautiful but cleared before it could be taken in);
 - use pack color and restrained copy;
 - never activate controls that are visually covered by the celebration;
 - leave the separate global Menu operable while the covered scene is inert;

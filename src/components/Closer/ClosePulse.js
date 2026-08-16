@@ -276,8 +276,14 @@ function MilestoneScene({ stage, accent, label, detail, duration, reducedMotion 
   );
 }
 
-const FULL_DURATION_MS = 2100;
-const FINALE_DURATION_MS = 2500;
+// Roughly doubled from the original 2100/2500ms (RaDi, 2026-08-16): the
+// scene read as beautiful but disappeared before it had been taken in.
+// Every sub-animation (Halo/Thread/Sparks/LeftLight/RightLight/Scene/
+// Overlay) times itself as a percentage of this value via styled-
+// components' $duration prop, so raising it here scales the whole
+// composition proportionally -- no keyframe percentages need touching.
+const FULL_DURATION_MS = 4200;
+const FINALE_DURATION_MS = 5000;
 const REDUCED_DURATION_MS = 1200;
 
 export default function ClosePulse({
