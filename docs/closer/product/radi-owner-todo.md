@@ -158,6 +158,7 @@ Technical groundwork already delivered:
 - [x] Extract intro, act-entry, and act-break presentation while retaining compiled act timing and boundaries.
 - [x] Consolidate private-question capture and post-run check presentation without weakening individual handoffs.
 - [x] Extract last-question staging, all Q37 branches, and ending beats into one finale view.
+- [x] Extract question, twist, countdown, free-pass, response-card, and stay presentation without changing gameplay timing or controls.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 

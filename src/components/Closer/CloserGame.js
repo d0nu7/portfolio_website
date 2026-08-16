@@ -61,17 +61,13 @@ import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
 import CloserPrivateMomentView, {
   PRIVATE_MOMENT_VIEW_PHASES,
 } from './CloserPrivateMomentView';
+import CloserQuestionView, { questionFrameOptions } from './CloserQuestionView';
 import CloserSetupView from './CloserSetupView';
 import {
-  Bar,
   Body,
   Button,
   CloserGlobal,
   Choice,
-  Count,
-  Counter,
-  Elapsed,
-  Flash,
   Foot,
   FrameContent,
   GhostButton,
@@ -80,24 +76,12 @@ import {
   Lede,
   MenuTrigger,
   Question,
-  ResponseCard,
-  ResponseCardLabel,
-  Row,
   Screen,
   Sheet,
   SheetPanel,
   Small,
-  Stay,
-  StayDot,
   TextButton,
   Toggle,
-  TopBar,
-  Track,
-  TurnBadge,
-  TurnName,
-  TurnVerb,
-  TwistLabel,
-  VisuallyHidden,
   Wordmark,
 } from './CloserStyles';
 
@@ -1029,271 +1013,41 @@ export default function CloserGame() {
     );
   }
 
-  /* ================================================================== */
-  /* STAY                                                               */
-  /* ================================================================== */
-
-  if (staying) {
-    return frame(
-      <>
-        <Stay>
-          <StayDot $accent={style.accent} />
-          <Lede style={{ textAlign: 'center' }}>{t('stayTitle')}</Lede>
-          <TextButton
-            onClick={() => {
-              setStaying(false);
-              leaveQuestion();
-            }}
-          >
-            {t('continue')}
-          </TextButton>
-        </Stay>
-      </>,
-      { accent: style.accent, glow: 0.02, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* QUESTION                                                           */
-  /* ================================================================== */
-
-  const questionText = pick(question, lang);
-
-  // While a pass flash is
-  // showing, render ONLY the flash -- not the question's own controls
-  // (Next/Stay/Pass/decline) underneath it, and not the in-game menu
-  // trigger either. Those used to stay mounted, just visually covered by
-  // the flash, which left them reachable by keyboard/screen reader (an
-  // extra tap or Enter could advance more than one question, racing the
-  // flash's own 1.6s auto-advance) and kept them in the accessibility tree
-  // during what's meant to be a brief, controls-free beat. Focus moves onto
-  // the flash message itself via the effect above.
-  if (justDeclined) {
-    return frame(
-      <Flash>
-        <Question ref={flashRef} tabIndex={-1} style={{ textAlign: 'center', outline: 'none' }}>
-          {t('passed')}
-        </Question>
-      </Flash>
-    );
-  }
-
-  // Whose turn it is reads the same whether the question is still behind a
-  // twist screen, mid-countdown, or already the live question -- computed
-  // once and reused everywhere, so it never has to agree with itself.
-  let badge = (
-    <TurnBadge $accent={style.accent}>
-      <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
-      <TurnVerb>{t('turnFirst')}</TurnVerb>
-    </TurnBadge>
-  );
-  if (twist === 'both') {
-    badge = (
-      <TurnBadge $accent={style.accent}>
-        <TurnName $accent={style.accent}>{t('turnBoth')}</TurnName>
-        <TurnVerb>{t('turnBothVerb')}</TurnVerb>
-      </TurnBadge>
-    );
-  } else if (twist === 'predict') {
-    badge = (
-      <TurnBadge $accent={style.accent}>
-        <TurnName $accent={style.accent}>{nameOf(starter)}</TurnName>
-        <TurnVerb>{t('turnAnswers')}</TurnVerb>
-      </TurnBadge>
-    );
-  }
-
-  let inner;
-
-  if (step === 'twist' && twist === 'both') {
-    // BOTH shows the real question right away -- there is nothing to guess
-    // and nothing to hide, only a moment to read before answering together.
-    inner = (
-      <>
-        <Body $center>
-          <TwistLabel $accent={style.accent}>{t('bothLabel')}</TwistLabel>
-          {badge}
-          <Question>{questionText}</Question>
-          <Lede style={{ marginTop: '2.4rem' }}>{t('bothText')}</Lede>
-        </Body>
-        <Foot>
-          <Button $accent={style.accent} onClick={() => runCountdown(3)}>
-            {t('ready')}
-          </Button>
-          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
-        </Foot>
-      </>
-    );
-  } else if (step === 'twist') {
-    // PREDICT and NO THINKING both still open on an explanation screen,
-    // deliberately without the question -- PREDICT because the guess has to
-    // come first, NO THINKING because the question is meant to land at the
-    // same moment the count starts, not before.
-    const copy = {
-      predict: {
-        label: t('predictLabel'),
-        text: tf('predictText', nameOf(1 - starter), nameOf(starter)),
-      },
-      nothinking: { label: t('nothinkingLabel'), text: t('nothinkingText') },
-    }[twist];
-    inner = (
-      <>
-        <Body $center>
-          <TwistLabel $accent={style.accent}>{copy.label}</TwistLabel>
-          <Question>{copy.text}</Question>
-        </Body>
-        <Foot>
-          <Button
-            $accent={style.accent}
-            onClick={() => {
-              if (twist === 'predict') setStep('ask');
-              else runCountdown(5);
-            }}
-          >
-            {t('ready')}
-          </Button>
-          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
-        </Foot>
-      </>
-    );
-  } else if (step === 'counting') {
-    // The question (and, for NO THINKING, the starter) appears together
-    // with the count and stays put through to zero -- nobody answers
-    // something they have not seen.
-    inner = (
-      <>
-        <Body $center>
-          <TwistLabel $accent={style.accent}>
-            {twist === 'both' ? t('bothLabel') : t('nothinkingLabel')}
-          </TwistLabel>
-          {badge}
-          <Question>{questionText}</Question>
-          {/* role="timer" describes what this is to assistive tech without
-              making it a live region -- see the `announce` state above for
-              the two announcements that actually get spoken. */}
-          <Counter
-            $accent={style.accent}
-            style={{ marginTop: '3.2rem' }}
-            role="timer"
-            aria-atomic="true"
-          >
-            {count}
-          </Counter>
-        </Body>
-        <Foot>
-          <TextButton onClick={passQuestion}>{t('declineToAnswer')}</TextButton>
-        </Foot>
-      </>
-    );
-  } else if (step === 'deeper') {
-    inner = (
-      <>
-        <Body $center>
-          <TwistLabel $accent={style.accent}>{t('deeperLabel')}</TwistLabel>
-          <Question>{t('deeperText')}</Question>
-        </Body>
-        <Foot>
-          <Button $accent={style.accent} onClick={() => setStep('deeperOpen')}>
-            {t('deeperAsk')}
-          </Button>
-          <TextButton onClick={() => advanceQuestion(QUESTION_EVENTS.ANSWER_DONE)}>
-            {t('next')}
-          </TextButton>
-        </Foot>
-      </>
-    );
-  } else if (step === 'deeperOpen') {
-    inner = (
-      <>
-        <Body $center>
-          <Lede>{t('deeperOpen')}</Lede>
-        </Body>
-        <Foot>
-          <GhostButton onClick={() => advanceQuestion(QUESTION_EVENTS.ANSWER_DONE)}>
-            {t('continue')}
-          </GhostButton>
-        </Foot>
-      </>
-    );
-  } else {
-    inner = (
-      <>
-        <Body $center>
-          {!isLast && badge}
-          <Question ref={questionHeadingRef} tabIndex={-1} style={{ outline: 'none' }}>
-            {questionText}
-          </Question>
-          {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
-          {/* Response cards are optional listening hints attached to specific questions --
-              always visible when present, nothing to tap through, no
-              button of its own. See its own note in CloserStyles.js. */}
-          {question?.responseCard && (
-            <ResponseCard $accent={style.accent}>
-              <ResponseCardLabel $accent={style.accent}>
-                {pick(question.responseCard.label, lang)}
-              </ResponseCardLabel>
-              <Small>{pick(question.responseCard.text, lang)}</Small>
-            </ResponseCard>
-          )}
-        </Body>
-        <Foot>
-          {canStay ? (
-            <Row>
-              <GhostButton onClick={() => setStaying(true)}>{t('stay')}</GhostButton>
-              <Button $accent={style.accent} onClick={leaveQuestion}>
-                {t('next')}
-              </Button>
-            </Row>
-          ) : (
-            <Button $accent={style.accent} onClick={leaveQuestion}>
-              {isLast ? t('done') : t('next')}
-            </Button>
-          )}
-          {/* Free, unlimited and available on the last question too. */}
-          <TextButton onClick={passQuestion}>
-            {t('declineToAnswer')}
-          </TextButton>
-        </Foot>
-      </>
-    );
-  }
-
-  const progress = style.progress;
-  const showChrome = !isLast && step !== 'counting';
-
   return frame(
-    <>
-      {showChrome && (
-        <>
-          <TopBar $chrome={style.chrome}>
-            <Count>
-              {progress === 'number'
-                ? String(s.qIndex + 1).padStart(2, '0')
-                : `${String(s.qIndex + 1).padStart(2, '0')} / ${total}`}
-            </Count>
-            {s.timerEnabled && s.hasStarted ? (
-              <Elapsed $long={overtime}>{overtime ? t('timerOver') : clockOf(elapsed)}</Elapsed>
-            ) : null}
-          </TopBar>
-          {progress === 'full' && (
-            <Bar $chrome={style.chrome}>
-              <Track $pct={pct} $accent={style.accent} />
-            </Bar>
-          )}
-        </>
-      )}
-
-      {inner}
-
-      {/* One polite announcement at the start of a countdown and one at
-          zero -- never per tick. This element stays mounted across every
-          step of a question (twist/counting/ask/deeper) so its content
-          changes are picked up as live-region updates rather than a fresh
-          element appearing. */}
-      <VisuallyHidden role="status" aria-live="polite">
-        {announce}
-      </VisuallyHidden>
-    </>,
-    { menu: true }
+    <CloserQuestionView
+      state={s}
+      question={question}
+      lang={lang}
+      style={style}
+      total={total}
+      starter={starter}
+      twist={twist}
+      step={step}
+      count={count}
+      announce={announce}
+      isLast={isLast}
+      canStay={canStay}
+      staying={staying}
+      justDeclined={justDeclined}
+      overtime={overtime}
+      elapsedLabel={clockOf(elapsed)}
+      progressPercent={pct}
+      flashRef={flashRef}
+      questionHeadingRef={questionHeadingRef}
+      nameOf={nameOf}
+      t={t}
+      tf={tf}
+      onContinueStay={() => {
+        setStaying(false);
+        leaveQuestion();
+      }}
+      onPass={passQuestion}
+      onCountdown={runCountdown}
+      onSetStep={setStep}
+      onAdvance={() => advanceQuestion(QUESTION_EVENTS.ANSWER_DONE)}
+      onLeaveQuestion={leaveQuestion}
+      onStay={() => setStaying(true)}
+    />,
+    questionFrameOptions({ justDeclined, staying, style })
   );
 }

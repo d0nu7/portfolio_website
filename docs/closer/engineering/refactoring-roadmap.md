@@ -52,6 +52,7 @@ src/components/Closer/
   CloserActView.js             # intro, act entry, and act-break presentation
   CloserPrivateMomentView.js   # private capture and post-run check handoffs
   CloserFinaleView.js          # last question, Q37 branches, and ending beats
+  CloserQuestionView.js        # question, twist, countdown, pass, and stay presentation
 src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
 
@@ -141,7 +142,7 @@ documentation are in scope.
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [x] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory and implemented families live in the [transition matrix](transition-matrix.md).
 3. [x] Move allowed navigation into pure transition functions. Setup/entry, consent, acts, question completion/pass, private moments, final-question reveal, Question 37, end-run, language, timer, and compiled destinations are characterized in `src/closer/engine/transitions.js`. Canonical state creation, restart, resume preparation, and save parsing live in `src/closer/engine/persistence.js`; guarded browser storage lives in `src/closer/infrastructure/storage.js`. Screen-local effects and Late Night discovery preferences intentionally remain in the controller.
-4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events. Setup, consent, acts, private moments, and the complete finale are extracted; question/twist presentation remains to be split.
+4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events. Setup, consent, acts, private moments, the complete finale, and the full question/twist surface are extracted; the shared screen shell remains to be split.
 5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
 6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
 7. [x] Keep non-run preferences in a separately versioned preference record.
