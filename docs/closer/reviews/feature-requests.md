@@ -166,3 +166,102 @@ TTS is no longer considered by the active CLOSER roadmap. The existing voice
 branch is not planned for merge and must not shape FR-011 implementation choices.
 Do not generate, migrate, review, or clean up voice artifacts. Reopening FR-012
 requires a new explicit product decision and a separately scoped effort.
+
+### FR-013 – Configurable pack library
+
+**Status:** Planned
+
+Replace the one-off Late Night visibility control under **Menu → Additional
+content** with a checklist of every registered pack. A person can choose which
+packs appear on the normal pack-selection screen; hidden packs remain available
+in this menu and can be restored at any time.
+
+Product intent:
+
+- reduce irrelevant choices without deleting content;
+- allow mutually unlikely contexts such as First Date and Couples to be hidden
+  independently;
+- keep the ordinary pack selector focused on the situations that matter to the
+  current device owner;
+- preserve discreet discovery and per-session consent for Late Night.
+
+Requirements:
+
+- Store visibility as a separately versioned list of pack IDs, not one boolean
+  per pack.
+- Migrate the existing `lateNightVisible` preference without unexpectedly
+  changing the visibility of current packs.
+- Existing mainstream packs remain visible after migration; newly introduced
+  specialist packs start hidden until selected.
+- The checklist must not permit an empty selector; at least one pack remains
+  visible.
+- Hiding the currently selected pack during setup selects a visible fallback.
+- Hiding a pack never invalidates or conceals a valid resumable game using it.
+- Unknown IDs from a newer or older deployment are ignored safely.
+- Resetting all local CLOSER data restores the documented default set.
+- Every checklist item exposes a clear checked state, pack name, short context,
+  keyboard operation, and adequate touch target.
+- Late Night retains its neutral 18+ explanation and both independent consent
+  gates. Making it visible is never consent to play it.
+
+Recommended default: keep the currently public packs visible, keep Late Night
+hidden, and introduce Road Trip, Family, and Colleagues as hidden specialist
+packs. Confirm this default during implementation rather than silently changing
+the first-run experience.
+
+### FR-014 – Road Trip, Family, and Colleagues packs
+
+**Status:** Planned; bilingual editorial content required
+
+Add three research-informed packs after FR-013 provides a manageable library.
+Each pack needs 36 stable DE/EN master questions, a three-act intensity curve,
+curated routes, truthful duration estimates, pack-specific finale copy, and a
+decision on whether any private moment genuinely improves the experience.
+
+#### ROAD TRIP
+
+- Context: two people travelling together, regardless of relationship type.
+- Arc: surroundings and playful hypotheticals → travel stories and preferences
+  → future places, shared wishes, and what makes a journey memorable.
+- Suggested routes: Quick 12, Standard 24, Full 36.
+- Safety: the driver never handles or reads the phone. Setup must explicitly
+  assign control to a passenger or require the vehicle to be parked.
+- Avoid navigation tasks, competitive dares, distracting countdowns, and
+  assumptions about budget, passports, mobility, or international travel.
+
+#### FAMILY
+
+- Context: two adult family members, including chosen family; no assumption of
+  biological relation, harmony, childhood together, parenthood, or desired
+  reconciliation.
+- Arc: everyday knowledge and positive memories → roles, support, and change →
+  appreciation, boundaries, and a freely chosen future relationship.
+- Suggested routes: Quick 12, Standard 24, Full 36.
+- Avoid diagnosing family dynamics, forcing disclosure of conflict or trauma,
+  ranking relatives, assigning blame, or presenting the game as family therapy.
+
+#### COLLEAGUES
+
+- Context: two colleagues participating voluntarily, ideally peers rather than
+  an evaluator and the person being evaluated.
+- Arc: work style and small wins → collaboration and communication → strengths,
+  learning, and a healthy shared working future.
+- Suggested routes: Quick 12 and Standard 24; add Full only if user sessions
+  demonstrate a credible, non-intrusive use case.
+- Avoid salary, health, protected characteristics, workplace investigations,
+  confidential employer/client information, performance ratings, compulsory
+  vulnerability, and prompts that could affect employment decisions.
+- Intro copy must make Pass and ending unconditional and state that participation
+  is not an assessment.
+
+Editorial acceptance:
+
+- Questions are clearly specific to their pack rather than lightly rewritten
+  Classic/Friends prompts.
+- Quick is a self-contained arc, not a random excerpt.
+- Wording is gender-neutral, culturally cautious, and answerable without a
+  privileged lifestyle or ideal relationship history.
+- New claims remain “research-informed”; only Classic Full may be positioned as
+  closely following the original closeness protocol.
+- Catalog fidelity, registry conformance, route timing, save/resume, visibility
+  migration, DE/EN, and mobile E2E coverage all pass before release.
