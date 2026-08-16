@@ -4,6 +4,34 @@
 **Basis:** `main` ab `a8ac798`, `RefactoringClaude.md`, Iteration-9-Produktreview und Iteration-9-Code-Review  
 **Ziel:** nachweisbare Produktfehler zuerst beheben, danach Content und Engine schrittweise entkoppeln – ohne Big-Bang-Rewrite und ohne den laufenden TTS-/ElevenLabs-Branch anzufassen
 
+## Abschlussstand (16.08.2026, autonome Umsetzung Phase 0–4)
+
+Phasen 0, 1, 2 und 4 sind vollständig abgearbeitet; Phase 3 bis auf die
+Reducer-Extraktion (s. u.). Phasen 5–7 sind nicht begonnen – sie brauchen
+RaDis redaktionelle Ersatzfragen (5), echte Rechts-/Kontaktdaten und
+Geräte-/WebKit-Zugriff (6) beziehungsweise sein eigenes Stimmmodell (7,
+Entscheidung 10) und wurden deshalb bewusst nicht autonom angefasst.
+
+Einzig offen gebliebene, bewusst nicht in einer Sitzung durchgezogene
+Position: **Events und erlaubte Phasenwechsel in einen reinen Reducer
+verschieben** (Phase 3). `compileRun()` existiert bereits als additive,
+getestete RunDefinition-Funktion (siehe unten); sie ist aber noch nicht
+die Laufzeitquelle von `CloserGame.js`, und dessen ~50 inline
+`if (s.phase === 'x')`-Zweige rufen weiterhin direkt `set()`/`setS()`
+auf statt zu dispatchen. Diese Umstellung berührt genau die Übergänge,
+die die Iteration-9-Reviews als fragil markiert haben (Geheimfrage-
+Richtung, LATE-NIGHT-Consent-Pfad), und lässt sich anders als der
+Content-Modul-Split (Phase 2, per Byte-für-Byte-JSON-Diff verifiziert)
+nicht mechanisch beweisen – genau der Big-Bang-Rewrite, den dieses
+Dokument in seiner eigenen Zielsetzung ausschließt. Bleibt ein eigener,
+sorgfältig geprüfter Aufwand.
+
+Jede abgeschlossene Position wurde gemessen, nicht behauptet: Content-
+Umzug per Byte-Diff, jeder neue Regressionstest per `git stash`-
+Gegenprobe gegen den alten Stand verifiziert, der neue E2E-Console-Guard
+per Selbsttest bewiesen. Endstand: 232 Jest-Tests, 114 Playwright-E2E-
+Tests, Lint und Build grün.
+
 ---
 
 ## 1. Verbindliche Entscheidungen
@@ -89,6 +117,8 @@ Nach Pack-, Routen- und Stylewahl wird einmalig ein unveränderlicher Lauf kompi
 
 Alle Navigation, Persistenz, Timer und TTS-Zuordnung beziehen sich danach auf dieses Objekt.
 
+**Status:** `compileRun()` ist implementiert und getestet (`src/constants/closer.js`, benannt `modeId` statt `styleId` – konsistent mit dem bestehenden Namen im übrigen Code). `CloserGame.js` liest weiterhin einzeln aus `resolvedActs()`/`routeTimingFor()`/`runFingerprintFor()`; die Umstellung auf dieses eine Objekt als Quelle ist an die noch offene Reducer-Extraktion (Phase 3) gebunden.
+
 ---
 
 ## 4. Umsetzungsphasen
@@ -132,8 +162,8 @@ Status dieser Iteration:
 
 ### Phase 3 – Transition-Kern und Persistenz
 
-- [ ] `createInitialState(options)` zentralisiert; `compileRun(options)` steht noch aus
-- [ ] Events und erlaubte Phasenwechsel in einen reinen Reducer verschieben
+- [x] `createInitialState(options)` zentralisiert (bereits seit Phase 0); `compileRun(options)` implementiert (`src/constants/closer.js`, additive RunDefinition, acht Tests) – **aber noch nicht die Laufzeitquelle** von `CloserGame.js`; diese Umstellung ist an den Reducer-Punkt darunter gebunden
+- [ ] Events und erlaubte Phasenwechsel in einen reinen Reducer verschieben – bewusst offen, siehe „Abschlussstand“ oben für die Risikoabwägung
 - [x] versionierten Save-Parser als diskriminierte Zustände implementieren
 - [x] aktive statt verstrichener Wandzeit speichern; Background/Resume pausieren
 - [x] abgeschlossene Runs löschen (Persistenz erst ab `hasStarted`); getrennte Präferenzspeicherung steht noch aus
@@ -146,7 +176,7 @@ Status dieser Iteration:
 - [x] gemeinsames semantisches Dialog-/Bottom-Sheet mit Fokusfalle, Escape und Fokusrückgabe (`src/components/Closer/CloserDialog.js`; in Phase 0 vorgezogen, weil das Menü ohnehin darauf umgestellt werden musste – der Consent-Gate-Pfad nutzt es noch nicht)
 - [x] wiederholte Handoff-Screens extrahieren
 - [x] reine Setup-Screens extrahieren, ohne Flowlogik in Präsentationskomponenten zu verteilen
-- [x] Text-/Aktionsfarben auf mindestens 4,5:1 bringen (+ :focus-visible-Ring; weitere Pack-Akzente unter 4,5:1 als Folgeposten, siehe Abschlusszusammenfassung)
+- [x] Text-/Aktionsfarben auf mindestens 4,5:1 bringen (+ :focus-visible-Ring). Erste Runde traf nur die im Plan genannten Fälle plus den namentlich genannten DEEP-Akt-III-Akzent; eine anschließende Vollprüfung aller neun Packs fand fünf weitere Werte darunter (DEEP Akt I/II, LATE NIGHT alle drei Akte) sowie das Field-Label – alle nachträglich auf ≥5:1 angehoben, `contrast.test.js` prüft jetzt alle 27 Pack-Akzente
 - [x] Ending mit expliziter Tastaturaktion und stabiler Live-Region
 - [x] Keyboard- und Accessibility-Smokes ergänzt, globaler Console-Guard; WebKit lokal nicht installiert (Download nicht ungefragt ausgelöst) -- als Folgeposten offen
 
@@ -192,6 +222,8 @@ Pflichtpipeline:
 9. Accessibility-Smoke
 
 E2E-Tests für Packs werden tabellengetrieben konsolidiert. Ein alter `out`-Ordner darf nie ohne vorherigen Build getestet werden.
+
+**Status (16.08.2026):** Schritte 1–6, 8 und 9 sind eingerichtet und laufen bei jeder Phase (`e2e/fixtures.js` für Schritt 8, `e2e/a11y-smoke.spec.js` für Schritt 9). Schritt 7 (WebKit) fehlt – WebKit ist in dieser Umgebung nicht installiert, ein automatischer Download wurde bewusst nicht ausgelöst.
 
 ---
 
