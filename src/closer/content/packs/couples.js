@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
@@ -17,7 +18,6 @@ import {
 const COUPLES_ACTS = [
   {
     id: 'noticing',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'SEHEN', en: 'NOTICING' },
     intro: {
       de: 'Fangt damit an, was zwischen euch gerade gut läuft.',
@@ -96,7 +96,6 @@ const COUPLES_ACTS = [
   },
   {
     id: 'repair',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'REPARIEREN', en: 'REPAIR' },
     intro: {
       de: 'Kein Therapieersatz -- nur ein bisschen mehr Verständnis für das, was manchmal schwer ist.',
@@ -177,7 +176,6 @@ const COUPLES_ACTS = [
   },
   {
     id: 'choosing',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WÄHLEN', en: 'CHOOSING' },
     intro: {
       de: 'Dieser Akt schaut nach vorn -- auf das, was ihr als Paar als Nächstes wählt.',
@@ -285,9 +283,8 @@ const COUPLES_SECRET_AT_INDEX = 27;
  */
 const COUPLES_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 15,
-    title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Check-in', en: 'Check-in' },
     actIndices: [
       [0, 1, 4, 8],
@@ -296,10 +293,8 @@ const COUPLES_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 32,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 8, 9],
       [0, 1, 2, 3, 4, 6, 7, 11],
@@ -307,11 +302,8 @@ const COUPLES_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 60,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

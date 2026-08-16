@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
   RESPONSE_CARDS,
@@ -20,7 +21,6 @@ import {
 const DEEP_ACTS = [
   {
     id: 'beneath',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'DARUNTER', en: 'BENEATH' },
     intro: {
       de: 'Ein bewusst intensives Gespräch -- Tiefe heißt hier nicht Trauma.',
@@ -101,7 +101,6 @@ const DEEP_ACTS = [
   },
   {
     id: 'truth',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'WAHRHEIT', en: 'TRUTH' },
     intro: {
       de: 'Verstandenwerden statt Lösungen -- keine Diagnose, keine Bewertung.',
@@ -186,7 +185,6 @@ const DEEP_ACTS = [
   },
   {
     id: 'carryforward',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'MITNEHMEN', en: 'CARRY FORWARD' },
     intro: {
       de: 'Dieser Akt fragt, was ihr aus diesem Gespräch mitnehmt -- ohne therapeutische Wirkung zu behaupten.',
@@ -291,10 +289,8 @@ const DEEP_SECRET_AT_INDEX = 27;
 // column entries verbatim from the catalog's section 8.
 const DEEP_ROUTES = {
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 38,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 3, 4, 7, 8, 10, 11],
       [0, 1, 3, 4, 7, 8, 9, 11],
@@ -302,11 +298,8 @@ const DEEP_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 75,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
   RESPONSE_CARDS,
@@ -27,7 +28,6 @@ import {
 const FRIENDS_ACTS = [
   {
     id: 'light',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'LEICHT', en: 'LIGHT' },
     intro: {
       de: 'Ausdrücklich freundschaftlich -- Humor und Wertschätzung, keine romantische Rahmung.',
@@ -107,7 +107,6 @@ const FRIENDS_ACTS = [
   },
   {
     id: 'showingup',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'DA SEIN', en: 'SHOWING UP' },
     intro: {
       de: 'Jetzt geht es um Unterstützung -- wie sie wirklich ankommt.',
@@ -190,7 +189,6 @@ const FRIENDS_ACTS = [
   },
   {
     id: 'ahead',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WEITER', en: 'AHEAD' },
     intro: {
       de: 'Dieser Akt blickt nach vorn -- auf das, was ihr als Freunde als Nächstes wollt.',
@@ -296,10 +294,8 @@ const FRIENDS_SECRET_AT_INDEX = 27;
 // from the catalog's per-question Route column in section 6.
 const FRIENDS_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 18,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
@@ -307,10 +303,8 @@ const FRIENDS_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 35,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 3, 4, 6, 7, 9, 10],
       [0, 1, 3, 4, 6, 7, 9, 10],
@@ -318,11 +312,8 @@ const FRIENDS_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 60,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

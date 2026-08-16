@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_ONLY,
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
@@ -20,7 +21,6 @@ import {
 const CHAOS_ACTS = [
   {
     id: 'weird',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'SELTSAM', en: 'WEIRD' },
     intro: {
       de: 'Gemeinsames Erfinden und Lachen -- niemand wird bloßgestellt.',
@@ -99,7 +99,6 @@ const CHAOS_ACTS = [
   },
   {
     id: 'bold',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'MUTIG', en: 'BOLD' },
     intro: {
       de: 'Kleine, machbare Risiken -- keine Mutproben, niemand wird bloßgestellt.',
@@ -178,7 +177,6 @@ const CHAOS_ACTS = [
   },
   {
     id: 'surprisinglyreal',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'ÜBERRASCHEND ECHT', en: 'SURPRISINGLY REAL' },
     intro: {
       de: 'Ein bisschen echte Tiefe, ohne den Spaß zu verlieren.',
@@ -284,10 +282,8 @@ const CHAOS_SECRET_AT_INDEX = 27;
 // the first four, matching the catalog exactly.
 const CHAOS_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 10,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     actIndices: [
       [0, 1, 2, 3],
       [0, 1, 2, 3],
@@ -295,10 +291,8 @@ const CHAOS_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 21,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 6, 7],
       [0, 1, 2, 3, 4, 5, 6, 7],
@@ -306,11 +300,8 @@ const CHAOS_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 35,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

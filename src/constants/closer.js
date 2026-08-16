@@ -138,6 +138,7 @@ export function pick(value, lang) {
 // doesn't require also remembering to touch this boilerplate.
 
 import { PACKS, LATE_NIGHT_PACK } from '../closer/content';
+import { ACT_NUMERALS } from '../closer/content/shared';
 
 export { PACKS, LATE_NIGHT_PACK };
 
@@ -219,7 +220,15 @@ export function resolvedActs(packId, routeId = DEFAULT_ROUTE_ID) {
   const timing = routeTimingFor(packId, routeId);
   return pack.acts.map((act, actNum) => {
     const questions = resolvedLocalIndices(act, route, actNum).map((li) => act.questions[li]);
-    return { ...act, questions, subtitle: actSubtitle(questions.length, timing.actMinutes[actNum]) };
+    return {
+      ...act,
+      questions,
+      subtitle: actSubtitle(questions.length, timing.actMinutes[actNum]),
+      // AKT I/II/III sind in allen Packs gleich und aus dem Index
+      // ableitbar -- siehe ACT_NUMERALS. Ein Pack, das eigene Numeralia
+      // braucht, setzt `numeral` selbst und gewinnt hier.
+      numeral: act.numeral ?? ACT_NUMERALS[actNum],
+    };
   });
 }
 

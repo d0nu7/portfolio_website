@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   NO_TWISTS,
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
@@ -58,7 +59,6 @@ const LATE_NIGHT_ACT_II_OPT_IN = {
 const LATE_NIGHT_ACTS = [
   {
     id: 'atmosphere',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'ATMOSPHÄRE', en: 'ATMOSPHERE' },
     intro: {
       de: 'Worte, Stimmung und Aufmerksamkeit -- noch nichts Explizites.',
@@ -137,7 +137,6 @@ const LATE_NIGHT_ACTS = [
   },
   {
     id: 'desire',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'WUNSCH', en: 'DESIRE' },
     // Requires the renewed opt-in above (LATE_NIGHT_ACT_II_OPT_IN) before
     // this act's questions appear -- not yet enforced anywhere, since the
@@ -219,7 +218,6 @@ const LATE_NIGHT_ACTS = [
   },
   {
     id: 'trust',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'VERTRAUEN', en: 'TRUST' },
     intro: {
       de: 'Zustimmung, Grenzen, Safer Sex und Aftercare -- konkret, nie als Handlungsaufforderung.',
@@ -328,9 +326,8 @@ const LATE_NIGHT_SECRET_AT_INDEX = 27;
 // vier zu Vertrauen. [...] keine zufällige Auswahl expliziter Fragen."
 const LATE_NIGHT_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 18,
-    title: { de: 'KURZ', en: 'QUICK' },
     meta: { de: 'Eine sichere Steigerung', en: 'A safe escalation' },
     actIndices: [
       [0, 1, 2, 3],
@@ -339,10 +336,8 @@ const LATE_NIGHT_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 32,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 2, 3, 4, 5, 6, 7],
       [0, 1, 2, 3, 4, 5, 6, 7],
@@ -350,11 +345,8 @@ const LATE_NIGHT_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 50,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

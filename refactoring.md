@@ -123,10 +123,10 @@ Status dieser Iteration:
 
 ### Phase 2 – Content modularisieren
 
-- [ ] `closer.js` in Packmodule, Shared Content und Engine-Fassade aufteilen
-- [ ] Akt-Numeralia, Full-Route und Routentitel deduplizieren
-- [ ] LATE NIGHT bleibt eigener, nicht registrierter Pack
-- [ ] öffentliche Exports während der Migration stabil halten
+- [x] `closer.js` in Packmodule, Shared Content und Engine-Fassade aufteilen
+- [x] Akt-Numeralia, Full-Route und Routentitel deduplizieren
+- [x] LATE NIGHT bleibt eigener, nicht registrierter Pack
+- [x] öffentliche Exports während der Migration stabil halten
 
 **Abnahme:** kein sichtbarer oder gespeicherter Flow ändert sich; Bundle bleibt in derselben Größenordnung; alle Tests grün.
 

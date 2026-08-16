@@ -1,7 +1,8 @@
+import { ROUTE_PRESETS } from '../shared';
+
 const CLASSIC_ACTS = [
   {
     id: 'curious',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'NEUGIERIG', en: 'CURIOUS' },
     // Reworded per the iteration-6 content review's P2 finding: "start
     // light" undersold what's actually here -- question 7 asks about your
@@ -100,7 +101,6 @@ const CLASSIC_ACTS = [
   },
   {
     id: 'closer',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'NÄHER', en: 'CLOSER' },
     intro: {
       de: 'Die Fragen werden jetzt ein bisschen persönlicher.',
@@ -184,7 +184,6 @@ const CLASSIC_ACTS = [
   },
   {
     id: 'open',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'OFFEN', en: 'OPEN' },
     // Content warning, not just a mood-setter (iteration-6 content review,
     // P1): the previous "this part gets personal" was true but nonspecific
@@ -368,10 +367,8 @@ const CLASSIC_SECRET_AT_INDEX = 27;
  */
 const CLASSIC_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 15,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     // Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
     actIndices: [
       [0, 3, 8, 11],
@@ -380,10 +377,8 @@ const CLASSIC_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 30,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     // Q01-Q04, Q08, Q09, Q11, Q12 · Q13-Q18, Q20, Q21 · Q25-Q31, Q36
     actIndices: [
       [0, 1, 2, 3, 7, 8, 10, 11],
@@ -392,11 +387,8 @@ const CLASSIC_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 45,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

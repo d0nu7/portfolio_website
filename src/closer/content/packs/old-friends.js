@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
   RESPONSE_CARDS,
@@ -19,7 +20,6 @@ import {
 const OLD_FRIENDS_ACTS = [
   {
     id: 'then',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'DAMALS', en: 'THEN' },
     intro: {
       de: 'Fangt bei eurer gemeinsamen Geschichte an -- ohne Nähe oder Versöhnung vorauszusetzen.',
@@ -101,7 +101,6 @@ const OLD_FRIENDS_ACTS = [
   },
   {
     id: 'inbetween',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'DAZWISCHEN', en: 'IN BETWEEN' },
     intro: {
       de: 'Jetzt geht es um die Zeit dazwischen -- ohne dass sie erklärt oder gelöst werden muss.',
@@ -182,7 +181,6 @@ const OLD_FRIENDS_ACTS = [
   },
   {
     id: 'again',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'WIEDER', en: 'AGAIN' },
     intro: {
       de: 'Dieser Akt fragt, was heute stimmig wäre -- ohne eine Wiederannäherung vorauszusetzen.',
@@ -288,10 +286,8 @@ const OLD_FRIENDS_SECRET_AT_INDEX = 27;
 // catalog's per-question Route column in section 7.
 const OLD_FRIENDS_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 18,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
@@ -299,10 +295,8 @@ const OLD_FRIENDS_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 32,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 3, 4, 6, 7, 9, 10],
       [0, 1, 3, 4, 6, 7, 9, 10],
@@ -310,11 +304,8 @@ const OLD_FRIENDS_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 60,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

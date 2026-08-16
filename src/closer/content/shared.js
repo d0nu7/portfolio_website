@@ -138,6 +138,54 @@ const RESPONSE_CARDS = {
   },
 };
 
+/*
+ * Akt-Numeralia (Refactoringplan Phase 2).
+ *
+ * Alle neun Packs benutzen dieselben drei Werte, und sie sind vollstaendig
+ * aus dem Aktindex ableitbar. Statt sie 27-mal in die Packdaten zu
+ * schreiben, setzt resolvedActs() sie ein -- ein Pack, das spaeter eigene
+ * Numeralia braucht, kann `numeral` weiterhin selbst setzen und
+ * ueberschreibt damit den Standard.
+ */
+const ACT_NUMERALS = [
+  { de: 'AKT I', en: 'ACT I' },
+  { de: 'AKT II', en: 'ACT II' },
+  { de: 'AKT III', en: 'ACT III' },
+];
+
+/*
+ * Routen-Presets (Refactoringplan Phase 2).
+ *
+ * id, Titel und -- wo sie sich decken -- das Meta sind ueber alle Packs
+ * gleich; unterschiedlich sind nur `minutes` und die kuratierten
+ * `actIndices`. Ein Pack schreibt deshalb:
+ *
+ *   quick: { ...ROUTE_PRESETS.quick, minutes: 15, actIndices: [...] }
+ *
+ * und ueberschreibt bei Bedarf einzelne Felder -- COUPLES nennt seine
+ * Quick-Route bewusst "Check-in", LATE NIGHT "Eine sichere Steigerung".
+ * `full` bringt sein `actIndices: [null, null, null]` gleich mit, weil es
+ * fuer jeden Pack identisch ist.
+ */
+const ROUTE_PRESETS = {
+  quick: {
+    id: 'quick',
+    title: { de: 'KURZ', en: 'QUICK' },
+    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
+  },
+  standard: {
+    id: 'standard',
+    title: { de: 'STANDARD', en: 'STANDARD' },
+    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
+  },
+  full: {
+    id: 'full',
+    title: { de: 'VOLL', en: 'FULL' },
+    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
+    actIndices: [null, null, null],
+  },
+};
+
 export {
   NO_TWISTS,
   DEEPER_AND_STAY,
@@ -145,4 +193,6 @@ export {
   ROUTE_NEUTRAL_BLURB,
   RESPONSE_CARD_LABEL,
   RESPONSE_CARDS,
+  ACT_NUMERALS,
+  ROUTE_PRESETS,
 };

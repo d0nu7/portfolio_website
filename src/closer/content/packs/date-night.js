@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
@@ -13,7 +14,6 @@ import {
 const DATE_NIGHT_ACTS = [
   {
     id: 'spark',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'FUNKE', en: 'SPARK' },
     intro: {
       de: 'Es geht um Anziehung und Wärme – prickelnd, aber ohne Druck.',
@@ -92,7 +92,6 @@ const DATE_NIGHT_ACTS = [
   },
   {
     id: 'tension',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'SPANNUNG', en: 'TENSION' },
     intro: {
       de: 'Jetzt geht es um Nähe, Berührung und Wünsche – immer nur, wenn ihr wollt.',
@@ -172,7 +171,6 @@ const DATE_NIGHT_ACTS = [
   },
   {
     id: 'openness',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'OFFEN', en: 'OPENNESS' },
     intro: {
       de: 'Dieser Akt öffnet Verlangen und Grenzen ehrlich, ohne dass daraus ein Versprechen für heute wird.',
@@ -281,10 +279,8 @@ const DATE_NIGHT_SECRET_AT_INDEX = 27;
  */
 const DATE_NIGHT_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 18,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     actIndices: [
       [0, 1, 4, 8],
       [0, 1, 5, 11],
@@ -292,10 +288,8 @@ const DATE_NIGHT_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 32,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 3, 4, 5, 8, 9, 11],
       [0, 1, 2, 5, 7, 8, 10, 11],
@@ -303,11 +297,8 @@ const DATE_NIGHT_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 55,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 

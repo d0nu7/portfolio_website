@@ -1,4 +1,5 @@
 import {
+  ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
 } from '../shared';
@@ -23,7 +24,6 @@ import {
 const FIRST_DATE_ACTS = [
   {
     id: 'curiosity',
-    numeral: { de: 'AKT I', en: 'ACT I' },
     title: { de: 'NEUGIER', en: 'CURIOSITY' },
     intro: {
       de: 'Fangt leicht an. Es geht um Neugier, nicht um Tiefe – ihr könnt jederzeit weitergehen.',
@@ -102,7 +102,6 @@ const FIRST_DATE_ACTS = [
   },
   {
     id: 'signal',
-    numeral: { de: 'AKT II', en: 'ACT II' },
     title: { de: 'SIGNAL', en: 'SIGNALS' },
     intro: {
       de: 'Jetzt geht es um das, was sich zwischen euch beiden gerade zeigt.',
@@ -182,7 +181,6 @@ const FIRST_DATE_ACTS = [
   },
   {
     id: 'clarity',
-    numeral: { de: 'AKT III', en: 'ACT III' },
     title: { de: 'KLARHEIT', en: 'CLARITY' },
     intro: {
       de: 'Dieser Akt bringt Klarheit über Erwartungen und Grenzen. Nichts davon ist ein Versprechen für später.',
@@ -300,10 +298,8 @@ const FIRST_DATE_SECRET_AT_INDEX = 27;
  */
 const FIRST_DATE_ROUTES = {
   quick: {
-    id: 'quick',
+    ...ROUTE_PRESETS.quick,
     minutes: 18,
-    title: { de: 'KURZ', en: 'QUICK' },
-    meta: { de: 'Ein Ausschnitt', en: 'A taste of it' },
     actIndices: [
       [0, 1, 3, 6],
       [0, 2, 4, 8],
@@ -311,10 +307,8 @@ const FIRST_DATE_ROUTES = {
     ],
   },
   standard: {
-    id: 'standard',
+    ...ROUTE_PRESETS.standard,
     minutes: 30,
-    title: { de: 'STANDARD', en: 'STANDARD' },
-    meta: { de: 'Kuratierte Auswahl', en: 'Curated selection' },
     actIndices: [
       [0, 1, 2, 3, 4, 6, 7, 11],
       [0, 1, 2, 3, 4, 6, 8, 11],
@@ -322,11 +316,8 @@ const FIRST_DATE_ROUTES = {
     ],
   },
   full: {
-    id: 'full',
+    ...ROUTE_PRESETS.full,
     minutes: 50,
-    title: { de: 'VOLL', en: 'FULL' },
-    meta: { de: 'Alle 36 Fragen', en: 'All 36 questions' },
-    actIndices: [null, null, null],
   },
 };
 
