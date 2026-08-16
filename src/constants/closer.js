@@ -168,6 +168,106 @@ const RESPONSE_CARD_LABEL = {
   reflect: { de: 'REFLECT', en: 'REFLECT' },
 };
 
+/*
+ * Die zwoelf Response Cards des Katalogs als vollstaendige, wiederverwendbare
+ * Objekte (Refactoringplan Phase 1).
+ *
+ * Vorher war nur das *Label* nach RESPONSE_CARD_LABEL ausgelagert, der Text
+ * daneben stand wortwoertlich an jeder Fundstelle -- derselbe VALIDATE-Text
+ * dreimal, vier weitere je zweimal. Label und Text gehoeren aber zusammen:
+ * halb extrahiert driften sie beim naechsten redaktionellen Feinschliff
+ * auseinander, weil niemand alle Fundstellen findet.
+ *
+ * Jede Frage referenziert jetzt genau eine dieser Karten. 19 Verwendungen
+ * ueber FRIENDS, OLD FRIENDS und DEEP, zwoelf verschiedene Karten.
+ */
+const RESPONSE_CARDS = {
+  celebrateShare: {
+    label: RESPONSE_CARD_LABEL.celebrate,
+    text: {
+      de: 'Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.',
+      en: 'Take a moment to celebrate with them before sharing your own story.',
+    },
+  },
+  celebrateHonor: {
+    label: RESPONSE_CARD_LABEL.celebrate,
+    text: {
+      de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
+      en: 'Take a moment to honor what that moment cost the person or meant to them.',
+    },
+  },
+  followUpDetail: {
+    label: RESPONSE_CARD_LABEL.followUp,
+    text: {
+      de: 'Frag nach einem einzigen Detail aus dieser Szene.',
+      en: 'Ask for one detail from that moment.',
+    },
+  },
+  followUpUnderstand: {
+    label: RESPONSE_CARD_LABEL.followUp,
+    text: {
+      de: 'Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.',
+      en: 'Ask for one specific detail that helps you understand the answer better.',
+    },
+  },
+  followUpBehavior: {
+    label: RESPONSE_CARD_LABEL.followUp,
+    text: {
+      de: 'Frag, welches konkrete Verhalten den Unterschied gemacht hat.',
+      en: 'Ask what specific behavior made the difference.',
+    },
+  },
+  followUpFirstStep: {
+    label: RESPONSE_CARD_LABEL.followUp,
+    text: {
+      de: 'Was wäre ein kleiner, realistischer erster Schritt?',
+      en: 'What would be one small, realistic first step?',
+    },
+  },
+  validateNoSolution: {
+    label: RESPONSE_CARD_LABEL.validate,
+    text: {
+      de: 'Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.',
+      en: 'No solution is needed. First, show that you heard them.',
+    },
+  },
+  validateNoJudgment: {
+    label: RESPONSE_CARD_LABEL.validate,
+    text: {
+      de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
+      en: 'No solution and no judgment. First, show that you heard them.',
+    },
+  },
+  validateNoJustify: {
+    label: RESPONSE_CARD_LABEL.validate,
+    text: {
+      de: 'Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.',
+      en: 'You do not need to justify or repair anything. First, show that you heard them.',
+    },
+  },
+  reflectUnderstood: {
+    label: RESPONSE_CARD_LABEL.reflect,
+    text: {
+      de: 'Sag in einem Satz, was du an der Antwort verstanden hast.',
+      en: 'In one sentence, say what you understood from the answer.',
+    },
+  },
+  reflectKeepInMind: {
+    label: RESPONSE_CARD_LABEL.reflect,
+    text: {
+      de: 'Sag in einem Satz, was du künftig beachten möchtest.',
+      en: 'In one sentence, say what you would like to keep in mind from now on.',
+    },
+  },
+  reflectBothVersions: {
+    label: RESPONSE_CARD_LABEL.reflect,
+    text: {
+      de: 'Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.',
+      en: 'Do not look for the correct version. Name what each memory means to you.',
+    },
+  },
+};
+
 const CLASSIC_ACTS = [
   {
     id: 'curious',
@@ -196,28 +296,34 @@ const CLASSIC_ACTS = [
     },
     questions: [
       {
+        id: 'classic-q01',
         de: 'Wenn du jeden und jede auf der Welt einladen könntest, mit wem würdest du gerne essen gehen?',
         en: 'If you could invite anyone in the world, who would you want to have dinner with?',
         twist: 'predict',
       },
       {
+        id: 'classic-q02',
         de: 'Wärst du gerne berühmt? Wenn ja, wie?',
         en: 'Would you like to be famous? If so, in what way?',
         twist: 'nothinking',
       },
       {
+        id: 'classic-q03',
         de: 'Probst du manchmal vor einem Telefonat, was du sagen wirst? Warum?',
         en: 'Do you ever rehearse what you are going to say before a phone call? Why?',
       },
       {
+        id: 'classic-q04',
         de: 'Wie würde dein perfekter Tag aussehen?',
         en: 'What would your perfect day look like?',
       },
       {
+        id: 'classic-q05',
         de: 'Wann hast du zuletzt für dich gesungen? Und für jemand anderen?',
         en: 'When did you last sing to yourself? And to someone else?',
       },
       {
+        id: 'classic-q06',
         de: 'Wenn du bis 90 leben könntest und du entweder den Körper oder den Geist eines Dreißigjährigen die restlichen 60 Jahre behalten könntest – wofür würdest du dich entscheiden?',
         en: 'If you could live to 90 and keep either the body or the mind of a thirty-year-old for the last 60 years — which would you choose?',
         twist: 'both',
@@ -229,27 +335,33 @@ const CLASSIC_ACTS = [
         // game -- tonally wrong for this question, even though it's a
         // deliberate, legitimate part of CLASSIC otherwise. The question
         // itself is unchanged.
+        id: 'classic-q07',
         de: 'Hast du eine Vorahnung, wie du sterben wirst?',
         en: 'Do you have a hunch about how you are going to die?',
       },
       {
+        id: 'classic-q08',
         de: 'Nenne drei Dinge, die du und dein Gegenüber scheinbar gemeinsam haben.',
         en: 'Name three things you and the other person seem to have in common.',
         twist: 'both',
       },
       {
+        id: 'classic-q09',
         de: 'Wofür bist du in deinem Leben am dankbarsten?',
         en: 'What are you most grateful for in your life?',
       },
       {
+        id: 'classic-q10',
         de: 'Wenn du etwas daran ändern könntest, wie du aufgezogen wurdest, was wäre das?',
         en: 'If you could change one thing about the way you were raised, what would it be?',
       },
       {
+        id: 'classic-q11',
         de: 'Erzähle deinem Gegenüber innerhalb von vier Minuten deine Lebensgeschichte – so detailreich wie möglich!',
         en: 'Tell the other person your life story in four minutes — in as much detail as you can.',
       },
       {
+        id: 'classic-q12',
         de: 'Wenn du morgen aufwachst und eine Eigenschaft oder Fähigkeit dazugewonnen hast, welche hättest du dann gerne?',
         en: 'If you woke up tomorrow having gained one quality or ability, which would you want?',
         twist: 'nothinking',
@@ -274,54 +386,66 @@ const CLASSIC_ACTS = [
     },
     questions: [
       {
+        id: 'classic-q13',
         de: 'Wenn dir eine Kristallkugel die Wahrheit über dich, dein Leben, deine Zukunft oder irgendetwas sonst verraten könnte, was würdest du wissen wollen?',
         en: 'If a crystal ball could tell you the truth about yourself, your life, your future or anything else — what would you want to know?',
         twist: 'predict',
       },
       {
+        id: 'classic-q14',
         de: 'Gibt es etwas, von dem du schon lange träumst, es zu tun? Warum hast du es noch nicht getan?',
         en: 'Is there something you have dreamed of doing for a long time? Why have you not done it yet?',
         twist: 'deeper',
       },
       {
+        id: 'classic-q15',
         de: 'Was ist deine größte Leistung in deinem Leben?',
         en: 'What is the greatest achievement of your life?',
       },
       {
+        id: 'classic-q16',
         de: 'Was schätzt du an einer Freundschaft am meisten?',
         en: 'What do you value most in a friendship?',
         twist: 'predict',
       },
       {
+        id: 'classic-q17',
         de: 'Was ist deine wertvollste Erinnerung?',
         en: 'What is your most treasured memory?',
       },
       {
+        id: 'classic-q18',
         de: 'Was ist deine schrecklichste Erinnerung?',
         en: 'What is your most terrible memory?',
       },
       {
+        id: 'classic-q19',
         de: 'Wenn du wüsstest, dass du in einem Jahr plötzlich sterben wirst, würdest du irgendetwas daran ändern, wie du jetzt lebst? Warum?',
         en: 'If you knew you would die suddenly in one year, would you change anything about how you are living now? Why?',
         stayEnabled: true,
       },
       {
+        id: 'classic-q20',
         de: 'Was bedeutet dir Freundschaft?',
         en: 'What does friendship mean to you?',
       },
       {
+        id: 'classic-q21',
         de: 'Welche Rolle spielen Liebe und Zuneigung in deinem Leben?',
         en: 'What role do love and affection play in your life?',
       },
       {
+        id: 'classic-q22',
         de: 'Wechselt euch ab, jeweils fünf positive Eigenschaften eures Gegenübers aufzuzählen.',
         en: 'Take turns naming five positive qualities of the other person.',
       },
       {
+        id: 'classic-q23',
         de: 'Wie nahe und warmherzig ist deine Familie? Glaubst du, dass deine Kindheit glücklicher war als die anderer Menschen?',
         en: "How close and warm is your family? Do you think your childhood was happier than most people's?",
       },
       {
+        id: 'classic-q24',
         de: 'Wie ist die Beziehung zu deiner Mutter?',
         en: 'What is your relationship with your mother like?',
         stayEnabled: true,
@@ -342,10 +466,12 @@ const CLASSIC_ACTS = [
     },
     questions: [
       {
+        id: 'classic-q25',
         de: 'Macht jeweils drei wahre Aussagen, die "wir" beinhalten. Beispielsweise: "Wir sind beide in diesem Raum und fühlen …"',
         en: 'Each make three true statements using "we". For example: "We are both in this room and feeling …"',
       },
       {
+        id: 'classic-q26',
         de: 'Vervollständige diesen Satz: Ich wünschte, ich hätte jemanden, mit dem ich … teilen kann.',
         en: 'Complete this sentence: I wish I had someone I could share … with.',
         twist: 'deeper',
@@ -355,41 +481,50 @@ const CLASSIC_ACTS = [
         // "für sie oder ihn" -> "für diese Person". Content, order and
         // meaning are unchanged -- only the binary pronoun is gone. English
         // was already neutral ("them").
+        id: 'classic-q27',
         de: 'Wenn du mit deinem Gegenüber eng befreundet wärst: Was wäre für diese Person wichtig, über dich zu wissen?',
         en: 'If you were to become a close friend of the other person, what would be important for them to know about you?',
       },
       {
         // Same rewording as above: "an ihm oder ihr" -> "an dieser Person".
+        id: 'classic-q28',
         de: 'Sag deinem Gegenüber, was du an dieser Person magst. Sei dabei sehr ehrlich und sag etwas, das du wahrscheinlich nicht zu jemandem sagen würdest, den du gerade getroffen hast.',
         en: 'Tell the other person what you like about them. Be very honest — say something you probably would not say to someone you had just met.',
       },
       {
+        id: 'classic-q29',
         de: 'Teile einen peinlichen Moment deines Lebens.',
         en: 'Share an embarrassing moment from your life.',
       },
       {
+        id: 'classic-q30',
         de: 'Wann hast du zuletzt vor einer anderen Person geweint? Und wann alleine?',
         en: 'When did you last cry in front of another person? And when alone?',
         stayEnabled: true,
       },
       {
+        id: 'classic-q31',
         de: 'Was magst du jetzt schon an deinem Gegenüber?',
         en: 'What do you already like about the other person?',
       },
       {
+        id: 'classic-q32',
         de: 'Was ist zu ernst, sodass man darüber keine Witze machen sollte?',
         en: 'What is too serious to joke about?',
       },
       {
+        id: 'classic-q33',
         de: 'Wenn du heute Abend sterben würdest und keine Gelegenheit mehr hättest, mit jemandem zu reden, was würdest du am meisten bereuen, nicht gesagt zu haben? Und warum hast du es noch nicht gesagt?',
         en: 'If you were to die this evening with no chance to speak to anyone, what would you most regret not having said? And why have you not said it yet?',
         stayEnabled: true,
       },
       {
+        id: 'classic-q34',
         de: 'Dein Haus und darin alles, was du besitzt, brennt. Menschen und Tiere sind in Sicherheit, und du hast die Möglichkeit, noch ein Ding zu retten. Was wäre das und wieso?',
         en: 'Your house, and everything you own in it, is burning. People and pets are safe, and you can save one more object. What would it be and why?',
       },
       {
+        id: 'classic-q35',
         de: 'Von all den Menschen in deiner Familie, wessen Tod würde dich am meisten treffen? Warum?',
         en: 'Of everyone in your family, whose death would affect you most? Why?',
         stayEnabled: true,
@@ -397,6 +532,7 @@ const CLASSIC_ACTS = [
       {
         // Same rewording as questions 27/28: "wie er oder sie" -> "wie
         // diese Person".
+        id: 'classic-q36',
         de: 'Teile ein persönliches Problem und frage dein Gegenüber, wie diese Person damit umgehen würde. Bitte dein Gegenüber außerdem darum, zu spiegeln, wie du dich mit dem Problem zu fühlen scheinst.',
         en: 'Share a personal problem and ask the other person how they would handle it. Then ask them to reflect back how you seem to feel about the problem you chose.',
         last: true,
@@ -582,50 +718,62 @@ const FIRST_DATE_ACTS = [
     },
     questions: [
       {
+        id: 'first-date-q01',
         de: 'Wie sieht für dich ein perfekter ungeplanter Abend aus?',
         en: 'What does your perfect spontaneous evening look like?',
       },
       {
+        id: 'first-date-q02',
         de: 'Über welches Thema kannst du reden, ohne die Zeit zu bemerken?',
         en: 'What topic can you talk about and completely lose track of time?',
       },
       {
+        id: 'first-date-q03',
         de: 'Welche Kleinigkeit bringt dich fast immer zum Lachen?',
         en: 'What small thing can almost always make you laugh?',
       },
       {
+        id: 'first-date-q04',
         de: 'Worauf freust du dich gerade wirklich?',
         en: 'What are you genuinely looking forward to right now?',
       },
       {
+        id: 'first-date-q05',
         de: 'Welche einfache Freude hat zuletzt einen gewöhnlichen Tag besser gemacht?',
         en: 'What simple pleasure recently made an ordinary day better?',
       },
       {
+        id: 'first-date-q06',
         de: 'Was machst du gern, ohne darin besonders gut sein zu müssen?',
         en: 'What do you enjoy doing without needing to be particularly good at it?',
       },
       {
+        id: 'first-date-q07',
         de: 'Auf welchen kleinen Moment der letzten Zeit bist du stolz – und warum?',
         en: 'What small recent moment made you feel proud, and why?',
       },
       {
+        id: 'first-date-q08',
         de: 'Wofür begeisterst du dich gerade mehr, als andere vielleicht erwarten würden?',
         en: 'What are you more excited about lately than people might expect?',
       },
       {
+        id: 'first-date-q09',
         de: 'An welchem Ort fühlst du dich überraschend schnell wohl?',
         en: 'Where do you find it surprisingly easy to feel at home?',
       },
       {
+        id: 'first-date-q10',
         de: 'Welche kleine Gewohnheit macht deinen Alltag spürbar besser?',
         en: 'What small habit makes a real difference to your day?',
       },
       {
+        id: 'first-date-q11',
         de: 'Was würdest du gern nur zum Vergnügen lernen?',
         en: 'What would you love to learn purely for the fun of it?',
       },
       {
+        id: 'first-date-q12',
         de: 'Welche kleine Entscheidung hat dir in letzter Zeit überraschend gutgetan?',
         en: 'What small decision has turned out surprisingly well for you lately?',
       },
@@ -649,51 +797,63 @@ const FIRST_DATE_ACTS = [
     },
     questions: [
       {
+        id: 'first-date-q13',
         de: 'Was hilft dir, dich mit einer neuen Person schnell wohlzufühlen?',
         en: 'What helps you feel comfortable around someone new?',
       },
       {
+        id: 'first-date-q14',
         de: 'Welche Eigenschaft fällt dir an anderen Menschen positiv auf?',
         en: 'What quality in other people tends to catch your attention in a good way?',
       },
       {
+        id: 'first-date-q15',
         de: 'Was macht ein Date für dich gut – unabhängig davon, wie es danach weitergeht?',
         en: 'What makes a date worthwhile, regardless of what happens afterward?',
       },
       {
+        id: 'first-date-q16',
         de: 'Was möchtest du über einen Menschen wissen, bevor du dir ein Urteil bildest?',
         en: 'What do you want to know about someone before you form an opinion of them?',
       },
       {
+        id: 'first-date-q17',
         de: 'Welches Verhalten gibt dir das Gefühl, dass dir wirklich zugehört wird?',
         en: 'What does someone do that makes you feel genuinely heard?',
       },
       {
+        id: 'first-date-q18',
         de: 'Wie zeigst du, dass dich eine Antwort wirklich interessiert?',
         en: 'How do you show someone that you are genuinely interested in their answer?',
       },
       {
+        id: 'first-date-q19',
         de: 'Welche Art von Kompliment erreicht dich wirklich?',
         en: 'What kind of compliment truly lands with you?',
       },
       {
+        id: 'first-date-q20',
         de: 'Welche Art von gemeinsamem Schweigen fühlt sich für dich angenehm an?',
         en: 'What kind of shared silence feels comfortable to you?',
       },
       {
+        id: 'first-date-q21',
         de: 'Welcher Wert zeigt sich in deinem Alltag besonders deutlich?',
         en: 'Which of your values shows up most clearly in your everyday life?',
       },
       {
+        id: 'first-date-q22',
         de: 'Welche gute Eigenschaft an dir erkennen Menschen oft erst mit der Zeit?',
         en: 'What good quality in you do people often discover only with time?',
         twist: 'deeper',
       },
       {
+        id: 'first-date-q23',
         de: 'Welche Mischung aus Planung und Spontaneität passt gut zu dir?',
         en: 'What balance of planning and spontaneity suits you best?',
       },
       {
+        id: 'first-date-q24',
         de: 'Welche Version von dir lernen neue Menschen meistens zuerst kennen?',
         en: 'Which version of you do new people usually meet first?',
       },
@@ -709,52 +869,64 @@ const FIRST_DATE_ACTS = [
     },
     questions: [
       {
+        id: 'first-date-q25',
         de: 'Was soll eine Person an dir bemerken, ohne dass du es beweisen musst?',
         en: 'What do you hope someone notices about you without making you prove it?',
       },
       {
+        id: 'first-date-q26',
         de: 'Woran merkst du, dass du jemanden gern wiedersehen möchtest?',
         en: 'How do you know when you would like to see someone again?',
       },
       {
+        id: 'first-date-q27',
         de: 'Welche Grenze macht Dating für dich leichter und sicherer?',
         en: 'What boundary makes dating feel easier and safer for you?',
       },
       {
+        id: 'first-date-q28',
         de: 'Welche Art von Verbindung hoffst du zu finden, ohne heute schon mehr versprechen zu müssen?',
         en: 'What kind of connection are you hoping for without having to promise anything tonight?',
       },
       {
+        id: 'first-date-q29',
         de: 'Welches Tempo fühlt sich beim Kennenlernen für dich gut an?',
         en: 'What pace feels right to you when getting to know someone?',
         stayEnabled: true,
       },
       {
+        id: 'first-date-q30',
         de: 'Welche Wahrheit über deinen Alltag ist wichtig, um dich gerade gut kennenzulernen?',
         en: 'What truth about your day-to-day life right now would help someone understand you better?',
       },
       {
+        id: 'first-date-q31',
         de: 'Wie zeigt sich Verlässlichkeit für dich am Anfang eines Kennenlernens?',
         en: 'What does reliability look like to you early on?',
       },
       {
+        id: 'first-date-q32',
         de: 'Wie soll eine Person nachfragen, wenn sie deine Gefühle nicht sicher einschätzen kann?',
         en: 'How would you like someone to ask when they are unsure how you feel?',
       },
       {
+        id: 'first-date-q33',
         de: 'Was lässt dich respektiert fühlen, wenn Interessen oder Meinungen auseinandergehen?',
         en: 'What makes you feel respected when interests or opinions differ?',
       },
       {
+        id: 'first-date-q34',
         de: 'Was soll dein Gegenüber von dir aus diesem Abend in Erinnerung behalten?',
         en: 'What do you hope the other person remembers about you from tonight?',
       },
       {
+        id: 'first-date-q35',
         de: 'Was hilft dir, ehrlich Nein zu sagen, ohne dich für die Stimmung verantwortlich zu fühlen?',
         en: 'What helps you say an honest no without feeling responsible for the mood?',
         stayEnabled: true,
       },
       {
+        id: 'first-date-q36',
         de: 'Was würde diesen Abend für dich gut und druckfrei abrunden?',
         en: 'What would make this evening feel complete and pressure-free for you?',
         last: true,
@@ -872,50 +1044,62 @@ const DATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'date-night-q01',
         de: 'Welche kleine Sache findest du überraschend attraktiv?',
         en: 'What small thing do you find surprisingly attractive?',
       },
       {
+        id: 'date-night-q02',
         de: 'Welches Kompliment bleibt bei dir besonders lange hängen?',
         en: 'What kind of compliment tends to stay with you?',
       },
       {
+        id: 'date-night-q03',
         de: 'Woran merkst du, dass jemand mit dir flirtet?',
         en: 'How can you tell when someone is flirting with you?',
       },
       {
+        id: 'date-night-q04',
         de: 'Bei welcher Art von Date vergisst du leicht die Zeit?',
         en: 'What kind of date makes it easy for you to lose track of time?',
       },
       {
+        id: 'date-night-q05',
         de: 'Welcher konkrete Moment zwischen euch hatte zuletzt einen besonderen Funken?',
         en: 'What recent moment between you had a special spark?',
       },
       {
+        id: 'date-night-q06',
         de: 'Welche Seite an deinem Gegenüber entdeckst du immer wieder gern neu?',
         en: 'What side of the person across from you do you still enjoy rediscovering?',
       },
       {
+        id: 'date-night-q07',
         de: 'Welche Art von Ausstrahlung zieht deine Aufmerksamkeit sofort an?',
         en: 'What kind of presence catches your attention immediately?',
       },
       {
+        id: 'date-night-q08',
         de: 'Welche spielerische Geste lässt dich merken, dass du gemeint bist?',
         en: 'What playful gesture makes you feel singled out in the best way?',
       },
       {
+        id: 'date-night-q09',
         de: 'Was macht einen gewöhnlichen Moment für dich romantisch?',
         en: 'What turns an ordinary moment into a romantic one for you?',
       },
       {
+        id: 'date-night-q10',
         de: 'Welche gemeinsame Erinnerung gibt dir sofort ein warmes Gefühl?',
         en: 'What shared memory gives you an instant warm feeling?',
       },
       {
+        id: 'date-night-q11',
         de: 'Welche Art von Vorfreude genießt du besonders?',
         en: 'What kind of anticipation do you enjoy most?',
       },
       {
+        id: 'date-night-q12',
         de: 'Welche Kleinigkeit an deinem Gegenüber ist dir heute positiv aufgefallen?',
         en: 'What small thing about the person across from you have you appreciated tonight?',
       },
@@ -939,51 +1123,63 @@ const DATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'date-night-q13',
         de: 'Wann fühlst du dich besonders begehrt?',
         en: 'When do you feel most desired?',
       },
       {
+        id: 'date-night-q14',
         de: 'Welche Form von Nähe lässt dich entspannen?',
         en: 'What kind of closeness helps you relax?',
       },
       {
+        id: 'date-night-q15',
         de: 'Was würdest du bei einem Date gern öfter selbst initiieren?',
         en: 'What would you like to initiate more often on a date?',
       },
       {
+        id: 'date-night-q16',
         de: 'Welche unausgesprochene Spannung zwischen zwei Menschen findest du schön?',
         en: 'What kind of unspoken tension between two people do you enjoy?',
       },
       {
+        id: 'date-night-q17',
         de: 'Welche verspielte Aufmerksamkeit lässt dich besonders gewählt fühlen?',
         en: 'What kind of playful attention makes you feel especially chosen?',
       },
       {
+        id: 'date-night-q18',
         de: 'Welche Art von Berührung fühlt sich für dich besonders zärtlich an?',
         en: 'What kind of touch feels especially tender to you?',
       },
       {
+        id: 'date-night-q19',
         de: 'Welche Atmosphäre spricht deine Sinne besonders an?',
         en: 'What kind of atmosphere awakens your senses?',
       },
       {
+        id: 'date-night-q20',
         de: 'Falls Küsse für dich dazugehören: Welche Art von Kuss fühlt sich besonders innig an?',
         en: 'If kissing is part of intimacy for you, what kind of kiss feels especially close?',
       },
       {
+        id: 'date-night-q21',
         de: 'Welche neue gemeinsame Erfahrung könnte zwischen euch einen Funken wecken?',
         en: 'What new experience together could bring out a fresh spark between you?',
         twist: 'deeper',
       },
       {
+        id: 'date-night-q22',
         de: 'Welches flirtende Kompliment würdest du heute gern hören?',
         en: 'What flirty compliment would you enjoy hearing tonight?',
       },
       {
+        id: 'date-night-q23',
         de: 'Welches Tempo lässt Anziehung für dich wachsen?',
         en: 'What pace allows attraction to grow for you?',
       },
       {
+        id: 'date-night-q24',
         de: 'Was lässt Anziehung für dich verspielt statt druckvoll wirken?',
         en: 'What makes attraction feel playful rather than pressured to you?',
       },
@@ -999,52 +1195,64 @@ const DATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'date-night-q25',
         de: 'Was hilft dir, dich sicher genug zu fühlen, um dich fallen zu lassen?',
         en: 'What helps you feel safe enough to let your guard down?',
       },
       {
+        id: 'date-night-q26',
         de: 'Welche Grenze macht Intimität für dich erst möglich?',
         en: 'What boundary helps make intimacy possible for you?',
       },
       {
+        id: 'date-night-q27',
         de: 'Was sollte ein Mensch über dein Verlangen verstehen, ohne es persönlich zu nehmen?',
         en: 'What should someone understand about your desire without taking it personally?',
       },
       {
+        id: 'date-night-q28',
         de: 'Was macht es dir leicht, ein ehrliches Ja oder Nein auszusprechen?',
         en: 'What makes it easier for you to give an honest yes or no?',
       },
       {
+        id: 'date-night-q29',
         de: 'Welche Form von Nähe fühlt sich gut an, auch wenn sie nirgendwohin führen muss?',
         en: 'What kind of closeness feels good even when it does not have to lead anywhere?',
         stayEnabled: true,
       },
       {
+        id: 'date-night-q30',
         de: 'Welche romantische Initiative lässt dich wirklich gesehen fühlen?',
         en: 'What romantic initiative makes you feel truly seen?',
       },
       {
+        id: 'date-night-q31',
         de: 'Welche Reaktion hilft dir, wenn eure Wünsche gerade nicht übereinstimmen?',
         en: 'What kind of response helps when your wishes do not match in the moment?',
       },
       {
+        id: 'date-night-q32',
         de: 'Welche gute Nachricht oder kleine Freude möchtest du heute gemeinsam feiern?',
         en: 'What piece of good news or small joy would you like to celebrate together tonight?',
       },
       {
+        id: 'date-night-q33',
         de: 'Welchen Wunsch würdest du gern teilen, wenn daraus keine Erwartung entsteht?',
         en: 'What wish would you like to share if it came with no expectation?',
         stayEnabled: true,
       },
       {
+        id: 'date-night-q34',
         de: 'Wie sieht für dich ein schöner Ausklang nach einem besonders nahen Date aus?',
         en: 'What does a lovely ending to an especially close date look like to you?',
       },
       {
+        id: 'date-night-q35',
         de: 'Welche kleine neue Erfahrung würdest du bei einem nächsten Date gern teilen?',
         en: 'What small new experience would you enjoy sharing on a future date?',
       },
       {
+        id: 'date-night-q36',
         de: 'Welcher Gedanke aus diesem Abend soll noch ein wenig nachklingen?',
         en: 'What thought from tonight would you like to linger a little longer?',
         last: true,
@@ -1155,50 +1363,62 @@ const COUPLES_ACTS = [
     },
     questions: [
       {
+        id: 'couples-q01',
         de: 'Welcher kleine Moment zwischen euch hat dir zuletzt gutgetan?',
         en: 'What small moment between you felt good to you recently?',
       },
       {
+        id: 'couples-q02',
         de: 'Was macht ihr als Paar gerade richtig?',
         en: 'What are the two of you doing well as a couple right now?',
       },
       {
+        id: 'couples-q03',
         de: 'Welches Alltagsritual möchtest du unbedingt behalten?',
         en: 'What everyday ritual in your relationship would you really like to keep?',
       },
       {
+        id: 'couples-q04',
         de: 'Wann fühlt ihr euch in eurer Beziehung besonders als Team?',
         en: 'When do the two of you feel most like a team?',
       },
       {
+        id: 'couples-q05',
         de: 'Welche Eigenschaft deines Gegenübers wurde in einem Moment sichtbar, für den du diese Woche dankbar bist?',
         en: 'Which quality in your partner showed up in a moment you felt grateful for this week?',
       },
       {
+        id: 'couples-q06',
         de: 'Welche gute Nachricht oder kleine Freude möchtest du gerade gemeinsam feiern – und welche Reaktion würde sich gut anfühlen?',
         en: 'What piece of good news or small joy would you like to celebrate together right now—and what response would feel good?',
       },
       {
+        id: 'couples-q07',
         de: 'Welche alltägliche Bemühung deines Gegenübers bedeutet dir mehr, als diese Person vermutlich merkt?',
         en: 'What everyday effort from your partner means more to you than they probably realize?',
       },
       {
+        id: 'couples-q08',
         de: 'Was tut dein Gegenüber beim Zuhören, das dich besonders verstanden fühlen lässt?',
         en: 'What does your partner do while listening that makes you feel especially understood?',
       },
       {
+        id: 'couples-q09',
         de: 'Welche kleine Gewohnheit zwischen euch fühlt sich für dich nach Zuhause an?',
         en: 'What small habit between you feels like home to you?',
       },
       {
+        id: 'couples-q10',
         de: 'Welcher Moment hat dich zuletzt stolz auf euch als Paar gemacht?',
         en: 'What recent moment made you feel proud of the two of you as a couple?',
       },
       {
+        id: 'couples-q11',
         de: 'Welche Seite von dir kommt in eurer Beziehung leichter zum Vorschein?',
         en: 'What part of you comes out more easily in your relationship?',
       },
       {
+        id: 'couples-q12',
         de: 'Welches ehrliche Kompliment über eure Beziehung kannst du gut annehmen?',
         en: 'What sincere compliment about your relationship can you truly accept?',
       },
@@ -1222,52 +1442,64 @@ const COUPLES_ACTS = [
     },
     questions: [
       {
+        id: 'couples-q13',
         de: 'Welche Bitte fällt dir deinem Gegenüber schwer auszusprechen?',
         en: 'What request do you find difficult to make of your partner?',
       },
       {
+        id: 'couples-q14',
         de: 'Wie wünschst du dir Trost, wenn es dir nicht gut geht?',
         en: 'How do you like to be comforted when you are having a hard time?',
       },
       {
+        id: 'couples-q15',
         de: 'Welches Bedürfnis bleibt hinter einem wiederkehrenden Missverständnis zwischen euch oft unsichtbar?',
         en: 'What need often goes unseen beneath a recurring misunderstanding between you?',
         stayEnabled: true,
       },
       {
+        id: 'couples-q16',
         de: 'Woran merkst du, dass eine Entschuldigung bei dir wirklich ankommt?',
         en: 'What tells you that an apology has truly landed?',
       },
       {
+        id: 'couples-q17',
         de: 'Welche Reaktion wünschst du dir zuerst, wenn du Stress teilst?',
         en: 'What kind of response do you want first when you share something stressful?',
       },
       {
+        id: 'couples-q18',
         de: 'Welche Formulierung hilft dir, um Raum zu bitten, ohne Distanz zu meinen?',
         en: 'What words help you ask for space without meaning emotional distance?',
       },
       {
+        id: 'couples-q19',
         de: 'Was macht ein schwieriges Gespräch für dich sicherer?',
         en: 'What helps a difficult conversation feel safer to you?',
       },
       {
+        id: 'couples-q20',
         de: 'Wie kann dein Gegenüber auf eine gute Nachricht von dir so reagieren, dass du dich wirklich begleitet fühlst?',
         en: 'How can your partner respond to your good news in a way that makes you feel truly supported?',
       },
       {
+        id: 'couples-q21',
         de: 'Welches Signal sollte für euch bedeuten, kurz innezuhalten statt weiterzudrängen?',
         en: 'What signal should tell the two of you to pause rather than push on?',
       },
       {
+        id: 'couples-q22',
         de: 'Welcher frühere schwierige Moment zeigt dir, dass ihr wieder zueinanderfinden könnt?',
         en: 'What past difficult moment reminds you that the two of you can find your way back to each other?',
         stayEnabled: true,
       },
       {
+        id: 'couples-q23',
         de: 'Welche kleine Veränderung würde in eurem Alltag gerade spürbar Druck herausnehmen?',
         en: 'What small change would noticeably ease the pressure in your everyday life right now?',
       },
       {
+        id: 'couples-q24',
         de: 'Was soll dein Gegenüber verstehen, bevor diese Person versucht, ein Problem für dich zu lösen?',
         en: 'What would you like your partner to understand before they try to solve a problem for you?',
       },
@@ -1283,51 +1515,63 @@ const COUPLES_ACTS = [
     },
     questions: [
       {
+        id: 'couples-q25',
         de: 'Wovon möchtest du in den nächsten drei Monaten mehr gemeinsam erleben?',
         en: 'What would you like the two of you to experience more of over the next three months?',
       },
       {
+        id: 'couples-q26',
         de: 'Welchen gemeinsamen Wunsch habt ihr zu lange verschoben?',
         en: 'What shared wish have the two of you postponed for too long?',
       },
       {
+        id: 'couples-q27',
         de: 'Wie könnt ihr eure Nähe schützen, wenn der Alltag stressig wird?',
         en: 'How can the two of you protect your closeness when everyday life gets stressful?',
       },
       {
+        id: 'couples-q28',
         de: 'Welches kleine Versprechen könnt ihr euch für diese Woche geben?',
         en: 'What small promise can the two of you make for this week?',
       },
       {
+        id: 'couples-q29',
         de: 'Welche neue gemeinsame Erfahrung würdet ihr im nächsten Monat gern ausprobieren?',
         en: 'What new experience would the two of you like to try in the next month?',
       },
       {
+        id: 'couples-q30',
         de: 'Welche neue Tradition würde gut zu euch passen?',
         en: 'What new tradition would suit the two of you?',
       },
       {
+        id: 'couples-q31',
         de: 'Wie sieht ein gewöhnlicher gemeinsamer Tag aus, auf den du dich auch in einigen Jahren freuen würdest?',
         en: 'What would an ordinary day together look like if it still felt worth looking forward to years from now?',
         twist: 'deeper',
       },
       {
+        id: 'couples-q32',
         de: 'Welche Eigenschaft möchtet ihr als Team stärker entwickeln?',
         en: 'What quality would you like to grow stronger in as a team?',
       },
       {
+        id: 'couples-q33',
         de: 'Welche Seite eurer Beziehung möchtest du auch in stressigen Zeiten bewusst wählen?',
         en: 'What part of your relationship do you want to keep choosing even during stressful times?',
       },
       {
+        id: 'couples-q34',
         de: 'Zu welchem Gespräch möchtet ihr regelmäßig zurückkehren?',
         en: 'What conversation would you like to return to regularly?',
       },
       {
+        id: 'couples-q35',
         de: 'Welche Unterstützung deines Gegenübers würde dir bei einem aktuellen Ziel wirklich helfen?',
         en: 'What support from your partner would genuinely help with one of your current goals?',
       },
       {
+        id: 'couples-q36',
         de: 'Welcher Satz aus diesem Gespräch soll euch morgen noch begleiten?',
         en: 'What line from this conversation would you like to carry into tomorrow?',
         last: true,
@@ -1448,57 +1692,63 @@ const FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'friends-q01',
         de: 'Welche kleine Sache macht dir im Moment Freude?',
         en: 'What small thing is bringing you joy at the moment?',
       },
       {
+        id: 'friends-q02',
         de: 'Welche Rolle nimmst du in Gruppen oft ganz automatisch ein?',
         en: 'What role do you tend to slip into automatically in a group?',
       },
       {
+        id: 'friends-q03',
         de: 'Für welches eher ungewöhnliche Thema kannst du dich überraschend stark begeistern?',
         en: 'What slightly unusual topic can you get surprisingly excited about?',
       },
       {
+        id: 'friends-q04',
         de: 'Welche konkrete Erinnerung steckt hinter einem Insider zwischen uns, der immer noch lustig ist?',
         en: 'What specific memory is behind an inside joke between us that is still funny?',
       },
       {
+        id: 'friends-q05',
         de: 'Woran merkst du am Ende eines freien Tages, dass du ihn gut verbracht hast?',
         en: 'At the end of a day off, what tells you that you spent it well?',
       },
       {
+        id: 'friends-q06',
         de: 'Worin bist du besser, als du dir selbst meistens zugestehst?',
         en: 'What are you better at than you usually give yourself credit for?',
       },
       {
+        id: 'friends-q07',
         de: 'Welche Eigenschaft ist dir in einer guten Freundschaft besonders wichtig?',
         en: 'What quality matters most to you in a good friendship?',
       },
       {
+        id: 'friends-q08',
         de: 'Welche gute Nachricht aus deinem Leben verdient gerade etwas mehr Aufmerksamkeit – und warum?',
         en: 'What good news in your life deserves a little more attention right now, and why?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.celebrate,
-          text: {
-            de: 'Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.',
-            en: 'Take a moment to celebrate with them before sharing your own story.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.celebrateShare,
       },
       {
+        id: 'friends-q09',
         de: 'Bei welchem konkreten gemeinsamen Moment musstest du besonders ehrlich lachen?',
         en: 'During what specific moment together did you laugh most genuinely?',
       },
       {
+        id: 'friends-q10',
         de: 'Welche konkrete Sache hat die andere Person einmal für dich getan – und welche Stärke von ihr wurde darin sichtbar?',
         en: 'What is one specific thing the other person once did for you, and what strength of theirs did it reveal?',
       },
       {
+        id: 'friends-q11',
         de: 'Welche Seite von dir hat sich verändert, seit wir uns kennen?',
         en: 'What side of you has changed since we have known each other?',
       },
       {
+        id: 'friends-q12',
         de: 'Über welchen Teil deines Lebens würdest du dir von befreundeten Menschen mehr neugierige Fragen wünschen?',
         en: 'What part of your life would you like your friends to ask more curious questions about?',
       },
@@ -1522,74 +1772,68 @@ const FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'friends-q13',
         de: 'Welche Form von Unterstützung hilft dir wirklich?',
         en: 'What kind of support genuinely helps you?',
       },
       {
+        id: 'friends-q14',
         de: 'Woran kann eine befreundete Person erkennen, ob du gerade Rat oder einfach Gesellschaft möchtest?',
         en: 'How can a friend tell whether you want advice or simply some company?',
       },
       {
+        id: 'friends-q15',
         de: 'Was tut jemand konkret, wenn du dich in einem Gespräch wirklich gehört fühlst?',
         en: 'What does someone actually do that makes you feel truly heard in a conversation?',
       },
       {
+        id: 'friends-q16',
         de: 'Was wird an dir häufig missverstanden?',
         en: 'What do people often misunderstand about you?',
       },
       {
+        id: 'friends-q17',
         de: 'Welche Emotion kannst du unter befreundeten Menschen leicht zeigen, und welche eher nicht?',
         en: 'Which emotion can you show easily around friends, and which one is harder to show?',
       },
       {
+        id: 'friends-q18',
         de: 'Wann hat eine befreundete Person zuletzt genau die richtige Nachfrage gestellt – und was hat sie bewirkt?',
         en: 'When did a friend last ask exactly the right follow-up question, and what difference did it make?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.followUp,
-          text: {
-            de: 'Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.',
-            en: 'Ask for one specific detail that helps you understand the answer better.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.followUpUnderstand,
       },
       {
+        id: 'friends-q19',
         de: 'Wann hattest du zuletzt das Gefühl, dass dir eine befreundete Person wirklich den Rücken stärkt?',
         en: 'When did you last feel that a friend truly had your back?',
       },
       {
+        id: 'friends-q20',
         de: 'Wie wünschst du dir, dass befreundete Menschen auf eine gute Nachricht von dir reagieren?',
         en: 'How would you like your friends to respond when you share good news?',
       },
       {
+        id: 'friends-q21',
         de: 'Wenn du einen schweren Tag teilst: Was hilft zuerst – Zuhören, Trost, Ablenkung, Ideen, praktische Hilfe oder etwas anderes?',
         en: 'When you share that you have had a hard day, what helps first: listening, comfort, distraction, ideas, practical help, or something else?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.',
-            en: 'No solution is needed. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoSolution,
       },
       {
+        id: 'friends-q22',
         de: 'Welche Eigenschaft der anderen Person schätzt du, die sie selbst vielleicht unterschätzt?',
         en: 'What quality do you appreciate in the other person that they may underestimate in themselves?',
       },
       {
+        id: 'friends-q23',
         de: 'Welche Grenze macht Freundschaften für dich verlässlicher und sicherer?',
         en: 'What boundary makes friendships feel more reliable and safe to you?',
       },
       {
+        id: 'friends-q24',
         de: 'Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen?',
         en: 'What are you dealing with right now that a friend can simply sit with you in, without having to solve it?',
         stayEnabled: true,
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.',
-            en: 'No solution is needed. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoSolution,
       },
     ],
   },
@@ -1603,68 +1847,68 @@ const FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'friends-q25',
         de: 'Was würdest du dieses Jahr gern gemeinsam machen?',
         en: 'What would you enjoy doing together this year?',
       },
       {
+        id: 'friends-q26',
         de: 'Welche neue gemeinsame Erinnerung sollten wir in den nächsten Monaten schaffen?',
         en: 'What new shared memory should we create in the next few months?',
       },
       {
+        id: 'friends-q27',
         de: 'Welche Art von Moment zwischen uns fühlt sich für dich besonders nach Freundschaft an?',
         en: 'What kind of moment between us feels most like friendship to you?',
       },
       {
+        id: 'friends-q28',
         de: 'Wie hat dich eine Freundschaft in deinem Leben verändert?',
         en: 'How has a friendship changed you?',
       },
       {
+        id: 'friends-q29',
         de: 'Was sollte die andere Person über deine heutige Version wissen, das früher noch nicht galt?',
         en: 'What should the other person know about who you are today that was not true before?',
       },
       {
+        id: 'friends-q30',
         de: 'Was würdest du gern von der anderen Person lernen – nicht unbedingt als Fähigkeit, sondern als Haltung?',
         en: 'What would you like to learn from the other person, not necessarily as a skill but as a way of approaching life?',
         twist: 'deeper',
       },
       {
+        id: 'friends-q31',
         de: 'Was sollten befreundete Menschen einander öfter fragen?',
         en: 'What should friends ask each other more often?',
       },
       {
+        id: 'friends-q32',
         de: 'Wie könnte ich in den nächsten Monaten besser für dich da sein, ohne etwas für dich zu entscheiden?',
         en: 'How could I show up for you better over the next few months without deciding anything for you?',
       },
       {
+        id: 'friends-q33',
         de: 'Welchen kleinen oder großen Erfolg sollten wir als Nächstes gemeinsam feiern?',
         en: 'What small or big success should we celebrate together next?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.celebrate,
-          text: {
-            de: 'Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.',
-            en: 'Take a moment to celebrate with them before sharing your own story.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.celebrateShare,
       },
       {
+        id: 'friends-q34',
         de: 'Wofür wären wir in einem Jahr dankbar, wenn wir es jetzt gemeinsam planen?',
         en: 'What would we be grateful for a year from now if we planned it together today?',
       },
       {
+        id: 'friends-q35',
         de: 'Was hilft unserer Freundschaft, auch in vollen oder anstrengenden Zeiten Raum zu behalten?',
         en: 'What helps our friendship keep a place in our lives when things are busy or difficult?',
       },
       {
+        id: 'friends-q36',
         de: 'Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus?',
         en: 'What would you like to thank the other person for today, and what does it say about who they are?',
         last: true,
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.reflect,
-          text: {
-            de: 'Sag in einem Satz, was du an der Antwort verstanden hast.',
-            en: 'In one sentence, say what you understood from the answer.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.reflectUnderstood,
       },
     ],
   },
@@ -1769,73 +2013,67 @@ const OLD_FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'old-friends-q01',
         de: 'Was ist deine erste klare Erinnerung an uns?',
         en: 'What is your first clear memory of us?',
       },
       {
+        id: 'old-friends-q02',
         de: 'Welche einzelne gemeinsame Szene kannst du heute noch besonders deutlich vor dir sehen?',
         en: 'What single moment we shared can you still picture especially clearly?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.followUp,
-          text: {
-            de: 'Frag nach einem einzigen Detail aus dieser Szene.',
-            en: 'Ask for one detail from that moment.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.followUpDetail,
       },
       {
+        id: 'old-friends-q03',
         de: 'Welcher Ort, Gegenstand, Geruch oder Klang gehört für dich zu einer Erinnerung an uns?',
         en: 'What place, object, smell, or sound belongs to one of your memories of us?',
       },
       {
+        id: 'old-friends-q04',
         de: 'An welches kleine gemeinsame Detail habe ich vielleicht nicht mehr gedacht?',
         en: 'What small detail from something we shared might I have forgotten?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.followUp,
-          text: {
-            de: 'Frag nach einem einzigen Detail aus dieser Szene.',
-            en: 'Ask for one detail from that moment.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.followUpDetail,
       },
       {
+        id: 'old-friends-q05',
         de: 'Bei welchem konkreten Moment haben wir einmal besonders ehrlich miteinander gelacht?',
         en: 'During what specific moment did we once laugh most genuinely together?',
       },
       {
+        id: 'old-friends-q06',
         de: 'Welcher damals gewöhnliche Moment zwischen uns fühlt sich rückblickend bedeutungsvoll an?',
         en: 'What ordinary moment between us feels meaningful in hindsight?',
       },
       {
+        id: 'old-friends-q07',
         de: 'Welche frühere Version von mir ist dir besonders im Gedächtnis geblieben?',
         en: 'What earlier version of me has stayed in your memory most clearly?',
       },
       {
+        id: 'old-friends-q08',
         de: 'Was hat dir unsere Freundschaft in dieser Phase deines Lebens gegeben?',
         en: 'What did our friendship give you during that phase of your life?',
       },
       {
+        id: 'old-friends-q09',
         de: 'Welche unserer alten Geschichten bedeutet dir heute etwas anderes als damals?',
         en: 'Which story from our past means something different to you now than it did then?',
       },
       {
+        id: 'old-friends-q10',
         de: 'Wofür möchtest du mir aus dieser Zeit danken – und welche Eigenschaft von mir wurde darin sichtbar?',
         en: 'What would you like to thank me for from that time, and what quality of mine did it reveal?',
       },
       {
+        id: 'old-friends-q11',
         de: 'Welche konkrete Erinnerung zeigt, wann wir als Team besonders gut funktioniert haben?',
         en: 'What specific memory shows a time when we worked especially well as a team?',
       },
       {
+        id: 'old-friends-q12',
         de: 'Welche gemeinsame Erinnerung erzählen wir unterschiedlich – und was ist an beiden Versionen interessant?',
         en: 'Which shared memory do we tell differently, and what is interesting about both versions?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.reflect,
-          text: {
-            de: 'Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.',
-            en: 'Do not look for the correct version. Name what each memory means to you.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.reflectBothVersions,
       },
     ],
   },
@@ -1857,58 +2095,64 @@ const OLD_FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'old-friends-q13',
         de: 'Was hat sich in deinem Leben am stärksten verändert, seit wir uns besonders nah waren?',
         en: 'What has changed most in your life since the time when we were especially close?',
       },
       {
+        id: 'old-friends-q14',
         de: 'Welcher Teil deines heutigen Lebens passt am wenigsten zu dem Bild, das ich früher von dir hatte?',
         en: 'What part of your life today fits least with the picture I used to have of you?',
       },
       {
+        id: 'old-friends-q15',
         de: 'Welche Entscheidung aus der Zeit dazwischen hat die heutige Version von dir besonders geprägt?',
         en: 'What decision from the time in between most shaped who you are today?',
       },
       {
+        id: 'old-friends-q16',
         de: 'Was wünschst du dir, dass ich über die Zeit dazwischen verstehe?',
         en: 'What would you like me to understand about the time in between?',
       },
       {
+        id: 'old-friends-q17',
         de: 'Was hast du in dieser Zeit über dich gelernt, das du früher noch nicht wissen konntest?',
         en: 'What did you learn about yourself during that time that you could not have known before?',
       },
       {
+        id: 'old-friends-q18',
         de: 'Was war an unserer Distanz leichter oder schwerer, als du erwartet hattest?',
         en: 'What about the distance between us was easier or harder than you expected?',
       },
       {
+        id: 'old-friends-q19',
         de: 'Was hat dir geholfen, mit weniger Kontakt auf eine für dich gute Weise umzugehen?',
         en: 'What helped you handle having less contact in a way that worked for you?',
       },
       {
+        id: 'old-friends-q20',
         de: 'Gibt es etwas aus der Zeit dazwischen, das du erzählen möchtest, ohne dass es erklärt oder gelöst werden muss?',
         en: 'Is there something from the time in between you would like to share without needing it to be explained or solved?',
         stayEnabled: true,
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.',
-            en: 'You do not need to justify or repair anything. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoJustify,
       },
       {
+        id: 'old-friends-q21',
         de: 'Welche alte Annahme über die andere Person bist du heute bereit zu überprüfen?',
         en: 'What old assumption about the other person are you ready to reconsider today?',
       },
       {
+        id: 'old-friends-q22',
         de: 'Was fühlt sich zwischen uns noch immer mühelos an?',
         en: 'What still feels effortless between us?',
       },
       {
+        id: 'old-friends-q23',
         de: 'Wie hat sich die Art von Unterstützung verändert, die dir heute wirklich hilft?',
         en: 'How has the kind of support that genuinely helps you changed over time?',
       },
       {
+        id: 'old-friends-q24',
         de: 'Welcher Teil deines heutigen Lebens würde mich vermutlich am meisten überraschen?',
         en: 'What part of your life today would probably surprise me most?',
       },
@@ -1924,65 +2168,65 @@ const OLD_FRIENDS_ACTS = [
     },
     questions: [
       {
+        id: 'old-friends-q25',
         de: 'Welche Form von Kontakt würde sich heute für dich stimmig anfühlen – ohne etwas für später festlegen zu müssen?',
         en: 'What kind of contact would feel right to you today without deciding anything about the future?',
       },
       {
+        id: 'old-friends-q26',
         de: 'Welche alte Tradition sollten wir behalten, verändern oder bewusst ruhen lassen?',
         en: 'What old tradition should we keep, adapt, or consciously leave at rest?',
       },
       {
+        id: 'old-friends-q27',
         de: 'Welche Gewohnheit oder Erwartung aus früher darf dort bleiben?',
         en: 'What habit or expectation from the past is allowed to stay there?',
       },
       {
+        id: 'old-friends-q28',
         de: 'Welche gemeinsame Tradition wäre schön wiederzubeleben oder neu zu erfinden?',
         en: 'What shared tradition would be good to revive or reinvent?',
       },
       {
+        id: 'old-friends-q29',
         de: 'Über welches Thema von heute wärst du neugierig, ohne dass daraus ein schwieriges Gespräch werden muss?',
         en: 'What present-day topic are you curious to discuss without it having to become a difficult conversation?',
       },
       {
+        id: 'old-friends-q30',
         de: 'Was brauchst du heute, um dich von mir als die Person gesehen zu fühlen, die du inzwischen bist?',
         en: 'What do you need today to feel seen by me as the person you have become?',
         twist: 'deeper',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.',
-            en: 'You do not need to justify or repair anything. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoJustify,
       },
       {
+        id: 'old-friends-q31',
         de: 'Gibt es ein Gespräch, für das heute mehr Raum wäre als früher?',
         en: 'Is there a conversation that has more room to happen today than it did before?',
       },
       {
+        id: 'old-friends-q32',
         de: 'Falls wir wieder mehr Kontakt haben: Woran würden wir merken, dass er für uns beide gut ist?',
         en: 'If we have more contact again, what would show us that it is good for both of us?',
       },
       {
+        id: 'old-friends-q33',
         de: 'Welche Grenze oder Erwartung sollten wir klar aussprechen, statt sie aus früher abzuleiten?',
         en: 'What boundary or expectation should we say out loud instead of carrying it over from the past?',
       },
       {
+        id: 'old-friends-q34',
         de: 'Wenn wir eine echte neue Erinnerung schaffen: Welche dürfte es sein?',
         en: 'If we create a genuine new memory together, what would you like it to be?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.followUp,
-          text: {
-            de: 'Was wäre ein kleiner, realistischer erster Schritt?',
-            en: 'What would be one small, realistic first step?',
-          },
-        },
+        responseCard: RESPONSE_CARDS.followUpFirstStep,
       },
       {
+        id: 'old-friends-q35',
         de: 'Welche Seite der anderen Person möchtest du heute neu kennenlernen?',
         en: 'What side of the other person would you like to get to know again as they are today?',
       },
       {
+        id: 'old-friends-q36',
         de: 'Welche Eigenschaft schätzt du an der Person vor dir heute – unabhängig von eurer gemeinsamen Geschichte?',
         en: 'What quality do you appreciate in the person in front of you today, apart from your shared history?',
         last: true,
@@ -2091,57 +2335,63 @@ const DEEP_ACTS = [
     },
     questions: [
       {
+        id: 'deep-q01',
         de: 'Auf welchen konkreten Moment aus der letzten Zeit bist du still stolz – und warum?',
         en: 'What specific recent moment are you quietly proud of, and why?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.celebrate,
-          text: {
-            de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
-            en: 'Take a moment to honor what that moment cost the person or meant to them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.celebrateHonor,
       },
       {
+        id: 'deep-q02',
         de: 'Welche Seite von dir wird selten gesehen, obwohl sie eigentlich kein Geheimnis ist?',
         en: 'What side of you is rarely seen even though it is not really a secret?',
       },
       {
+        id: 'deep-q03',
         de: 'Welche konkrete Erfahrung kommt deinem Gefühl von Zuhause am nächsten?',
         en: 'What specific experience comes closest to your feeling of home?',
       },
       {
+        id: 'deep-q04',
         de: 'Welche Wahrheit über dich selbst hast du erst spät verstanden?',
         en: 'What truth about yourself did you only come to understand later in life?',
       },
       {
+        id: 'deep-q05',
         de: 'Welche Rolle spielst du oft, wenn du unsicher bist?',
         en: 'What role do you tend to play when you feel uncertain?',
       },
       {
+        id: 'deep-q06',
         de: 'In welchem Umfeld fühlst du dich deiner eigenen Art zu sein am nächsten?',
         en: 'In what setting do you feel most like yourself?',
       },
       {
+        id: 'deep-q07',
         de: 'Welche Emotion kannst du leicht zeigen, und welche hältst du eher zurück?',
         en: 'Which emotion can you show easily, and which one do you tend to hold back?',
       },
       {
+        id: 'deep-q08',
         de: 'Welche Überzeugung über dich hast du hinter dir gelassen?',
         en: 'What belief about yourself have you left behind?',
       },
       {
+        id: 'deep-q09',
         de: 'Wo erlebst du Zugehörigkeit, ohne etwas leisten oder darstellen zu müssen?',
         en: 'Where do you experience belonging without having to achieve or perform anything?',
       },
       {
+        id: 'deep-q10',
         de: 'Welchen Wert aus deiner Herkunft oder Prägung hast du bewusst behalten?',
         en: 'What value from your background or upbringing have you consciously kept?',
       },
       {
+        id: 'deep-q11',
         de: 'Was schützt du manchmal mit Humor oder Schweigen?',
         en: 'What do you sometimes protect with humor or silence?',
       },
       {
+        id: 'deep-q12',
         de: 'Welche Hoffnung beeinflusst gerade mehr deiner Entscheidungen, als andere vermutlich merken?',
         en: 'What hope is shaping more of your decisions right now than other people probably realize?',
         twist: 'deeper',
@@ -2166,88 +2416,70 @@ const DEEP_ACTS = [
     },
     questions: [
       {
+        id: 'deep-q13',
         de: 'Wann hast du dich zuletzt wirklich verstanden gefühlt – und was hat die andere Person konkret getan?',
         en: 'When did you last feel truly understood, and what did the other person specifically do?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.followUp,
-          text: {
-            de: 'Frag, welches konkrete Verhalten den Unterschied gemacht hat.',
-            en: 'Ask what specific behavior made the difference.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.followUpBehavior,
       },
       {
+        id: 'deep-q14',
         de: 'Welches Bedürfnis fällt dir schwer auszusprechen?',
         en: 'What need do you find difficult to express?',
       },
       {
+        id: 'deep-q15',
         de: 'Welches ehrliche Kompliment kannst du nur schwer annehmen – und warum?',
         en: 'What sincere compliment do you find hard to accept, and why?',
       },
       {
+        id: 'deep-q16',
         de: 'Was wird an dir von nahestehenden Menschen häufig missverstanden?',
         en: 'What do people close to you often misunderstand about you?',
       },
       {
+        id: 'deep-q17',
         de: 'Welche Veränderung oder welcher Verlust hat dich stark geprägt?',
         en: 'What change or loss has had a powerful influence on who you are?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
-            en: 'No solution and no judgment. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoJudgment,
       },
       {
+        id: 'deep-q18',
         de: 'Welche schwierige Emotion kannst du besser aushalten, wenn jemand auf eine bestimmte Weise bei dir bleibt?',
         en: 'What difficult emotion becomes easier to sit with when someone stays with you in a particular way?',
       },
       {
+        id: 'deep-q19',
         de: 'Wofür lernst du gerade, dir selbst zu vergeben?',
         en: 'What are you learning to forgive yourself for?',
         stayEnabled: true,
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
-            en: 'No solution and no judgment. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoJudgment,
       },
       {
+        id: 'deep-q20',
         de: 'Bei welchem Thema wünschst du dir, dass Menschen erst zuhören, bevor sie nach einer Lösung suchen?',
         en: 'On what topic do you wish people would listen before looking for a solution?',
       },
       {
+        id: 'deep-q21',
         de: 'Welche schwierige Entscheidung macht dich heute stolz auf dich?',
         en: 'What difficult decision makes you proud of yourself today?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.celebrate,
-          text: {
-            de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
-            en: 'Take a moment to honor what that moment cost the person or meant to them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.celebrateHonor,
       },
       {
+        id: 'deep-q22',
         de: 'Zwischen welchen zwei wichtigen Werten entsteht in deinem Leben manchmal Spannung?',
         en: 'Which two important values sometimes come into tension in your life?',
       },
       {
+        id: 'deep-q23',
         de: 'Welche Frage über dein Leben beschäftigt dich gerade, ohne eine schnelle Antwort zu brauchen?',
         en: 'What question about your life is on your mind right now without needing a quick answer?',
       },
       {
+        id: 'deep-q24',
         de: 'Was bedeutet Unterstützung für dich, wenn es keine Lösung gibt?',
         en: 'What does support mean to you when there is no solution?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.validate,
-          text: {
-            de: 'Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.',
-            en: 'No solution and no judgment. First, show that you heard them.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.validateNoJudgment,
       },
     ],
   },
@@ -2261,58 +2493,64 @@ const DEEP_ACTS = [
     },
     questions: [
       {
+        id: 'deep-q25',
         de: 'Welche Wahrheit möchtest du in deinem Leben konsequenter leben?',
         en: 'What truth would you like to live by more consistently?',
       },
       {
+        id: 'deep-q26',
         de: 'Welche Hoffnung möchtest du schützen, auch wenn du ihren Ausgang nicht kontrollieren kannst?',
         en: 'What hope would you like to protect even though you cannot control how it turns out?',
       },
       {
+        id: 'deep-q27',
         de: 'Wovon soll dein nächstes Lebenskapitel mehr enthalten?',
         en: 'What would you like more of in the next chapter of your life?',
       },
       {
+        id: 'deep-q28',
         de: 'Woran sollen sich Menschen erinnern, wenn sie an dich denken?',
         en: 'What would you like people to remember when they think of you?',
       },
       {
+        id: 'deep-q29',
         de: 'Über welchen Teil deines Lebens würdest du gern öfter sprechen, wenn jemand wirklich neugierig zuhört?',
         en: 'What part of your life would you like to talk about more often if someone listened with genuine curiosity?',
       },
       {
+        id: 'deep-q30',
         de: 'Was bedeutet Erfolg für dich, wenn niemand anderes ihn bewertet?',
         en: 'What does success mean to you when nobody else is judging it?',
       },
       {
+        id: 'deep-q31',
         de: 'Was möchtest du über dich aussprechen dürfen, ohne dass jemand es sofort lösen oder einordnen muss?',
         en: 'What would you like to be able to say about yourself without anyone immediately trying to solve or categorize it?',
         stayEnabled: true,
       },
       {
+        id: 'deep-q32',
         de: 'Womit könntest du heute beginnen, wofür dir dein zukünftiges Ich einmal dankbar wäre?',
         en: 'What could you start today that your future self might thank you for?',
       },
       {
+        id: 'deep-q33',
         de: 'Welchen Teil deiner Identität möchtest du in Zukunft bewusster nähren?',
         en: 'What part of your identity would you like to nurture more intentionally in the future?',
       },
       {
+        id: 'deep-q34',
         de: 'Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes?',
         en: 'After this conversation, how can the other person best be there for you: by listening, asking questions, giving you space, or something else?',
-        responseCard: {
-          label: RESPONSE_CARD_LABEL.reflect,
-          text: {
-            de: 'Sag in einem Satz, was du künftig beachten möchtest.',
-            en: 'In one sentence, say what you would like to keep in mind from now on.',
-          },
-        },
+        responseCard: RESPONSE_CARDS.reflectKeepInMind,
       },
       {
+        id: 'deep-q35',
         de: 'Welchen Satz oder Gedanken möchtest du aus diesem Gespräch mitnehmen?',
         en: 'What sentence or thought would you like to carry with you from this conversation?',
       },
       {
+        id: 'deep-q36',
         de: 'Was möchtest du dir selbst nach diesem Gespräch mit etwas mehr Freundlichkeit zugestehen?',
         en: 'After this conversation, what would you like to allow yourself with a little more kindness?',
         last: true,
@@ -2411,50 +2649,62 @@ const CHAOS_ACTS = [
     },
     questions: [
       {
+        id: 'chaos-q01',
         de: 'Ihr eröffnet gemeinsam ein völlig unnötiges Museum. Was stellt es aus?',
         en: 'You’re opening a completely unnecessary museum together. What does it display?',
       },
       {
+        id: 'chaos-q02',
         de: 'Welche völlig unwichtige Meinung würdest du bis zum Äußersten verteidigen?',
         en: 'What utterly unimportant opinion would you defend forever?',
       },
       {
+        id: 'chaos-q03',
         de: 'Mit welcher fiktiven Figur würdest du für 24 Stunden das Leben tauschen – und was würdest du zuerst tun?',
         en: 'Which fictional character would you swap lives with for 24 hours—and what would you do first?',
       },
       {
+        id: 'chaos-q04',
         de: 'Welche winzige, seltsame Sache macht deinen Alltag unverhältnismäßig besser?',
         en: 'What tiny, oddly specific thing makes your everyday life disproportionately better?',
       },
       {
+        id: 'chaos-q05',
         de: 'Welcher Song sollte laufen, wenn du völlig übertrieben einen Raum betrittst?',
         en: 'What song should play when you make an outrageously dramatic entrance?',
       },
       {
+        id: 'chaos-q06',
         de: 'Welche scheinbar nutzlose Superkraft hättest du gern – und wie würdest du sie doch sinnvoll einsetzen?',
         en: 'What seemingly useless superpower would you want—and how would you put it to surprisingly good use?',
       },
       {
+        id: 'chaos-q07',
         de: 'Erfindet gemeinsam eine harmlose Verschwörungstheorie darüber, warum einzelne Socken verschwinden.',
         en: 'Invent a harmless conspiracy theory together about why single socks disappear.',
       },
       {
+        id: 'chaos-q08',
         de: 'Erfindet einen Feiertag für etwas völlig Alltägliches. Was wird gefeiert und wie?',
         en: 'Invent a holiday for something completely ordinary. What does it celebrate, and how?',
       },
       {
+        id: 'chaos-q09',
         de: 'Welches Tier sollte die Menschheit bei einem Treffen mit Außerirdischen vertreten – und was wäre sein erster Satz?',
         en: 'Which animal should represent humanity at a meeting with aliens—and what would its opening line be?',
       },
       {
+        id: 'chaos-q10',
         de: 'Ihr eröffnet ein Restaurant mit einer völlig absurden Regel. Wie lautet sie, und warum kommen die Leute trotzdem?',
         en: 'You’re opening a restaurant with one completely absurd rule. What is it, and why do people still come?',
       },
       {
+        id: 'chaos-q11',
         de: 'Welcher Alltagsgegenstand verdient ein dramatisches Biopic – und wie heißt der Film?',
         en: 'Which everyday object deserves a dramatic biopic—and what is the film called?',
       },
       {
+        id: 'chaos-q12',
         de: 'Welche absurd spezifische Auszeichnung würdest du dir selbst verleihen?',
         en: 'What absurdly specific award would you give yourself?',
       },
@@ -2478,50 +2728,62 @@ const CHAOS_ACTS = [
     },
     questions: [
       {
+        id: 'chaos-q13',
         de: 'Welche chaotische Entscheidung war im Nachhinein genau richtig?',
         en: 'What chaotic decision turned out to be exactly right?',
       },
       {
+        id: 'chaos-q14',
         de: 'Welche Regel des Erwachsenseins würdest du sofort abschaffen?',
         en: 'What rule of adulthood would you abolish immediately?',
       },
       {
+        id: 'chaos-q15',
         de: 'Welches kleine, überschaubare Risiko möchtest du demnächst eingehen?',
         en: 'What small, manageable risk would you like to take soon?',
       },
       {
+        id: 'chaos-q16',
         de: 'Erfindet gemeinsam das absurdeste Unternehmen, das überraschend funktionieren könnte.',
         en: 'Invent the most absurd business together that might actually work.',
       },
       {
+        id: 'chaos-q17',
         de: 'Welche harmlose Fähigkeit von dir verdient viel mehr Fanfare, als sie normalerweise bekommt?',
         en: 'What harmless skill of yours deserves far more fanfare than it usually gets?',
       },
       {
+        id: 'chaos-q18',
         de: 'Ihr habt spontan drei freie Stunden und dürft nichts vorbereiten. Welches Mini-Abenteuer beginnt jetzt?',
         en: 'You suddenly have three free hours and cannot prepare anything. What mini-adventure starts now?',
       },
       {
+        id: 'chaos-q19',
         de: 'Welche gesellschaftliche Konvention würdest du gern einen Tag lang ignorieren, wenn niemand dadurch zu Schaden käme?',
         en: 'What social convention would you like to ignore for one day if no one could be harmed by it?',
       },
       {
+        id: 'chaos-q20',
         de: 'Welche verspielte Seite von dir kommt erst zum Vorschein, wenn du dich wohlfühlst?',
         en: 'What playful side of you only appears when you feel comfortable?',
       },
       {
+        id: 'chaos-q21',
         de: 'Wie müsste dich jemand einladen, damit du bei einer herrlich albernen Idee sofort mitmachst?',
         en: 'How would someone have to invite you for you to join a delightfully silly idea straight away?',
       },
       {
+        id: 'chaos-q22',
         de: 'Welches unerwartete Kompliment hat dich gleichzeitig zum Lachen gebracht und wirklich erreicht?',
         en: 'What unexpected compliment both made you laugh and genuinely landed with you?',
       },
       {
+        id: 'chaos-q23',
         de: 'Welchen harmlosen Plot-Twist würdest du dir für den nächsten Monat wünschen?',
         en: 'What harmless plot twist would you like the next month to bring?',
       },
       {
+        id: 'chaos-q24',
         de: 'Plant ein tatsächlich machbares Mini-Abenteuer für höchstens zehn Euro – ohne Mutprobe und ohne jemanden bloßzustellen.',
         en: 'Plan a genuinely doable mini-adventure for no more than ten euros—with no dares and no embarrassing anyone.',
       },
@@ -2537,51 +2799,63 @@ const CHAOS_ACTS = [
     },
     questions: [
       {
+        id: 'chaos-q25',
         de: 'Wofür wünschst du dir gerade mehr Erlaubnis von dir selbst?',
         en: 'What do you wish you gave yourself more permission to do right now?',
       },
       {
+        id: 'chaos-q26',
         de: 'Welche kurze Sprachnachricht würdest du deinem Ich in fünf Jahren schicken?',
         en: 'What short voice message would you send to yourself five years from now?',
       },
       {
+        id: 'chaos-q27',
         de: 'Was würdest du ausprobieren, wenn Peinlichkeit für einen Tag nicht existieren würde?',
         en: 'What would you try if embarrassment did not exist for one day?',
       },
       {
+        id: 'chaos-q28',
         de: 'Welcher gemeinsame Plan ist so albern, dass er vielleicht großartig wäre?',
         en: 'What could you do together that sounds so silly it might be brilliant?',
       },
       {
+        id: 'chaos-q29',
         de: 'Welche Begeisterung von dir wird oft unterschätzt oder missverstanden?',
         en: 'What enthusiasm of yours is often underestimated or misunderstood?',
       },
       {
+        id: 'chaos-q30',
         de: 'Welche Form von Spiel oder Albernheit hilft dir, wieder bei dir anzukommen?',
         en: 'What kind of play or silliness helps you feel like yourself again?',
       },
       {
+        id: 'chaos-q31',
         de: 'Wann hat gemeinsames Lachen dir zuletzt das Gefühl gegeben, jemandem wirklich nah zu sein?',
         en: 'When did laughing with someone last make you feel genuinely close to them?',
       },
       {
+        id: 'chaos-q32',
         de: 'Welche Seite von dir dürfte im Alltag mehr Raum bekommen?',
         en: 'What side of you deserves more room in your everyday life?',
       },
       {
+        id: 'chaos-q33',
         de: 'Wie zeigst du durch Humor, dass dir ein Mensch wichtig ist?',
         en: 'How do you use humour to show someone that they matter to you?',
       },
       {
+        id: 'chaos-q34',
         de: 'Welche Antwort aus diesem Gespräch würdest du gern noch genauer hören?',
         en: 'Which answer from this conversation would you like to hear more about?',
         twist: 'deeper',
       },
       {
+        id: 'chaos-q35',
         de: 'Woran würdest du dich von diesem Gespräch gern erinnern?',
         en: 'What would you like to remember about this conversation?',
       },
       {
+        id: 'chaos-q36',
         de: 'Erfindet ein kleines Ritual, mit dem ihr euch eure Neugier aufeinander bewahren könnt.',
         en: 'Invent a small ritual that could help you stay curious about each other.',
         last: true,
@@ -2731,50 +3005,62 @@ const LATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'late-night-q01',
         de: 'Woran merkst du, dass ein Gespräch für dich flirtend oder erotisch wird?',
         en: 'What tells you that a conversation is becoming flirtatious or erotic for you?',
       },
       {
+        id: 'late-night-q02',
         de: 'Welche Art von Blick, Stimme, Worten oder Bewegung kann auf dich besonders anziehend wirken?',
         en: 'What kind of gaze, voice, words or movement can feel especially attractive to you?',
       },
       {
+        id: 'late-night-q03',
         de: 'Welche Umgebung hilft dir, dich offen für erotische Stimmung zu fühlen?',
         en: 'What kind of setting helps you feel open to an erotic mood?',
       },
       {
+        id: 'late-night-q04',
         de: 'Wie zeigst du Interesse an mehr Nähe, ohne vorauszusetzen, dass die andere Person dasselbe möchte?',
         en: 'How do you show interest in more intimacy without assuming the other person wants the same thing?',
       },
       {
+        id: 'late-night-q05',
         de: 'Welche Art von erotischem Kompliment fühlt sich für dich gut an – und welche eher nicht?',
         en: 'What kind of erotic compliment feels good to you—and what kind tends not to?',
       },
       {
+        id: 'late-night-q06',
         de: 'Welches Tempo fühlt sich beim Flirten oder beim Aufbau von Intimität für dich angenehm an?',
         en: 'What pace feels comfortable to you when flirting or building intimacy?',
       },
       {
+        id: 'late-night-q07',
         de: 'Was hilft dir, dich sicher genug für ein ausdrücklich sexuelles Gespräch zu fühlen?',
         en: 'What helps you feel safe enough to begin an explicitly sexual conversation?',
       },
       {
+        id: 'late-night-q08',
         de: 'Welche Stimmung passt bei erotischen Gesprächen zu dir: verspielt, direkt, zärtlich, ernst – oder etwas anderes?',
         en: 'What tone suits you in erotic conversations: playful, direct, tender, serious—or something else?',
       },
       {
+        id: 'late-night-q09',
         de: 'Welche nichtsexuelle Form von Nähe kann bei dir Lust wecken – falls es eine gibt?',
         en: 'What non-sexual form of closeness can awaken desire in you, if any?',
       },
       {
+        id: 'late-night-q10',
         de: 'Wie soll jemand prüfen, ob Flirten für dich gerade willkommen ist?',
         en: 'How would you like someone to check whether flirting is welcome for you in that moment?',
       },
       {
+        id: 'late-night-q11',
         de: 'Wodurch kannst du dich begehrt fühlen, ohne dich unter Druck gesetzt zu fühlen?',
         en: 'What can make you feel desired without making you feel pressured?',
       },
       {
+        id: 'late-night-q12',
         de: 'Was hilft dir, während wachsender Intimität präsent und mit dir selbst verbunden zu bleiben?',
         en: 'What helps you stay present and connected to yourself as intimacy builds?',
       },
@@ -2801,50 +3087,62 @@ const LATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'late-night-q13',
         de: 'Welche Art erotischer Berührung könnte sich für dich gut anfühlen – wenn überhaupt und nur wenn du sie ausdrücklich möchtest?',
         en: 'What kind of erotic touch might feel good to you—if any, and only when you explicitly want it?',
       },
       {
+        id: 'late-night-q14',
         de: 'Wie möchtest du, dass sexuelle Nähe initiiert wird?',
         en: 'How do you like sexual intimacy to be initiated?',
       },
       {
+        id: 'late-night-q15',
         de: 'Welche Worte oder Laute könnten sich in einer sexuellen Situation für dich gut anfühlen – und welche eher nicht?',
         en: 'What words or sounds might feel good to you in a sexual situation—and which might not?',
       },
       {
+        id: 'late-night-q16',
         de: 'Welche Fantasie kannst du teilen, ohne dass daraus eine Erwartung für heute oder später entstehen soll?',
         en: 'What fantasy could you share without it creating any expectation for today or later?',
       },
       {
+        id: 'late-night-q17',
         de: 'Welche Rolle spielen Vorfreude oder spielerisches Hinauszögern für deine Lust?',
         en: 'What role do anticipation or playful delay play in your desire?',
       },
       {
+        id: 'late-night-q18',
         de: 'Welche Rolle spielen Spielzeuge, erotische Medien oder andere Hilfsmittel in deiner Sexualität – wenn überhaupt?',
         en: 'What role do toys, erotic media or other aids play in your sexuality, if any?',
       },
       {
+        id: 'late-night-q19',
         de: 'Was kann Sex für dich erfüllend machen, auch unabhängig von einem Orgasmus?',
         en: 'What can make sex fulfilling for you, independently of orgasm?',
       },
       {
+        id: 'late-night-q20',
         de: 'Gibt es eine erotische Idee oder einen Kink, über den du neugierig sprechen möchtest, ohne heute etwas darüber entscheiden zu müssen?',
         en: 'Is there an erotic idea or kink you are curious to talk about without having to decide anything about it today?',
       },
       {
+        id: 'late-night-q21',
         de: 'Wie würdest du dich damit fühlen, in einer sexuellen Situation konkrete Wünsche oder Hinweise zu geben oder zu bekommen?',
         en: 'How might you feel about giving or receiving specific requests or guidance in a sexual situation?',
       },
       {
+        id: 'late-night-q22',
         de: 'Wodurch baut sich Lust für dich eher auf: Tempo, Wiederholung, Abwechslung, Pausen – oder etwas anderes?',
         en: 'What tends to build pleasure for you: pace, repetition, variety, pauses—or something else?',
       },
       {
+        id: 'late-night-q23',
         de: 'Wie zeigst du gern, dass sich etwas besonders gut anfühlt?',
         en: 'How do you like to show that something feels especially good?',
       },
       {
+        id: 'late-night-q24',
         de: 'Was würde es dir leichter machen, darüber zu sprechen, was du in einer sexuellen Situation häufiger, seltener oder anders erleben möchtest – falls das für dich relevant ist?',
         en: 'What would make it easier to talk about something you might want more often, less often or differently in a sexual situation, if that is relevant to you?',
       },
@@ -2860,50 +3158,62 @@ const LATE_NIGHT_ACTS = [
     },
     questions: [
       {
+        id: 'late-night-q25',
         de: 'Woran merkst du in dir selbst ein klares Ja, ein Vielleicht oder ein Nein?',
         en: 'How do you recognise a clear yes, maybe or no within yourself?',
       },
       {
+        id: 'late-night-q26',
         de: 'Mit welchen Worten oder Zeichen möchtest du Zustimmung, Pause und Stopp ausdrücken?',
         en: 'What words or signals do you want to use to express consent, pause and stop?',
       },
       {
+        id: 'late-night-q27',
         de: 'Wie soll die andere Person nachfragen, wenn dein Signal nicht eindeutig ist?',
         en: 'How would you like the other person to check in when your signal is unclear?',
       },
       {
+        id: 'late-night-q28',
         de: 'Was brauchst du nach einem intensiven intimen Moment: Nähe, Abstand, Berührung, Ruhe oder etwas anderes?',
         en: 'What do you need after an intense intimate moment: closeness, space, touch, quiet or something else?',
       },
       {
+        id: 'late-night-q29',
         de: 'Was hilft dir, ein Nein oder einen Sinneswandel leicht auszusprechen und gut angenommen zu wissen?',
         en: 'What helps you voice a no or a change of mind easily and trust that it will be received well?',
       },
       {
+        id: 'late-night-q30',
         de: 'Welche Grenze, Verhütung oder Schutzmaßnahme darf niemals bloß angenommen werden?',
         en: 'What boundary, contraception or protection measure must never simply be assumed?',
       },
       {
+        id: 'late-night-q31',
         de: 'Welche Gespräche über Tests, Barrieren, Verhütung oder andere Schutzmaßnahmen brauchst du, bevor sich sexuelle Nähe sicher genug anfühlt?',
         en: 'What conversations about testing, barriers, contraception or other protection do you need before sexual intimacy feels safe enough?',
       },
       {
+        id: 'late-night-q32',
         de: 'Wie möchtest du, dass erneut nach Zustimmung gefragt wird, wenn sich eine sexuelle Aktivität verändert oder intensiviert?',
         en: 'How would you like consent to be checked again when a sexual activity changes or becomes more intense?',
       },
       {
+        id: 'late-night-q33',
         de: 'Welche Absprachen zu Exklusivität, weiteren Kontakten oder Privatsphäre sind für dich wichtig – falls das für eure Situation relevant ist?',
         en: 'What agreements about exclusivity, other partners or privacy matter to you, if they are relevant to your situation?',
       },
       {
+        id: 'late-night-q34',
         de: 'Gibt es körperliche Bedürfnisse, Empfindlichkeiten oder Zugänglichkeitsaspekte, über die du vor Intimität sprechen möchtest?',
         en: 'Are there any physical needs, sensitivities or accessibility considerations you would want to discuss before intimacy?',
       },
       {
+        id: 'late-night-q35',
         de: 'Wie wünschst du dir einen Check-in am nächsten Tag – wenn überhaupt?',
         en: 'How would you like to check in the next day, if at all?',
       },
       {
+        id: 'late-night-q36',
         de: 'Welche eine Sache soll dein Gegenüber aus diesem Gespräch mitnehmen, ohne daraus eine Erwartung für heute oder später abzuleiten?',
         en: 'What is one thing you want the other person to take from this conversation without turning it into an expectation for today or later?',
         last: true,
@@ -3352,12 +3662,24 @@ export function secretAtIndexFor(packId, routeId = DEFAULT_ROUTE_ID) {
 }
 
 /*
- * A stable, deterministic id for a given pack + question position -- e.g.
- * 'classic-q01' .. 'classic-q36'. Derived rather than stored on each
- * question object, so there is nothing to keep in sync by hand across 36+
- * questions per pack and no risk of a typo'd or duplicate id.
+ * Die stabile ID einer Frage -- z. B. 'classic-q01'.
+ *
+ * Seit Refactoringplan Phase 1 traegt jede Frage ihre ID explizit als
+ * `id`-Feld. Vorher wurde sie aus der Position abgeleitet, was den
+ * Resume-Schutz wirkungslos machte: wird eine Frage an derselben Position
+ * ersetzt oder werden zwei Fragen getauscht, bleibt die abgeleitete
+ * Sequenz identisch, und ein laufendes Spiel merkt die Aenderung nicht
+ * (Code Review CR-P1-05).
+ *
+ * Der positionsbasierte Ausdruck bleibt als Fallback stehen, damit die
+ * Funktion fuer einen Index ohne hinterlegte Frage (z. B. ein Aufruf mit
+ * einem Index jenseits des Packs) weiterhin einen Wert liefert statt zu
+ * werfen. Ein Pack mit fehlenden IDs faellt in der Registry-Konformitaet
+ * durch, nicht erst hier.
  */
 export function questionIdFor(packId, questionIndex) {
+  const question = questionAt(packId, questionIndex, DEFAULT_ROUTE_ID);
+  if (question?.id) return question.id;
   return `${packId}-q${String(questionIndex + 1).padStart(2, '0')}`;
 }
 

@@ -262,6 +262,89 @@ describe('questionIdFor / voiceSrc', () => {
     expect(questionIdFor('classic', 35)).toBe('classic-q36');
   });
 
+  /*
+   * Refactoringplan Phase 1: Die ID muss an der Frage haengen, nicht an
+   * ihrer Position. Ohne diese Zusicherung faellt der Resume-Schutz still
+   * auf das alte, positionsabgeleitete Verhalten zurueck -- und genau das
+   * war der Grund, warum CONTENT_VERSION vorher nichts invalidieren konnte
+   * (CR-P1-05). Auch LATE NIGHT wird geprueft, obwohl es nicht registriert
+   * ist: der Pack soll bei seiner Freigabe nicht erst IDs nachziehen muessen.
+   */
+  const ALL_PACKS = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
+
+  it('jede Frage jedes Packs traegt eine explizite id', () => {
+    // Fehlende IDs werden gesammelt statt einzeln geworfen -- so nennt ein
+    // Fehlschlag alle Fundstellen auf einmal, nicht nur die erste.
+    const missing = [];
+    Object.entries(ALL_PACKS).forEach(([packId, pack]) => {
+      pack.acts.forEach((act, actIndex) => {
+        act.questions.forEach((q, i) => {
+          if (typeof q.id !== 'string' || q.id.length === 0) {
+            missing.push(`${packId} Akt ${actIndex + 1} Frage ${i + 1}`);
+          }
+        });
+      });
+    });
+    expect(missing).toEqual([]);
+  });
+
+  it('IDs sind global eindeutig und mit ihrem Pack praefixiert', () => {
+    const seen = new Set();
+    Object.entries(ALL_PACKS).forEach(([packId, pack]) => {
+      pack.acts.forEach((act) => {
+        act.questions.forEach((q) => {
+          expect(q.id.startsWith(`${packId}-`)).toBe(true);
+          expect(seen.has(q.id)).toBe(false);
+          seen.add(q.id);
+        });
+      });
+    });
+    expect(seen.size).toBe(324);
+  });
+
+  it('questionIdFor stimmt fuer jede registrierte Frage mit ihrer id ueberein', () => {
+    Object.keys(PACKS).forEach((packId) => {
+      const total = totalQuestions(packId);
+      for (let i = 0; i < total; i += 1) {
+        expect(questionIdFor(packId, i)).toBe(questionAt(packId, i).id);
+      }
+    });
+  });
+
+  /*
+   * Der Test darueber allein beweist NICHT, dass die explizite ID benutzt
+   * wird: die echten IDs wurden absichtlich positionsgleich vergeben, damit
+   * bestehende Spielstaende ihre gespeicherte runQuestionIds-Liste
+   * wiedererkennen. Beide Implementierungen -- explizit und positions-
+   * abgeleitet -- liefern dort dasselbe.
+   *
+   * Dieser Stub-Pack vergibt IDs bewusst quer zur Position. Nur wer die
+   * hinterlegte `id` liest, besteht ihn.
+   */
+  it('questionIdFor liest die hinterlegte id, nicht die Position', () => {
+    const stub = {
+      id: 'stub',
+      acts: [
+        {
+          questions: [
+            { id: 'stub-zulu', de: 'a', en: 'a' },
+            { id: 'stub-alpha', de: 'b', en: 'b' },
+          ],
+        },
+      ],
+      routes: { full: { id: 'full', actIndices: [null] } },
+    };
+    const original = PACKS.stub;
+    PACKS.stub = stub;
+    try {
+      expect(questionIdFor('stub', 0)).toBe('stub-zulu');
+      expect(questionIdFor('stub', 1)).toBe('stub-alpha');
+    } finally {
+      if (original === undefined) delete PACKS.stub;
+      else PACKS.stub = original;
+    }
+  });
+
   it('builds a pack-namespaced audio path from a packId/lang/questionId', () => {
     expect(voiceSrc('classic', 'de', 'classic-q01')).toBe(
       '/audio/closer/classic/de/classic-q01.mp3'

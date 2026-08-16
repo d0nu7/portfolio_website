@@ -112,11 +112,11 @@ Status dieser Iteration:
 
 ### Phase 1 – Inhalt und Identität
 
-- [ ] Fragen erhalten explizite stabile IDs
+- [x] Fragen erhalten explizite stabile IDs
 - [x] strukturierter DE/EN-Katalogabgleich nach Pack, Akt und ID
 - [x] der Prototyp `scripts/check-catalog-fidelity.js` wird durch einen CI-tauglichen Exact-Match ersetzt
 - [ ] Contentrevision und geordneter Run-Fingerprint einführen
-- [ ] Response Cards als vollständige wiederverwendbare Objekte deduplizieren
+- [x] Response Cards als vollständige wiederverwendbare Objekte deduplizieren
 - [x] Routenzeiten numerisch modellieren und aus einer Quelle rendern
 
 **Abnahme:** Jede der 324 DE-/EN-Fragen und jede Routenzuordnung wird exakt geprüft; Drift beendet Tests mit Fehlerstatus.
