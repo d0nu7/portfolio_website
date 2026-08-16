@@ -30,8 +30,8 @@ const FRIENDS_ACTS = [
     id: 'light',
     title: { de: 'LEICHT', en: 'LIGHT' },
     intro: {
-      de: 'Ausdrücklich freundschaftlich -- Humor und Wertschätzung, keine romantische Rahmung.',
-      en: "Explicitly friendship-toned -- humor and appreciation, no romantic framing.",
+      de: 'Ausdrücklich freundschaftlich – Humor und Wertschätzung, keine romantische Rahmung.',
+      en: 'Explicitly friendship-toned—humor and appreciation, no romantic framing.',
     },
     breakText: {
       de: 'Ihr wisst jetzt ein paar Dinge übereinander, die ihr vor diesem Akt noch nicht wusstet.',
@@ -109,8 +109,8 @@ const FRIENDS_ACTS = [
     id: 'showingup',
     title: { de: 'DA SEIN', en: 'SHOWING UP' },
     intro: {
-      de: 'Jetzt geht es um Unterstützung -- wie sie wirklich ankommt.',
-      en: "Now it's about support -- how it actually lands.",
+      de: 'Jetzt geht es um Unterstützung – wie sie wirklich ankommt.',
+      en: "Now it's about support—how it actually lands.",
     },
     breakText: {
       de: 'Kein Tempo ist hier falsch.',
@@ -191,8 +191,8 @@ const FRIENDS_ACTS = [
     id: 'ahead',
     title: { de: 'WEITER', en: 'AHEAD' },
     intro: {
-      de: 'Dieser Akt blickt nach vorn -- auf das, was ihr als Freunde als Nächstes wollt.',
-      en: "This act looks ahead -- at what the two of you want next as friends.",
+      de: 'Dieser Akt blickt nach vorn – auf das, was ihr als Freunde als Nächstes wollt.',
+      en: 'This act looks ahead—at what the two of you want next as friends.',
     },
     questions: [
       {

@@ -98,8 +98,8 @@ const COUPLES_ACTS = [
     id: 'repair',
     title: { de: 'REPARIEREN', en: 'REPAIR' },
     intro: {
-      de: 'Kein Therapieersatz -- nur ein bisschen mehr Verständnis für das, was manchmal schwer ist.',
-      en: "Not a substitute for therapy -- just a little more understanding for what's sometimes hard.",
+      de: 'Kein Therapieersatz – nur ein bisschen mehr Verständnis für das, was manchmal schwer ist.',
+      en: "Not a substitute for therapy—just a little more understanding for what's sometimes hard.",
     },
     breakText: {
       de: 'Auch das gehört zu einer guten Beziehung.',
@@ -178,8 +178,8 @@ const COUPLES_ACTS = [
     id: 'choosing',
     title: { de: 'WÄHLEN', en: 'CHOOSING' },
     intro: {
-      de: 'Dieser Akt schaut nach vorn -- auf das, was ihr als Paar als Nächstes wählt.',
-      en: "This act looks ahead -- at what the two of you choose next as a couple.",
+      de: 'Dieser Akt schaut nach vorn – auf das, was ihr als Paar als Nächstes wählt.',
+      en: 'This act looks ahead—at what the two of you choose next as a couple.',
     },
     questions: [
       {

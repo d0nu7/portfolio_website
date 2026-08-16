@@ -1,14 +1,14 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 16 August 2026
-**Scope:** current `main`, active review worktree, live `/closer/` experience, pack content, game mechanics, mobile/PWA behavior, accessibility, privacy/legal reachability, tests, and refactoring direction
+**Scope:** current `main`, live `/closer/` experience, pack content, game mechanics, mobile/PWA behavior, accessibility, privacy/legal reachability, tests, and completed refactoring
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## 1. Overall assessment
 
 CLOSER is now a coherent product rather than a single 36-question prototype. Its strongest qualities are the shared-device focus, quiet question screens, bilingual content fidelity, curated route structure, unconditional passing, and a thoughtful set of relationship-specific packs. The content is generally strong enough for broader moderated testing.
 
-The current worktree closes the most visible defects: timer/Menu collision, undersized milestone animation, dialog subview focus, STAY lockout, discreet Late Night discovery and consent, the Late Night no-secret finale, and in-app legal reachability. FR-011 also replaces the monolithic phase controller with a compiled run definition, characterized pure transitions, explicit persistence/storage boundaries, and focused presentation components. Lint, unit/catalog tests, the production static build, and the complete local Chromium E2E suite pass. It is not yet fully release-verified because the new build is not deployed and physical Android/iOS plus assistive-technology checks remain.
+Current `main` closes the most visible defects: timer/Menu collision, undersized milestone animation, dialog subview focus, STAY lockout, discreet Late Night discovery and consent, the Late Night no-secret finale, and in-app legal reachability. FR-011 also replaces the monolithic phase controller with a compiled run definition, characterized pure transitions, explicit persistence/storage boundaries, and focused presentation components. Lint, unit/catalog tests, the production static build, and the complete local Chromium E2E suite pass. Physical Android/iOS plus assistive-technology checks remain release validation rather than unfinished refactoring.
 
 Recommended release decision:
 
@@ -27,7 +27,7 @@ The review covered:
 - inspection of all nine pack definitions and the complete DE/EN catalog;
 - existing unit and E2E coverage, including the global console/page-error guard.
 
-The latest modified worktree was not yet deployed when this document was updated. Local lint, unit/catalog, production build, and Chromium E2E gates pass. Deployed headers, live console behavior, WebKit, and physical-device behavior remain separate verification items. No hard-coded test counts are recorded here because they become stale quickly.
+Local lint, unit/catalog, production build, and Chromium E2E gates pass. Deployment freshness, live console behavior, WebKit, and physical-device behavior remain separate verification items. No hard-coded test counts are recorded here because they become stale quickly.
 
 No unexpected console error was observed during the reviewed live smoke path. That is useful but not equivalent to testing every deployed branch; the global console guard should continue to run over the complete E2E suite and a post-deploy smoke test.
 

@@ -10,7 +10,7 @@ Status values:
 - **Open:** reproducible and not fully fixed.
 - **Device verification:** automated coverage exists or the desktop result is acceptable, but a supported physical-device check remains required.
 
-The closed items in this iteration passed lint, unit/catalog tests, a production static build, and the complete local Chromium E2E suite. Physical Android/iOS and deployed-response checks remain grouped under BUG-010 or the relevant feature request.
+The closed items on current `main` passed lint, unit/catalog tests, a production static build, and the complete local Chromium E2E suite. Physical Android/iOS and deployed-response checks remain grouped under BUG-010 or the relevant feature request.
 
 ## P0 – release blockers closed in the local build
 
@@ -166,7 +166,7 @@ Validation checked broad shape and several invariants, but accepted combinations
 
 Deliberately scoped rather than exhaustive: several other candidate invariants (an `act`-phase `pending` matching an act-start boundary, `hasSecretQuestion[i]` values for the `checkPass*`/`check*` phases) were traced from the transition code but dropped after checking them against `e2e/*.spec.js` fixtures — they either conflicted with an intentionally minimal, currently-correct test fixture (a legacy-migration test that relies on `hasRealProgress()`'s deliberately lenient `pending > 0` heuristic for pre-`hasStarted` saves), or would not actually have prevented a broken screen, only a data inconsistency invisible to the player. A stricter but unverified rule risks rejecting a legitimate resume, which is worse than the gap it closes. The two checks that shipped were each confirmed against the real fixtures and proven to reject exactly the intended case (and only that case) with direct unit tests.
 
-Extending this further (a fuller per-phase schema, or the `act`/`break`/`hasSecretQuestion` invariants considered above) is real remaining work, not implied to be finished by this closure.
+Further per-phase schema tightening may be considered as optional hardening if a concrete invalid state is found. It is not unfinished FR-011 work and should not reject plausible legacy saves without a demonstrated benefit.
 
 ### BUG-009 – Active timer segment may be lost after abrupt termination
 

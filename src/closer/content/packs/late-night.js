@@ -26,8 +26,8 @@ const LATE_NIGHT_ACTS = [
     id: 'atmosphere',
     title: { de: 'ATMOSPHÄRE', en: 'ATMOSPHERE' },
     intro: {
-      de: 'Worte, Stimmung und Aufmerksamkeit -- noch nichts Explizites.',
-      en: "Words, mood and attention -- nothing explicit yet.",
+      de: 'Worte, Stimmung und Aufmerksamkeit – noch nichts Explizites.',
+      en: 'Words, mood and attention—nothing explicit yet.',
     },
     breakText: {
       de: 'Ihr habt gerade ehrlich über Anziehung gesprochen.',
@@ -183,8 +183,8 @@ const LATE_NIGHT_ACTS = [
     id: 'trust',
     title: { de: 'VERTRAUEN', en: 'TRUST' },
     intro: {
-      de: 'Zustimmung, Grenzen, Safer Sex und Aftercare -- konkret, nie als Handlungsaufforderung.',
-      en: "Consent, boundaries, safer sex and aftercare -- concretely, never as a call to action.",
+      de: 'Zustimmung, Grenzen, Safer Sex und Aftercare – konkret, nie als Handlungsaufforderung.',
+      en: 'Consent, boundaries, safer sex and aftercare—concretely, never as a call to action.',
     },
     questions: [
       {

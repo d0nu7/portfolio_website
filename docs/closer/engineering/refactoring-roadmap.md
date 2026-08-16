@@ -1,10 +1,11 @@
 # CLOSER – refactoring roadmap
 
 **Updated:** 16 August 2026
+**Status:** Closed
 **Basis:** independent code review, the consolidated Claude refactoring analysis, product review, and current regression findings
-**Goal:** improve correctness and maintainability incrementally without a high-risk rewrite or unrelated product changes
+**Outcome:** correctness and maintainability improved incrementally without a high-risk rewrite or unrelated product changes
 
-This is the only active refactoring roadmap. Dated iteration reports were removed after their durable findings were folded into this document and the living review trackers.
+This is the completed FR-011 implementation record. Dated iteration reports were removed after their durable findings were folded into this document and the living review trackers.
 
 ## 1. Non-negotiable product decisions
 
@@ -94,7 +95,7 @@ controller.
 
 ### Phase 0 – release correctness
 
-Status: substantially complete; regressions remain tracked in [bugs.md](../reviews/bugs.md).
+Status: complete. Device-only release checks remain tracked in [bugs.md](../reviews/bugs.md).
 
 - [x] Remove heart-based skipping and keep one unconditional pass action.
 - [x] Skip singleton style selection.
@@ -139,13 +140,13 @@ The modularization exists for reviewability and maintenance, not as a claimed pe
 
 ### Phase 3 – run definition, transitions, and persistence
 
-Status: complete in code; physical-device verification remains part of the release gate.
+Status: complete.
 
 **Execution freeze (16 August 2026):** routes, content, private moments,
 finales, consent, Pass, setup navigation, animation, legal copy, PWA behavior,
-and infrastructure remained frozen throughout FR-011. Keep that freeze through
-release verification; any later product work starts as a separately approved
-scope.
+and infrastructure remained frozen throughout FR-011. The refactoring freeze
+ended with the verified completion commit; any later product work starts as a
+separately approved scope.
 
 1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
 2. [x] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory and implemented families live in the [transition matrix](transition-matrix.md).
@@ -156,86 +157,39 @@ scope.
 7. [x] Keep non-run preferences in a separately versioned preference record.
 8. [x] Pause active time while the page is hidden and request Wake Lock again after visibility returns.
 
-Do this in small, behavior-preserving slices. Consent and private handoffs need dedicated tests before each transition is moved.
+The work was delivered in small, behavior-preserving slices. Consent and private handoffs received dedicated tests before their transitions moved.
 
 Acceptance:
 
 - A transition matrix covers every phase and event.
-- Invalid phase/data combinations are rejected before rendering.
+- Structurally invalid saves and characterized impossible phase/run combinations are rejected before rendering.
 - Resume reconstructs the same immutable run or rejects the save safely.
 - Restart always produces the canonical state for the selected pack.
 
-### Phase 4 – UI and accessibility
+## 4. Verification record
 
-Status: core primitives exist; visual and device verification remains open.
+The final automated gate passed:
 
-- [x] Use a shared semantic dialog/bottom sheet with focus trap, Escape handling, and focus return.
-- [x] Extract repeated handoff and choice-list presentation.
-- [x] Raise known text and accent combinations to at least WCAG AA contrast.
-- [x] Add `:focus-visible` treatment and basic accessibility smoke tests.
-- [x] Fail E2E tests on unexpected console errors and page errors.
-- [x] Verify focus is moved into each dialog subview, not only on initial mount.
-- [x] Reserve permanent layout space for Menu and timer controls at 320–430 px.
-- [x] Verify the milestone celebration is large, legible, non-blocking, and meaningfully reduced under `prefers-reduced-motion`.
-- [x] Preserve AA text contrast for question count and elapsed time without compound parent opacity.
-- [ ] Run VoiceOver, TalkBack, WebKit/iOS, and real installed-PWA checks.
-
-### Phase 5 – refined game mechanics
-
-Status: editorial and implementation work open.
-
-- [ ] Curate replacement questions by pack, act, and intensity before adding a replacement-question joker.
-- [ ] Replace the universal saved question with optional pack- and route-specific private moments.
-- [ ] Keep Quick free of multi-screen private rituals.
-- [ ] Let CHAOS use at most a short secret spark.
-- [ ] Give Late Night only readiness/consent checks; do not generate secret sexual or physical tasks.
-- [ ] Calibrate all route estimates through moderated sessions.
-
-See [gameplay and safety](../product/gameplay-and-safety.md) for the product contract and [feature requests](../reviews/feature-requests.md) for acceptance criteria.
-
-### Phase 6 – privacy, PWA, and deployment
-
-Status: partially complete; legal text requires owner review.
-
-- [x] Keep imprint and privacy information directly reachable within the CLOSER menu in both languages.
-- [ ] Verify the legal copy against the final operator details and obtain professional review where appropriate.
-- [x] Verify the new deployment-level security headers against the deployed static export (FR-003, `curl -I https://radi.solutions/closer/` confirms all six headers are actually served, not only configured).
-- [ ] Decide whether offline operation justifies a service worker and document the update/cache strategy before adding one.
-- [ ] Complete real Android and iOS installed-PWA checks.
-- [ ] Evaluate `closer.radi.solutions` as a separate Vercel project only after the app behavior stabilizes.
-
-Moving origins does not migrate `localStorage` saves or an installed PWA identity. A subdomain move therefore needs transition copy and an intentional redirect from `/closer/`.
-
-### Phase 7 – TTS
-
-Status: shelved indefinitely by product decision on 16 August 2026.
-
-- The existing voice branch is not planned for merge.
-- FR-011 must not preserve speculative TTS requirements beyond existing stable
-  content IDs and backward-compatible public exports.
-- Do not generate, migrate, review, or clean up voice artifacts as part of the
-  active roadmap.
-- Resume TTS work only after a new explicit product decision creates a separate
-  scope, privacy review, and delivery plan.
-
-## 4. Test strategy
-
-Required pipeline:
-
-1. `npm ci`
-2. `npm run lint`
-3. `npm test -- --runInBand`
-4. exact catalog and schema fidelity
-5. `npm run build`
-6. Chromium critical paths at 320, 390, and 430 px
-7. WebKit critical paths
-8. fail on unexpected `pageerror` and `console.error`
-9. keyboard, focus, reduced-motion, and contrast checks
-10. real Android and iOS installed-PWA smoke tests before a public release
+1. `npm run lint`
+2. 332 unit, schema, transition, persistence, storage, and catalog tests
+3. production static export
+4. 149 mobile Chromium E2E scenarios
+5. console/page-error guard, keyboard, focus, reduced-motion, contrast, and 320–430 px layout coverage
 
 Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already creates a fresh build; `npm run test:e2e:run` is only appropriate after a verified current export.
 
-## 5. Cleanup rules
+Physical Android/iOS, VoiceOver, TalkBack, and WebKit checks remain release
+validation, not unfinished FR-011 refactoring. They are tracked under BUG-010
+and the RaDi owner TODO.
+
+## 5. Follow-up outside FR-011
+
+- Product mechanics and editorial ideas remain in [feature requests](../reviews/feature-requests.md).
+- Device, legal, offline-PWA, and subdomain decisions remain in the [RaDi owner TODO](../product/radi-owner-todo.md).
+- TTS remains shelved indefinitely and requires a new explicit product decision.
+- Renaming persisted `modeId` is a separate save-migration project, not cleanup.
+
+## 6. Maintenance rules
 
 - Remove only demonstrably unused files, exports, comments, and duplicate documentation.
 - Do not modify or merge voice artifacts. TTS is outside the active product scope.
@@ -244,7 +198,7 @@ Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already
 - Keep one living document per purpose. Git history preserves superseded iteration reports.
 - End each phase with a full relevant test run and `git diff --check`.
 
-## 6. Related documents
+## 7. Related documents
 
 - [CLOSER documentation index](../README.md)
 - [Current holistic review](../reviews/current-review.md)

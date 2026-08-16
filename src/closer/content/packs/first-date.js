@@ -27,7 +27,7 @@ const FIRST_DATE_ACTS = [
     title: { de: 'NEUGIER', en: 'CURIOSITY' },
     intro: {
       de: 'Fangt leicht an. Es geht um Neugier, nicht um Tiefe – ihr könnt jederzeit weitergehen.',
-      en: "Start light. This is about curiosity, not depth -- you can move on whenever you like.",
+      en: 'Start light. This is about curiosity, not depth—you can move on whenever you like.',
     },
     breakText: {
       de: 'Ihr wisst jetzt ein paar Dinge übereinander, die ihr vor diesem Akt noch nicht wusstet.',

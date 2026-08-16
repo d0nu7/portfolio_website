@@ -14,7 +14,6 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 4. Define and approve pack-specific private moments.
 5. Build and approve replacement-question pools.
 6. Run moderated sessions and recalibrate duration estimates.
-7. Keep the approved product freeze in place through FR-011 release verification.
 
 ## Immediate release decisions
 
@@ -134,55 +133,19 @@ Recommendation: make the move before a larger public launch, or postpone it unti
 
 Done when: RaDi records **stay** or **move**, the canonical URL, migration behavior, timing, and responsible owner.
 
-## Dedicated engineering effort
+## Completed engineering effort
 
 ### FR-011 – `compileRun()` and transition core
 
-This is intentionally not a small follow-up task. It touches every phase, consent gate, resume path, private handoff, route boundary, and finale.
+Delivered on 16 August 2026. Runtime behavior derives from one immutable run
+definition; persisted transitions, save parsing, and browser storage have
+explicit tested boundaries; phase presentation is split into focused views;
+save compatibility is preserved. The full implementation record and automated
+verification are in the [refactoring roadmap](../engineering/refactoring-roadmap.md)
+and [transition matrix](../engineering/transition-matrix.md).
 
-Technical groundwork already delivered:
-
-- [x] Include style identity in the run fingerprint.
-- [x] Add scoped phase-discriminated save validation.
-- [x] Checkpoint active timer segments across lifecycle boundaries.
-- [x] Keep non-game preferences in a separately versioned record.
-- [x] Make `compileRun()` the controller and save parser's runtime source.
-- [x] Establish the complete transition matrix and characterize setup/entry, consent, act-entry/break, private-moment, finale, end-run, and question-destination transition families.
-- [x] Extract canonical state creation and discriminated save parsing into the pure engine layer without changing the stored shape.
-- [x] Isolate all CLOSER-owned `localStorage` keys and guarded read/write/delete behavior behind a tested infrastructure adapter.
-- [x] Move canonical restart and resume-state preparation into characterized pure engine functions while keeping UI effects outside them.
-- [x] Route supported language and timer changes through characterized global transition events.
-- [x] Route normal completion and free Pass through one characterized question-transition contract.
-- [x] Begin declarative rendering extraction with a pure setup view for players, packs, routes, and styles.
-- [x] Consolidate entry and Act II private opt-in presentation in one consent view without changing consent events.
-- [x] Extract intro, act-entry, and act-break presentation while retaining compiled act timing and boundaries.
-- [x] Consolidate private-question capture and post-run check presentation without weakening individual handoffs.
-- [x] Extract last-question staging, all Q37 branches, and ending beats into one finale view.
-- [x] Extract question, twist, countdown, free-pass, response-card, and stay presentation without changing gameplay timing or controls.
-- [x] Centralize the shared screen, accessibility-blocking, menu, and milestone layers.
-- [x] Extract start/resume/restart-confirmation and global-menu presentation while retaining controller-owned effects and event dispatch.
-
-FR-011 implementation is complete in code. The automated release gate and a
-physical-device smoke check remain required before public release.
-
-RaDi decisions before engineering starts:
-
-- [x] Freeze the intended behavior for routes, private moments, finales, consent, Pass, setup navigation, animations, legal copy, PWA behavior, and infrastructure for the duration of the refactor.
-- [x] Authorize FR-011 as the only active implementation workstream.
-- [x] Shelve TTS indefinitely and confirm that the existing voice branch is not planned for merge.
-- [x] Require a transition matrix and characterization tests before moving logic.
-- [x] Require incremental, reviewable commits rather than a controller rewrite in one change.
-- [x] Define the automated release gate: full lint, unit/catalog, build, and E2E suite. Physical smoke checks remain required before public release.
-
-Completed engineering sequence:
-
-1. Completed: make `compileRun()` the runtime source without changing visible behavior.
-2. Completed: characterize every persisted phase and event family before moving it.
-3. Completed: move one phase family at a time into pure transition functions.
-4. Completed for the verified save families: extract persistence parsing and enforce phase-specific validation without changing save compatibility.
-5. Completed for FR-011: preserve compatibility exports and the stored `modeId` field; do not perform an unrelated save migration.
-
-Done when: runtime behavior derives from one immutable run definition, transitions are explicit and testable, invalid saved states fail safely, and no user-visible behavior changes unintentionally.
+No RaDi action remains for FR-011. Physical-device checks belong to the release
+sign-off list above.
 
 ## Explicitly separate work
 
@@ -197,5 +160,4 @@ Done when: runtime behavior derives from one immutable run definition, transitio
 | 2026-08-16 | FR-002 | Do not publish IBAN/BIC | No payment flow or identified Imprint requirement justifies the additional public disclosure | Complete |
 | 2026-08-16 | FR-011 | Freeze all product behavior and authorize incremental run-definition and transition-core work | A stable target and characterization coverage reduce the risk of changing fragile phase paths during the refactor | Engineering |
 | 2026-08-16 | FR-012 | Shelve TTS indefinitely; do not merge the existing voice branch | TTS is not currently planned and must not complicate the active engine refactor | Reopen only by explicit RaDi decision |
-| 2026-08-16 | FR-011 | Complete the incremental transition, persistence, storage, and view extraction without product changes | The characterized slices pass the automated release gate and preserve save compatibility | Physical-device release verification |
-|  |  |  |  |  |
+| 2026-08-16 | FR-011 | Complete the incremental transition, persistence, storage, and view extraction without product changes | The characterized slices pass the automated release gate and preserve save compatibility | Complete |

@@ -22,8 +22,8 @@ const OLD_FRIENDS_ACTS = [
     id: 'then',
     title: { de: 'DAMALS', en: 'THEN' },
     intro: {
-      de: 'Fangt bei eurer gemeinsamen Geschichte an -- ohne Nähe oder Versöhnung vorauszusetzen.',
-      en: "Start with your shared history -- without assuming closeness or reconciliation.",
+      de: 'Fangt bei eurer gemeinsamen Geschichte an – ohne Nähe oder Versöhnung vorauszusetzen.',
+      en: 'Start with your shared history—without assuming closeness or reconciliation.',
     },
     breakText: {
       de: 'Ihr habt gerade ein Stück gemeinsame Geschichte wieder aufleben lassen.',
@@ -103,8 +103,8 @@ const OLD_FRIENDS_ACTS = [
     id: 'inbetween',
     title: { de: 'DAZWISCHEN', en: 'IN BETWEEN' },
     intro: {
-      de: 'Jetzt geht es um die Zeit dazwischen -- ohne dass sie erklärt oder gelöst werden muss.',
-      en: "Now it's about the time in between -- without needing it explained or solved.",
+      de: 'Jetzt geht es um die Zeit dazwischen – ohne dass sie erklärt oder gelöst werden muss.',
+      en: "Now it's about the time in between—without needing it explained or solved.",
     },
     breakText: {
       de: 'Kein Tempo ist hier falsch.',
@@ -183,8 +183,8 @@ const OLD_FRIENDS_ACTS = [
     id: 'again',
     title: { de: 'WIEDER', en: 'AGAIN' },
     intro: {
-      de: 'Dieser Akt fragt, was heute stimmig wäre -- ohne eine Wiederannäherung vorauszusetzen.',
-      en: "This act asks what would feel right today -- without assuming a reconnection.",
+      de: 'Dieser Akt fragt, was heute stimmig wäre – ohne eine Wiederannäherung vorauszusetzen.',
+      en: 'This act asks what would feel right today—without assuming a reconnection.',
     },
     questions: [
       {

@@ -23,8 +23,8 @@ const CHAOS_ACTS = [
     id: 'weird',
     title: { de: 'SELTSAM', en: 'WEIRD' },
     intro: {
-      de: 'Gemeinsames Erfinden und Lachen -- niemand wird bloßgestellt.',
-      en: "Inventing things together and laughing -- nobody gets put on the spot.",
+      de: 'Gemeinsames Erfinden und Lachen – niemand wird bloßgestellt.',
+      en: 'Inventing things together and laughing—nobody gets put on the spot.',
     },
     breakText: {
       de: 'Das war herrlich unnötig.',
@@ -101,8 +101,8 @@ const CHAOS_ACTS = [
     id: 'bold',
     title: { de: 'MUTIG', en: 'BOLD' },
     intro: {
-      de: 'Kleine, machbare Risiken -- keine Mutproben, niemand wird bloßgestellt.',
-      en: "Small, doable risks -- no dares, no one gets embarrassed.",
+      de: 'Kleine, machbare Risiken – keine Mutproben, niemand wird bloßgestellt.',
+      en: 'Small, doable risks—no dares, no one gets embarrassed.',
     },
     breakText: {
       de: 'Ein bisschen Chaos hat euch gutgetan.',

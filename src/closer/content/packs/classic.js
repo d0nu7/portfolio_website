@@ -189,7 +189,7 @@ const CLASSIC_ACTS = [
     // questions concentrate (18, 19, 23, 24, 33, 35, 36).
     intro: {
       de: 'Dieser Akt berührt Familie, schwierige Erinnerungen, Verlust und Tod. Ihr müsst nichts beantworten. Überspringt oder beendet das Spiel jederzeit – ohne Erklärung.',
-      en: "This act touches on family, difficult memories, loss and death. You don't have to answer anything. Pass or end the game anytime -- no explanation needed.",
+      en: "This act touches on family, difficult memories, loss and death. You don't have to answer anything. Pass or end the game anytime—no explanation needed.",
     },
     questions: [
       {

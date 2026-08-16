@@ -23,8 +23,8 @@ const DEEP_ACTS = [
     id: 'beneath',
     title: { de: 'DARUNTER', en: 'BENEATH' },
     intro: {
-      de: 'Ein bewusst intensives Gespräch -- Tiefe heißt hier nicht Trauma.',
-      en: "A deliberately intensive conversation -- depth here doesn't mean trauma.",
+      de: 'Ein bewusst intensives Gespräch – Tiefe heißt hier nicht Trauma.',
+      en: "A deliberately intensive conversation—depth here doesn't mean trauma.",
     },
     breakText: {
       de: 'Ihr wisst jetzt ein paar Dinge übereinander, die ihr vor diesem Akt noch nicht wusstet.',
@@ -103,8 +103,8 @@ const DEEP_ACTS = [
     id: 'truth',
     title: { de: 'WAHRHEIT', en: 'TRUTH' },
     intro: {
-      de: 'Verstandenwerden statt Lösungen -- keine Diagnose, keine Bewertung.',
-      en: 'Being understood, not solved -- no diagnosis, no judgment.',
+      de: 'Verstandenwerden statt Lösungen – keine Diagnose, keine Bewertung.',
+      en: 'Being understood, not solved—no diagnosis, no judgment.',
     },
     breakText: {
       de: 'Kein Tempo ist hier falsch.',
@@ -187,8 +187,8 @@ const DEEP_ACTS = [
     id: 'carryforward',
     title: { de: 'MITNEHMEN', en: 'CARRY FORWARD' },
     intro: {
-      de: 'Dieser Akt fragt, was ihr aus diesem Gespräch mitnehmt -- ohne therapeutische Wirkung zu behaupten.',
-      en: "This act asks what you'll carry forward from this conversation -- without claiming any therapeutic effect.",
+      de: 'Dieser Akt fragt, was ihr aus diesem Gespräch mitnehmt – ohne therapeutische Wirkung zu behaupten.',
+      en: "This act asks what you'll carry forward from this conversation—without claiming any therapeutic effect.",
     },
     questions: [
       {

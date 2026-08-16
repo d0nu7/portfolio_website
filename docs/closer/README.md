@@ -27,7 +27,7 @@ Product code and automated tests remain the technical source of truth for what t
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
 - Pack content is modularized under `src/closer/content/`; the compiled run still originates in `src/constants/closer.js` while the new pure transition core lives under `src/closer/engine/`.
 - `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Persisted transitions, persistence parsing, browser storage, and phase presentation now have explicit tested boundaries.
-- The active iteration repairs mobile control spacing, milestone presentation, dialog subview focus, Late Night discovery/consent behavior, STAY safety, and in-app legal reachability. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
+- FR-011 is complete: compiled run structure, pure persisted transitions, persistence/storage boundaries, and focused presentation components are in place. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
 - TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.
 
 ## Documentation conventions

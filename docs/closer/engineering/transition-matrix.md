@@ -2,7 +2,7 @@
 
 **Updated:** 16 August 2026
 **Scope:** persisted game phases and the events that may leave them
-**Product state:** FR-011 implementation complete; release verification pending
+**Product state:** FR-011 delivered; retained as the behavioral contract
 
 This matrix is the behavioral contract for the transition-core migration. A
 transition family moves only after its current behavior has characterization

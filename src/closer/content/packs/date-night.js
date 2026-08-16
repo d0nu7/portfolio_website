@@ -17,7 +17,7 @@ const DATE_NIGHT_ACTS = [
     title: { de: 'FUNKE', en: 'SPARK' },
     intro: {
       de: 'Es geht um Anziehung und Wärme – prickelnd, aber ohne Druck.',
-      en: "This is about attraction and warmth -- a spark, without any pressure.",
+      en: 'This is about attraction and warmth—a spark, without any pressure.',
     },
     breakText: {
       de: 'Ihr wisst jetzt ein bisschen mehr darüber, was zwischen euch funkt.',
@@ -95,7 +95,7 @@ const DATE_NIGHT_ACTS = [
     title: { de: 'SPANNUNG', en: 'TENSION' },
     intro: {
       de: 'Jetzt geht es um Nähe, Berührung und Wünsche – immer nur, wenn ihr wollt.',
-      en: "Now it's about closeness, touch and desire -- only ever if you want to.",
+      en: "Now it's about closeness, touch and desire—only ever if you want to.",
     },
     breakText: {
       de: 'Die Spannung darf bleiben, wo sie gerade ist.',

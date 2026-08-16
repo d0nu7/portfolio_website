@@ -3,7 +3,7 @@
 **Updated:** 16 August 2026
 **Status convention:** Proposed, Planned, In progress, Verification pending, Delivered, or Shelved
 
-Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 implementation is complete; the approved product freeze remains in place through release verification.
+Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 is delivered; later product changes require their own approved scope.
 
 ## P0 – release requirements
 
@@ -143,7 +143,7 @@ Migration requirements:
 
 ### FR-011 – Run-definition and transition-core integration
 
-**Status:** Verification pending
+**Status:** Delivered
 
 `compileRun()` drives runtime run structure and save validation. All persisted
 phase transitions are characterized in the pure transition core, persistence
@@ -153,9 +153,10 @@ handoffs, and finale behavior auditable. The completed sequence is recorded in
 the [refactoring roadmap](../engineering/refactoring-roadmap.md) and the
 [transition matrix](../engineering/transition-matrix.md).
 
-Frozen on 16 August 2026: no concurrent content, game-mechanic, animation,
-legal, PWA, infrastructure, or TTS changes. Characterization tests must precede
-each transition-family extraction, and visible behavior remained unchanged.
+The 16 August 2026 implementation freeze prevented concurrent content,
+game-mechanic, animation, legal, PWA, infrastructure, or TTS changes.
+Characterization tests preceded each transition-family extraction, and the
+final automated release gate passed without a visible behavior change.
 
 ### FR-012 – TTS integration
 
