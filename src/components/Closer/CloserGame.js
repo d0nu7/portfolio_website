@@ -50,6 +50,7 @@ import {
 } from '../../closer/infrastructure/storage';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
+import CloserActView, { ACT_VIEW_PHASES, actViewStyle } from './CloserActView';
 import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
 import CloserDialog from './CloserDialog';
 import CloserHandoff from './CloserHandoff';
@@ -57,8 +58,6 @@ import CloserInstallHint from './CloserInstallHint';
 import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
 import CloserSetupView from './CloserSetupView';
 import {
-  ActNumeral,
-  ActTitle,
   Bar,
   Body,
   Button,
@@ -941,92 +940,25 @@ export default function CloserGame() {
   }
 
   /* ================================================================== */
-  /* INTRO                                                              */
+  /* INTRO / ACT / BREAK                                                */
   /* ================================================================== */
 
-  if (s.phase === 'intro') {
+  if (ACT_VIEW_PHASES.has(s.phase)) {
+    const viewStyle = actViewStyle(s, run, pack);
     return frame(
-      <>
-        <Body $center>
-          <Lede>{pick(pack.positioning || pack.blurb, lang)}</Lede>
-          <Lede style={{ marginTop: '3.2rem' }}>{t('introLines')}</Lede>
-          <Lede style={{ marginTop: '3.2rem' }}>{t('introPass')}</Lede>
-        </Body>
-        <Foot>
-          <Button
-            $accent={A0}
-            onClick={() => dispatchSetup({ type: SETUP_EVENTS.BEGIN_RUN })}
-          >
-            {t('begin')}
-          </Button>
-          {/* No Back button when a consent gate is involved -- this
-              screen is only reached after both required confirmations;
-              see goBackFromSetup()'s own comment. */}
-          {!pack.consentGate && (
-            <TextButton onClick={goBackFromSetup}>{t('goBack')}</TextButton>
-          )}
-          <Small style={{ textAlign: 'center' }}>{t('privacy')}</Small>
-        </Foot>
-      </>,
-      { accent: A0, glow: 0.24, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* ACT INTRO / BREAK                                                  */
-  /* ================================================================== */
-
-  if (s.phase === 'act') {
-    const idx = actIndexAt(run, s.pending);
-    const act = acts[idx];
-    const st = pack.actStyle[idx];
-    return frame(
-      <>
-        <Body $center>
-          <ActNumeral>{pick(act.numeral, lang)}</ActNumeral>
-          <ActTitle $accent={st.accent}>{pick(act.title, lang)}</ActTitle>
-          <Lede>{pick(act.intro, lang)}</Lede>
-        </Body>
-        <Foot>
-          <Button
-            $accent={st.accent}
-            onClick={() => dispatchAct({ type: ACT_EVENTS.START_ACT })}
-          >
-            {t('continue')}
-          </Button>
-        </Foot>
-      </>,
-      { accent: st.accent, glow: st.glow + 0.1, menu: true }
-    );
-  }
-
-  if (s.phase === 'break') {
-    const done = acts[s.breakAct];
-    const st = pack.actStyle[s.breakAct];
-    return frame(
-      <>
-        <Body $center>
-          <ActNumeral>
-            {pick(done.numeral, lang)} {t('complete')}
-          </ActNumeral>
-          <ActTitle $accent={st.accent} style={{ fontSize: '3.2rem', marginBottom: '3.2rem' }}>
-            {pick(done.title, lang)}
-          </ActTitle>
-          <Lede>{pick(done.breakText, lang)}</Lede>
-          {done.breakSub && (
-            <Lede style={{ marginTop: '2rem' }}>{pick(done.breakSub, lang)}</Lede>
-          )}
-        </Body>
-        <Foot>
-          <Button
-            $accent={st.accent}
-            onClick={() => dispatchAct({ type: ACT_EVENTS.CONTINUE_FROM_BREAK })}
-          >
-            {t('continue')}
-          </Button>
-        </Foot>
-      </>,
-      { accent: st.accent, glow: st.glow, menu: true }
+      <CloserActView
+        state={s}
+        run={run}
+        pack={pack}
+        acts={acts}
+        lang={lang}
+        t={t}
+        onBegin={() => dispatchSetup({ type: SETUP_EVENTS.BEGIN_RUN })}
+        onBack={goBackFromSetup}
+        onStartAct={() => dispatchAct({ type: ACT_EVENTS.START_ACT })}
+        onContinueFromBreak={() => dispatchAct({ type: ACT_EVENTS.CONTINUE_FROM_BREAK })}
+      />,
+      { ...viewStyle, menu: true }
     );
   }
 
