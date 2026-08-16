@@ -4,7 +4,6 @@ import {
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   LANGS,
-  classifySecretAsked,
   compileRun,
   getPack,
   getRoute,
@@ -19,7 +18,6 @@ import {
   GLOBAL_EVENTS,
   PRIVATE_MOMENT_EFFECTS,
   PRIVATE_MOMENT_EVENTS,
-  Q37_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
   QUESTION_EVENTS,
   SETUP_EVENTS,
@@ -53,6 +51,11 @@ import ClosePulse from './ClosePulse';
 import CloserActView, { ACT_VIEW_PHASES, actViewStyle } from './CloserActView';
 import CloserConsentView, { CONSENT_VIEW_PHASES } from './CloserConsentView';
 import CloserDialog from './CloserDialog';
+import CloserFinaleView, {
+  ENDING_BEATS,
+  FINALE_VIEW_PHASES,
+  finaleViewGlow,
+} from './CloserFinaleView';
 import CloserInstallHint from './CloserInstallHint';
 import CloserLegal, { LEGAL_TITLES } from './CloserLegal';
 import CloserPrivateMomentView, {
@@ -100,7 +103,6 @@ import {
 
 export { SAVE_REJECT_REASONS, parseSaved } from '../../closer/engine/persistence';
 
-const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 // BUG-009: how often the active timer segment is folded into persisted
 // actElapsedMs while still running, bounding how much active time an
 // abrupt kill can lose. Small enough to keep that loss window tight,
@@ -993,230 +995,37 @@ export default function CloserGame() {
   }
 
   /* ================================================================== */
-  /* LAST QUESTION STAGING                                              */
+  /* FINALE                                                             */
   /* ================================================================== */
 
-  if (s.phase === 'lastIntro') {
+  if (FINALE_VIEW_PHASES.has(s.phase)) {
     return frame(
-      <>
-        <Body $center>
-          <Question>{t('oneLastQuestion')}</Question>
-        </Body>
-        <Foot>
-          <GhostButton
-            onClick={() => dispatchFinale({ type: FINALE_EVENTS.REVEAL_LAST })}
-          >
-            {t('reveal')}
-          </GhostButton>
-        </Foot>
-      </>,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  if (s.phase === 'all36') {
-    const secretCount = s.hasSecretQuestion.filter((value) => value === true).length;
-    const isQuick = route.id === 'quick';
-    return frame(
-      <>
-        <Body $center>
-          <Question>{tf('allThirtySix', total)}</Question>
-          {revealSecond && privateMomentEnabled && secretCount > 0 && (
-            <Lede style={{ marginTop: '3.2rem' }}>{tf('secretSummary', secretCount)}</Lede>
-          )}
-        </Body>
-        <Foot>
-          {revealSecond && (
-            <GhostButton
-              onClick={() => dispatchPrivateMoment({
-                type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
-              })}
-            >
-              {isQuick ? t('end') : t('continue')}
-            </GhostButton>
-          )}
-        </Foot>
-      </>,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* QUESTION 37                                                        */
-  /* ================================================================== */
-
-  if (s.phase === 'q37intro' || s.phase === 'q37' || s.phase === 'q37a' || s.phase === 'q37b') {
-    const finaleLabel = route.id === 'full' ? t('q37Label') : t('finalQuestionLabel');
-    const finaleButton = route.id === 'full' ? t('q37Button') : t('finalQuestionButton');
-    // Exactly one person's question went unasked -- that person asks it now.
-    // A person who declined to save a question never counts as
-    // "still waiting" for a question that was never formed.
-    const { neither, bothAsked, pendingPlayer, noneHaveSecretQuestion } = classifySecretAsked(
-      s.secretAsked,
-      s.hasSecretQuestion
-    );
-
-    if (s.phase === 'q37intro') {
-      let kicker = t('q37OneMore');
-      let text = pick(pack.q37.neither, lang);
-      if (!privateMomentEnabled) {
-        text = t('q37StillWantOne');
-      } else if (noneHaveSecretQuestion) {
-        kicker = t('q37NoSecretQuestions');
-        text = t('q37NoSecretQuestionsText');
-      } else if (bothAsked) {
-        kicker = t('q37AlreadyAsked');
-        text = t('q37StillWantOne');
-      } else if (!neither) {
-        kicker = t('q37OneRemains');
-        text = t('q37OneText');
+      <CloserFinaleView
+        state={s}
+        pack={pack}
+        route={route}
+        lang={lang}
+        accent={finalStyle.accent}
+        total={total}
+        beat={beat}
+        revealSecond={revealSecond}
+        privateMomentEnabled={privateMomentEnabled}
+        nameOf={nameOf}
+        t={t}
+        tf={tf}
+        onRevealLast={() => dispatchFinale({ type: FINALE_EVENTS.REVEAL_LAST })}
+        onContinueAfterQuestions={() => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+        })}
+        onQ37={(type) => dispatchQ37({ type })}
+        onAdvanceBeat={() => setBeat((current) => current + 1)}
+        onRestart={restart}
+      />,
+      {
+        accent: finalStyle.accent,
+        glow: finaleViewGlow(s, beat),
+        menu: true,
       }
-      return frame(
-        <>
-          <Body $center>
-            <Kicker>{kicker}</Kicker>
-            <Question>{text}</Question>
-          </Body>
-          <Foot>
-            {bothAsked || noneHaveSecretQuestion || !privateMomentEnabled ? (
-              // Nobody has a secret question waiting either way here --
-              // "bothAsked" offers the ordinary bonus prompt, and so does
-              // "noneHaveSecretQuestion" (there's nothing secret-question-
-              // specific left to offer instead).
-              <Row>
-                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.ACCEPT_FINALE })}>
-                  {t('yes')}
-                </GhostButton>
-                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
-                  {t('end')}
-                </GhostButton>
-              </Row>
-            ) : (
-              // Every finale branch offers an end option because a self-chosen question can be
-              // more intimate than anything scripted, so nobody should be
-              // funneled toward speaking it just because the UI only ever
-              // offered "continue".
-              <Row>
-                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.ACCEPT_FINALE })}>
-                  {neither ? finaleButton : t('continue')}
-                </GhostButton>
-                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
-                  {t('end')}
-                </GhostButton>
-              </Row>
-            )}
-          </Foot>
-        </>,
-        { accent: finalStyle.accent, glow: 0.03, menu: true }
-      );
-    }
-
-    if (s.phase === 'q37a' || s.phase === 'q37b') {
-      // Nobody's question got asked during the game, so there is no
-      // "pending player" to anchor on -- continue the same strict
-      // alternation the whole game has used, one step past question 36, so
-      // the order is fixed rather than a coin flip made twice.
-      const opener = starterFor(total, s.starterOffset);
-      const asker = s.phase === 'q37a' ? opener : 1 - opener;
-      return frame(
-        <>
-          <Body $center>
-            <Kicker>{finaleLabel}</Kicker>
-            <Question>{tf('q37AskSecret', nameOf(asker))}</Question>
-          </Body>
-          <Foot>
-            {s.phase === 'q37a' ? (
-              // Consent can change between the two people's turns, so the first turn offers
-              // "continue" into q37b, with no way to stop before the second
-              // person's turn.
-              <Row>
-                <Button
-                  $accent={finalStyle.accent}
-                  onClick={() => dispatchQ37({ type: Q37_EVENTS.CONTINUE_SECOND_TURN })}
-                >
-                  {t('continue')}
-                </Button>
-                <GhostButton onClick={() => dispatchQ37({ type: Q37_EVENTS.END_OPTIONAL })}>
-                  {t('end')}
-                </GhostButton>
-              </Row>
-            ) : (
-              <TextButton onClick={() => dispatchQ37({ type: Q37_EVENTS.COMPLETE })}>
-                {t('done')}
-              </TextButton>
-            )}
-          </Foot>
-        </>,
-        { accent: finalStyle.accent, glow: 0.03, menu: true }
-      );
-    }
-
-    // 'one' and 'both' still land on a single shared prompt -- there is
-    // exactly one question left to ask (or, for 'both'/noneHaveSecretQuestion,
-    // one optional bonus), so there is nothing to sequence.
-    let prompt = pick(pack.q37.both, lang);
-    if (privateMomentEnabled && !neither && !bothAsked && !noneHaveSecretQuestion) {
-      prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
-    }
-
-    return frame(
-      <>
-        <Body $center>
-          <Kicker>{finaleLabel}</Kicker>
-          <Question>{prompt}</Question>
-        </Body>
-        <Foot>
-          <TextButton onClick={() => dispatchQ37({ type: Q37_EVENTS.COMPLETE })}>
-            {t('done')}
-          </TextButton>
-        </Foot>
-      </>,
-      { accent: finalStyle.accent, glow: 0.03, menu: true }
-    );
-  }
-
-  /* ================================================================== */
-  /* ENDING                                                             */
-  /* ================================================================== */
-
-  if (s.phase === 'ending') {
-    if (s.endReason === 'consentDeclined') {
-      return frame(
-        <>
-          <Body $center>
-            <Question>{t('consentDeclinedTitle')}</Question>
-            <Lede style={{ marginTop: '2.4rem' }}>{t('consentDeclinedBody')}</Lede>
-          </Body>
-          <Foot>
-            <TextButton onClick={restart}>{t('playAgain')}</TextButton>
-          </Foot>
-        </>,
-        { accent: finalStyle.accent, glow: 0.03, menu: true }
-      );
-    }
-
-    const isFinal = beat === ENDING_BEATS.length - 1;
-    const advance = () => setBeat((b) => b + 1);
-    return frame(
-      <>
-        {/* Keep the live region on a stable wrapper so screen readers detect
-            each line change. The explicit footer button provides a keyboard
-            equivalent to tapping the body. */}
-        <Body $center onClick={() => !isFinal && advance()} aria-live="polite" aria-atomic="true">
-          <Question key={beat}>{t(ENDING_BEATS[beat])}</Question>
-        </Body>
-        <Foot>
-          {isFinal ? (
-            <>
-              <Small style={{ textAlign: 'center', letterSpacing: '.3em' }}>CLOSER</Small>
-              <TextButton onClick={restart}>{t('playAgain')}</TextButton>
-            </>
-          ) : (
-            <TextButton onClick={advance}>{t('continue')}</TextButton>
-          )}
-        </Foot>
-      </>,
-      { accent: finalStyle.accent, glow: isFinal ? 0.1 : 0.02, menu: true }
     );
   }
 

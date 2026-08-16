@@ -157,6 +157,7 @@ Technical groundwork already delivered:
 - [x] Consolidate entry and Act II private opt-in presentation in one consent view without changing consent events.
 - [x] Extract intro, act-entry, and act-break presentation while retaining compiled act timing and boundaries.
 - [x] Consolidate private-question capture and post-run check presentation without weakening individual handoffs.
+- [x] Extract last-question staging, all Q37 branches, and ending beats into one finale view.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 
