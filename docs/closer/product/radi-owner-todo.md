@@ -149,6 +149,7 @@ Technical groundwork already delivered:
 - [x] Make `compileRun()` the controller and save parser's runtime source.
 - [x] Establish the complete transition matrix and characterize setup/entry, consent, act-entry/break, private-moment, finale, end-run, and question-destination transition families.
 - [x] Extract canonical state creation and discriminated save parsing into the pure engine layer without changing the stored shape.
+- [x] Isolate all CLOSER-owned `localStorage` keys and guarded read/write/delete behavior behind a tested infrastructure adapter.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 

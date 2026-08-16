@@ -34,7 +34,17 @@ import {
   transitionQ37,
   transitionSetup,
 } from '../../closer/engine/transitions';
-import { createInitialState, parseSaved } from '../../closer/engine/persistence';
+import { createInitialState } from '../../closer/engine/persistence';
+import {
+  DEFAULT_PREFERENCES,
+  clearAllCloserData,
+  clearSavedGame,
+  getBrowserStorage,
+  loadPreferences,
+  loadSavedGame,
+  persistGameState,
+  persistPreferences,
+} from '../../closer/infrastructure/storage';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
 import CloserChoiceList from './CloserChoiceList';
@@ -86,12 +96,6 @@ import {
 
 export { SAVE_REJECT_REASONS, parseSaved } from '../../closer/engine/persistence';
 
-const STORAGE_KEY = 'closer:v1';
-const PREFERENCES_KEY = 'closer:preferences:v1';
-const DEFAULT_PREFERENCES = Object.freeze({ lateNightVisible: false });
-// Must match CloserInstallHint.js's own key. Keeping the literal here avoids
-// coupling data deletion to another component's implementation.
-const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
 const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 // BUG-009: how often the active timer segment is folded into persisted
 // actElapsedMs while still running, bounding how much active time an
@@ -100,48 +104,6 @@ const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 const ACTIVE_SEGMENT_CHECKPOINT_MS = 5000;
 
 const initialState = createInitialState();
-
-function loadSaved() {
-  if (typeof window === 'undefined') return null;
-  try {
-    const result = parseSaved(window.localStorage.getItem(STORAGE_KEY));
-    return result.ok ? result.value : null;
-  } catch (err) {
-    return null;
-  }
-}
-
-function loadPreferences() {
-  if (typeof window === 'undefined') return DEFAULT_PREFERENCES;
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(PREFERENCES_KEY) || '{}');
-    return {
-      lateNightVisible: parsed?.lateNightVisible === true,
-    };
-  } catch (err) {
-    return DEFAULT_PREFERENCES;
-  }
-}
-
-function savePreferences(preferences) {
-  try {
-    window.localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
-  } catch (err) {
-    /* Preferences are optional; the game remains usable without storage. */
-  }
-}
-
-// This explicit privacy action removes every key written by CLOSER and
-// returns to a plain start screen. It is intentionally broader than restart.
-function deleteAllLocalData() {
-  try {
-    window.localStorage.removeItem(STORAGE_KEY);
-    window.localStorage.removeItem(PREFERENCES_KEY);
-    window.localStorage.removeItem(INSTALL_HINT_DISMISS_KEY);
-  } catch (err) {
-    /* ignore */
-  }
-}
 
 function buzz(pattern) {
   if (typeof window === 'undefined') return;
@@ -231,9 +193,10 @@ export default function CloserGame() {
   // the saved game was in, not silently fall back to German -- the language
   // toggle on this screen still lets someone switch before continuing.
   useEffect(() => {
-    setPreferences(loadPreferences());
+    const storage = getBrowserStorage(window);
+    setPreferences(loadPreferences(storage));
     setMounted(true);
-    const saved = loadSaved();
+    const saved = loadSavedGame(storage);
     setResumable(saved);
     if (saved) set({ lang: saved.lang });
   }, [set]);
@@ -266,15 +229,7 @@ export default function CloserGame() {
 
   useEffect(() => {
     if (!mounted) return;
-    try {
-      if (s.completed) {
-        window.localStorage.removeItem(STORAGE_KEY);
-      } else if (s.hasStarted && s.phase !== 'start') {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-      }
-    } catch (err) {
-      /* private mode, quota, whatever -- the game still works */
-    }
+    persistGameState(getBrowserStorage(window), s);
   }, [s, mounted]);
 
   // Keep the shared phone awake during a real run, never during setup.
@@ -531,11 +486,7 @@ export default function CloserGame() {
   }, [s.phase]);
 
   const restart = useCallback(() => {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch (err) {
-      /* ignore */
-    }
+    clearSavedGame(getBrowserStorage(window));
     setResumable(null);
     setConfirmReset(false);
     setBeat(0);
@@ -583,7 +534,7 @@ export default function CloserGame() {
   const pct = Math.round((s.qIndex / (total - 1)) * 100);
 
   const handleDeleteLocalData = () => {
-    deleteAllLocalData();
+    clearAllCloserData(getBrowserStorage(window));
     setPreferences(DEFAULT_PREFERENCES);
     setResumable(null);
     setMenuOpen(false);
@@ -594,7 +545,7 @@ export default function CloserGame() {
   const setLateNightVisible = (visible) => {
     const nextPreferences = { ...preferences, lateNightVisible: visible };
     setPreferences(nextPreferences);
-    savePreferences(nextPreferences);
+    persistPreferences(getBrowserStorage(window), nextPreferences);
 
     // Hiding the pack during setup must not leave an invisible selection
     // active. An already-started or resumable LATE NIGHT run remains valid.

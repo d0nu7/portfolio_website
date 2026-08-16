@@ -15,8 +15,9 @@ capture/resolution, final-question reveal, Question 37, end-run reasons, and
 compiled question destinations are pure and characterized in
 `src/closer/engine/transitions.js`. Canonical state creation and discriminated
 save parsing are pure and characterized in `src/closer/engine/persistence.js`;
-browser storage and resume orchestration are not yet part of the transition
-core.
+the guarded browser-storage boundary is isolated in
+`src/closer/infrastructure/storage.js`. Resume orchestration is not yet part of
+the transition core.
 
 ## Global events
 
@@ -74,9 +75,9 @@ Setup/entry, consent, act-entry/break, private-moment capture/resolution,
 final-question reveal, Question 37, end-run reasons, and compiled question
 destinations are implemented in `src/closer/engine/transitions.js`. Canonical
 state creation and save validation are implemented in
-`src/closer/engine/persistence.js`. Browser storage, resume orchestration,
-global preferences, and the screen-local ending timeline remain outside the
-transition core.
+`src/closer/engine/persistence.js`, while browser storage is isolated in
+`src/closer/infrastructure/storage.js`. Resume orchestration, global preference
+events, and the screen-local ending timeline remain outside the transition core.
 
 ## Private moment and finale
 
