@@ -171,7 +171,7 @@ Status: partially complete; legal text requires owner review.
 
 - [x] Keep imprint and privacy information directly reachable within the CLOSER menu in both languages.
 - [ ] Verify the legal copy against the final operator details and obtain professional review where appropriate.
-- [ ] Verify the new deployment-level security headers against the deployed static export.
+- [x] Verify the new deployment-level security headers against the deployed static export (FR-003, `curl -I https://radi.solutions/closer/` confirms all six headers are actually served, not only configured).
 - [ ] Decide whether offline operation justifies a service worker and document the update/cache strategy before adding one.
 - [ ] Complete real Android and iOS installed-PWA checks.
 - [ ] Evaluate `closer.radi.solutions` as a separate Vercel project only after the app behavior stabilizes.

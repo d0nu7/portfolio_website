@@ -36,20 +36,11 @@ Requirements:
 
 ### FR-003 – Deployment security headers
 
-**Status:** Configuration delivered; deployed-header verification pending
+**Status:** Delivered; live response verified 2026-08-16
 
-The current worktree configures headers at the Vercel/static-hosting layer because a static Next.js export cannot reliably add runtime response headers itself. Deployment verification remains required.
+`curl -I https://radi.solutions/closer/` confirms every header in `vercel.json` is actually served on the live response, not only present in the config file: `Content-Security-Policy` (including `style-src 'self' 'unsafe-inline'`, required for styled-components' runtime style injection, and `script-src 'self' 'unsafe-inline'`), `Strict-Transport-Security: max-age=31536000`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera/geolocation/microphone/payment/usb all denied), `X-Frame-Options: DENY`.
 
-Minimum review set:
-
-- Content Security Policy compatible with the current self-hosted assets and required inline runtime behavior;
-- `Strict-Transport-Security`;
-- `X-Content-Type-Options: nosniff`;
-- strict referrer policy;
-- restrictive permissions policy;
-- framing protection.
-
-Verify the deployed responses, not only configuration files.
+Not verified from this environment: an actual browser console check for a CSP violation on the live deployed bundle specifically (as opposed to the local dev/build server, which the E2E console guard already covers) — this sandbox's browser tooling is blocked from navigating to external sites. The header values were written for this app's exact known runtime needs (self-hosted fonts, styled-components, no third-party requests, per the holistic review's own source inspection) and match what the local build already exercises cleanly under the same console guard, so a live-specific violation is unlikely, but this is inference from configuration intent, not a live-browser observation. A real cross-browser check on the deployed site remains worth doing once accessible.
 
 ## P1 – product quality
 
