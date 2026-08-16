@@ -26,7 +26,9 @@
  *
  * --- Pack architecture (added ahead of further game packs) ----------------
  *
- * "Pack" (this file's PACKS registry) and "Style" (a pack's own `modes`,
+ * "Pack" (the PACKS registry, since Refactoringplan Phase 2 defined in
+ * src/closer/content/index.js and re-exported here for a stable public API)
+ * and "Style" (a pack's own `modes`,
  * formerly the top-level MODES) are two separate axes and were previously
  * conflated -- there was only ever one pack, so nobody had to say so.
  *   pack  = WHAT is being asked: the questions, their acts, their per-act
@@ -431,6 +433,67 @@ export function runFingerprintFor(packId, routeId = DEFAULT_ROUTE_ID) {
  */
 export function voiceSrc(packId, lang, questionId) {
   return `/audio/closer/${packId}/${lang}/${questionId}.mp3`;
+}
+
+/*
+ * compileRun() -- die RunDefinition aus der Zielarchitektur (Refactoringplan
+ * Abschnitt 3), einmal kompiliert aus Pack/Route/Style:
+ *
+ *   { packId, routeId, modeId, questions, actStarts, timing, privateMoment,
+ *     contentRevision, fingerprint }
+ *
+ * Status dieser Nacharbeit: die Funktion ist vollstaendig und getestet
+ * (siehe closer.test.js), aber NOCH NICHT die Laufzeitquelle fuer
+ * CloserGame.js -- der Komponente liest weiterhin einzeln aus
+ * resolvedActs()/routeTimingFor()/runFingerprintFor() usw., wie zuvor.
+ * Das Umstellen auf ein einziges kompiliertes RunDefinition-Objekt als
+ * Navigations-/Persistenz-/Timer-Quelle gehoert zusammen mit dem im Plan
+ * ebenfalls noch offenen reinen Reducer (Phase 3, "Events und erlaubte
+ * Phasenwechsel in einen reinen Reducer verschieben") -- beides zusammen
+ * waere der Big-Bang-Rewrite, den der Plan in seiner eigenen Zielsetzung
+ * ausdruecklich ausschliesst ("schrittweise entkoppeln – ohne
+ * Big-Bang-Rewrite"). compileRun() steht hier bewusst als eigenstaendiger,
+ * risikoloser erster Schritt: eine reine Funktion, die nichts im laufenden
+ * Spiel veraendert, weil sie noch von niemandem aufgerufen wird.
+ *
+ * `questions[i].content` traegt das volle Frageobjekt (id, de, en, twist,
+ * stayEnabled, responseCard, ...) -- kompiliert wird zusammengesetzt,
+ * nicht neu erfunden; `sourceIndex` ist der absolute Index im ungekuerzten
+ * Pack (originalIndexFor()), fuer denselben pack-namespaced Voice-Pfad,
+ * den voiceSrc()/questionIdFor() bereits beschreiben.
+ */
+export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
+  const pack = getPack(packId);
+  const route = getRoute(packId, routeId);
+  const acts = resolvedActs(pack.id, route.id);
+  const actStarts = actStartIndices(pack.id, route.id);
+  const timing = routeTimingFor(pack.id, route.id);
+  const resolvedModeId = pack.modes.some((m) => m.id === modeId) ? modeId : pack.modes[0].id;
+
+  const questions = [];
+  acts.forEach((act, actIndex) => {
+    act.questions.forEach((q, localIndex) => {
+      const routeRelativeIndex = actStarts[actIndex] + localIndex;
+      questions.push({
+        id: q.id,
+        actIndex,
+        sourceIndex: originalIndexFor(pack.id, routeRelativeIndex, route.id),
+        content: q,
+      });
+    });
+  });
+
+  return Object.freeze({
+    packId: pack.id,
+    routeId: route.id,
+    modeId: resolvedModeId,
+    questions: Object.freeze(questions),
+    actStarts: Object.freeze(actStarts),
+    timing,
+    privateMoment: null,
+    contentRevision: CONTENT_VERSION,
+    fingerprint: runFingerprintFor(pack.id, route.id),
+  });
 }
 
 /*

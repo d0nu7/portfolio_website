@@ -9,6 +9,7 @@ import {
   actIndexFor,
   actStartIndices,
   classifySecretAsked,
+  compileRun,
   finalQuestionIndex,
   getPack,
   getRoute,
@@ -685,6 +686,77 @@ describe('runFingerprintFor (Phase 1)', () => {
     // Der Bump von CONTENT_VERSION muss den Wert veraendern -- vorher war
     // ein Versions-Bump wirkungslos (CR-P1-05).
     expect(runFingerprintFor('classic', 'full')).toMatch(new RegExp(`^r${CONTENT_VERSION}-`));
+  });
+});
+
+/*
+ * compileRun() (Refactoringplan Phase 3, Nacharbeit): eine neue Funktion,
+ * die getrennt bestehende Bausteine (resolvedActs, routeTimingFor,
+ * runFingerprintFor, originalIndexFor) zu einer RunDefinition
+ * zusammensetzt. Diese Tests pruefen die Zusammensetzung gegen genau
+ * diese Bausteine, statt einen erwarteten Wert von Hand vorzuschreiben --
+ * driftet compileRun() von einem der Bausteine ab, faellt der jeweilige
+ * Test, nicht nur ein globaler Schnappschussvergleich.
+ */
+describe('compileRun (Phase 3, RunDefinition)', () => {
+  it('stimmt mit routeTimingFor()/runFingerprintFor() fuer dieselbe Route ueberein', () => {
+    const run = compileRun('classic', 'quick');
+    expect(run.timing).toEqual(routeTimingFor('classic', 'quick'));
+    expect(run.fingerprint).toBe(runFingerprintFor('classic', 'quick'));
+    expect(run.contentRevision).toBe(CONTENT_VERSION);
+  });
+
+  it('questions[] hat pro resolvedActs()-Frage genau einen Eintrag, in derselben Reihenfolge', () => {
+    const run = compileRun('classic', 'quick');
+    const flatIds = resolvedActs('classic', 'quick').flatMap((a) => a.questions.map((q) => q.id));
+    expect(run.questions.map((q) => q.id)).toEqual(flatIds);
+  });
+
+  it('actStarts stimmt mit actStartIndices() ueberein', () => {
+    const run = compileRun('classic', 'quick');
+    expect(run.actStarts).toEqual(actStartIndices('classic', 'quick'));
+  });
+
+  it('sourceIndex jeder Frage stimmt mit originalIndexFor() an derselben Route-Position ueberein', () => {
+    const run = compileRun('classic', 'quick');
+    run.questions.forEach((q, i) => {
+      expect(q.sourceIndex).toBe(originalIndexFor('classic', i, 'quick'));
+    });
+  });
+
+  it('actIndex jeder Frage passt zu ihrer Position relativ zu actStarts', () => {
+    const run = compileRun('classic', 'quick');
+    run.questions.forEach((q, i) => {
+      const expectedActIndex = run.actStarts.filter((start) => start <= i).length - 1;
+      expect(q.actIndex).toBe(expectedActIndex);
+    });
+  });
+
+  it('faellt ohne modeId auf den ersten Style des Packs zurueck; eine gueltige modeId bleibt erhalten', () => {
+    expect(compileRun('classic', 'full').modeId).toBe(PACKS.classic.modes[0].id);
+    const second = PACKS.classic.modes[1].id;
+    expect(compileRun('classic', 'full', second).modeId).toBe(second);
+    // Eine ungueltige modeId faellt genauso zurueck wie eine fehlende --
+    // dieselbe Kanonisierung, die loadSaved() fuer eine gespeicherte
+    // modeId schon durchfuehrt.
+    expect(compileRun('classic', 'full', 'does-not-exist').modeId).toBe(PACKS.classic.modes[0].id);
+  });
+
+  it('privateMoment ist noch null (Phase 5 nicht implementiert) und das Ergebnis ist eingefroren', () => {
+    const run = compileRun('classic', 'full');
+    expect(run.privateMoment).toBeNull();
+    expect(Object.isFrozen(run)).toBe(true);
+    expect(Object.isFrozen(run.questions)).toBe(true);
+    expect(Object.isFrozen(run.actStarts)).toBe(true);
+  });
+
+  it('unterscheidet Packs und Routen', () => {
+    expect(compileRun('classic', 'quick').fingerprint).not.toBe(
+      compileRun('classic', 'full').fingerprint
+    );
+    expect(compileRun('classic', 'full').fingerprint).not.toBe(
+      compileRun('friends', 'full').fingerprint
+    );
   });
 });
 
