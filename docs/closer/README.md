@@ -20,9 +20,10 @@ Product code and automated tests remain the technical source of truth for what t
 
 ## Current implementation summary
 
-- Live packs: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, and Chaos.
-- Late Night content is complete and available through a discreet menu preference while retaining independent per-session consent. The local regression gate passes; deployed and physical-device smoke tests remain.
-- All 324 German/English questions have stable IDs and automated exact catalog-fidelity coverage.
+- Nine catalog packs are implemented: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, and Late Night.
+- Late Night is available through a discreet menu preference while retaining independent per-session consent. The local regression gate passes; deployed and physical-device smoke tests remain.
+- The implemented packs contain 324 German/English questions with stable IDs and automated exact catalog-fidelity coverage. CLASSIC is editorially immutable and has dedicated fingerprint regression coverage in addition to exact catalog fidelity.
+- Road Trip, Family, and Colleagues are editorial candidates on the current feature branch, with 36 bilingual master questions and route, safety, and private-moment specifications each. They are not registered or playable yet. The combined editorial catalog now contains 12 packs and 432 questions; FR-013 and user-session validation remain prerequisites for release.
 - Quick, Standard, and Full are curated routes. Packs with one valid style skip the style screen.
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
 - Pack content is modularized under `src/closer/content/`; the compiled run still originates in `src/constants/closer.js` while the new pure transition core lives under `src/closer/engine/`.

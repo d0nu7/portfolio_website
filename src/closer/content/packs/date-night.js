@@ -215,8 +215,8 @@ const DATE_NIGHT_ACTS = [
       },
       {
         id: 'date-night-q32',
-        de: 'Welche gute Nachricht oder kleine Freude möchtest du heute gemeinsam feiern?',
-        en: 'What piece of good news or small joy would you like to celebrate together tonight?',
+        de: 'Welches kleine Sinnesdetail dieses Abends – ein Blick, ein Geräusch, ein Geschmack oder etwas anderes – möchtest du in Erinnerung behalten?',
+        en: 'What small sensory detail from tonight—a look, a sound, a taste, or something else—would you like to remember?',
       },
       {
         id: 'date-night-q33',

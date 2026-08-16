@@ -211,7 +211,15 @@ the first-run experience.
 
 ### FR-014 – Road Trip, Family, and Colleagues packs
 
-**Status:** Planned; bilingual editorial content required
+**Status:** In progress; editorial specification completed on this feature branch, registry/UI implementation and user-session validation pending
+
+This feature branch completes the editorial deliverable for all three packs:
+three bilingual 36-question master banks (108 questions total), curated route
+membership, context and safety guidance, and an explicit decision to use no
+private moment in any of the three packs. The packs are not yet registered or
+playable in the application. FR-013 remains the prerequisite for their UI
+integration, and moderated user sessions remain necessary before release timing
+and route assumptions can be treated as validated.
 
 Add three research-informed packs after FR-013 provides a manageable library.
 Each pack needs 36 stable DE/EN master questions, a three-act intensity curve,
@@ -265,3 +273,55 @@ Editorial acceptance:
   closely following the original closeness protocol.
 - Catalog fidelity, registry conformance, route timing, save/resume, visibility
   migration, DE/EN, and mobile E2E coverage all pass before release.
+
+### FR-015 – Students pack and FH Salzburg campus variant
+
+**Status:** Planned; research, product framing, and bilingual editorial content pending
+
+Add a durable general `students` pack for two voluntarily participating peers
+in higher education. Treat the FH Salzburg idea as an optional campus variant or
+overlay on that foundation, rather than immediately duplicating an entire
+institution-specific 36-question bank. This keeps the general experience useful
+outside one organization and makes the smaller local layer easier to review when
+campuses, programs, terminology, or student services change.
+
+#### STUDENTS
+
+- Context: two adult students participating voluntarily, regardless of
+  institution, program, study format, semester, age, employment status, or
+  whether they already know one another.
+- Possible arc: everyday student life and small wins → learning, collaboration,
+  and belonging → strengths, support preferences, hopes, and a self-directed
+  future.
+- Research and user testing must determine whether Quick 12 and Standard 24 are
+  sufficient or whether a 36-question Full route has a credible use case.
+- Do not ask for grades, ranking, finances, health or disability details,
+  immigration status, protected characteristics, political or religious views,
+  named conflicts, misconduct reports, or confidential information from study,
+  work, research, placements, clients, or patients.
+- Do not frame answers as evidence of aptitude, engagement, wellbeing,
+  employability, or belonging. Passing and ending remain unconditional.
+- Exclude lecturer–student, assessor–assessed, supervisor–supervisee, admissions,
+  scholarship, and other pairings in which one person can materially affect the
+  other person's studies or opportunities.
+
+#### FH SALZBURG variant
+
+- Prefer a small, versioned campus overlay or locally curated route that can add
+  genuinely useful FH Salzburg context without forking all general questions.
+- The variant must remain a peer conversation, not institutional onboarding,
+  course evaluation, marketing research, or a channel for academic complaints.
+- Local prompts must avoid assuming a specific campus, degree program, mode of
+  study, nationality, mobility, or access need.
+- Assign an explicit content owner and review cadence for local wording and
+  links. Do not encode changeable facts in the shared base pack.
+- Use of the FH Salzburg name, branding, or any implication of official
+  endorsement requires separate organizational approval; CLOSER must not imply
+  that the institution has validated the questions or research claims.
+- No answer is recorded, exported, reported to the institution, or used for an
+  academic or employment decision.
+
+Before implementation, decide whether the local experience is best represented
+as a separately selectable pack, a STUDENTS setup option, or a curated event
+route. It should remain hidden in the configurable pack library by default
+outside an explicitly selected FH Salzburg context.

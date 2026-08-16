@@ -37,8 +37,8 @@ const DEEP_ACTS = [
     questions: [
       {
         id: 'deep-q01',
-        de: 'Auf welchen konkreten Moment aus der letzten Zeit bist du still stolz – und warum?',
-        en: 'What specific recent moment are you quietly proud of, and why?',
+        de: 'Welche innere Veränderung an dir macht dich in letzter Zeit still stolz – und woran merkst du sie?',
+        en: 'What inner change in yourself has made you quietly proud lately—and how do you notice it?',
         responseCard: RESPONSE_CARDS.celebrateHonor,
       },
       {

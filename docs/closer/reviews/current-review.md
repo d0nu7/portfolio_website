@@ -1,7 +1,7 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 16 August 2026
-**Scope:** current `main`, live `/closer/` experience, pack content, game mechanics, mobile/PWA behavior, accessibility, privacy/legal reachability, tests, and completed refactoring
+**Scope:** current `main` implementation and live `/closer/` experience, plus editorial candidates on `feature/closer-roadtrip-family-colleagues`
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## 1. Overall assessment
@@ -44,10 +44,10 @@ No unexpected console error was observed during the reviewed live smoke path. Th
 
 ### Content and modes
 
-- The bilingual catalog contains 324 stable question pairs across nine packs.
-- All shipped questions have stable IDs and exact catalog-fidelity coverage.
+- The bilingual editorial catalog contains 432 stable question pairs across 12 packs: 324 implemented questions in nine packs plus 108 questions in the Road Trip, Family, and Colleagues candidates.
+- All implemented questions have stable IDs and exact catalog-fidelity coverage; the three candidate banks have automated ID, route-count, bilingual-completeness, and duplicate-copy checks.
 - Quick, Standard, and Full are curated sequences rather than random samples.
-- Classic remains editorially stable, protecting its relationship to the original closeness protocol.
+- Classic remains editorially immutable and fingerprint-protected, preserving its relationship to the original closeness protocol.
 - The newer packs have recognizably different arcs rather than superficial theme labels.
 - Response cards are sparse and framed as listening cues rather than required answers.
 - Late Night wording is unusually careful about assumptions, action pressure, safer sex, boundaries, and aftercare.

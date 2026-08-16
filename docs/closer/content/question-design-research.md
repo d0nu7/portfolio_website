@@ -2,7 +2,7 @@
 
 **Updated:** 16 August 2026
 **Purpose:** Research-informed editorial guidance for CLOSER questions
-**Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, and their shorter and longer routes
+**Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, and their available routes
 
 This document is a design synthesis, not a claim that the new CLOSER packs or individual prompts have been scientifically validated. The bilingual [question catalog](question-catalog.de-en.md) remains the editorial source of truth for shipped wording and routes.
 
@@ -19,8 +19,9 @@ Research does not provide a ready-made validated question list for every CLOSER 
 5. **Depth is not synonymous with trauma or maximum vulnerability.** Identity, values, pride, belonging, hope, and being understood can be equally deep.
 6. **Short routes need their own arc.** Evidence supports short, time-bounded closeness exercises, but not random excerpts from a longer pack.
 7. **Late Night requires distinct safety rules.** High-quality sexual communication may support satisfaction, but prompts must never turn disclosure into pressure or implied consent.
+8. **Context-specific packs need context-specific limits.** Road safety, family autonomy, and workplace power cannot be handled by generic consent copy alone.
 
-The current **Classic Full questions should remain unchanged**. Their proximity to the original 36-question structure has independent product value. Research should primarily shape the newer packs, route arcs, safety constraints, and occasional listening cues.
+**Classic is immutable.** Its questions, translations, order, and route membership must not change as part of work on newer packs. Its proximity to the original 36-question structure has independent product value. Research should primarily shape the newer packs, route arcs, safety constraints, and occasional listening cues.
 
 ---
 
@@ -197,6 +198,66 @@ Required guardrails:
 - No task that the app expects or asks people to confirm they completed.
 - Discovery may be discreet, but hiding or showing the pack is separate from per-session consent.
 
+### 4.10 Road Trip
+
+**Goal:** Use travel time for a playful, progressively more meaningful conversation about the current journey, travel memories, preferences, and future possibilities.
+
+Travel is a useful editorial frame for concrete memories and shared novelty, but it creates a non-negotiable safety boundary. Passenger conversation is itself a possible distraction. Simulator research suggests that an in-car passenger may adapt a conversation to changing traffic demands better than a remote phone partner, but that study did not test a structured conversation game and does not establish that ROAD TRIP is safe while driving. [Drews, Pasupathi & Strayer (2008)](https://pubmed.ncbi.nlm.nih.gov/19102621/)
+
+The NHTSA advises people to make the passenger the designated phone user or to park before using a phone, and Austrian official guidance prohibits drivers from reading or operating phones outside narrow permitted uses. [NHTSA distracted-driving guidance](https://www.nhtsa.gov/campaign/distracted-driving), [oesterreich.gv.at: Handyverbot am Steuer](https://eausweise.oesterreich.gv.at/de/themen/mobilitaet/kfz/10/4/Seite.063220)
+
+Required design constraints:
+
+- If either participant is driving, only the passenger handles and reads the device; the driver never looks at, touches, or operates it.
+- Quick is the only route that may be offered while a participant is driving, and it must still not be described as safe, certified, or distraction-free. Parking remains the preferred condition.
+- Standard and Full require a parked vehicle or a setting in which neither participant is responsible for driving.
+- Silence and driving attention always override an answer. The passenger must be able to pause immediately, and a stopped or absent answer is not a Pass, failure, or reason for feedback.
+- Disable `NO THINKING`, countdowns, `PREDICT`, simultaneous-answer twists, timers, eye-contact prompts, device handoffs, auto-advance, surprise audio, and any task involving the surroundings, navigation, photography, or music selection.
+- Use no private moment. End Quick directly; make any Standard or Full reflection visibly optional.
+- Do not presume cars, international travel, unrestricted mobility, a passport, a particular budget, or a romantic relationship.
+
+Pilot ranges are Quick 15–20 minutes, Standard 30–45 minutes, and Full 50–70 minutes. They are not safety claims or completion targets. Local traffic rules and the real road situation always take precedence.
+
+### 4.11 Family
+
+**Goal:** Help two adults who understand each other as family see one another beyond fixed roles, exchange useful knowledge about care and boundaries, and imagine a freely chosen future.
+
+Family narrative studies linked coordinated storytelling, perspective-taking, and validation with measures of family satisfaction, functioning, and self-esteem. These studies used conventional family samples, often including children or adolescents, and the relevant findings are mainly correlational; they do not validate an adult two-person question game. [Koenig Kellas (2005)](https://doi.org/10.1080/03637750500322453), [Bohanek et al. (2006)](https://doi.org/10.1111/j.1545-5300.2006.00079.x)
+
+The pack must explicitly include chosen family. A study of 350 young adult gay and bisexual men found chosen family in many participants’ own family definitions, but that specific sample cannot define family for everyone. Participants’ own language remains authoritative. [Soler et al. (2018)](https://doi.org/10.1007/s13178-017-0288-7)
+
+Required design constraints:
+
+- Include family of origin, adoptive and blended family, relatives through partnership, and chosen family without assuming biology, a shared home or childhood, harmony, current closeness, parenthood, or frequent contact.
+- Let different versions of a shared memory stand beside one another. The game must not search for a single correct family story.
+- Move from concrete everyday stories to roles and support, then to appreciation, autonomy, boundaries, and a future that need not be closer.
+- Do not presume reconciliation. Qualitative work on adult sibling estrangement found meaningful variation in whether reconciliation was wanted. [Blake, Bland & Rouncefield-Swales (2023)](https://doi.org/10.1177/0192513X211064876)
+- Never ask people to rank relatives, assign blame, diagnose someone, disclose another person’s secret, justify estrangement, or mediate an active third-party conflict.
+- Use no private moment at launch. A secret appreciation task can create pressure even when positive. Disable `PREDICT`, and do not use `NO THINKING` for roles, support, autonomy, or boundaries.
+- Describe the pack as conversation, not therapy, mediation, reconciliation, healing, or an assessment of family functioning.
+
+Pilot ranges are Quick 15–25 minutes, Standard 30–50 minutes, and Full 55–85 minutes. All three routes need their own positive-to-personal arc, unconditional passing, and a direct or clearly optional finale.
+
+### 4.12 Colleagues
+
+**Goal:** Help two voluntary peers understand practical working preferences without turning the conversation into an assessment, conflict process, or substitute for organizational responsibility.
+
+Team research associated psychological safety with learning behavior, and research on managerial openness linked authority behavior, perceived safety, and employee voice. These findings concern organizational conditions and power; they do not show that a conversation game creates psychological safety or better performance. [Edmondson (1999)](https://doi.org/10.2307/2666999), [Detert & Burris (2007)](https://doi.org/10.5465/amj.2007.26279183)
+
+Employees may withhold work concerns because speaking can carry interpersonal or career consequences. Friendly copy cannot remove that risk. [Milliken, Morrison & Hewlin (2003)](https://doi.org/10.1111/1467-6486.00387)
+
+Required design constraints:
+
+- Position the pack for people on as equal a footing as possible. Exclude manager–direct-report, evaluator–evaluated, client–dependent-contractor, and other pairings in which one person materially affects the other’s pay, schedule, tasks, promotion, discipline, contract, or access to opportunities.
+- Participation must be optional in substance. Do not use the pack for mandatory team building, onboarding, performance review, training attendance, mediation, investigation, grievance handling, or HR assessment.
+- Ask about everyday work rhythm, communication, coordination, capacity signals, feedback preferences, strengths, recognition, learning, and sustainable boundaries—not loyalty, personality ranking, active conflict, or judgments of colleagues and employers.
+- Do not solicit confidential work information, named complaints, salary, health, disability, union activity, family status, religion, politics, romantic or sexual information, or other sensitive personal data. General, anonymized, hypothetical, or passed answers must remain valid.
+- Do not store, score, transcribe, export, or report answers. Nothing said is a promise, assignment, admission, consent to a work change, or valid basis for an employment decision.
+- Launch Quick first. Release Standard only after moderated peer testing; keep the remaining 12 master questions as editorial reserve. Do not create a public Full route merely to match other packs.
+- Use no private moment, `PREDICT`, `NO THINKING`, simultaneous-answer twist, countdown, or performance-oriented timer. Alternate starters and keep any listening cue sparse and transparent.
+
+Pilot ranges are Quick 15–25 minutes and Standard 30–50 minutes. If a serious safety, discrimination, harassment, legal, or employment concern emerges, the game ends; it must not imply that a prompt can investigate or resolve the issue.
+
 ---
 
 ## 5. Editorial schema and review matrix
@@ -217,6 +278,10 @@ sensitiveTopics[]
 twistAllowed
 lateNightSafeTwists[]
 quickRouteEligible
+routeMembership[]       # quick | standard | full | editorial_reserve
+contextEligibility      # pack-specific runtime conditions
+privateMoment           # none | explicitly reviewed pack-specific design
+safetyConstraints[]
 ```
 
 Score each candidate from 0–2 on every criterion before inclusion:
@@ -275,9 +340,12 @@ Marketing, onboarding, and engineering documentation must keep these limitations
 - Many studies use Western, student, or heterosexual samples; transfer to all ages, cultures, queer relationships, and neurodivergent people cannot be assumed.
 - Correlations with relationship satisfaction do not prove that a specific CLOSER prompt causes that outcome.
 - Only the original protocol may be closely associated with its study result. The other packs are new editorial products.
+- ROAD TRIP has not been validated as safe while a vehicle is moving. Passenger control and a shorter route reduce device interaction; they do not eliminate distraction.
+- FAMILY is not family therapy, mediation, reconciliation, or evidence of healthy family functioning.
+- COLLEAGUES cannot create organizational psychological safety or neutralize power, retaliation, confidentiality, or employment risk.
 - “Research-informed” or “based on findings about self-disclosure and active listening” is appropriate. “Scientifically proven” or “validated” is not.
 
-Before broad release, test every pack with varied pairs. Moderated sessions should rate situation fit, answerability, conversation quality, intensity, inclusive wording, passing frequency, and willingness to play again. Include varied ages, relationship types, sexual orientations, cultural backgrounds, and neurodivergent participants. Late Night additionally requires a dedicated safety, consent, and legal review.
+Before broad release, test every pack with varied pairs. Moderated sessions should rate situation fit, answerability, conversation quality, intensity, inclusive wording, passing frequency, and willingness to play again. Include varied ages, relationship types, sexual orientations, cultural backgrounds, and neurodivergent participants. Late Night additionally requires a dedicated safety, consent, and legal review. Road Trip needs parked and public-transport pilots first; any passenger-led moving-vehicle study requires a dedicated safety protocol and still cannot certify the game as safe. Family needs varied biological, adoptive, blended, infrequent-contact, and chosen-family pairs. Colleagues needs voluntary peer sessions across sectors and work arrangements, with Standard evaluated separately from Quick.
 
 ---
 
@@ -290,6 +358,8 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Enforce Late Night guardrails technically and editorially.
 4. Curate Quick routes rather than sampling them randomly.
 5. Keep all person and role language gender-neutral and assumption-free.
+6. Enforce Road Trip driver/device rules in route availability and runtime behavior.
+7. Keep Family non-prescriptive and Colleagues voluntary, peer-oriented, confidential, and free of assessment mechanics.
 
 ### P1 – highest quality gain
 
@@ -298,13 +368,15 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Center Old Friends on specific we-memories rather than general nostalgia.
 4. Balance Deep across vulnerability, hope, identity, and positive meaning.
 5. Keep Chaos focused on co-creation and shared laughter rather than exposure.
+6. Center Road Trip on travel-specific memories and preferences, Family on multiple perspectives and autonomy, and Colleagues on practical working preferences rather than personal evaluation.
 
 ### P2 – after initial user testing
 
 1. Score questions with the review matrix.
 2. Calibrate duration ranges from real sessions.
 3. Replace prompts with unusually high pass rates or low conversation quality.
-4. Iteratively validate pack-specific Quick, Standard, and Full routes.
+4. Iteratively evaluate and refine pack-specific Quick, Standard, and Full routes.
+5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
 
 ---
 
@@ -336,6 +408,30 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 - [Guan & Wang (2022): Sharing autobiographical memories and interpersonal closeness](https://doi.org/10.1177%2F00220221211072809)
 - [Hall (2017): Humor in romantic relationships—meta-analysis](https://onlinelibrary.wiley.com/doi/full/10.1111/pere.12183)
 - [Kurtz & Algoe (2015): Shared laughter as a behavioral indicator of relationship well-being](https://doi.org/10.1111/pere.12095)
+
+### Road safety and travel context
+
+- [Drews, Pasupathi & Strayer (2008): Passenger and cell-phone conversations in simulated driving](https://pubmed.ncbi.nlm.nih.gov/19102621/)
+- [NHTSA: Distracted-driving guidance](https://www.nhtsa.gov/campaign/distracted-driving)
+- [Austrian official guidance: Handyverbot am Steuer](https://eausweise.oesterreich.gv.at/de/themen/mobilitaet/kfz/10/4/Seite.063220)
+- [European Road Safety Observatory (2024): Distraction report](https://road-safety.transport.ec.europa.eu/news/new-report-european-road-safety-observatory-focus-distraction-2024-01-11_en)
+
+### Family narratives, family forms, and autonomy
+
+- [Koenig Kellas (2005): Family storytelling and family functioning](https://doi.org/10.1080/03637750500322453)
+- [Bohanek et al. (2006): Family narrative interaction and adolescent sense of self](https://doi.org/10.1111/j.1545-5300.2006.00079.x)
+- [Fivush et al. (2009): Family narratives at dinnertime](https://pmc.ncbi.nlm.nih.gov/articles/PMC4665103/)
+- [Soler et al. (2018): Family of origin, chosen family, and social support](https://doi.org/10.1007/s13178-017-0288-7)
+- [Blake, Bland & Rouncefield-Swales (2023): Adult sibling estrangement and reconciliation](https://doi.org/10.1177/0192513X211064876)
+
+### Workplace voice, listening, and boundaries
+
+- [Edmondson (1999): Psychological safety and learning behavior in work teams](https://doi.org/10.2307/2666999)
+- [Nembhard & Edmondson (2006): Leader inclusiveness, status, and psychological safety](https://doi.org/10.1002/job.413)
+- [Detert & Burris (2007): Leadership behavior and employee voice](https://doi.org/10.5465/amj.2007.26279183)
+- [Milliken, Morrison & Hewlin (2003): Employee silence at work](https://doi.org/10.1111/1467-6486.00387)
+- [Grant & Gino (2010): Gratitude and prosocial behavior at work](https://pubmed.ncbi.nlm.nih.gov/20515249/)
+- [Kreiner (2006): Work–home boundary fit](https://doi.org/10.1002/job.386)
 
 ### Sexual communication and consent
 

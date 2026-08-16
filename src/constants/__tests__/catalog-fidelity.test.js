@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
@@ -11,6 +12,13 @@ const CATALOG_PATH = path.join(
   'question-catalog.de-en.md'
 );
 
+// CLASSIC mirrors the original published protocol and is intentionally locked.
+// Any deliberate source correction requires an explicit editorial decision and
+// a corresponding fingerprint update; adding or editing other packs must not
+// change this value.
+const CLASSIC_QUESTION_FINGERPRINT =
+  'c13e623df86a8b56bff40a3d26283548563e0b9767958d399e4bf575ae3329a6';
+
 const HEADING_TO_PACK_ID = {
   CLASSIC: 'classic',
   'FIRST DATE': 'first-date',
@@ -21,7 +29,12 @@ const HEADING_TO_PACK_ID = {
   DEEP: 'deep',
   CHAOS: 'chaos',
   'LATE NIGHT (18+)': 'late-night',
+  'ROAD TRIP': 'road-trip',
+  FAMILY: 'family',
+  COLLEAGUES: 'colleagues',
 };
+
+const EDITORIAL_ONLY_PACK_IDS = ['road-trip', 'family', 'colleagues'];
 
 function parseCatalogQuestions(markdown) {
   const byPack = {};
@@ -41,10 +54,15 @@ function parseCatalogQuestions(markdown) {
       .slice(1, -1)
       .map((cell) => cell.trim());
     const [id] = cells;
-    const routeIsSecondColumn = /^(Q\/S\/F|S\/F|F)$/.test(cells[1]);
+    const routeIsSecondColumn = /^(Q\/S\/F|S\/F|F|Q\/S|S|Reserve)$/.test(cells[1]);
     const de = cells[routeIsSecondColumn ? 2 : 1];
     const en = cells[routeIsSecondColumn ? 3 : 2];
-    byPack[currentPackId].push({ id: id.toLowerCase(), de, en });
+    byPack[currentPackId].push({
+      id: id.toLowerCase(),
+      route: routeIsSecondColumn ? cells[1] : null,
+      de,
+      en,
+    });
   });
 
   return byPack;
@@ -58,21 +76,104 @@ function questionsFromPack(pack) {
   }));
 }
 
+function questionText(questions) {
+  return questions.map(({ id, de, en }) => ({ id, de, en }));
+}
+
 describe('catalog fidelity', () => {
   const markdown = fs.readFileSync(CATALOG_PATH, 'utf8');
   const catalog = parseCatalogQuestions(markdown);
   const implementation = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
+  const implementedPackIds = Object.keys(implementation);
 
-  it('contains exactly the nine expected packs', () => {
-    expect(Object.keys(catalog)).toEqual(Object.keys(implementation));
+  it('contains the nine implemented packs and three editorial candidates', () => {
+    expect(Object.keys(catalog)).toEqual([
+      ...implementedPackIds,
+      ...EDITORIAL_ONLY_PACK_IDS,
+    ]);
   });
 
-  it.each(Object.keys(implementation))('%s has 36 exact DE/EN question pairs', (packId) => {
+  it('keeps the published CLASSIC question set immutable', () => {
+    const fingerprint = createHash('sha256')
+      .update(JSON.stringify(questionText(catalog.classic)))
+      .digest('hex');
+
+    expect(fingerprint).toBe(CLASSIC_QUESTION_FINGERPRINT);
+  });
+
+  it.each(implementedPackIds)('%s has 36 exact DE/EN question pairs', (packId) => {
     const catalogQuestions = catalog[packId];
     const codeQuestions = questionsFromPack(implementation[packId]);
 
     expect(catalogQuestions).toHaveLength(36);
     expect(codeQuestions).toHaveLength(36);
-    expect(codeQuestions).toEqual(catalogQuestions);
+    expect(codeQuestions).toEqual(questionText(catalogQuestions));
+  });
+
+  it.each(EDITORIAL_ONLY_PACK_IDS)('%s has a complete bilingual 36-question master bank', (packId) => {
+    const questions = catalog[packId];
+
+    expect(questions).toHaveLength(36);
+    expect(questions.map(({ id }) => id)).toEqual(
+      Array.from({ length: 36 }, (_, index) => `q${String(index + 1).padStart(2, '0')}`)
+    );
+    questions.forEach(({ de, en }) => {
+      expect(de).toBeTruthy();
+      expect(en).toBeTruthy();
+    });
+  });
+
+  it('keeps the editorial route contracts explicit', () => {
+    const routeCounts = (packId) =>
+      catalog[packId].reduce((counts, { route }) => {
+        counts[route] = (counts[route] || 0) + 1;
+        return counts;
+      }, {});
+
+    expect(routeCounts('road-trip')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
+    expect(routeCounts('family')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
+    expect(routeCounts('colleagues')).toEqual({ 'Q/S': 12, S: 12, Reserve: 12 });
+
+    ['road-trip', 'family'].forEach((packId) => {
+      for (let act = 0; act < 3; act += 1) {
+        const actRoutes = catalog[packId]
+          .slice(act * 12, act * 12 + 12)
+          .map(({ route }) => route);
+        expect(actRoutes.filter((route) => route === 'Q/S/F')).toHaveLength(4);
+        expect(actRoutes.filter((route) => route === 'S/F')).toHaveLength(4);
+        expect(actRoutes.filter((route) => route === 'F')).toHaveLength(4);
+      }
+    });
+
+    for (let act = 0; act < 3; act += 1) {
+      const actRoutes = catalog.colleagues
+        .slice(act * 12, act * 12 + 12)
+        .map(({ route }) => route);
+      expect(actRoutes.filter((route) => route === 'Q/S')).toHaveLength(4);
+      expect(actRoutes.filter((route) => route === 'S')).toHaveLength(4);
+      expect(actRoutes.filter((route) => route === 'Reserve')).toHaveLength(4);
+    }
+  });
+
+  it('does not duplicate candidate question copy across the catalog', () => {
+    const normalize = (value) => value.trim().toLocaleLowerCase('de');
+    const priorGerman = new Set();
+    const priorEnglish = new Set();
+
+    implementedPackIds.forEach((packId) => {
+      catalog[packId].forEach(({ de, en }) => {
+        priorGerman.add(normalize(de));
+        priorEnglish.add(normalize(en));
+      });
+    });
+
+    EDITORIAL_ONLY_PACK_IDS.forEach((packId) => {
+      catalog[packId].forEach(({ de, en }) => {
+        expect(priorGerman.has(normalize(de))).toBe(false);
+        expect(priorEnglish.has(normalize(en))).toBe(false);
+        priorGerman.add(normalize(de));
+        priorEnglish.add(normalize(en));
+      });
+    });
   });
 });

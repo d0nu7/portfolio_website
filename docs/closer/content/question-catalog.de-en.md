@@ -1,14 +1,15 @@
 # CLOSER – complete question catalog DE/EN
 
 **Updated:** 16 August 2026
-**Status:** Editorial content specification for implementation
-**Scope:** 9 packs · 324 master questions · German and English · curated duration routes · pack-specific finales
+**Status:** Editorial content specification for implemented and candidate packs
+**Scope:** 12 packs · 432 master questions · German and English · curated duration routes · pack-specific finales
 
 ---
 
 ## 1. Authoritative interpretation
 
-- A **pack/mode** determines *what* is asked: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, or `late-night`.
+- A **pack/mode** determines *what* is asked. Nine packs are currently implemented: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, and `late-night`.
+- `road-trip`, `family`, and `colleagues` are complete editorial candidates on this branch. Their inclusion here reserves stable IDs and wording; it does not register them in the app or make them playable.
 - A **style** only determines *how* the game is played, for example `CALM` or `PLAYFUL`. Styles do not own duplicate question lists.
 - Every pack has a master bank of **3 acts with 12 questions each**.
 - A stable implementation ID combines the pack and table ID, for example `first-date-q01`, `friends-q24`, or `late-night-q36`.
@@ -26,13 +27,13 @@
 | Standard | 24 questions, 8 per act | default for most packs |
 | Full | 36 questions, 12 per act | complete master bank |
 
-In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `S/F` means Standard and Full; and `F` means Full only. Selected IDs always retain their listed order.
+In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `S/F` means Standard and Full; and `F` means Full only. `COLLEAGUES` intentionally uses `Q/S`, `S`, and `Reserve`: Reserve questions belong to its editorial master bank but to no playable route. Selected IDs always retain their listed order.
 
-`DEEP` intentionally has no Quick route. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts.
+`DEEP` intentionally has no Quick route. `COLLEAGUES` intentionally has no Full route until user sessions demonstrate a credible, non-intrusive use case. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts. The 36 Classic rows are immutable and protected by an automated content fingerprint.
 
 ### Privately saved question
 
-In Standard and Full, each person privately receives this choice unless the pack explicitly sets `privateMoment: 'none'`. Quick intentionally omits the multi-step handoff. Late Night currently opts out on every route:
+In Standard and Full, each person privately receives this choice unless the pack explicitly sets `privateMoment: 'none'`. Quick intentionally omits the multi-step handoff. Late Night, Road Trip, Family, and Colleagues currently opt out on every route:
 
 - **DE:** „Denk an eine Frage, die du deinem Gegenüber später gerne stellen würdest. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
 - **EN:** “Think of one question you would like to ask the other person later. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
@@ -262,7 +263,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 | Q29 | Welche Form von Nähe fühlt sich gut an, auch wenn sie nirgendwohin führen muss? | What kind of closeness feels good even when it does not have to lead anywhere? |
 | Q30 | Welche romantische Initiative lässt dich wirklich gesehen fühlen? | What romantic initiative makes you feel truly seen? |
 | Q31 | Welche Reaktion hilft dir, wenn eure Wünsche gerade nicht übereinstimmen? | What kind of response helps when your wishes do not match in the moment? |
-| Q32 | Welche gute Nachricht oder kleine Freude möchtest du heute gemeinsam feiern? | What piece of good news or small joy would you like to celebrate together tonight? |
+| Q32 | Welches kleine Sinnesdetail dieses Abends – ein Blick, ein Geräusch, ein Geschmack oder etwas anderes – möchtest du in Erinnerung behalten? | What small sensory detail from tonight—a look, a sound, a taste, or something else—would you like to remember? |
 | Q33 | Welchen Wunsch würdest du gern teilen, wenn daraus keine Erwartung entsteht? | What wish would you like to share if it came with no expectation? |
 | Q34 | Wie sieht für dich ein schöner Ausklang nach einem besonders nahen Date aus? | What does a lovely ending to an especially close date look like to you? |
 | Q35 | Welche kleine neue Erfahrung würdest du bei einem nächsten Date gern teilen? | What small new experience would you enjoy sharing on a future date? |
@@ -388,7 +389,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 | Q06 | F | Worin bist du besser, als du dir selbst meistens zugestehst? | What are you better at than you usually give yourself credit for? |
 | Q07 | Q/S/F | Welche Eigenschaft ist dir in einer guten Freundschaft besonders wichtig? | What quality matters most to you in a good friendship? |
 | Q08 | S/F | Welche gute Nachricht aus deinem Leben verdient gerade etwas mehr Aufmerksamkeit – und warum? | What good news in your life deserves a little more attention right now, and why? |
-| Q09 | F | Bei welchem konkreten gemeinsamen Moment musstest du besonders ehrlich lachen? | During what specific moment together did you laugh most genuinely? |
+| Q09 | F | Wann hast du dich mit der anderen Person zuletzt besonders ungezwungen gefühlt – und was hat dazu beigetragen? | When did you last feel especially at ease with the other person, and what helped create that feeling? |
 | Q10 | Q/S/F | Welche konkrete Sache hat die andere Person einmal für dich getan – und welche Stärke von ihr wurde darin sichtbar? | What is one specific thing the other person once did for you, and what strength of theirs did it reveal? |
 | Q11 | S/F | Welche Seite von dir hat sich verändert, seit wir uns kennen? | What side of you has changed since we have known each other? |
 | Q12 | F | Über welchen Teil deines Lebens würdest du dir von befreundeten Menschen mehr neugierige Fragen wünschen? | What part of your life would you like your friends to ask more curious questions about? |
@@ -400,7 +401,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 | Q13 | Q/S/F | Welche Form von Unterstützung hilft dir wirklich? | What kind of support genuinely helps you? |
 | Q14 | S/F | Woran kann eine befreundete Person erkennen, ob du gerade Rat oder einfach Gesellschaft möchtest? | How can a friend tell whether you want advice or simply some company? |
 | Q15 | F | Was tut jemand konkret, wenn du dich in einem Gespräch wirklich gehört fühlst? | What does someone actually do that makes you feel truly heard in a conversation? |
-| Q16 | Q/S/F | Was wird an dir häufig missverstanden? | What do people often misunderstand about you? |
+| Q16 | Q/S/F | Woran merkst du, dass du in einer Freundschaft ganz du selbst sein kannst? | What tells you that you can be fully yourself in a friendship? |
 | Q17 | S/F | Welche Emotion kannst du unter befreundeten Menschen leicht zeigen, und welche eher nicht? | Which emotion can you show easily around friends, and which one is harder to show? |
 | Q18 | F | Wann hat eine befreundete Person zuletzt genau die richtige Nachfrage gestellt – und was hat sie bewirkt? | When did a friend last ask exactly the right follow-up question, and what difference did it make? |
 | Q19 | Q/S/F | Wann hattest du zuletzt das Gefühl, dass dir eine befreundete Person wirklich den Rücken stärkt? | When did you last feel that a friend truly had your back? |
@@ -536,7 +537,7 @@ The keys follow the existing pack structure: `neither` means both saved question
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q01 | S/F | Auf welchen konkreten Moment aus der letzten Zeit bist du still stolz – und warum? | What specific recent moment are you quietly proud of, and why? |
+| Q01 | S/F | Welche innere Veränderung an dir macht dich in letzter Zeit still stolz – und woran merkst du sie? | What inner change in yourself has made you quietly proud lately—and how do you notice it? |
 | Q02 | S/F | Welche Seite von dir wird selten gesehen, obwohl sie eigentlich kein Geheimnis ist? | What side of you is rarely seen even though it is not really a secret? |
 | Q03 | F | Welche konkrete Erfahrung kommt deinem Gefühl von Zuhause am nächsten? | What specific experience comes closest to your feeling of home? |
 | Q04 | S/F | Welche Wahrheit über dich selbst hast du erst spät verstanden? | What truth about yourself did you only come to understand later in life? |
@@ -823,3 +824,319 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 - Depending on the situation, safer sex includes testing, barriers, contraception, other protective measures, relevant agreements, and accessibility; pregnancy risk is not assumed universally.
 - Every question remains individually passable even after an earlier positive answer. Consent is not inferred from earlier answers, body language, or starting the pack.
 - A separate Austrian youth-protection, media-law, and privacy review remains required before public release; this question catalog is not legal approval.
+
+---
+
+## 11. ROAD TRIP
+
+**Editorial status:** Complete candidate; not registered or playable yet.
+**Goal:** A warm, playful conversation about the present journey, travel memories, preferences, and future possibilities for two people travelling together, regardless of relationship type.
+**Acts:** UNTERWEGS → GESCHICHTEN → HORIZONT
+**Duration:** Quick 15–20 min · Standard 30–45 min · Full 50–70 min
+**Default:** Quick
+**Private moment:** `none` on every route
+
+The pack does not assume romance, friendship, family, car ownership, international travel, a passport, a particular budget, or unrestricted mobility.
+
+### Mandatory road-safety contract
+
+If one participant is driving, only the passenger handles and reads the phone. The driver never looks at the display or takes the device. Quick is the only selectable route in that context, and it must not be described as distraction-free or certified safe. Standard and Full require a parked vehicle or a setting in which neither participant is responsible for driving.
+
+**DE pre-start copy**
+
+> Wenn eine Person fährt, bedient und liest ausschließlich die mitfahrende Person das Smartphone. Wer fährt, schaut weder auf das Display noch übernimmt das Gerät. Unterbrecht das Spiel sofort, sobald die Verkehrssituation Aufmerksamkeit verlangt. Ihr könnt jederzeit ohne Begründung pausieren oder aufhören. Wenn niemand das Smartphone sicher bedienen kann, spielt erst im geparkten Fahrzeug.
+
+**EN pre-start copy**
+
+> If one person is driving, only the passenger handles and reads the phone. The driver never looks at the screen or takes the device. Pause the game immediately whenever the road requires attention. Either of you may pause or stop at any time without giving a reason. If no passenger can operate the phone safely, play only after the vehicle is parked.
+
+When a participant is driving, the passenger additionally confirms device control and receives a persistent **Pause until safe / Pausieren, bis es sicher ist** action. Silence, an unfinished answer, or an ignored prompt is a safety pause rather than a Pass. Disable timers, countdowns, `PREDICT`, `NO THINKING`, simultaneous answers, eye-contact prompts, device handoffs, surprise audio, automatic progress, and any task involving the surroundings, navigation, music, photos, maps, or typing.
+
+### Curated routes
+
+- **Quick:** Q01–Q04 · Q13–Q16 · Q25–Q28
+- **Standard:** Q01–Q08 · Q13–Q20 · Q25–Q32
+- **Full:** Q01–Q36
+
+### Act I – UNTERWEGS / ON THE ROAD
+
+**DE:** „Kommt leicht ins Gespräch: über das Unterwegssein, kleine Vorlieben und spielerische Ideen. Niemand muss dafür etwas suchen, anschauen oder bedienen.“
+
+**EN:** “Ease into the conversation through the journey, small preferences, and playful ideas. Nobody needs to search for, look at, or operate anything.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S/F | Welcher kleine Teil des Unterwegsseins tut dir heute überraschend gut? | What small part of being on the road feels unexpectedly good today? |
+| Q02 | Q/S/F | Wenn diese Fahrt einen Soundtrack hätte: Welche Stimmung müsste er einfangen? | If this journey had a soundtrack, what mood would it need to capture? |
+| Q03 | Q/S/F | Welche Art von Zwischenstopp macht selbst eine gewöhnliche Strecke für dich besonders? | What kind of stop can make even an ordinary route feel special to you? |
+| Q04 | Q/S/F | Wenn diese Fahrt einen Filmtitel hätte, wie würde er lauten? | If this journey had a movie title, what would it be? |
+| Q05 | S/F | Welche Kleinigkeit trägst du gern dazu bei, damit gemeinsames Unterwegssein angenehm wird? | What small thing do you like to contribute to make travelling together enjoyable? |
+| Q06 | S/F | Was brauchst du unterwegs eher: Gespräche, Musik, Ruhe, Beobachten – oder eine Mischung daraus? | What do you tend to need on a journey: conversation, music, quiet, watching the world go by—or a mix? |
+| Q07 | S/F | Wenn diese Fahrt eine Komödie wäre: Welche harmlose Nebenhandlung würde darin vorkommen? | If this journey were a comedy, what harmless subplot would it include? |
+| Q08 | S/F | Welche unscheinbare Sache macht das Unterwegssein für dich spürbar angenehmer? | What easily overlooked thing makes being on the road noticeably better for you? |
+| Q09 | F | Welche Landschaft oder Art von Umgebung versetzt dich in Reisestimmung – auch ganz in der Nähe? | What kind of landscape or setting puts you in a travelling mood, even close to home? |
+| Q10 | F | Welche völlig unnötige Komfortfunktion dürfte in deinem erfundenen Reisefahrzeug nicht fehlen? | What completely unnecessary comfort feature would your imaginary travel vehicle need? |
+| Q11 | F | Wenn diese Fahrt eine Postkarte wäre: Welcher eine Satz stünde auf der Rückseite? | If this journey were a postcard, what one sentence would be written on the back? |
+| Q12 | F | Welchen unspektakulären Moment am Unterwegssein magst du besonders gern? | What unremarkable moment of a journey do you especially enjoy? |
+
+### Act II – GESCHICHTEN / STORIES
+
+**DE:** „Tauscht konkrete Erinnerungen und Reisegewohnheiten aus. Eine gute Geschichte darf klein sein; jede Frage darf warten.“
+
+**EN:** “Share specific memories and travel habits. A good story can be small, and every question can wait.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q13 | Q/S/F | Welche konkrete Erinnerung an eine Reise oder einen Ausflug bringt dich sofort zum Lächeln? | What specific memory from a journey or outing makes you smile straight away? |
+| Q14 | Q/S/F | Wann hat ein ungeplanter Moment eine Fahrt oder einen Ausflug besser gemacht als der ursprüngliche Plan? | When did an unplanned moment make a journey or outing better than the original plan? |
+| Q15 | Q/S/F | Was hast du unterwegs einmal über dich gelernt, das dir vorher nicht so klar war? | What did you once learn about yourself while travelling that had not been so clear before? |
+| Q16 | Q/S/F | Woran merkst du unterwegs, dass du eine Pause, Ruhe oder einen Planwechsel brauchst? | How do you notice that you need a break, some quiet, or a change of plan while travelling? |
+| Q17 | S/F | Welche Reiseerinnerung ist für dich vor allem wegen eines Menschen wertvoll? | What travel memory matters to you mainly because of a person who was part of it? |
+| Q18 | S/F | Welche Entscheidung triffst du unterwegs gern selbst, und welche gibst du lieber ab? | What decision do you like making yourself on a journey, and what would you rather leave to someone else? |
+| Q19 | S/F | Wann hat dir jemand unterwegs das Gefühl gegeben, gut aufgehoben zu sein – und was hat die Person konkret getan? | When did someone make you feel well looked after while travelling, and what did they specifically do? |
+| Q20 | S/F | Welche kleine Reisegewohnheit hast du von jemandem übernommen – und warum ist sie geblieben? | What small travel habit did you pick up from someone else, and why has it stayed with you? |
+| Q21 | F | Welche Reiseerfahrung klingt von außen unscheinbar, bedeutet dir aber viel? | What travel experience might sound unremarkable to others but means a great deal to you? |
+| Q22 | F | Was bedeutet „ankommen“ für dich – außer einen Ort zu erreichen? | What does “arriving” mean to you beyond reaching a place? |
+| Q23 | F | Welche Gewohnheit oder Seite von dir zeigt sich unterwegs stärker als im Alltag? | What habit or side of you shows up more strongly while travelling than in everyday life? |
+| Q24 | F | Welche Reiseerinnerung bedeutet dir heute etwas anderes als damals – und wodurch hat sich ihre Bedeutung verändert? | What travel memory means something different to you now than it did then, and what changed its meaning? |
+
+### Act III – HORIZONT / HORIZON
+
+**DE:** „Blickt auf mögliche nächste Wege und darauf, was gemeinsame Reisezeit wertvoll macht. Ein Wunsch ist keine Verabredung.“
+
+**EN:** “Look toward possible future journeys and what makes shared travel time meaningful. A wish is not a commitment.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q25 | Q/S/F | Welche Art von Ort oder Gegend würdest du gern einmal entdecken – ganz in der Nähe oder weiter weg? | What kind of place or area would you like to explore one day, close to home or farther away? |
+| Q26 | Q/S/F | Falls ihr wieder gemeinsam unterwegs seid: Welche Kleinigkeit würdest du gern genauso wiederholen? | If you travel together again, what small thing would you happily repeat exactly as it was? |
+| Q27 | Q/S/F | Bei welcher Reisevorliebe ist es für dich völlig in Ordnung, wenn ihr unterschiedlich seid? | Which travel preference is it completely fine for the two of you to differ on? |
+| Q28 | Q/S/F | Was möchtest du von dieser gemeinsamen Zeit in Erinnerung behalten? | What would you like to remember from this time together? |
+| Q29 | S/F | Welche Reiseidee reizt dich, auch wenn sie vielleicht nie umgesetzt wird? | What travel idea appeals to you even if it may never happen? |
+| Q30 | S/F | Was sollte eine gemeinsame Reiseplanung respektieren, damit sie sich für dich leicht und fair anfühlt? | What should shared travel planning respect so that it feels easy and fair to you? |
+| Q31 | S/F | Welche Art von Abenteuer passt gerade zu deinem Leben – klein, groß oder ganz alltäglich? | What kind of adventure suits your life right now—small, big, or entirely ordinary? |
+| Q32 | S/F | Wenn die andere Person auf einer künftigen Fahrt eine Sache auswählen dürfte: Welche würdest du ihr gern überlassen? | If the other person could choose one thing on a future journey, what would you happily leave to them? |
+| Q33 | F | Welche Sehnsucht verbindest du mit dem Unterwegssein? | What longing do you associate with being on the road? |
+| Q34 | F | Wie würdest du gern begleitet werden, wenn auf einer Reise etwas nicht nach Plan läuft? | How would you like someone to support you when something does not go to plan on a journey? |
+| Q35 | F | Welcher Seite von dir möchtest du auf einer zukünftigen Reise mehr Raum geben? | What side of yourself would you like to give more room on a future journey? |
+| Q36 | F | Was macht eine gemeinsame Reise für dich im Rückblick wirklich wertvoll? | Looking back, what makes a shared journey truly meaningful to you? |
+
+### Direct finales
+
+- **Quick DE:** „Gute Weiterreise. Lasst das Gespräch weiterlaufen – oder genießt einfach die Strecke.“
+- **Quick EN:** “Enjoy the rest of the journey. Let the conversation continue—or simply enjoy the road.”
+- **Standard DE:** „Wenn ihr möchtet, beendet die Runde mit je einem Satz: Etwas, das ich jetzt besser über dich verstehe, ist …“
+- **Standard EN:** “If you like, end the round with one sentence each: Something I understand better about you now is …”
+- **Full DE:** „Welche Antwort der anderen Person hat dich heute neugieriger gemacht – und was möchtest du dazu noch fragen?“
+- **Full EN:** “Which of the other person’s answers made you more curious today, and what would you like to ask next?”
+
+Quick ends directly. Standard uses **FINALE** and Full may use **FRAGE 37 / QUESTION 37**, but neither enters saved-question branches. Every optional reflection has an equally prominent End action.
+
+---
+
+## 12. FAMILY
+
+**Editorial status:** Complete candidate; not registered or playable yet.
+**Goal:** Help two adults who understand each other as family see each other beyond fixed roles, exchange useful knowledge about support and boundaries, and choose what their relationship may look like next.
+**Acts:** ALLTAG → ROLLEN → GESTALTEN
+**Duration:** Quick 15–25 min · Standard 30–50 min · Full 55–85 min
+**Default:** Standard
+**Private moment:** `none` on every route
+
+Family includes family of origin, adoptive and blended family, relatives by partnership, and chosen family. The pack does not assume biological relation, a shared household or childhood, current closeness, harmony, parenthood, or a wish to reconcile. It is not family therapy, mediation, or an assessment of family functioning.
+
+### Required introduction
+
+**DE**
+
+> FAMILY ist für zwei erwachsene Menschen, die einander als Familie verstehen – biologisch, rechtlich, angeheiratet, adoptiert oder selbst gewählt. Das Spiel setzt weder Nähe noch eine gemeinsame Kindheit oder den Wunsch voraus, etwas zu klären. Jede Frage darf ohne Begründung ausgelassen und das Gespräch jederzeit beendet werden. Es geht nicht um eine richtige Version eurer Familie, sondern darum, einander zuzuhören.
+
+**EN**
+
+> FAMILY is for two adults who understand each other as family—through biology, law, partnership, adoption, or choice. The game does not assume closeness, a shared childhood, or a wish to resolve anything. Either person may pass on any question without explanation and end the conversation at any time. There is no single correct version of your family; the purpose is to listen to each other.
+
+### Curated routes
+
+- **Quick:** Q01, Q02, Q04, Q05 · Q13–Q16 · Q25, Q27, Q32, Q36
+- **Standard:** Q01–Q06, Q08, Q11 · Q13–Q20 · Q25–Q29, Q31, Q32, Q36
+- **Full:** Q01–Q36
+
+### Act I – ALLTAG / EVERYDAY
+
+**DE:** „Beginnt mit kleinen Geschichten und Alltagsdetails, die zu eurer eigenen Version von Familie gehören. Eine lange gemeinsame Vergangenheit ist hilfreich, aber nicht nötig. Unterschiedliche Erinnerungen dürfen nebeneinanderstehen; ihr sucht keine richtige Version.“
+
+**EN:** “Begin with small stories and everyday details that belong to your own version of family. A long shared history can help, but it is not required. Different memories may stand side by side; you are not looking for one correct version.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S/F | Welche kleine Sache verbindet dich im Alltag mit der anderen Person, auch wenn ihr nicht am selben Ort lebt? | What small thing connects you to the other person in everyday life, even if you do not live in the same place? |
+| Q02 | Q/S/F | Welche kleine Geschichte über euch fühlt sich für dich unverwechselbar nach Familie an? | What small story about the two of you feels unmistakably like family to you? |
+| Q03 | S/F | Welche Alltagssituation zeigt besonders gut, worin ihr euch ähnelt oder unterscheidet? | What everyday situation best shows how you are alike or different? |
+| Q04 | Q/S/F | Welchen kleinen Teil deines heutigen Alltags möchtest du der anderen Person näherbringen? | What small part of your life today would you like the other person to know better? |
+| Q05 | Q/S/F | Welches Essen, Ritual oder Ereignis gehört für dich zu eurer persönlichen Version von Familie? | What food, ritual, or occasion belongs to your personal version of family? |
+| Q06 | S/F | Welcher Satz, Ausdruck oder Witz hat zwischen euch eine ganz eigene Bedeutung bekommen? | What phrase, expression, or little joke has taken on a meaning of its own between you? |
+| Q07 | F | Welche alltägliche Form von Fürsorge wird in Familien leicht übersehen, obwohl sie dir etwas bedeutet? | What everyday form of care is easily overlooked in families even though it matters to you? |
+| Q08 | S/F | Welcher kleine Moment hat dir zuletzt eine neue Seite der anderen Person gezeigt? | What small recent moment showed you a new side of the other person? |
+| Q09 | F | Welche Familiengeschichte sollte weiterleben, auch wenn verschiedene Menschen sie unterschiedlich erzählen – und warum? | Which family story deserves to live on even if different people tell it differently, and why? |
+| Q10 | F | Welche Tradition würdest du gern anpassen oder neu erfinden, damit sie heute zu den beteiligten Menschen passt? | Which tradition would you like to adapt or reinvent so it fits the people involved today? |
+| Q11 | S/F | Bei welchem alltäglichen Anlass – etwa Kochen, Autofahren, Spazieren oder Nachrichten schreiben – redet ihr besonders leicht miteinander? | During what everyday activity—such as cooking, driving, walking, or messaging—do the two of you find it easiest to talk? |
+| Q12 | F | Was macht eine Verbindung für dich zu Familie – unabhängig davon, ob sie biologisch, rechtlich oder selbst gewählt ist? | What makes a connection family to you, regardless of whether it is biological, legal, or chosen? |
+
+### Act II – ROLLEN / ROLES
+
+**DE:** „Schaut jetzt auf Rollen, Unterstützung und Veränderung. Hört zu, ohne die andere Person einzuordnen oder für sie zu entscheiden.“
+
+**EN:** “Now look at roles, support, and change. Listen without defining the other person or deciding for them.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q13 | Q/S/F | Welche Stärke bringst du in familiäre Beziehungen oft ein, ohne dass sie ausdrücklich benannt wird? | What strength do you often bring to family relationships without it being named? |
+| Q14 | Q/S/F | Woran darf die andere Person erkennen, ob du gerade Unterstützung von ihr oder lieber Freiraum möchtest? | How can the other person tell whether you want their support or would prefer some space? |
+| Q15 | Q/S/F | Welche Veränderung an dir möchtest du in deiner Familie sichtbarer machen? | What change in yourself would you like to make more visible within your family? |
+| Q16 | Q/S/F | Welche Seite der anderen Person kennst du außerhalb ihrer gewohnten Familienrolle noch zu wenig? | What side of the other person do you know least outside their usual family role? |
+| Q17 | S/F | Welche Rolle wird dir in Familien schnell zugeschrieben – und wie gut passt sie heute noch? | What role do people tend to assign you in families, and how well does it still fit? |
+| Q18 | S/F | Was bedeutet für dich, für Familie da zu sein, ohne dich selbst zu übergehen? | What does being there for family mean to you without neglecting yourself? |
+| Q19 | S/F | Welche Form von Hilfe möchtest du lieber angeboten bekommen, als dass sie einfach übernommen wird? | What kind of help would you rather be offered than have someone simply take over? |
+| Q20 | S/F | Was sollte die andere Person über deine Art wissen, Familienmitgliedern Zuneigung zu zeigen? | What should the other person know about how you show affection in family relationships? |
+| Q21 | F | Bei welcher persönlichen Veränderung wünschst du dir von Menschen in deiner Familie eher Verständnis als Bewertung? | For what personal change would you prefer understanding from family rather than evaluation? |
+| Q22 | F | Welche unausgesprochene Erwartung in Familien würdest du lieber als offene Frage behandeln? | What unspoken expectation in families would you rather treat as an open question? |
+| Q23 | F | Bei welcher familiären Aufgabe oder Verantwortung möchtest du, dass gefragt wird, statt automatisch mit dir zu rechnen? | With what family task or responsibility would you like people to ask rather than automatically count on you? |
+| Q24 | F | Welche Erfahrung hat deine Vorstellung davon geprägt, wie Familie dich unterstützen sollte? | What experience has shaped your idea of how family should support you? |
+
+### Act III – GESTALTEN / SHAPING
+
+**DE:** „Zum Schluss geht es um Wertschätzung, Grenzen und eine frei gewählte Zukunft. Nähe kann auch bedeuten, Freiraum und Unterschiede zu respektieren.“
+
+**EN:** “The final act is about appreciation, boundaries, and a freely chosen future. Closeness can also mean respecting space and difference.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q25 | Q/S/F | Welche konkrete Stärke der anderen Person möchtest du heute würdigen – und woran zeigt sie sich? | What specific strength of the other person would you like to appreciate today, and what behavior shows it? |
+| Q26 | S/F | Wofür möchtest du der anderen Person danken, ohne daraus eine Verpflichtung für die Zukunft zu machen? | What would you like to thank the other person for without turning it into an obligation for the future? |
+| Q27 | Q/S/F | Welche Grenze hilft dir, dass sich familiäre Nähe freiwillig und gut anfühlt? | What boundary helps family closeness feel voluntary and good to you? |
+| Q28 | S/F | Welches kleine gemeinsame Ritual würdest du gern ausprobieren, ohne dass es zur Pflicht wird? | What small shared ritual would you like to try without turning it into an obligation? |
+| Q29 | S/F | Wie soll die andere Person auf ein ehrliches Nein von dir reagieren? | How would you like the other person to respond to an honest no from you? |
+| Q30 | F | Welche Entscheidung möchtest du selbst treffen dürfen, auch wenn Familie dazu eine Meinung hat? | What decision do you want to be free to make for yourself even when family has an opinion about it? |
+| Q31 | S/F | Welche Form von Kontakt fühlt sich für dich verlässlich an, ohne häufig sein zu müssen? | What kind of contact feels dependable to you without needing to be frequent? |
+| Q32 | Q/S/F | Wie soll sich eure Beziehung im nächsten Jahr anfühlen, ohne vorauszusetzen, dass sie enger werden muss? | What would you like your relationship to feel like over the next year without assuming it has to become closer? |
+| Q33 | F | Welche alte Familienregel möchtest du bewusst prüfen, statt sie automatisch weiterzuführen? | What old family rule would you like to examine consciously rather than carry forward automatically? |
+| Q34 | F | Was möchtest du der anderen Person künftig eher direkt sagen, statt zu hoffen, dass Familie es einfach weiß? | What would you rather tell the other person directly in future instead of hoping family should simply know? |
+| Q35 | F | Welche Frage sollte man in Familien öfter stellen, bevor jemand hilft, urteilt oder plant? | What question should people in families ask more often before helping, judging, or making plans? |
+| Q36 | Q/S/F | Was wünschst du der anderen Person für ihren nächsten Lebensabschnitt, ohne ihr einen Weg vorzugeben? | What do you wish for the other person's next chapter without choosing their path for them? |
+
+### Direct finale
+
+Quick ends after Q36 without another prompt. Standard uses **FINALE** and Full uses **FRAGE 37 / QUESTION 37** for this optional closer:
+
+**DE:** „Ihr könnt hier enden – oder noch eine freiwillige Frage nehmen: Was soll in eurer Art, Familie zu sein, künftig mehr Platz haben?“
+
+**EN:** “You can end here—or take one optional final question: What would you like your way of being family to make more room for in the future?”
+
+The End action remains equally prominent. Nobody is asked to agree, reciprocate, make a promise, or define the relationship as close. `PREDICT` is disabled; `NO THINKING` is disabled in Acts II and III. The initial release does not use the deferred private-observation experiment documented during drafting.
+
+---
+
+## 13. COLLEAGUES
+
+**Editorial status:** Complete candidate; not registered or playable yet.
+**Goal:** Help two voluntarily participating colleagues understand practical working preferences without turning the conversation into an assessment, feedback interview, conflict intervention, or substitute for organizational responsibility.
+**Acts:** RHYTHMUS → ABSTIMMUNG → BEITRAG
+**Duration:** Quick 15–25 min · Standard 30–50 min
+**Default:** Quick
+**Private moment:** `none` on every route
+
+COLLEAGUES is designed for peers with no meaningful power over each other’s employment conditions. It must not be used between a manager and direct report, evaluator and evaluated person, or in another dependent working relationship. Formal equality is not enough when seniority, precarious employment, or control over future work makes refusal costly.
+
+The mode is not mandatory team building, onboarding, a performance review, a team diagnostic, mediation, an investigation, an HR interview, or a grievance channel. Do not name clients, cases, trade secrets, security details, personal records, active complaints, or confidential employer information. Do not solicit salary, health, protected characteristics, union activity, family status, disability, religion, political views, or sexual or romantic information. Answers are not recorded, scored, exported, or valid input to an employment decision.
+
+### Required introduction
+
+**DE**
+
+> Dieses Gespräch ist freiwillig und keine Bewertung. Ihr könnt jede Frage ohne Begründung überspringen oder jederzeit beenden. Sprecht nur über Arbeitsweisen und Erfahrungen, die ihr sicher teilen könnt; vertrauliche Informationen und konkrete Beschwerden gehören nicht in dieses Spiel. Keine Antwort ist eine Zusage, Aufgabe oder Grundlage für eine berufliche Entscheidung. Dieser Modus ist für möglichst gleichgestellte Personen gedacht – nicht für Vorgesetzte mit direkten Mitarbeitenden oder andere Abhängigkeitsverhältnisse.
+
+**EN**
+
+> This conversation is voluntary and is not an assessment. You may pass on any question without explanation or end at any time. Discuss only working preferences and experiences that are safe to share; confidential information and specific complaints do not belong in this game. No answer is a commitment, assignment, or valid basis for an employment decision. This mode is designed for people on as equal a footing as possible—not managers with direct reports or other dependent working relationships.
+
+The acknowledgement action says **Verstanden / I understand**, never **I agree**.
+
+### Curated routes
+
+- **Quick:** Q01, Q02, Q06, Q12 · Q13, Q15, Q18, Q24 · Q25, Q29, Q32, Q36
+- **Standard:** Q01–Q04, Q06, Q08, Q10, Q12 · Q13–Q16, Q18, Q20, Q22, Q24 · Q25–Q27, Q29, Q31, Q32, Q34, Q36
+- **Editorial reserve:** Q05, Q07, Q09, Q11 · Q17, Q19, Q21, Q23 · Q28, Q30, Q33, Q35
+
+The reserve belongs to the 36-question master bank but is not playable. A future extended route requires a separate product decision and user-session evidence; it must not appear merely to match other packs.
+
+### Act I – RHYTHMUS / RHYTHM
+
+**DE:** „Beginnt beim Arbeitsalltag, nicht bei Leistung: kleine gute Momente, Fokus, Kommunikation und Rhythmus. Ihr könnt allgemein oder hypothetisch antworten; Projekte, Organisationen und Namen müssen nicht genannt werden.“
+
+**EN:** “Begin with everyday work, not performance: small positive moments, focus, communication, and rhythm. You may answer generally or hypothetically; projects, organizations, and names do not need to be identified.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S | Welcher kleine Moment hat dir in letzter Zeit gezeigt: So arbeite ich gern? | What small recent moment made you think, “This is how I like to work”? |
+| Q02 | Q/S | Bei welcher Art von Aufgabe kommst du meist gut in deinen Arbeitsfluss? | What kind of task usually helps you settle into a good working flow? |
+| Q03 | S | Welche kleine Bedingung hilft dir beim Konzentrieren – zum Beispiel ein klares Ziel, Ruhe, eine Frist, eine kurze Abstimmung oder etwas anderes? | What small condition helps you focus—for example, a clear goal, quiet, a deadline, a brief check-in, or something else? |
+| Q04 | S | Woran merkst du, dass sich ein Arbeitstag für dich sinnvoll angefühlt hat – unabhängig davon, wie voll er war? | What tells you that a workday felt worthwhile, regardless of how busy it was? |
+| Q05 | Reserve | Welche Art von Beginn macht dir den Einstieg in eine gemeinsame Aufgabe leichter? | What kind of start makes it easier for you to enter a shared task? |
+| Q06 | Q/S | Wann passt für eine kurze Abstimmung bei dir eher eine Nachricht, ein Gespräch oder ein anderes Format? | For a brief check-in, when do you prefer a message, a conversation, or another format? |
+| Q07 | Reserve | Welche Information möchtest du zu Beginn einer Aufgabe lieber einmal zu viel als einmal zu wenig haben? | At the start of a task, what information would you rather receive once too often than once too little? |
+| Q08 | S | Wie viel Planung hilft dir, bevor du mit einer gemeinsamen Aufgabe beginnst? | How much planning helps you before starting a shared task? |
+| Q09 | Reserve | Welche Art von Pause hilft dir, mit einem frischen Blick zu einer Aufgabe zurückzukehren? | What kind of break helps you return to a task with a fresh perspective? |
+| Q10 | S | Wie möchtest du angesprochen werden, wenn etwas kurzfristig deine Aufmerksamkeit braucht? | How would you like someone to approach you when something needs your attention at short notice? |
+| Q11 | Reserve | Welche kleine Abstimmungsgewohnheit – etwa Zuständigkeit, Zeitpunkt oder nächsten Schritt zu benennen – macht Zusammenarbeit für dich leichter? | What small coordination habit—such as naming the owner, timing, or next step—makes collaboration easier for you? |
+| Q12 | Q/S | Was macht eine kurze Besprechung für dich wirklich nützlich? | What makes a short meeting genuinely useful to you? |
+
+### Act II – ABSTIMMUNG / COORDINATION
+
+**DE:** „Sprecht über Zusammenarbeit, nicht über konkrete andere Personen oder laufende Konflikte. Beschreibt, was euch hilft; niemand bewertet die Antwort oder muss eine Begründung liefern.“
+
+**EN:** “Discuss collaboration, not specific other people or active conflicts. Describe what helps you; nobody is evaluating the answer or owes an explanation.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q13 | Q/S | Was kann eine andere Person tun, damit für dich klar ist, dass dein Beitrag wirklich willkommen ist? | What can another person do to make it clear that your contribution is genuinely welcome? |
+| Q14 | S | Wenn eine gemeinsame Aufgabe unklar wird: Welche Frage bringt euch am ehesten wieder auf eine gemeinsame Linie? | When a shared task becomes unclear, what question is most likely to bring you back onto common ground? |
+| Q15 | Q/S | Was hilft dir, damit eine Meinungsverschiedenheit bei der Sache bleibt und nicht persönlich wird? | What helps a disagreement stay focused on the work rather than becoming personal? |
+| Q16 | S | Wenn du eine unfertige Idee teilst: Welche Reaktion hilft dir, sie weiterzuentwickeln? | When you share an unfinished idea, what kind of response helps you develop it further? |
+| Q17 | Reserve | Wie möchtest du darauf hingewiesen werden, wenn noch Kontext von dir fehlt, damit Nachfragen leicht bleibt? | How would you like someone to let you know when they still need context from you, so asking remains easy? |
+| Q18 | Q/S | Wie möchtest du signalisieren, dass du gerade keine zusätzliche Aufgabe übernehmen kannst, ohne dich rechtfertigen zu müssen? | How would you like to signal that you cannot take on another task right now without having to justify it? |
+| Q19 | Reserve | Wenn du ein Arbeitsproblem ansprichst: Wie soll die andere Person zuerst klären, ob du Zuhören, Fragen, Optionen oder praktische Hilfe möchtest? | When you raise a work problem, how should the other person first check whether you want listening, questions, options, or practical help? |
+| Q20 | S | Was macht Rückmeldung für dich nützlich, auch wenn du nicht alles davon übernimmst? | What makes feedback useful to you even when you decide not to use all of it? |
+| Q21 | Reserve | Welche Information bei einer Übergabe erspart dir unnötige Rückfragen? | What information in a handoff saves you from unnecessary follow-up questions? |
+| Q22 | S | Wie können zwei Menschen einer leiseren oder später entstehenden Perspektive Raum geben, ohne jemanden zum Sprechen zu drängen? | How can two people make room for a quieter or later-forming perspective without pressuring anyone to speak? |
+| Q23 | Reserve | Was hilft dir, wenn sich Zuständigkeiten überschneiden, damit niemand stillschweigend etwas voraussetzen muss? | What helps when responsibilities overlap so that nobody has to rely on unspoken assumptions? |
+| Q24 | Q/S | Welche Grenze bei Erreichbarkeit oder Kommunikation hilft dir, verlässlich mit anderen zusammenzuarbeiten? | What boundary around availability or communication helps you collaborate reliably with others? |
+
+### Act III – BEITRAG / CONTRIBUTION
+
+**DE:** „Blickt auf Stärken, Lernen, Anerkennung und gesunde Grenzen. Aus keiner Antwort entsteht ein Versprechen, eine Aufgabe oder eine Beurteilung.“
+
+**EN:** “Look at strengths, learning, recognition, and healthy boundaries. No answer creates a promise, assignment, or assessment.”
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q25 | Q/S | Welche Art von Arbeit bringt eine Stärke von dir zum Vorschein, die du gern einsetzt? | What kind of work brings out a strength you enjoy using? |
+| Q26 | S | Falls es so etwas gibt: Wobei fragen dich Menschen bei der Arbeit manchmal um Rat, und was gefällt dir daran? | If anything comes to mind, what do people at work sometimes ask your advice about, and what do you enjoy about it? |
+| Q27 | S | Welche Arbeitsweise hast du von einer anderen Person übernommen, weil sie für dich gut funktioniert? | What way of working have you borrowed from someone else because it works well for you? |
+| Q28 | Reserve | Welche nützliche Lektion über Zusammenarbeit hättest du gern früher gekannt? | What useful lesson about collaboration do you wish you had learned earlier? |
+| Q29 | Q/S | Welche Form von Anerkennung fühlt sich für dich ehrlich und angenehm an – privat, öffentlich, kurz, konkret oder ganz anders? | What form of recognition feels sincere and comfortable to you—private, public, brief, specific, or something else? |
+| Q30 | Reserve | Welcher konkrete Beitrag einer anderen Person hat deine Arbeit zuletzt leichter oder klarer gemacht? Namen sind nicht nötig. | What specific contribution from someone else recently made your work easier or clearer? No names are needed. |
+| Q31 | S | Welche Art von Lernchance hilft dir zu wachsen, ohne dich dabei allein gelassen zu fühlen? | What kind of learning opportunity helps you grow without making you feel left on your own? |
+| Q32 | Q/S | Welchen Teil eines gesunden Arbeitsrhythmus möchtest du auch in intensiven Phasen schützen? | What part of a healthy working rhythm do you want to protect even during intense periods? |
+| Q33 | Reserve | Welche Art der Zusammenarbeit würdest du bei einer nächsten gemeinsamen Aufgabe gern wiederholen oder ausprobieren? | What way of working would you like to repeat or try on a future shared task? |
+| Q34 | S | Welches kleine Thema würdest du vor einer künftigen gemeinsamen Aufgabe gern früh klären, ohne es heute festlegen zu müssen? | What small point would you like to clarify early before a future shared task, without needing to settle it today? |
+| Q35 | Reserve | Was können Menschen in einem Team tun, damit frühes Nachfragen und Hilfeholen normal wirken? | What can people on a team do to make early questions and requests for help feel normal? |
+| Q36 | Q/S | Was soll die andere Person über eine gute Zusammenarbeit mit dir verstehen, ohne es als Verpflichtung zu lesen? | What would you like the other person to understand about working well with you without treating it as an obligation? |
+
+### Direct finales
+
+- **Quick DE:** „Ihr habt Arbeitsweisen sichtbar gemacht, ohne sie zu bewerten. Ihr könnt hier enden. Nichts aus diesem Gespräch ist eine Zusage.“
+- **Quick EN:** “You made working preferences more visible without evaluating them. You can end here. Nothing from this conversation is a commitment.”
+- **Standard DE:** „Wenn ihr möchtet, nennt nacheinander eine Arbeitspräferenz, die ihr heute klarer verstanden habt. Spiegeln reicht; ihr müsst nichts vereinbaren.“
+- **Standard EN:** “If you would like, take turns naming one working preference you understand more clearly now. Reflection is enough; you do not need to agree on anything.”
+
+COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PREDICT`, `NO THINKING`, simultaneous answers, countdowns, performance-oriented twists, and the timer by default. Use at most two sparse listening cues in a run; never frame turns, completion, or disclosure as a score.

@@ -85,8 +85,8 @@ const FRIENDS_ACTS = [
       },
       {
         id: 'friends-q09',
-        de: 'Bei welchem konkreten gemeinsamen Moment musstest du besonders ehrlich lachen?',
-        en: 'During what specific moment together did you laugh most genuinely?',
+        de: 'Wann hast du dich mit der anderen Person zuletzt besonders ungezwungen gefühlt – und was hat dazu beigetragen?',
+        en: 'When did you last feel especially at ease with the other person, and what helped create that feeling?',
       },
       {
         id: 'friends-q10',
@@ -138,8 +138,8 @@ const FRIENDS_ACTS = [
       },
       {
         id: 'friends-q16',
-        de: 'Was wird an dir häufig missverstanden?',
-        en: 'What do people often misunderstand about you?',
+        de: 'Woran merkst du, dass du in einer Freundschaft ganz du selbst sein kannst?',
+        en: 'What tells you that you can be fully yourself in a friendship?',
       },
       {
         id: 'friends-q17',
