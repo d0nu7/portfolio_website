@@ -4,9 +4,11 @@
 
 **Purpose:** Decisions, editorial work, and real-world validation that require RaDi as product owner. Technical implementation details remain in the [feature-request tracker](../reviews/feature-requests.md) and [refactoring roadmap](../engineering/refactoring-roadmap.md).
 
+Checkboxes reflect the repository state: `[x]` is complete or explicitly decided; `[ ]` still requires RaDi, real participants, external review, or a separately commissioned engineering effort.
+
 ## Recommended order
 
-1. Approve the legal/operator information and arrange professional review where appropriate.
+1. Decide whether to obtain professional Austrian legal review for the implemented legal text.
 2. Complete physical-device release checks for the current product.
 3. Decide whether offline support and a separate subdomain are actually wanted.
 4. Define and approve pack-specific private moments.
@@ -18,16 +20,19 @@
 
 ### FR-002 – Approve legal text
 
-Current state: bilingual Imprint and Privacy views are implemented, but the wording is not lawyer-certified.
+Current state: bilingual Imprint and Privacy views are implemented. RaDi's supplied operator details were incorporated on 16 August 2026, and the data-handling statements were checked against the current source. The wording is not lawyer-certified.
 
-- [ ] Confirm the operator name, postal address, and contact email.
-- [ ] Confirm whether any additional business, professional, trade, tax, or regulatory identifiers apply.
-- [ ] Confirm the actual Vercel plan, logging configuration, and any other processors used in production.
-- [ ] Verify that the statements about local storage, cookies, analytics, fonts, hosting, transfers, and retention match the deployed service.
+- [x] Confirm operator name, postal address, phone number, business email, and VAT ID.
+- [x] Replace the placeholder contact address with `radomir.dinic@radi.solutions`.
+- [x] Publish VAT ID `ATU77589478` and the supplied phone number in the Imprint.
+- [x] Keep bank details private because CLOSER takes no payments and the Imprint has no identified need for them.
+- [x] Confirm the current Vercel Hobby plan and keep provider-retention wording plan-neutral.
+- [x] Verify the current local-storage, answer-storage, cookie, analytics, font-hosting, hosting, transfer, and retention statements against the source.
+- [ ] Confirm whether any further business, professional, trade, or regulatory identifiers apply beyond the supplied VAT ID.
 - [ ] Decide whether professional Austrian legal review is required before broader release.
-- [ ] Record approval date and reviewer in the legal copy or release notes.
+- [ ] If reviewed, record approval date, reviewer, and required corrections in the legal copy or release notes.
 
-Done when: RaDi has approved the real operator facts, any required corrections are implemented in DE and EN, and the final risk decision is documented.
+Done when: RaDi has confirmed whether further identifiers apply, made an explicit legal-review decision, and any resulting corrections are implemented in DE and EN.
 
 ### Delivered items – physical-device sign-off
 
@@ -135,6 +140,15 @@ Done when: RaDi records **stay** or **move**, the canonical URL, migration behav
 
 This is intentionally not a small follow-up task. It touches every phase, consent gate, resume path, private handoff, route boundary, and finale.
 
+Technical groundwork already delivered:
+
+- [x] Include style identity in the run fingerprint.
+- [x] Add scoped phase-discriminated save validation.
+- [x] Checkpoint active timer segments across lifecycle boundaries.
+- [x] Keep non-game preferences in a separately versioned record.
+
+The remaining compiler/reducer integration is still a dedicated high-blast-radius effort.
+
 RaDi decisions before engineering starts:
 
 - [ ] Freeze the intended behavior for routes, private moments, finales, consent, Pass, and setup navigation for the duration of the refactor.
@@ -162,4 +176,6 @@ Done when: runtime behavior derives from one immutable run definition, transitio
 
 | Date | FR | Decision | Rationale | Follow-up owner |
 |---|---|---|---|---|
+| 2026-08-16 | FR-002 | Publish supplied phone number and VAT ID; use `radomir.dinic@radi.solutions` | Real operator details and existing identifiers belong in the Imprint | Complete |
+| 2026-08-16 | FR-002 | Do not publish IBAN/BIC | No payment flow or identified Imprint requirement justifies the additional public disclosure | Complete |
 |  |  |  |  |  |
