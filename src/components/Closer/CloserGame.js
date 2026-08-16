@@ -23,14 +23,15 @@ import {
   PRIVATE_MOMENT_EVENTS,
   Q37_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
+  QUESTION_EVENTS,
   SETUP_EVENTS,
   actIndexAt,
-  resolveQuestionDestination,
   transitionAct,
   transitionConsent,
   transitionFinale,
   transitionGlobal,
   transitionPrivateMoment,
+  transitionQuestion,
   transitionQ37,
   transitionSetup,
 } from '../../closer/engine/transitions';
@@ -391,11 +392,10 @@ export default function CloserGame() {
    * Everything between questions routes through here. Act breaks, the secret
    * question and the staged last question all interrupt on the way past.
    */
-  const goTo = useCallback(
-    (index, patch = {}) => {
-      const base = { ...s, ...patch };
-      const nextRun = compileRun(base.packId, base.routeId, base.modeId);
-      const destination = resolveQuestionDestination(nextRun, base, index);
+  const advanceQuestion = useCallback(
+    (eventType) => {
+      const destination = transitionQuestion(run, s, { type: eventType });
+      if (!destination) return;
 
       if (destination.effect === QUESTION_DESTINATION_EFFECTS.ACT_BREAK) {
         buzz([18, 60, 18]);
@@ -403,12 +403,12 @@ export default function CloserGame() {
         buzz(20);
       }
 
-      set({ ...patch, ...destination.patch });
+      set(destination.patch);
       if (destination.effect === QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION) {
-        enterQuestion(index, base);
+        enterQuestion(s.qIndex + 1, s);
       }
     },
-    [s, set, enterQuestion]
+    [run, s, set, enterQuestion]
   );
 
   const leaveQuestion = useCallback(() => {
@@ -416,8 +416,8 @@ export default function CloserGame() {
       setStep('deeper');
       return;
     }
-    goTo(s.qIndex + 1);
-  }, [twist, step, goTo, s.qIndex]);
+    advanceQuestion(QUESTION_EVENTS.ANSWER_DONE);
+  }, [twist, step, advanceQuestion]);
 
   // BOTH / NO THINKING lead-in count. The question itself is already on
   // screen for the whole count -- see the 'counting' step below -- so this
@@ -466,10 +466,10 @@ export default function CloserGame() {
     if (!justDeclined) return undefined;
     const id = setTimeout(() => {
       setJustDeclined(false);
-      goTo(s.qIndex + 1);
+      advanceQuestion(QUESTION_EVENTS.PASS);
     }, 1600);
     return () => clearTimeout(id);
-  }, [justDeclined, goTo, s.qIndex]);
+  }, [justDeclined, advanceQuestion]);
 
   // The standard closing sequence plays itself out one line at a time.
   // A declined consent gate uses a dedicated neutral ending instead.
@@ -1771,7 +1771,9 @@ export default function CloserGame() {
           <Button $accent={style.accent} onClick={() => setStep('deeperOpen')}>
             {t('deeperAsk')}
           </Button>
-          <TextButton onClick={() => goTo(s.qIndex + 1)}>{t('next')}</TextButton>
+          <TextButton onClick={() => advanceQuestion(QUESTION_EVENTS.ANSWER_DONE)}>
+            {t('next')}
+          </TextButton>
         </Foot>
       </>
     );
@@ -1782,7 +1784,9 @@ export default function CloserGame() {
           <Lede>{t('deeperOpen')}</Lede>
         </Body>
         <Foot>
-          <GhostButton onClick={() => goTo(s.qIndex + 1)}>{t('continue')}</GhostButton>
+          <GhostButton onClick={() => advanceQuestion(QUESTION_EVENTS.ANSWER_DONE)}>
+            {t('continue')}
+          </GhostButton>
         </Foot>
       </>
     );

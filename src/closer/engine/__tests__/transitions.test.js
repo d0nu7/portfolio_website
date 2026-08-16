@@ -9,6 +9,7 @@ import {
   PRIVATE_MOMENT_EVENTS,
   Q37_EVENTS,
   QUESTION_DESTINATION_EFFECTS,
+  QUESTION_EVENTS,
   SETUP_EVENTS,
   actIndexAt,
   resolveQuestionDestination,
@@ -17,6 +18,7 @@ import {
   transitionFinale,
   transitionGlobal,
   transitionPrivateMoment,
+  transitionQuestion,
   transitionQ37,
   transitionAct,
 } from '../transitions';
@@ -91,6 +93,28 @@ describe('question destination transition core', () => {
     const before = JSON.stringify(full);
     resolveQuestionDestination(full, current, 1);
     expect(JSON.stringify(full)).toBe(before);
+  });
+});
+
+describe('question completion transition core', () => {
+  const run = compileRun('classic', 'full', 'playful');
+
+  it.each([QUESTION_EVENTS.ANSWER_DONE, QUESTION_EVENTS.PASS])(
+    '%s advances through the same compiled destination rules',
+    (type) => {
+      const current = state({ phase: 'q', qIndex: 0 });
+      expect(transitionQuestion(run, current, { type }))
+        .toEqual(resolveQuestionDestination(run, current, 1));
+    }
+  );
+
+  it('rejects completion outside a question or for an unknown event', () => {
+    expect(transitionQuestion(run, state({ phase: 'act', qIndex: 0 }), {
+      type: QUESTION_EVENTS.ANSWER_DONE,
+    })).toBeNull();
+    expect(transitionQuestion(run, state({ phase: 'q', qIndex: 0 }), {
+      type: 'UNKNOWN',
+    })).toBeNull();
   });
 });
 

@@ -12,7 +12,7 @@ changes the next game event.
 
 Implementation status: setup/entry, consent, act-entry/break, private-moment
 capture/resolution, final-question reveal, Question 37, end-run reasons, and
-compiled question destinations, language, and timer changes are pure and characterized in
+compiled question destinations, question completion/pass, language, and timer changes are pure and characterized in
 `src/closer/engine/transitions.js`. Canonical state creation and discriminated
 save parsing are pure and characterized in `src/closer/engine/persistence.js`;
 the guarded browser-storage boundary is isolated in
@@ -56,8 +56,8 @@ preparation are pure; their screen-local effects remain in the controller.
 | Current phase | Event | Next phase | Required state/effect |
 |---|---|---|---|
 | `act` | `START_ACT` | `q` | Enter `pending`; first start records run fingerprint and `hasStarted=true` |
-| `q` | `ANSWER_DONE` | local deeper step or compiled destination | Deeper is screen-local; otherwise advance one route-relative index |
-| `q` | `PASS` | compiled destination after neutral flash | Same destination as answer completion; no penalty |
+| `q` | `ANSWER_DONE` | local deeper step or compiled destination | Deeper is screen-local; otherwise pure `transitionQuestion()` advances one route-relative index |
+| `q` | `PASS` | compiled destination after neutral flash | Pure `transitionQuestion()` uses the same destination as answer completion; no penalty |
 | compiled destination | ordinary index | `q` | Set `qIndex`; initialize question-local twist state |
 | compiled destination | act boundary | `break` | Set `breakAct`, `pending`; act-break feedback only |
 | compiled destination | eligible private-moment index | `secretPass1` | Only non-Quick runs with an enabled private moment not yet seen |

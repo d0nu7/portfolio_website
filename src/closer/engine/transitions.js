@@ -11,6 +11,11 @@ export const QUESTION_DESTINATION_EFFECTS = Object.freeze({
   ENTER_QUESTION: 'enter-question',
 });
 
+export const QUESTION_EVENTS = Object.freeze({
+  ANSWER_DONE: 'ANSWER_DONE',
+  PASS: 'PASS',
+});
+
 export const GLOBAL_EVENTS = Object.freeze({
   END_RUN: 'END_RUN',
   SET_LANGUAGE: 'SET_LANGUAGE',
@@ -380,4 +385,16 @@ export function resolveQuestionDestination(run, state, index) {
     patch: { phase: 'q', qIndex: index },
     effect: QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION,
   };
+}
+
+export function transitionQuestion(run, state, event) {
+  if (
+    state.phase !== 'q' ||
+    !event ||
+    (event.type !== QUESTION_EVENTS.ANSWER_DONE && event.type !== QUESTION_EVENTS.PASS) ||
+    !Number.isInteger(state.qIndex)
+  ) {
+    return null;
+  }
+  return resolveQuestionDestination(run, state, state.qIndex + 1);
 }

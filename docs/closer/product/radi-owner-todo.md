@@ -152,6 +152,7 @@ Technical groundwork already delivered:
 - [x] Isolate all CLOSER-owned `localStorage` keys and guarded read/write/delete behavior behind a tested infrastructure adapter.
 - [x] Move canonical restart and resume-state preparation into characterized pure engine functions while keeping UI effects outside them.
 - [x] Route supported language and timer changes through characterized global transition events.
+- [x] Route normal completion and free Pass through one characterized question-transition contract.
 
 The remaining transition-core integration is still a dedicated high-blast-radius effort.
 
