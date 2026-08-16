@@ -1709,17 +1709,32 @@ export default function CloserGame() {
 
   if (s.phase === 'ending') {
     const isFinal = beat === ENDING_BEATS.length - 1;
+    const advance = () => setBeat((b) => b + 1);
     return frame(
       <>
-        <Body $center onClick={() => !isFinal && setBeat((b) => b + 1)}>
+        {/*
+         * Refactoringplan Phase 4: vorher liess sich nur per Tap auf den
+         * Body vorspringen -- eine div hat kein Tastatur-Aequivalent, wer
+         * mit Tab/Enter unterwegs war, sass auf diesem Screen fest. Ein
+         * echter Button im Foot (siehe unten) deckt das jetzt ab; der Tap
+         * bleibt fuer Touch-Bedienung zusaetzlich erhalten.
+         *
+         * aria-live/aria-atomic auf diesem stabilen Wrapper, nicht auf dem
+         * per `key` neu gemounteten Question-Kind: eine Live-Region muss
+         * bestehen bleiben, damit ein Screenreader die Aenderung als
+         * Aenderung erkennt, statt sie zu verpassen.
+         */}
+        <Body $center onClick={() => !isFinal && advance()} aria-live="polite" aria-atomic="true">
           <Question key={beat}>{t(ENDING_BEATS[beat])}</Question>
         </Body>
         <Foot>
-          {isFinal && (
+          {isFinal ? (
             <>
               <Small style={{ textAlign: 'center', letterSpacing: '.3em' }}>CLOSER</Small>
               <TextButton onClick={restart}>{t('playAgain')}</TextButton>
             </>
+          ) : (
+            <TextButton onClick={advance}>{t('continue')}</TextButton>
           )}
         </Foot>
       </>,

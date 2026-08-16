@@ -304,10 +304,19 @@ const DEEP_ROUTES = {
 };
 
 // Introspective jewel tones -- deep indigo, deep violet, near-navy grey.
+/*
+ * Akt III war urspruenglich #2E3A59 -- rechnerisch 1,77:1 auf dem
+ * #08090c-Hintergrund, weit unter WCAG AA (4,5:1), obwohl TurnName und
+ * ActTitle diesen Wert direkt als Textfarbe zeigen (Iteration-9-Review,
+ * Refactoringplan Phase 4). #6580C4 ist derselbe Farbton (Skalierungsfaktor
+ * 2,2 auf den Originalwert), nur hell genug, um 5,16:1 zu erreichen -- die
+ * gedaempfte Wirkung von Akt III bleibt gegenueber Akt I/II erhalten, siehe
+ * src/constants/__tests__/contrast.test.js fuer die nachgerechnete Zahl.
+ */
 const DEEP_ACT_STYLE = [
   { accent: '#4A5EAA', chrome: 1, progress: 'full', glow: 0.24 },
   { accent: '#7B4B94', chrome: 0.5, progress: 'count', glow: 0.13 },
-  { accent: '#2E3A59', chrome: 0.22, progress: 'number', glow: 0.05 },
+  { accent: '#6580C4', chrome: 0.22, progress: 'number', glow: 0.05 },
 ];
 
 export {

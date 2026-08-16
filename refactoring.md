@@ -146,8 +146,8 @@ Status dieser Iteration:
 - [x] gemeinsames semantisches Dialog-/Bottom-Sheet mit Fokusfalle, Escape und Fokusrückgabe (`src/components/Closer/CloserDialog.js`; in Phase 0 vorgezogen, weil das Menü ohnehin darauf umgestellt werden musste – der Consent-Gate-Pfad nutzt es noch nicht)
 - [x] wiederholte Handoff-Screens extrahieren
 - [x] reine Setup-Screens extrahieren, ohne Flowlogik in Präsentationskomponenten zu verteilen
-- [ ] Text-/Aktionsfarben auf mindestens 4,5:1 bringen
-- [ ] Ending mit expliziter Tastaturaktion und stabiler Live-Region
+- [x] Text-/Aktionsfarben auf mindestens 4,5:1 bringen (+ :focus-visible-Ring; weitere Pack-Akzente unter 4,5:1 als Folgeposten, siehe Abschlusszusammenfassung)
+- [x] Ending mit expliziter Tastaturaktion und stabiler Live-Region
 - [ ] WebKit-Critical-Paths, Keyboard- und Accessibility-Smokes ergänzen
 
 ### Phase 5 – neue Spielmechanik

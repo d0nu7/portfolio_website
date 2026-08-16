@@ -10,6 +10,21 @@ import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
  * information is carried by colour alone.
  */
 
+export const CLOSER_BG = '#08090c';
+export const CLOSER_FG = [242, 243, 245];
+
+/*
+ * Kontrastschwelle fuer gedaempften Text (Refactoringplan Phase 4,
+ * Iteration-9-Code-Review, TextButton/Small/MenuTrigger).
+ *
+ * Alle drei standen vorher bei 0.30-0.38 Alpha auf #08090c -- 2,4:1 bis
+ * 3,3:1, deutlich unter WCAG AA (4,5:1 fuer normalen Text). 0.5 ergibt
+ * rechnerisch 4,90:1 (siehe src/constants/__tests__/contrast.test.js, das
+ * denselben Wert unabhaengig nachrechnet, damit eine spaetere Aenderung
+ * hier nicht stillschweigend wieder unter die Schwelle rutscht).
+ */
+export const MUTED_TEXT_ALPHA = 0.5;
+
 export const CloserGlobal = createGlobalStyle`
   html, body {
     background: #08090c;
@@ -210,7 +225,7 @@ export const Lede = styled.p`
 export const Small = styled.p`
   font-size: 1.3rem;
   line-height: 1.6;
-  color: rgba(242, 243, 245, 0.32);
+  color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
   margin: 0;
   white-space: pre-line;
 `;
@@ -333,6 +348,22 @@ const base = css`
     opacity: 0.3;
     cursor: default;
   }
+
+  /*
+   * Refactoringplan Phase 4: ein sichtbarer Fokusring fuer Tastatur- und
+   * Switch-Bedienung, unabhaengig vom jeweiligen Pack-Akzent (der teils
+   * selbst zu wenig Kontrast hat, um als Ring zu taugen). :focus-visible
+   * statt :focus, damit ein Antippen keinen Ring hinterlaesst -- nur
+   * echte Tastaturnavigation zeigt ihn. rgba(242, 243, 245, 0.85) liegt
+   * bei ueber 9:1 auf #08090c (siehe contrast.test.js).
+   */
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid rgba(242, 243, 245, 0.85);
+    outline-offset: 3px;
+  }
 `;
 
 /* 60px+ tall, full width: a comfortable one-handed target. */
@@ -371,7 +402,7 @@ export const TextButton = styled.button`
   border: none;
   background: none;
   padding: 1.4rem 0;
-  color: rgba(242, 243, 245, 0.38);
+  color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
   font-size: 1.3rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -403,7 +434,7 @@ export const MenuTrigger = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgba(242, 243, 245, 0.3);
+  color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
   font-size: 1.05rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -747,7 +778,7 @@ export const InstallDismiss = styled.button`
   min-height: 4.4rem;
   padding: 1rem 0.6rem;
   margin: -1rem -0.6rem;
-  color: rgba(242, 243, 245, 0.32);
+  color: rgba(242, 243, 245, ${MUTED_TEXT_ALPHA});
   font-size: 1.3rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
