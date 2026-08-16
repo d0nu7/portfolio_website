@@ -25,6 +25,7 @@ import {
 } from '../../constants/closer';
 import COPY from '../../constants/closerCopy';
 import ClosePulse from './ClosePulse';
+import CloserChoiceList from './CloserChoiceList';
 import CloserDialog from './CloserDialog';
 import CloserHandoff from './CloserHandoff';
 import CloserInstallHint from './CloserInstallHint';
@@ -1048,25 +1049,22 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Kicker $accent={A0}>{t('pickPack')}</Kicker>
-          {Object.values(PACKS).map((p) => (
-            <Choice
-              key={p.id}
-              $on={s.packId === p.id}
-              $accent={A0}
-              aria-pressed={s.packId === p.id}
-              onClick={() =>
+          <CloserChoiceList
+            accent={A0}
+            items={Object.values(PACKS).map((p) => ({
+              id: p.id,
+              selected: s.packId === p.id,
+              title: pick(p.title, lang),
+              meta: pick(p.meta, lang),
+              blurb: pick(p.blurb, lang),
+              onSelect: () =>
                 set({
                   packId: p.id,
                   routeId: p.defaultRouteId || DEFAULT_ROUTE_ID,
                   modeId: p.modes[0].id,
-                })
-              }
-            >
-              <strong>{pick(p.title, lang)}</strong>
-              <em>{pick(p.meta, lang)}</em>
-              <span>{pick(p.blurb, lang)}</span>
-            </Choice>
-          ))}
+                }),
+            }))}
+          />
         </Body>
         <Foot>
           <Button $accent={A0} onClick={() => set({ phase: 'duration' })}>
@@ -1087,19 +1085,17 @@ export default function CloserGame() {
       <>
         <Body $center>
           <Kicker $accent={A0}>{t('pickDuration')}</Kicker>
-          {Object.values(pack.routes).map((r) => (
-            <Choice
-              key={r.id}
-              $on={s.routeId === r.id}
-              $accent={A0}
-              aria-pressed={s.routeId === r.id}
-              onClick={() => set({ routeId: r.id })}
-            >
-              <strong>{pick(r.title, lang)}</strong>
-              <em>{pick(r.meta, lang)}</em>
-              <span>{pick(routeSubtitleFor(s.packId, r.id), lang)}</span>
-            </Choice>
-          ))}
+          <CloserChoiceList
+            accent={A0}
+            items={Object.values(pack.routes).map((r) => ({
+              id: r.id,
+              selected: s.routeId === r.id,
+              title: pick(r.title, lang),
+              meta: pick(r.meta, lang),
+              blurb: pick(routeSubtitleFor(s.packId, r.id), lang),
+              onSelect: () => set({ routeId: r.id }),
+            }))}
+          />
           <Toggle
             $on={s.timerEnabled}
             $accent={A0}
@@ -1148,19 +1144,17 @@ export default function CloserGame() {
           <Small style={{ textAlign: 'center', marginBottom: '2rem' }}>
             {pick(route.title, lang)} · {pick(routeSubtitleFor(s.packId, route.id), lang)}
           </Small>
-          {pack.modes.map((m) => (
-            <Choice
-              key={m.id}
-              $on={s.modeId === m.id}
-              $accent={A0}
-              aria-pressed={s.modeId === m.id}
-              onClick={() => set({ modeId: m.id })}
-            >
-              <strong>{pick(m.title, lang)}</strong>
-              <em>{pick(m.meta, lang)}</em>
-              <span>{pick(m.blurb, lang)}</span>
-            </Choice>
-          ))}
+          <CloserChoiceList
+            accent={A0}
+            items={pack.modes.map((m) => ({
+              id: m.id,
+              selected: s.modeId === m.id,
+              title: pick(m.title, lang),
+              meta: pick(m.meta, lang),
+              blurb: pick(m.blurb, lang),
+              onSelect: () => set({ modeId: m.id }),
+            }))}
+          />
         </Body>
         <Foot>
           <Button
