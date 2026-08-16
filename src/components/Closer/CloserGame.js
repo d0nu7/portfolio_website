@@ -82,6 +82,11 @@ const ENDING_BEATS = ['endingOne', 'endingTwo', 'endingThree', 'endingFour'];
 // Bump only when an older saved shape cannot be migrated safely.
 const STATE_VERSION = 1;
 const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
+// BUG-009: how often the active timer segment is folded into persisted
+// actElapsedMs while still running, bounding how much active time an
+// abrupt kill can lose. Small enough to keep that loss window tight,
+// large enough to avoid excessive re-renders/localStorage writes.
+const ACTIVE_SEGMENT_CHECKPOINT_MS = 5000;
 const VALID_PHASES = new Set([
   'players', 'pack', 'duration', 'mode', 'intro', 'act', 'break', 'q',
   'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
@@ -519,9 +524,12 @@ export default function CloserGame() {
 
   /*
    * Count active conversation time, not wall time. The clock runs only while
-   * a question is visible, the document is visible, and no dialog is open.
-   * `actElapsedMs` is persisted; the current segment intentionally is not,
-   * so a resumed game always starts paused.
+   * a question is visible, the document is visible, and no dialog or
+   * celebration is covering it. `actElapsedMs` is persisted; the in-memory
+   * segment start (`runningSince`) is not, so a resumed game always starts
+   * paused. The running segment is periodically checkpointed into
+   * `actElapsedMs` rather than only flushed when it ends -- see
+   * ACTIVE_SEGMENT_CHECKPOINT_MS and BUG-009.
    */
   const [runningSince, setRunningSince] = useState(null);
   const [visible, setVisible] = useState(true);
@@ -536,21 +544,43 @@ export default function CloserGame() {
   const timerRunning =
     s.timerEnabled && s.phase === 'q' && visible && !menuOpen && !pulseStage;
 
+  // BUG-009: the running segment previously folded into persisted
+  // actElapsedMs only when it ended (visibility loss, menu open, phase
+  // change). An abrupt kill in between -- a crash, an OS-level app-switcher
+  // kill, or a background suspension too fast for a normal React render to
+  // catch up with -- lost the whole unflushed segment. A short periodic
+  // checkpoint bounds that loss to a few seconds instead. `pagehide` is
+  // added on top because it can fire closer to an actual termination than
+  // `visibilitychange` guarantees on every platform; `beforeunload` is
+  // deliberately not used since it is unreliable on mobile and disables the
+  // back/forward cache. Both paths call the same idempotent flush, so
+  // whichever fires first "wins" and a later call commits zero extra time.
   useEffect(() => {
     if (!timerRunning) return undefined;
-    const startedAt = Date.now();
-    setRunningSince(startedAt);
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const segmentRef = { current: Date.now() };
+    setRunningSince(segmentRef.current);
+    const displayId = setInterval(() => setNow(Date.now()), 1000);
     setNow(Date.now());
-    return () => {
-      clearInterval(id);
-      setRunningSince(null);
-      // Fold the finished segment into persisted time with a functional
-      // update so cleanup never closes over a stale value.
-      const ran = Date.now() - startedAt;
+
+    const flush = () => {
+      const flushedAt = Date.now();
+      const ran = flushedAt - segmentRef.current;
+      segmentRef.current = flushedAt;
+      setRunningSince(flushedAt);
       if (ran > 0) {
         setS((prev) => ({ ...prev, actElapsedMs: (prev.actElapsedMs || 0) + ran }));
       }
+    };
+
+    const checkpointId = setInterval(flush, ACTIVE_SEGMENT_CHECKPOINT_MS);
+    window.addEventListener('pagehide', flush);
+
+    return () => {
+      clearInterval(displayId);
+      clearInterval(checkpointId);
+      window.removeEventListener('pagehide', flush);
+      flush();
+      setRunningSince(null);
     };
   }, [timerRunning]);
 

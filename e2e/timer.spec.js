@@ -1,5 +1,5 @@
 const { test, expect } = require('./fixtures');
-const { seedAndResume } = require('./helpers');
+const { seedAndResume, STORAGE_KEY } = require('./helpers');
 
 test.describe('Act timer', () => {
   test('timer off shows no elapsed indicator at all', async ({ page }) => {
@@ -91,5 +91,40 @@ test.describe('Act timer', () => {
     await page.waitForTimeout(2200);
     const second = await page.locator('text=/^\\d+:\\d\\d$/').textContent();
     expect(second).not.toBe(first);
+  });
+
+  /*
+   * BUG-009: the running segment previously folded into persisted
+   * actElapsedMs only when it ended (visibility loss, menu, phase change).
+   * An abrupt kill in between lost the whole unflushed segment. A periodic
+   * checkpoint now bounds that loss -- proven here by reading storage
+   * directly, without ever pausing the game, so the only way the stored
+   * value can move is the checkpoint itself, not the existing
+   * end-of-segment flush this file's other tests already cover.
+   */
+  test('the running segment is checkpointed into storage before it ends', async ({ page }) => {
+    await seedAndResume(page, { qIndex: 2, timerEnabled: true, actElapsedMs: 0 });
+
+    const readStoredElapsed = () =>
+      page.evaluate((key) => JSON.parse(window.localStorage.getItem(key)).actElapsedMs, STORAGE_KEY);
+
+    expect(await readStoredElapsed()).toBe(0);
+
+    // Comfortably past ACTIVE_SEGMENT_CHECKPOINT_MS (5000ms in
+    // CloserGame.js), with margin for scheduling jitter. The tab stays
+    // foregrounded and the question stays open throughout -- no pause, no
+    // reload -- so a nonzero value can only come from the periodic
+    // checkpoint, not the segment-end flush.
+    await page.waitForTimeout(5800);
+
+    const checkpointed = await readStoredElapsed();
+    expect(checkpointed).toBeGreaterThan(0);
+    // The visible clock should agree with what got persisted, not run
+    // ahead of it -- confirms the checkpoint and the display share the
+    // same segment reference rather than double-counting.
+    const clockText = await page.locator('text=/^\\d+:\\d\\d$/').textContent();
+    const [mm, ss] = clockText.split(':').map(Number);
+    const displayedMs = (mm * 60 + ss) * 1000;
+    expect(Math.abs(displayedMs - checkpointed)).toBeLessThanOrEqual(1500);
   });
 });

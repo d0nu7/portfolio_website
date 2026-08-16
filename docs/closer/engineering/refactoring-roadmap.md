@@ -124,7 +124,7 @@ Status: partially complete. This is the largest remaining engineering task.
 3. [ ] Move allowed transitions into a pure reducer or equivalent pure transition function.
 4. [ ] Keep rendering declarative: phase selectors decide which screen is shown; screen components emit events.
 5. [ ] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants.
-6. [ ] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible.
+6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
 7. [ ] Keep non-run preferences in a separately versioned preference record.
 8. [x] Pause active time while the page is hidden and request Wake Lock again after visibility returns.
 

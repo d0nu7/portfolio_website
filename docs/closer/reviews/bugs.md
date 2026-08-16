@@ -163,11 +163,13 @@ Recommended fix: parse a versioned envelope, validate the immutable run referenc
 
 ### BUG-009 – Active timer segment may be lost after abrupt termination
 
-**Status:** Open
+**Status:** Closed
 
-Background transitions are handled, but an abrupt process kill can still lose the current uncommitted active segment.
+Background transitions were handled, but an abrupt process kill could still lose the current uncommitted active segment: it was folded into persisted `actElapsedMs` only when the segment ended.
 
-Recommended fix: persist a small active-segment checkpoint on safe lifecycle boundaries and reconcile it conservatively during resume. Never count hidden/background time.
+The running segment is now checkpointed into `actElapsedMs` every `ACTIVE_SEGMENT_CHECKPOINT_MS` (5 s) while it runs, and immediately on `pagehide` (which can fire closer to an actual termination than `visibilitychange` guarantees on every platform). `beforeunload` is deliberately not used, since it is unreliable on mobile and disables the back/forward cache. The checkpoint and the end-of-segment flush share one idempotent function, so nothing is double-counted regardless of which fires first. No separate reconciliation step was needed: each checkpoint writes the already-merged value directly, so there is no pending state left to reconcile on resume. Hidden/background time still never counts, since the segment only exists while `timerRunning` (visible, in a question, no dialog or celebration) is true.
+
+Covered by a new E2E test that reads `localStorage` directly without ever pausing the game, so a nonzero `actElapsedMs` can only come from the periodic checkpoint, not the pre-existing end-of-segment flush; verified against the pre-fix code, where it fails.
 
 ## Device verification
 
