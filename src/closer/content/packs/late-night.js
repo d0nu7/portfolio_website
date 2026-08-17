@@ -318,6 +318,8 @@ const LATE_NIGHT_ACT_STYLE = [
 export const LATE_NIGHT_PACK = {
   id: 'late-night',
   discoverability: 'menu-unlock',
+  contentGroup: 'adult',
+  discoveryNoticeKey: 'lateNightMenuIntro',
   privateMoment: 'none',
   title: { de: 'LATE NIGHT', en: 'LATE NIGHT' },
   meta: { de: '18+ · Für zwei Erwachsene', en: '18+ · For two adults' },

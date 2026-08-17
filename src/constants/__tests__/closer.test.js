@@ -117,6 +117,10 @@ describe('PACKS registry', () => {
   it('registers LATE NIGHT for saved-game recovery while marking it for discreet discovery', () => {
     expect(getPack('late-night')).toBe(LATE_NIGHT_PACK);
     expect(PACKS['late-night']).toBe(LATE_NIGHT_PACK);
+    expect(LATE_NIGHT_PACK).toMatchObject({
+      contentGroup: 'adult',
+      discoveryNoticeKey: 'lateNightMenuIntro',
+    });
     expect(LATE_NIGHT_PACK.discoverability).toBe('menu-unlock');
     expect(LATE_NIGHT_PACK.privateMoment).toBe('none');
   });

@@ -1,14 +1,14 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 17 August 2026
-**Scope:** release candidate on `feature/closer-roadtrip-family-colleagues`
+**Scope:** current `main` release candidate after pack-library and final UI polish
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## Overall assessment
 
 CLOSER is a coherent, testable shared-device conversation product. The current branch completes the configurable pack library, makes Road Trip, Family, and Colleagues playable, and introduces a deliberately sparse pack-aware PLAYFUL rollout. The core experience still keeps the phone secondary: answers are spoken, Pass is free, timers never advance the game, and high-intensity or professionally sensitive packs do not inherit pressure actions.
 
-The branch is suitable for merge after its automated release gate. Public confidence still requires the separately owned deployment smoke test, physical Android/iOS checks, legal sign-off where noted, and moderated sessions. Those are release-validation tasks rather than incomplete repository implementation.
+The current main candidate passes its automated release gate. Public confidence still benefits from deployment smoke checks, broader physical Android/iOS coverage, and moderated sessions. RaDi has accepted the initial Android check and decided not to commission professional legal advice or offline support at the current stage; those decisions should be reopened only after a material product or risk change.
 
 ## Delivered in this branch
 
@@ -24,6 +24,12 @@ The branch is suitable for merge after its automated release gate. Public confid
 - Deep, Late Night, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
 - PLAYFUL assignments are deterministic question data. Quick contains at most three actions; all routes enforce spacing and per-act density ceilings.
 - Content revision 4 intentionally invalidates incompatible active saves after route/style behavior changed.
+- The start screen now points to optional packs in the Menu. Adult packs are
+  grouped in a collapsed 18+ section at the bottom, with Late Night and its
+  explanation kept together.
+- Milestone scenes use their original compact 2.1/2.5-second duration again;
+  only the final scene/overlay fade is slowed, avoiding the previous stretched
+  movement and hold phases.
 
 ## Product review by pack
 

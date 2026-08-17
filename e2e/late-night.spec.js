@@ -9,6 +9,9 @@ async function unlockLateNight(page, language = 'de') {
     .getByRole('button', { name: language === 'de' ? 'Zusätzliche Inhalte' : 'Additional content' })
     .click();
   await page
+    .getByText(language === 'de' ? 'Inhalte ab 18' : '18+ content', { exact: true })
+    .click();
+  await page
     .getByRole('button', { name: language === 'de' ? 'LATE NIGHT anzeigen' : 'Show LATE NIGHT' })
     .click();
   await page.getByRole('button', { name: language === 'de' ? 'Zurück' : 'Back' }).click();
@@ -109,6 +112,7 @@ test.describe('LATE NIGHT consent and runtime', () => {
     await expect(page.getByText('03 / 12')).toBeVisible();
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+    await page.getByText('Inhalte ab 18', { exact: true }).click();
     await expect(page.getByText(/LATE NIGHT bleibt .* verborgen/)).toBeVisible();
   });
 

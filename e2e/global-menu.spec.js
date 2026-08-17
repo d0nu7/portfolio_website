@@ -5,6 +5,7 @@ async function unlockLateNight(page) {
   await page.goto('/closer/');
   await page.getByRole('button', { name: 'Menü' }).click();
   await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+  await page.getByText('Inhalte ab 18', { exact: true }).click();
   await page.getByRole('button', { name: 'LATE NIGHT anzeigen' }).click();
   await page.getByRole('button', { name: 'Zurück' }).click();
   await page.getByRole('button', { name: 'Schließen' }).click();
@@ -23,6 +24,13 @@ test.describe('Global menu', () => {
 
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+    await expect(page.getByRole('button', { name: 'LATE NIGHT anzeigen' })).toHaveCount(0);
+    await page.getByText('Inhalte ab 18', { exact: true }).click();
+    const colleaguesBox = await page.getByRole('button', { name: /^COLLEAGUES/ }).boundingBox();
+    const lateNightBox = await page
+      .getByRole('button', { name: 'LATE NIGHT anzeigen' })
+      .boundingBox();
+    expect(lateNightBox.y).toBeGreaterThan(colleaguesBox.y);
     await page.getByRole('button', { name: 'LATE NIGHT anzeigen' }).click();
     await page.getByRole('button', { name: 'Zurück' }).click();
     await page.getByRole('button', { name: 'Schließen' }).click();
@@ -69,6 +77,15 @@ test.describe('Global menu', () => {
     await expect(imprint.getByText('+43 699 10867695')).toBeVisible();
     await expect(imprint.getByRole('link', { name: 'radomir.dinic@radi.solutions' }))
       .toHaveAttribute('href', 'mailto:radomir.dinic@radi.solutions');
+  });
+
+  test('the start screen points to optional packs in both languages', async ({ page }) => {
+    await page.goto('/closer/');
+    await expect(page.getByText('Weitere Gesprächsmodi kannst du jederzeit im Menü einblenden.'))
+      .toBeVisible();
+    await page.getByRole('button', { name: 'en', exact: true }).click();
+    await expect(page.getByText('You can show more conversation packs from the Menu at any time.'))
+      .toBeVisible();
   });
 
   test('STAY keeps an immediate exit and the global menu available', async ({ page }) => {

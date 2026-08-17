@@ -163,6 +163,10 @@ sign-off list above.
 
 - **FR-012 / TTS:** shelved indefinitely. The voice branch is not planned for merge and is not a constraint or dependency for FR-011. Reopening it requires a new explicit decision.
 - **FR-015 / Students and FH Salzburg:** remains a separate content feature requiring research, bilingual editorial review, an FH naming/endorsement decision, and a local content owner before implementation.
+- **FR-017 / Adult library:** the collapsed 18+ disclosure is implemented. Every future adult pack still needs its own visibility, eligibility, participation, safety, and release decision.
+- **FR-018 / POWER & TRUST:** commission and approve a dedicated evidence review before questions or implementation. Confirm or replace the working title after editorial review.
+- **FR-019 / SLOW BURN:** commission and approve a dedicated evidence review and physical-interaction design. This is intentionally touch-forward, but each increase in intensity still needs an immediate bilateral choice.
+- **FR-020 / Cross-pack evidence audit:** schedule after the focused adult reviews; Classic wording remains immutable.
 - **Pack/route/style terminology:** defer the persisted `modeId` rename to a separately approved save migration; FR-011 deliberately preserves it.
 
 ## Decision log
@@ -178,3 +182,5 @@ sign-off list above.
 | 2026-08-17 | Device check | Accept the initial Android phone smoke test | The first real-device check found no blocking issue; deeper platform/accessibility coverage can follow incrementally | RaDi |
 | 2026-08-17 | FR-009 | Do not add offline support or a service worker for now | Installability and fullscreen presentation are sufficient for the current product need | Complete |
 | 2026-08-17 | FR-005/006 | Split Private Moments and Replacement Question Pools into independent tasks | Both require substantial editorial decisions before safe implementation | Editorial tasks |
+| 2026-08-17 | FR-017 | Group every adult pack behind one collapsed 18+ disclosure and keep Late Night last | Explicit content stays discreet while its explanation remains adjacent and understandable | Complete for current library |
+| 2026-08-17 | FR-018/019 | Research POWER & TRUST and the touch-forward SLOW BURN as separate adult experiences | Their evidence, interaction, and participation requirements differ materially from Late Night | RaDi / editorial research |

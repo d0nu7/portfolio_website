@@ -97,6 +97,7 @@ test.describe('Setup Back navigation', () => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+    await page.getByText('Inhalte ab 18', { exact: true }).click();
     await page.getByRole('button', { name: 'LATE NIGHT anzeigen' }).click();
     await page.getByRole('button', { name: 'Zurück' }).click();
     await page.getByRole('button', { name: 'Schließen' }).click();

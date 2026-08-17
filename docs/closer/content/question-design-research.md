@@ -377,6 +377,9 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Replace prompts with unusually high pass rates or low conversation quality.
 4. Iteratively evaluate and refine pack-specific Quick, Standard, and Full routes.
 5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
+6. Run a dedicated evidence review before drafting POWER & TRUST, an adult conversation pack about consensual power exchange.
+7. Run a separate evidence and interaction-design review for SLOW BURN, an intentionally touch-forward adult experience with a three-act physical progression and brief bilateral choices at each increase in intensity.
+8. After those focused reviews, repeat the evidence and question audit across every research-informed pack while leaving Classic unchanged.
 
 ---
 

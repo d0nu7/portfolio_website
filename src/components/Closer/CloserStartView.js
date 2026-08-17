@@ -79,6 +79,7 @@ export default function CloserStartView({
             <Small style={{ textAlign: 'center' }}>{t('aboutMinutes')}</Small>
           </>
         )}
+        <Small style={{ textAlign: 'center' }}>{t('morePacksHint')}</Small>
       </Foot>
       <CloserInstallHint lang={lang} accent={accent} />
     </>

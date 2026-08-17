@@ -572,6 +572,49 @@ export const Toggle = styled.button`
   }
 `;
 
+export const Disclosure = styled.details`
+  margin-top: 1.6rem;
+  border: 1px solid rgba(242, 243, 245, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+
+  summary {
+    ${base};
+    min-height: 5.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    padding: 1.4rem 1.6rem;
+    color: rgba(242, 243, 245, 0.72);
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '+';
+    color: ${({ $accent }) => $accent};
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  &[open] summary::after {
+    content: '−';
+  }
+`;
+
+export const DisclosureBody = styled.div`
+  padding: 0 1.2rem 1.2rem;
+`;
+
 export const LangSwitch = styled.div`
   position: relative;
   z-index: 2;

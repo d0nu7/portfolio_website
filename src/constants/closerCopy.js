@@ -262,6 +262,11 @@ const COPY = {
     de: 'Wähle, welche Gesprächsmodi in deiner Auswahl sichtbar sind. Mindestens ein Modus bleibt aktiv.',
     en: 'Choose which conversation packs appear in your selector. At least one pack stays active.',
   },
+  adultContentGroup: { de: 'Inhalte ab 18', en: '18+ content' },
+  morePacksHint: {
+    de: 'Weitere Gesprächsmodi kannst du jederzeit im Menü einblenden.',
+    en: 'You can show more conversation packs from the Menu at any time.',
+  },
   lateNightShow: { de: 'LATE NIGHT anzeigen', en: 'Show LATE NIGHT' },
   lateNightHide: { de: 'LATE NIGHT wieder verbergen', en: 'Hide LATE NIGHT again' },
   lateNightShown: {

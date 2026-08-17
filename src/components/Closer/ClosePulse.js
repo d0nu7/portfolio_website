@@ -20,13 +20,13 @@ const STAGES = {
 
 const overlayLife = keyframes`
   0% { opacity: 0; }
-  10%, 78% { opacity: 1; }
+  10%, 56% { opacity: 1; }
   100% { opacity: 0; }
 `;
 
 const sceneArrive = keyframes`
   0% { opacity: 0; transform: translateY(18px) scale(0.9); }
-  18%, 76% { opacity: 1; transform: translateY(0) scale(1); }
+  18%, 52% { opacity: 1; transform: translateY(0) scale(1); }
   100% { opacity: 0; transform: translateY(-4px) scale(1.025); }
 `;
 
@@ -276,14 +276,11 @@ function MilestoneScene({ stage, accent, label, detail, duration, reducedMotion 
   );
 }
 
-// Roughly doubled from the original 2100/2500ms (RaDi, 2026-08-16): the
-// scene read as beautiful but disappeared before it had been taken in.
-// Every sub-animation (Halo/Thread/Sparks/LeftLight/RightLight/Scene/
-// Overlay) times itself as a percentage of this value via styled-
-// components' $duration prop, so raising it here scales the whole
-// composition proportionally -- no keyframe percentages need touching.
-const FULL_DURATION_MS = 4200;
-const FINALE_DURATION_MS = 5000;
+// Keep the original compact rhythm. Only the final scene/overlay fade is
+// intentionally slower: it begins about twice as early within the unchanged
+// duration instead of stretching every movement and hold phase.
+const FULL_DURATION_MS = 2100;
+const FINALE_DURATION_MS = 2500;
 const REDUCED_DURATION_MS = 1200;
 
 export default function ClosePulse({

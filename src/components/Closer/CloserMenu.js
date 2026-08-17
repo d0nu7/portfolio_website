@@ -5,6 +5,8 @@ import CloserDialog from './CloserDialog';
 import CloserLegal from './CloserLegal';
 import {
   Button,
+  Disclosure,
+  DisclosureBody,
   GhostButton,
   MenuTrigger,
   Small,
@@ -30,6 +32,50 @@ export default function CloserMenu({
   onDeleteLocalData,
   onSetPackVisible,
 }) {
+  const packs = Object.values(PACKS);
+  const ordinaryPacks = packs.filter((pack) => pack.contentGroup !== 'adult');
+  const adultPacks = packs
+    .filter((pack) => pack.contentGroup === 'adult')
+    .sort((a, b) => Number(a.id === 'late-night') - Number(b.id === 'late-night'));
+
+  const renderPackToggle = (pack) => {
+    const visible = preferences.visiblePackIds.includes(pack.id);
+    const lastVisible = visible && preferences.visiblePackIds.length === 1;
+    return (
+      <React.Fragment key={pack.id}>
+        {pack.discoveryNoticeKey ? (
+          <Small style={{ marginTop: '0.8rem', marginBottom: '0.8rem' }}>
+            {t(pack.discoveryNoticeKey)}
+          </Small>
+        ) : null}
+        <Toggle
+          $on={visible}
+          $accent={accent}
+          aria-pressed={visible}
+          aria-label={pack.id === 'late-night'
+            ? (visible ? t('lateNightHide') : t('lateNightShow'))
+            : undefined}
+          disabled={lastVisible}
+          onClick={() => onSetPackVisible(pack.id, !visible)}
+          style={{ marginTop: '0.8rem', marginBottom: '0.8rem' }}
+        >
+          <span>
+            {pick(pack.title, lang)}
+            <small style={{ display: 'block', marginTop: '0.2rem' }}>
+              {pick(pack.meta, lang)}
+            </small>
+          </span>
+          <b>{visible ? t('on') : t('off')}</b>
+        </Toggle>
+        {pack.id === 'late-night' ? (
+          <Small style={{ marginTop: '-0.35rem', marginBottom: '0.8rem' }}>
+            {visible ? t('lateNightShown') : t('lateNightHidden')}
+          </Small>
+        ) : null}
+      </React.Fragment>
+    );
+  };
+
   return (
     <>
       <MenuTrigger
@@ -130,41 +176,13 @@ export default function CloserMenu({
             {step === 'additional' && (
               <>
                 <Small style={{ marginBottom: '1.4rem' }}>{t('packLibraryIntro')}</Small>
-                {Object.values(PACKS).map((pack) => {
-                  const visible = preferences.visiblePackIds.includes(pack.id);
-                  const lastVisible = visible && preferences.visiblePackIds.length === 1;
-                  return (
-                    <React.Fragment key={pack.id}>
-                      <Toggle
-                        $on={visible}
-                        $accent={accent}
-                        aria-pressed={visible}
-                        aria-label={pack.id === 'late-night'
-                          ? (visible ? t('lateNightHide') : t('lateNightShow'))
-                          : undefined}
-                        disabled={lastVisible}
-                        onClick={() => onSetPackVisible(pack.id, !visible)}
-                        style={{ marginBottom: '0.8rem' }}
-                      >
-                        <span>
-                          {pick(pack.title, lang)}
-                          <small style={{ display: 'block', marginTop: '0.2rem' }}>
-                            {pick(pack.meta, lang)}
-                          </small>
-                        </span>
-                        <b>{visible ? t('on') : t('off')}</b>
-                      </Toggle>
-                      {pack.id === 'late-night' && (
-                        <Small style={{ marginTop: '-0.35rem', marginBottom: '0.8rem' }}>
-                          {visible ? t('lateNightShown') : t('lateNightHidden')}
-                        </Small>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-                <Small style={{ marginTop: '1rem', marginBottom: '1.6rem' }}>
-                  {t('lateNightMenuIntro')}
-                </Small>
+                {ordinaryPacks.map(renderPackToggle)}
+                {adultPacks.length ? (
+                  <Disclosure $accent={accent}>
+                    <summary>{t('adultContentGroup')}</summary>
+                    <DisclosureBody>{adultPacks.map(renderPackToggle)}</DisclosureBody>
+                  </Disclosure>
+                ) : null}
                 <TextButton style={{ width: '100%' }} onClick={() => onSetStep(null)}>
                   {t('goBack')}
                 </TextButton>

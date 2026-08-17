@@ -57,12 +57,11 @@ test.describe('CLOSER PULSE', () => {
     await expect(page.getByText('Das war’s.')).toBeVisible();
 
     // The first ending beat must not elapse behind the opaque celebration.
-    // 4400ms is comfortably inside the 5000ms finale duration; the 2000ms
-    // poll window afterward comfortably reaches past it.
-    await page.waitForTimeout(4400);
+    // The compact finale remains visible beyond its first ending beat.
+    await page.waitForTimeout(2200);
     await expect(pulse).toBeVisible();
     await expect(page.getByText('Das war’s.')).toBeVisible();
-    await expect(pulse).toHaveCount(0, { timeout: 2000 });
+    await expect(pulse).toHaveCount(0, { timeout: 1500 });
     await expect(page.getByText('Das war’s.')).toBeVisible();
   });
 
@@ -85,7 +84,7 @@ test.describe('CLOSER PULSE', () => {
     const box = await visual.boundingBox();
     expect(box).not.toBeNull();
     expect(box.width).toBeGreaterThanOrEqual(280);
-    await expect(pulse).toHaveAttribute('data-duration', '4200');
+    await expect(pulse).toHaveAttribute('data-duration', '2100');
     expect(await pulse.evaluate((node) => getComputedStyle(node).pointerEvents)).toBe('none');
 
     const scene = page.getByTestId('closer-frame-content');
@@ -141,8 +140,7 @@ test.describe('CLOSER PULSE', () => {
     await page.waitForTimeout(1300);
     await expect(scene.getByText('0:00', { exact: true })).toBeVisible();
 
-    // Poll window widened to reach past the 4200ms full-scene duration.
-    await expect(page.locator(PULSE)).toHaveCount(0, { timeout: 3500 });
+    await expect(page.locator(PULSE)).toHaveCount(0, { timeout: 1500 });
     await expect(scene.getByText('0:01', { exact: true })).toBeVisible({ timeout: 2500 });
   });
 

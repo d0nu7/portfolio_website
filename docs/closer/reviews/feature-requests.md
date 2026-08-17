@@ -49,7 +49,7 @@ Not verified from this environment: an actual browser console check for a CSP vi
 
 ### FR-004 – CLOSER milestone celebration
 
-**Status:** Delivered; physical-device validation remains required
+**Status:** Delivered; compact timing and slower final fade refined on 17 August 2026; physical-device validation remains required
 
 Replace the tiny pulse with a full, calm, pack-colored milestone scene that creates a brief sense of reward between acts while leaving conversation screens quiet.
 
@@ -228,6 +228,9 @@ Requirements:
   keyboard operation, and adequate touch target.
 - Late Night retains its neutral 18+ explanation and both independent consent
   gates. Making it visible is never consent to play it.
+- Adult packs are grouped behind a separate collapsed **18+ content**
+  disclosure at the bottom of the library. Their neutral explanation is shown
+  beside the relevant toggle rather than below unrelated packs.
 
 Recommended default: keep the currently public packs visible, keep Late Night
 hidden, and introduce Road Trip, Family, and Colleagues as hidden specialist
@@ -470,3 +473,112 @@ actions or no PLAYFUL style at all.
 - Moderated sessions compare the default and PLAYFUL styles for conversation
   quality, pressure, confusion, action fatigue, pass rate, and whether attention
   remains on the other person rather than the phone.
+
+### FR-017 – Extensible 18+ content library
+
+**Status:** Disclosure infrastructure delivered; additional adult packs are not yet implemented
+
+Keep adult material discreet without making it difficult to understand once a
+person intentionally opens it. The Additional content view places every pack
+whose metadata declares `contentGroup: 'adult'` in a collapsed **18+ content**
+section at the bottom. Late Night is therefore the final pack in the current
+list, with its explanation immediately adjacent to its toggle.
+
+Requirements for future adult packs:
+
+- Use pack metadata rather than pack-name conditionals to enter the adult group.
+- Keep the group collapsed by default and its packs absent from the ordinary
+  selector until deliberately enabled.
+- Treat visibility, adult eligibility, willingness to enter the experience,
+  and agreement to a particular real-world action as distinct states.
+- Give every adult pack its own neutral purpose and participation contract.
+- Never store answers, body preferences, fantasies, consent choices, or sexual
+  history.
+- Reopen the legal/youth-protection review decision before public release,
+  because broader explicit content materially changes the product-risk profile.
+
+Done when: future adult packs can join the disclosure through metadata, the
+group remains keyboard/screen-reader accessible at 320 px, and every pack passes
+its own participation, content, and release review.
+
+### FR-018 – POWER & TRUST adult pack research
+
+**Status:** Proposed research and editorial task; no questions approved
+
+Working title: **POWER & TRUST**. This is an original conversation pack about
+consensual power exchange, dominance/submission preferences, negotiation,
+safewords, stopping, check-ins, and aftercare. It must not imitate, quote, or use
+the branding of *Fifty Shades of Grey*.
+
+Before drafting questions, run a dedicated literature review covering consensual
+BDSM and power-exchange communication, consent negotiation, stigma and minority
+stress, risk frameworks and their limitations, safewords/check-ins, aftercare,
+and indicators of coercion or unsafe power imbalance. Separate peer-reviewed
+findings from community practice and clinical or popular claims.
+
+Editorial contract:
+
+- Adults only; do not present intoxication, coercion, or hazardous practices as
+  valid consent or as instructions.
+- Do not use punishment, score, countdown, prediction, or partner-test mechanics.
+- Questions may explore roles and desires but never assign a role or make an
+  answer proof of permission.
+- Do not assume prior experience, exclusivity, a specific body, gender,
+  orientation, relationship, or wish to act.
+- Entry and escalation use independent opt-ins and a neutral direct ending.
+
+Done when: the literature map, claim limits, bilingual 36-question candidate
+bank, route/intensity proposal, safety matrix, and moderated pilot protocol have
+been reviewed separately. Implementation starts only after explicit RaDi
+approval.
+
+### FR-019 – SLOW BURN touch-forward adult experience
+
+**Status:** Proposed research, interaction-design, and editorial task; no steps approved
+
+Working title: **SLOW BURN**. Unlike the conversation-only Late Night pack, this
+is deliberately a physical, touch-forward experience for two participating
+adults. The three acts may progress from atmosphere and non-intimate touch to
+more sensual or erotic touch, kissing, and body-specific preferences. It may be
+research-informed, but the product must not promise, score, or claim to cause
+arousal.
+
+The dedicated review must cover responsive and spontaneous desire, excitation
+and inhibition, sexual communication, sensate-focus principles and limitations,
+touch and ongoing consent, body image and trauma-informed practice,
+gender/orientation/body inclusion, and the evidential limits of tantra-related
+claims. Medical, therapeutic, spiritual, community, and commercial sources must
+not be treated as equivalent evidence.
+
+Interaction contract:
+
+- Both adults knowingly choose a touch-based mode and confirm that intention
+  independently before it starts.
+- Each new category or increase in intensity uses a brief bilateral choice such
+  as **Yes / Adjust / Next**, without turning the flow into repeated legal copy.
+- The experience may give concrete, tasteful touch or kissing invitations and
+  may ask where or how touch feels good. It must also make “not there”, “not
+  now”, “different”, Pause, and End equally immediate.
+- Agreement to enter the mode is not a blanket agreement to every later action;
+  a changed answer takes effect immediately and needs no explanation.
+- No step assumes a particular anatomy, ability, orientation, relationship
+  structure, experience level, or desired endpoint.
+- Answers, chosen body areas, adjustments, and consent states are transient and
+  never persisted.
+
+Done when: the evidence review and non-claims, complete three-act interaction
+map, bilingual copy, consent-state model, accessibility review, and moderated
+pilot protocol are approved. Implementation starts only after explicit RaDi
+approval.
+
+### FR-020 – Cross-pack evidence and question audit
+
+**Status:** Proposed after the two focused adult-content reviews
+
+Repeat the evidence-review method across every research-informed pack without
+altering the immutable Classic questions. Recheck construct fit, intensity
+curves, duplicates, translation equivalence, inclusivity, pressure risks,
+duration assumptions, and whether newer publications materially change any
+editorial rationale. Preserve a dated source/claim map and file individual
+content changes as separately reviewable proposals rather than silently editing
+the authoritative catalog.
