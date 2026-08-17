@@ -2,6 +2,8 @@ import {
   ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
+  PLAYFUL_TWISTS,
+  PLAYFUL_BLURB,
 } from '../shared';
 
 /* ======================================================================
@@ -46,6 +48,7 @@ const COUPLES_ACTS = [
         id: 'couples-q03',
         de: 'Welches Alltagsritual möchtest du unbedingt behalten?',
         en: 'What everyday ritual in your relationship would you really like to keep?',
+        twist: 'nothinking',
       },
       {
         id: 'couples-q04',
@@ -76,6 +79,7 @@ const COUPLES_ACTS = [
         id: 'couples-q09',
         de: 'Welche kleine Gewohnheit zwischen euch fühlt sich für dich nach Zuhause an?',
         en: 'What small habit between you feels like home to you?',
+        twist: 'both',
       },
       {
         id: 'couples-q10',
@@ -206,6 +210,7 @@ const COUPLES_ACTS = [
         id: 'couples-q29',
         de: 'Welche neue gemeinsame Erfahrung würdet ihr im nächsten Monat gern ausprobieren?',
         en: 'What new experience would the two of you like to try in the next month?',
+        twist: 'predict',
       },
       {
         id: 'couples-q30',
@@ -270,6 +275,13 @@ const COUPLES_MODES = [
     meta: { de: 'Ruhig und ehrlich', en: 'Calm and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
     twists: DEEPER_AND_STAY,
+  },
+  {
+    id: 'playful',
+    title: { de: 'PLAYFUL', en: 'PLAYFUL' },
+    meta: { de: 'Leicht und positiv', en: 'Light and positive' },
+    blurb: PLAYFUL_BLURB,
+    twists: PLAYFUL_TWISTS,
   },
 ];
 

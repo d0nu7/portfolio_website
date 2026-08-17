@@ -1,9 +1,14 @@
 import { parseSaved } from '../engine/persistence';
+import { normalizeVisiblePackIds } from '../content';
 
 export const GAME_STORAGE_KEY = 'closer:v1';
-export const PREFERENCES_STORAGE_KEY = 'closer:preferences:v1';
+export const PREFERENCES_STORAGE_KEY = 'closer:preferences:v2';
+export const LEGACY_PREFERENCES_STORAGE_KEY = 'closer:preferences:v1';
 export const INSTALL_HINT_DISMISS_KEY = 'closer:installHintDismissed';
-export const DEFAULT_PREFERENCES = Object.freeze({ lateNightVisible: false });
+export const DEFAULT_PREFERENCES = Object.freeze({
+  version: 2,
+  visiblePackIds: Object.freeze(normalizeVisiblePackIds()),
+});
 
 export function getBrowserStorage(browser) {
   try {
@@ -48,8 +53,17 @@ export function clearSavedGame(storage) {
 export function loadPreferences(storage) {
   if (!storage) return DEFAULT_PREFERENCES;
   try {
-    const parsed = JSON.parse(storage.getItem(PREFERENCES_STORAGE_KEY) || '{}');
-    return { lateNightVisible: parsed?.lateNightVisible === true };
+    const current = storage.getItem(PREFERENCES_STORAGE_KEY);
+    if (current) {
+      const parsed = JSON.parse(current);
+      return { version: 2, visiblePackIds: normalizeVisiblePackIds(parsed?.visiblePackIds) };
+    }
+
+    const legacy = JSON.parse(storage.getItem(LEGACY_PREFERENCES_STORAGE_KEY) || '{}');
+    const migrated = legacy?.lateNightVisible === true
+      ? [...normalizeVisiblePackIds(), 'late-night']
+      : undefined;
+    return { version: 2, visiblePackIds: normalizeVisiblePackIds(migrated) };
   } catch (error) {
     return DEFAULT_PREFERENCES;
   }
@@ -58,7 +72,10 @@ export function loadPreferences(storage) {
 export function persistPreferences(storage, preferences) {
   if (!storage) return;
   try {
-    storage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
+    storage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      visiblePackIds: normalizeVisiblePackIds(preferences?.visiblePackIds),
+    }));
   } catch (error) {
     // Preferences are optional; the game remains usable without storage.
   }
@@ -69,6 +86,7 @@ export function clearAllCloserData(storage) {
   try {
     storage.removeItem(GAME_STORAGE_KEY);
     storage.removeItem(PREFERENCES_STORAGE_KEY);
+    storage.removeItem(LEGACY_PREFERENCES_STORAGE_KEY);
     storage.removeItem(INSTALL_HINT_DISMISS_KEY);
   } catch (error) {
     // The UI still resets its in-memory state if storage is unavailable.

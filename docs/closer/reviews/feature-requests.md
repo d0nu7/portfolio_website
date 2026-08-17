@@ -30,7 +30,7 @@ Add bilingual Imprint and Privacy views to the global CLOSER menu so installed-P
 Requirements:
 
 - Include the real operator name, geographical address, and direct email contact. — Done; also added the VAT ID (`ATU77589478`) and phone number RaDi supplied, since Austrian ECG §5 requires both where they exist and the Imprint previously omitted them. The contact email was corrected from a placeholder (`contact@radi.solutions`, the general portfolio address) to RaDi's actual address for this business (`radomir.dinic@radi.solutions`).
-- Describe locally stored names/settings/progress, state that answers are not stored, and explain deletion. — Verified directly against the current code, not just the existing text's own claim: exactly three `localStorage` keys exist (`closer:v1` save state, `closer:preferences:v1` for the Late Night visibility preference, `closer:installHintDismissed`), no analytics/tracking dependency is in `package.json`, and `src/styles/fonts.css` confirms fonts are genuinely self-hosted via `@fontsource` rather than fetched from Google. The existing text's claims held up; no correction was needed here.
+- Describe locally stored names/settings/progress, state that answers are not stored, and explain deletion. — Verified directly against the current code: the game save uses `closer:v1`, current pack visibility uses `closer:preferences:v2`, the former `closer:preferences:v1` is read only for migration and removed by local-data deletion, and install-hint dismissal uses `closer:installHintDismissed`. No analytics/tracking dependency is present, and fonts are self-hosted via `@fontsource`.
 - Describe hosting/request-log processing accurately without claiming that the app controls a provider's exact retention policy. — The current wording is already deliberately hedged ("can depend on the Vercel service and settings applicable at that time") rather than naming a specific plan tier, so it doesn't need updating for the fact the project is on Vercel's free (Hobby) plan specifically — a plan-tier change wouldn't make the existing generic wording inaccurate, only a change to what Vercel processes at the platform level would.
 - Deliberately NOT added: bank details (IBAN/BIC), even though RaDi supplied them. Austrian ECG §5 does not require payment/banking details in an Imprint, CLOSER takes no payments, and publishing IBAN/BIC on a public legal page is an avoidable disclosure with no legal upside here — flagged rather than silently included or silently dropped.
 - State purposes, legal basis, recipients/transfers where applicable, retention logic, rights, and the Austrian data-protection complaint route. — Unchanged; already present in the existing draft.
@@ -169,7 +169,7 @@ requires a new explicit product decision and a separately scoped effort.
 
 ### FR-013 – Configurable pack library
 
-**Status:** Planned
+**Status:** Delivered on `feature/closer-roadtrip-family-colleagues`; deployment and physical-device validation remain
 
 Replace the one-off Late Night visibility control under **Menu → Additional
 content** with a checklist of every registered pack. A person can choose which
@@ -211,14 +211,13 @@ the first-run experience.
 
 ### FR-014 – Road Trip, Family, and Colleagues packs
 
-**Status:** In progress; editorial specification completed on this feature branch, registry/UI implementation and user-session validation pending
+**Status:** Delivered on `feature/closer-roadtrip-family-colleagues`; moderated user-session validation remains
 
-This feature branch completes the editorial deliverable for all three packs:
+This feature branch completes the editorial and implementation deliverables for all three packs:
 three bilingual 36-question master banks (108 questions total), curated route
-membership, context and safety guidance, and an explicit decision to use no
-private moment in any of the three packs. The packs are not yet registered or
-playable in the application. FR-013 remains the prerequisite for their UI
-integration, and moderated user sessions remain necessary before release timing
+membership, context and safety guidance, an explicit decision to use no
+private moment in any of the three packs, registry integration, direct finales,
+and hidden-by-default discovery through FR-013. Moderated user sessions remain necessary before release timing
 and route assumptions can be treated as validated.
 
 Add three research-informed packs after FR-013 provides a manageable library.
@@ -232,8 +231,7 @@ decision on whether any private moment genuinely improves the experience.
 - Arc: surroundings and playful hypotheticals → travel stories and preferences
   → future places, shared wishes, and what makes a journey memorable.
 - Suggested routes: Quick 12, Standard 24, Full 36.
-- Safety: the driver never handles or reads the phone. Setup must explicitly
-  assign control to a passenger or require the vehicle to be parked.
+- Safety: the first release is parked/no-participating-driver only. A moving-vehicle design requires a separate product and safety decision.
 - Avoid navigation tasks, competitive dares, distracting countdowns, and
   assumptions about budget, passports, mobility, or international travel.
 
@@ -328,7 +326,7 @@ outside an explicitly selected FH Salzburg context.
 
 ### FR-016 – Pack-aware PLAYFUL styles and actions
 
-**Status:** Planned; interaction design, editorial assignment, and user testing pending
+**Status:** Initial rollout delivered; broader pack pilots and moderated user testing remain
 
 Extend the interaction mechanics currently associated with CLASSIC PLAYFUL to
 other suitable packs. This must be a pack-aware content feature, not a global
@@ -440,7 +438,7 @@ actions or no PLAYFUL style at all.
 - Browser tests cover Pass before and during every action type, question-first
   countdown behavior, simultaneous-answer instructions, starter alternation,
   one-style screen skipping, DE/EN copy, reduced motion, and mobile layout.
-- Dedicated safety tests prove that Late Night, moving-vehicle Road Trip,
+- Dedicated safety tests prove that Late Night, Road Trip,
   Colleagues, and every individually excluded sensitive question cannot render
   an incompatible action even when an invalid style ID or saved state is
   supplied.

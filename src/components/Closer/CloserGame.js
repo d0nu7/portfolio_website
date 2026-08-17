@@ -504,17 +504,21 @@ export default function CloserGame() {
     setS(createInitialState({ lang: s.lang }));
   };
 
-  const setLateNightVisible = (visible) => {
-    const nextPreferences = { ...preferences, lateNightVisible: visible };
+  const setPackVisible = (packId, visible) => {
+    const visiblePackIds = visible
+      ? [...new Set([...preferences.visiblePackIds, packId])]
+      : preferences.visiblePackIds.filter((id) => id !== packId);
+    if (!visiblePackIds.length) return;
+    const nextPreferences = { ...preferences, visiblePackIds };
     setPreferences(nextPreferences);
     persistPreferences(getBrowserStorage(window), nextPreferences);
 
     // Hiding the pack during setup must not leave an invisible selection
     // active. An already-started or resumable LATE NIGHT run remains valid.
-    if (!visible && !s.hasStarted && s.packId === 'late-night') {
-      const fallback = getPack(DEFAULT_PACK_ID);
+    if (!visible && !s.hasStarted && s.packId === packId) {
+      const fallback = getPack(visiblePackIds[0] || DEFAULT_PACK_ID);
       set({
-        phase: s.phase === 'pack' ? 'pack' : 'start',
+        phase: ['duration', 'mode', 'intro'].includes(s.phase) ? 'pack' : s.phase,
         packId: fallback.id,
         routeId: fallback.defaultRouteId || DEFAULT_ROUTE_ID,
         modeId: fallback.modes[0].id,
@@ -556,7 +560,7 @@ export default function CloserGame() {
       }}
       onRestart={restart}
       onDeleteLocalData={handleDeleteLocalData}
-      onSetLateNightVisible={setLateNightVisible}
+      onSetPackVisible={setPackVisible}
     />
   );
 

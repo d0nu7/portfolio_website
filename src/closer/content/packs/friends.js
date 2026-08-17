@@ -2,6 +2,8 @@ import {
   ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
+  PLAYFUL_TWISTS,
+  PLAYFUL_BLURB,
   RESPONSE_CARDS,
 } from '../shared';
 
@@ -61,6 +63,7 @@ const FRIENDS_ACTS = [
         id: 'friends-q04',
         de: 'Welche konkrete Erinnerung steckt hinter einem Insider zwischen uns, der immer noch lustig ist?',
         en: 'What specific memory is behind an inside joke between us that is still funny?',
+        twist: 'both',
       },
       {
         id: 'friends-q05',
@@ -285,6 +288,13 @@ const FRIENDS_MODES = [
     meta: { de: 'Locker und ehrlich', en: 'Easygoing and honest' },
     blurb: ROUTE_NEUTRAL_BLURB,
     twists: DEEPER_AND_STAY,
+  },
+  {
+    id: 'playful',
+    title: { de: 'PLAYFUL', en: 'PLAYFUL' },
+    meta: { de: 'Locker mit kleinen Aktionen', en: 'Easygoing with small actions' },
+    blurb: PLAYFUL_BLURB,
+    twists: PLAYFUL_TWISTS,
   },
 ];
 

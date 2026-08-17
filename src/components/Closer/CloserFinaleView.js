@@ -179,7 +179,7 @@ export default function CloserFinaleView({
     );
   }
 
-  let prompt = pick(pack.q37.both, lang);
+  let prompt = pick(pack.q37.byRoute?.[route.id] || pack.q37.both, lang);
   if (privateMomentEnabled && !neither && !bothAsked && !noneHaveSecretQuestion) {
     prompt = pack.q37.one(lang, nameOf(pendingPlayer), nameOf(1 - pendingPlayer));
   }

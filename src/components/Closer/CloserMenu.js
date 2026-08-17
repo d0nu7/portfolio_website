@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { PACKS, pick } from '../../constants/closer';
 import CloserDialog from './CloserDialog';
 import CloserLegal from './CloserLegal';
 import {
@@ -27,7 +28,7 @@ export default function CloserMenu({
   onFinish,
   onRestart,
   onDeleteLocalData,
-  onSetLateNightVisible,
+  onSetPackVisible,
 }) {
   return (
     <>
@@ -128,13 +129,42 @@ export default function CloserMenu({
             )}
             {step === 'additional' && (
               <>
-                <Small style={{ marginBottom: '1.4rem' }}>{t('lateNightMenuIntro')}</Small>
-                <Small style={{ marginBottom: '2.4rem' }}>
-                  {preferences.lateNightVisible ? t('lateNightShown') : t('lateNightHidden')}
+                <Small style={{ marginBottom: '1.4rem' }}>{t('packLibraryIntro')}</Small>
+                {Object.values(PACKS).map((pack) => {
+                  const visible = preferences.visiblePackIds.includes(pack.id);
+                  const lastVisible = visible && preferences.visiblePackIds.length === 1;
+                  return (
+                    <React.Fragment key={pack.id}>
+                      <Toggle
+                        $on={visible}
+                        $accent={accent}
+                        aria-pressed={visible}
+                        aria-label={pack.id === 'late-night'
+                          ? (visible ? t('lateNightHide') : t('lateNightShow'))
+                          : undefined}
+                        disabled={lastVisible}
+                        onClick={() => onSetPackVisible(pack.id, !visible)}
+                        style={{ marginBottom: '0.8rem' }}
+                      >
+                        <span>
+                          {pick(pack.title, lang)}
+                          <small style={{ display: 'block', marginTop: '0.2rem' }}>
+                            {pick(pack.meta, lang)}
+                          </small>
+                        </span>
+                        <b>{visible ? t('on') : t('off')}</b>
+                      </Toggle>
+                      {pack.id === 'late-night' && (
+                        <Small style={{ marginTop: '-0.35rem', marginBottom: '0.8rem' }}>
+                          {visible ? t('lateNightShown') : t('lateNightHidden')}
+                        </Small>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+                <Small style={{ marginTop: '1rem', marginBottom: '1.6rem' }}>
+                  {t('lateNightMenuIntro')}
                 </Small>
-                <GhostButton onClick={() => onSetLateNightVisible(!preferences.lateNightVisible)}>
-                  {preferences.lateNightVisible ? t('lateNightHide') : t('lateNightShow')}
-                </GhostButton>
                 <TextButton style={{ width: '100%' }} onClick={() => onSetStep(null)}>
                   {t('goBack')}
                 </TextButton>

@@ -75,8 +75,7 @@ export default function CloserSetupView({
 
   if (state.phase === 'pack') {
     const items = Object.values(PACKS)
-      .filter((candidate) =>
-        candidate.discoverability !== 'menu-unlock' || preferences.lateNightVisible)
+      .filter((candidate) => preferences.visiblePackIds.includes(candidate.id))
       .map((candidate) => ({
         id: candidate.id,
         selected: state.packId === candidate.id,
@@ -87,6 +86,7 @@ export default function CloserSetupView({
           packId: candidate.id,
           routeId: candidate.defaultRouteId || DEFAULT_ROUTE_ID,
           modeId: candidate.modes[0].id,
+          timerEnabled: candidate.defaultTimerEnabled ?? state.timerEnabled,
         }),
       }));
 

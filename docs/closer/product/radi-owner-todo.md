@@ -1,6 +1,6 @@
 # CLOSER – RaDi owner TODO
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 
 **Purpose:** Decisions, editorial work, and real-world validation that require RaDi as product owner. Technical implementation details remain in the [feature-request tracker](../reviews/feature-requests.md) and [refactoring roadmap](../engineering/refactoring-roadmap.md).
 
@@ -11,9 +11,9 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 1. Decide whether to obtain professional Austrian legal review for the implemented legal text.
 2. Complete physical-device release checks for the current product.
 3. Decide whether offline support and a separate subdomain are actually wanted.
-4. Define and approve pack-specific private moments.
-5. Build and approve replacement-question pools.
-6. Run moderated sessions and recalibrate duration estimates.
+4. Run moderated sessions for the new specialist packs and PLAYFUL rollout.
+5. Define and approve pack-specific private moments.
+6. Build and approve replacement-question pools.
 
 ## Immediate release decisions
 
@@ -72,6 +72,9 @@ Editorial worksheet:
 | Deep |  |  |  |  |  |  |
 | Chaos |  |  |  |  |  |  |
 | Late Night | Readiness/consent only |  |  |  |  |  |
+| Road Trip | No | None |  |  |  | Yes |
+| Family | No | None |  |  |  | Yes |
+| Colleagues | No | None |  |  |  | Yes |
 
 Done when: each eligible pack has approved DE/EN copy, route placement, a decline path, and an explicit reveal/use rule.
 
@@ -93,7 +96,7 @@ Done when: implementation can select a valid replacement deterministically witho
 
 ### FR-008 – Run moderated sessions
 
-- [ ] Define participant groups for every relevant pack: new dates, established couples, friends, old friends, and adults opting into Late Night.
+- [ ] Define participant groups for every relevant pack: new dates, established couples, friends, old friends, adults opting into Late Night, varied adult families, travelling pairs in parked/public-transport settings, and voluntarily participating workplace peers.
 - [ ] Define a short moderator script and an explicit privacy boundary: do not record spoken answers.
 - [ ] Record only operational observations such as route chosen, elapsed time, prompts reached, passes, abandonment point, perceived pacing, and usability issues.
 - [ ] Include Quick, Standard, and Full where the pack supports them.
@@ -101,6 +104,7 @@ Done when: implementation can select a valid replacement deterministically witho
 - [ ] Separate content feedback from interface defects.
 - [ ] Calculate median completion time and a useful spread for each pack/route.
 - [ ] Update the question catalog’s duration ranges only after reviewing the evidence.
+- [ ] Compare default and PLAYFUL styles for pressure, action fatigue, attention to the phone, and conversation quality.
 
 Suggested minimum before changing a duration estimate: five completed sessions per pack/route, treated as an early pilot rather than a statistically representative study.
 
@@ -150,6 +154,7 @@ sign-off list above.
 ## Explicitly separate work
 
 - **FR-012 / TTS:** shelved indefinitely. The voice branch is not planned for merge and is not a constraint or dependency for FR-011. Reopening it requires a new explicit decision.
+- **FR-015 / Students and FH Salzburg:** remains a separate content feature requiring research, bilingual editorial review, an FH naming/endorsement decision, and a local content owner before implementation.
 - **Pack/route/style terminology:** defer the persisted `modeId` rename to a separately approved save migration; FR-011 deliberately preserves it.
 
 ## Decision log

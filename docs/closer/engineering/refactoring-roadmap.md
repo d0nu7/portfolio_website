@@ -40,6 +40,8 @@ src/closer/
       deep.js
       chaos.js
       late-night.js
+      specialist.js
+      specialist-question-data.js
     index.js
   engine/
     transitions.js             # pure phase transitions and named effects
@@ -118,7 +120,7 @@ Acceptance: lint, unit tests, static build, and complete Chromium E2E suite pass
 
 Status: complete.
 
-- [x] Assign explicit stable IDs to all 324 German/English questions.
+- [x] Assign explicit stable IDs to every implemented German/English question.
 - [x] Enforce exact pack, act, ID, route, and wording fidelity against the bilingual catalog.
 - [x] Deduplicate response-card objects.
 - [x] Model route durations numerically.
@@ -171,9 +173,9 @@ Acceptance:
 The final automated gate passed:
 
 1. `npm run lint`
-2. 332 unit, schema, transition, persistence, storage, and catalog tests
+2. complete unit, schema, transition, persistence, storage, and catalog suite
 3. production static export
-4. 149 mobile Chromium E2E scenarios
+4. complete mobile Chromium E2E suite
 5. console/page-error guard, keyboard, focus, reduced-motion, contrast, and 320–430 px layout coverage
 
 Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already creates a fresh build; `npm run test:e2e:run` is only appropriate after a verified current export.

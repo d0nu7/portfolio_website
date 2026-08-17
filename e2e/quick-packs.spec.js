@@ -48,7 +48,8 @@ test.describe('Quick pack flow', () => {
 
       await page.getByRole('button', { name: 'Weiter' }).click();
       await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toHaveCount(0);
-      await expect(page.getByRole('button', { name: /Weiter|Fertig/ })).toBeVisible();
+      await expect(page.getByRole('button', { name: /Weiter|Fertig|Lieber nicht/ }).first())
+        .toBeVisible();
     });
   }
 });

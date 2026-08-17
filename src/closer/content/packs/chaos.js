@@ -1,7 +1,7 @@
 import {
   ROUTE_PRESETS,
-  DEEPER_ONLY,
   ROUTE_NEUTRAL_BLURB,
+  PLAYFUL_TWISTS,
 } from '../shared';
 
 /* ======================================================================
@@ -44,6 +44,7 @@ const CHAOS_ACTS = [
         id: 'chaos-q02',
         de: 'Welche völlig unwichtige Meinung würdest du bis zum Äußersten verteidigen?',
         en: 'What utterly unimportant opinion would you defend forever?',
+        twist: 'predict',
       },
       {
         id: 'chaos-q03',
@@ -69,6 +70,7 @@ const CHAOS_ACTS = [
         id: 'chaos-q07',
         de: 'Erfindet gemeinsam eine harmlose Verschwörungstheorie darüber, warum einzelne Socken verschwinden.',
         en: 'Invent a harmless conspiracy theory together about why single socks disappear.',
+        twist: 'both',
       },
       {
         id: 'chaos-q08',
@@ -132,6 +134,7 @@ const CHAOS_ACTS = [
         id: 'chaos-q16',
         de: 'Erfindet gemeinsam das absurdeste Unternehmen, das überraschend funktionieren könnte.',
         en: 'Invent the most absurd business together that might actually work.',
+        twist: 'both',
       },
       {
         id: 'chaos-q17',
@@ -202,6 +205,7 @@ const CHAOS_ACTS = [
         id: 'chaos-q28',
         de: 'Welcher gemeinsame Plan ist so albern, dass er vielleicht großartig wäre?',
         en: 'What could you do together that sounds so silly it might be brilliant?',
+        twist: 'nothinking',
       },
       {
         id: 'chaos-q29',
@@ -270,7 +274,7 @@ const CHAOS_MODES = [
     title: { de: 'PLAYFUL', en: 'PLAYFUL' },
     meta: { de: 'Leicht und albern', en: 'Light and silly' },
     blurb: ROUTE_NEUTRAL_BLURB,
-    twists: DEEPER_ONLY,
+    twists: { ...PLAYFUL_TWISTS, stay: false },
   },
 ];
 

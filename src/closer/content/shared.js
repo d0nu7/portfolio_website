@@ -16,6 +16,11 @@ const NO_TWISTS = { predict: false, both: false, nothinking: false, deeper: fals
 // default on while assigning a first, sparse pass of twists.
 const DEEPER_AND_STAY = { predict: false, both: false, nothinking: false, deeper: true, stay: true };
 const DEEPER_ONLY = { predict: false, both: false, nothinking: false, deeper: true, stay: false };
+const PLAYFUL_TWISTS = { predict: true, both: true, nothinking: true, deeper: true, stay: true };
+const PLAYFUL_BLURB = {
+  de: 'Wenige, gezielt ausgewählte Aktionen – immer freiwillig und ohne Punkte.',
+  en: 'A few carefully selected actions—always optional and never scored.',
+};
 const ROUTE_NEUTRAL_BLURB = {
   de: 'Zurückhaltende Inszenierung, ausgewählte Route.',
   en: 'Understated presentation for your selected route.',
@@ -180,6 +185,8 @@ export {
   NO_TWISTS,
   DEEPER_AND_STAY,
   DEEPER_ONLY,
+  PLAYFUL_TWISTS,
+  PLAYFUL_BLURB,
   ROUTE_NEUTRAL_BLURB,
   RESPONSE_CARD_LABEL,
   RESPONSE_CARDS,

@@ -20,13 +20,14 @@ Product code and automated tests remain the technical source of truth for what t
 
 ## Current implementation summary
 
-- Nine catalog packs are implemented: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, and Late Night.
+- Twelve catalog packs are implemented: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, and Colleagues.
 - Late Night is available through a discreet menu preference while retaining independent per-session consent. The local regression gate passes; deployed and physical-device smoke tests remain.
-- The implemented packs contain 324 German/English questions with stable IDs and automated exact catalog-fidelity coverage. CLASSIC is editorially immutable and has dedicated fingerprint regression coverage in addition to exact catalog fidelity.
-- Road Trip, Family, and Colleagues are editorial candidates on the current feature branch, with 36 bilingual master questions and route, safety, and private-moment specifications each. They are not registered or playable yet. The combined editorial catalog now contains 12 packs and 432 questions; FR-013 and user-session validation remain prerequisites for release.
+- The implemented packs contain 432 German/English questions with stable IDs and automated exact catalog-fidelity coverage. CLASSIC is editorially immutable and has dedicated fingerprint regression coverage in addition to exact catalog fidelity.
+- The menu contains a versioned, persistent pack library. Mainstream packs remain visible by default; Late Night and the three specialist packs start hidden and can be enabled independently without turning visibility into consent.
+- Date Night, Couples, and Friends offer an optional pack-aware PLAYFUL style. Chaos uses the same sparse action contract in its existing PLAYFUL presentation. Sensitive and professional packs remain free of countdown, prediction, and simultaneous-answer pressure.
 - Quick, Standard, and Full are curated routes. Packs with one valid style skip the style screen.
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
-- Pack content is modularized under `src/closer/content/`; the compiled run still originates in `src/constants/closer.js` while the new pure transition core lives under `src/closer/engine/`.
+- Pack content is modularized under `src/closer/content/`; specialist question data is reproducibly generated from the authoritative catalog with `npm run content:generate`.
 - `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Persisted transitions, persistence parsing, browser storage, and phase presentation now have explicit tested boundaries.
 - FR-011 is complete: compiled run structure, pure persisted transitions, persistence/storage boundaries, and focused presentation components are in place. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
 - TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.

@@ -3,6 +3,7 @@ import {
   DEFAULT_PREFERENCES,
   GAME_STORAGE_KEY,
   INSTALL_HINT_DISMISS_KEY,
+  LEGACY_PREFERENCES_STORAGE_KEY,
   PREFERENCES_STORAGE_KEY,
   clearAllCloserData,
   clearSavedGame,
@@ -75,22 +76,48 @@ describe('CLOSER storage boundary', () => {
 
   it('normalizes, persists, and defaults preferences', () => {
     const storage = createStorage({
-      [PREFERENCES_STORAGE_KEY]: JSON.stringify({ lateNightVisible: true, ignored: true }),
+      [PREFERENCES_STORAGE_KEY]: JSON.stringify({
+        version: 2,
+        visiblePackIds: ['classic', 'late-night', 'unknown'],
+      }),
     });
-    expect(loadPreferences(storage)).toEqual({ lateNightVisible: true });
+    expect(loadPreferences(storage)).toEqual({
+      version: 2,
+      visiblePackIds: ['classic', 'late-night'],
+    });
 
-    persistPreferences(storage, { lateNightVisible: false });
+    persistPreferences(storage, { visiblePackIds: ['family'] });
     expect(JSON.parse(storage.valueFor(PREFERENCES_STORAGE_KEY))).toEqual({
-      lateNightVisible: false,
+      version: 2,
+      visiblePackIds: ['family'],
     });
     expect(loadPreferences(createStorage({ [PREFERENCES_STORAGE_KEY]: '{broken' })))
       .toBe(DEFAULT_PREFERENCES);
+  });
+
+  it('migrates the legacy Late Night preference without exposing new specialist packs', () => {
+    const storage = createStorage({
+      [LEGACY_PREFERENCES_STORAGE_KEY]: JSON.stringify({ lateNightVisible: true }),
+    });
+    const preferences = loadPreferences(storage);
+    expect(preferences.visiblePackIds).toContain('late-night');
+    expect(preferences.visiblePackIds).not.toContain('road-trip');
+    expect(preferences.visiblePackIds).not.toContain('family');
+    expect(preferences.visiblePackIds).not.toContain('colleagues');
+  });
+
+  it('never accepts an empty visible-pack list', () => {
+    const storage = createStorage({
+      [PREFERENCES_STORAGE_KEY]: JSON.stringify({ version: 2, visiblePackIds: [] }),
+    });
+    expect(loadPreferences(storage).visiblePackIds).toEqual(DEFAULT_PREFERENCES.visiblePackIds);
   });
 
   it('clears the game alone or every CLOSER-owned key', () => {
     const storage = createStorage({
       [GAME_STORAGE_KEY]: 'game',
       [PREFERENCES_STORAGE_KEY]: 'preferences',
+      [LEGACY_PREFERENCES_STORAGE_KEY]: 'legacy-preferences',
       [INSTALL_HINT_DISMISS_KEY]: 'hint',
       unrelated: 'keep',
     });
@@ -99,6 +126,7 @@ describe('CLOSER storage boundary', () => {
     expect(storage.valueFor(GAME_STORAGE_KEY)).toBeUndefined();
     clearAllCloserData(storage);
     expect(storage.valueFor(PREFERENCES_STORAGE_KEY)).toBeUndefined();
+    expect(storage.valueFor(LEGACY_PREFERENCES_STORAGE_KEY)).toBeUndefined();
     expect(storage.valueFor(INSTALL_HINT_DISMISS_KEY)).toBeUndefined();
     expect(storage.valueFor('unrelated')).toBe('keep');
   });

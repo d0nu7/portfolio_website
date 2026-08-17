@@ -7,6 +7,7 @@ import {
   getPack,
   getRoute,
 } from '../../constants/closer';
+import { isPackVisible, normalizeVisiblePackIds } from '../content';
 
 // Bump only when an older saved shape cannot be migrated safely.
 export const STATE_VERSION = 1;
@@ -59,12 +60,12 @@ export function createInitialState(options = {}) {
 }
 
 export function createRestartState(currentState = {}, preferences = {}) {
-  const hiddenLateNight =
-    currentState.packId === 'late-night' && preferences.lateNightVisible !== true;
+  const hiddenPack = !isPackVisible(preferences, currentState.packId);
+  const fallbackPackId = normalizeVisiblePackIds(preferences.visiblePackIds)[0] || DEFAULT_PACK_ID;
 
   return createInitialState({
     lang: currentState.lang,
-    packId: hiddenLateNight ? DEFAULT_PACK_ID : currentState.packId,
+    packId: hiddenPack ? fallbackPackId : currentState.packId,
     routeId: currentState.routeId,
     timerEnabled: currentState.timerEnabled,
   });

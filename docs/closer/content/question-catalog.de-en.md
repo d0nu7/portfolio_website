@@ -1,7 +1,7 @@
 # CLOSER – complete question catalog DE/EN
 
 **Updated:** 16 August 2026
-**Status:** Editorial content specification for implemented and candidate packs
+**Status:** Editorial source of truth for implemented packs
 **Scope:** 12 packs · 432 master questions · German and English · curated duration routes · pack-specific finales
 
 ---
@@ -9,7 +9,7 @@
 ## 1. Authoritative interpretation
 
 - A **pack/mode** determines *what* is asked. Nine packs are currently implemented: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, and `late-night`.
-- `road-trip`, `family`, and `colleagues` are complete editorial candidates on this branch. Their inclusion here reserves stable IDs and wording; it does not register them in the app or make them playable.
+- `road-trip`, `family`, and `colleagues` are implemented specialist packs. They start hidden in the configurable pack library until a user enables them.
 - A **style** only determines *how* the game is played, for example `CALM` or `PLAYFUL`. Styles do not own duplicate question lists.
 - Every pack has a master bank of **3 acts with 12 questions each**.
 - A stable implementation ID combines the pack and table ID, for example `first-date-q01`, `friends-q24`, or `late-night-q36`.
@@ -829,7 +829,7 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 
 ## 11. ROAD TRIP
 
-**Editorial status:** Complete candidate; not registered or playable yet.
+**Editorial status:** Implemented; physical-device and moderated-session validation remains.
 **Goal:** A warm, playful conversation about the present journey, travel memories, preferences, and future possibilities for two people travelling together, regardless of relationship type.
 **Acts:** UNTERWEGS → GESCHICHTEN → HORIZONT
 **Duration:** Quick 15–20 min · Standard 30–45 min · Full 50–70 min
@@ -840,17 +840,17 @@ The pack does not assume romance, friendship, family, car ownership, internation
 
 ### Mandatory road-safety contract
 
-If one participant is driving, only the passenger handles and reads the phone. The driver never looks at the display or takes the device. Quick is the only selectable route in that context, and it must not be described as distraction-free or certified safe. Standard and Full require a parked vehicle or a setting in which neither participant is responsible for driving.
+The initial release is available only in a parked vehicle or a setting in which neither participant is responsible for driving. A driver never handles or reads the phone. This conservative restriction may be revisited only through a dedicated safety design and real-world validation; no route is described as distraction-free or certified safe.
 
 **DE pre-start copy**
 
-> Wenn eine Person fährt, bedient und liest ausschließlich die mitfahrende Person das Smartphone. Wer fährt, schaut weder auf das Display noch übernimmt das Gerät. Unterbrecht das Spiel sofort, sobald die Verkehrssituation Aufmerksamkeit verlangt. Ihr könnt jederzeit ohne Begründung pausieren oder aufhören. Wenn niemand das Smartphone sicher bedienen kann, spielt erst im geparkten Fahrzeug.
+> Spielt diese Version nur im geparkten Fahrzeug oder wenn keine teilnehmende Person fährt. Wer fährt, bedient oder liest niemals das Smartphone. Unterbrecht das Spiel sofort, sobald die Umgebung Aufmerksamkeit verlangt. Ihr könnt jederzeit ohne Begründung pausieren oder aufhören.
 
 **EN pre-start copy**
 
-> If one person is driving, only the passenger handles and reads the phone. The driver never looks at the screen or takes the device. Pause the game immediately whenever the road requires attention. Either of you may pause or stop at any time without giving a reason. If no passenger can operate the phone safely, play only after the vehicle is parked.
+> Play this release only in a parked vehicle or when neither participant is driving. A driver must never handle or read the phone. Pause immediately whenever the surroundings require attention. Either of you may pause or stop at any time without giving a reason.
 
-When a participant is driving, the passenger additionally confirms device control and receives a persistent **Pause until safe / Pausieren, bis es sicher ist** action. Silence, an unfinished answer, or an ignored prompt is a safety pause rather than a Pass. Disable timers, countdowns, `PREDICT`, `NO THINKING`, simultaneous answers, eye-contact prompts, device handoffs, surprise audio, automatic progress, and any task involving the surroundings, navigation, music, photos, maps, or typing.
+The implementation contains no moving-vehicle route, countdown, prediction, simultaneous-answer action, eye-contact task, device handoff, surprise audio, automatic progress, or task involving navigation, music, photos, maps, or typing.
 
 ### Curated routes
 
@@ -936,7 +936,7 @@ Quick ends directly. Standard uses **FINALE** and Full may use **FRAGE 37 / QUES
 
 ## 12. FAMILY
 
-**Editorial status:** Complete candidate; not registered or playable yet.
+**Editorial status:** Implemented; physical-device and moderated-session validation remains.
 **Goal:** Help two adults who understand each other as family see each other beyond fixed roles, exchange useful knowledge about support and boundaries, and choose what their relationship may look like next.
 **Acts:** ALLTAG → ROLLEN → GESTALTEN
 **Duration:** Quick 15–25 min · Standard 30–50 min · Full 55–85 min
@@ -1038,7 +1038,7 @@ The End action remains equally prominent. Nobody is asked to agree, reciprocate,
 
 ## 13. COLLEAGUES
 
-**Editorial status:** Complete candidate; not registered or playable yet.
+**Editorial status:** Implemented; physical-device and moderated-session validation remains.
 **Goal:** Help two voluntarily participating colleagues understand practical working preferences without turning the conversation into an assessment, feedback interview, conflict intervention, or substitute for organizational responsibility.
 **Acts:** RHYTHMUS → ABSTIMMUNG → BEITRAG
 **Duration:** Quick 15–25 min · Standard 30–50 min

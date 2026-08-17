@@ -258,6 +258,10 @@ const COPY = {
     de: 'LATE NIGHT ist ein ausdrücklich sexueller Gesprächsmodus für zwei Erwachsene (18+). Er bleibt standardmäßig verborgen. Sichtbarkeit ersetzt keine Zustimmung: Vor dem Start und vor Akt II entscheiden beide Personen jeweils privat und unabhängig.',
     en: 'LATE NIGHT is an explicitly sexual conversation mode for two adults (18+). It stays hidden by default. Visibility is not consent: before starting and before Act II, both people decide privately and independently.',
   },
+  packLibraryIntro: {
+    de: 'Wähle, welche Gesprächsmodi in deiner Auswahl sichtbar sind. Mindestens ein Modus bleibt aktiv.',
+    en: 'Choose which conversation packs appear in your selector. At least one pack stays active.',
+  },
   lateNightShow: { de: 'LATE NIGHT anzeigen', en: 'Show LATE NIGHT' },
   lateNightHide: { de: 'LATE NIGHT wieder verbergen', en: 'Hide LATE NIGHT again' },
   lateNightShown: {

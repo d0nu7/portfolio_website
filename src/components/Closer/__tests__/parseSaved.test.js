@@ -56,7 +56,7 @@ describe('createInitialState', () => {
       phase: 'q',
       qIndex: 8,
       hasStarted: true,
-    }, { lateNightVisible: false });
+    }, { visiblePackIds: ['first-date'] });
 
     expect(state).toEqual(expect.objectContaining({
       phase: 'start',
@@ -75,16 +75,28 @@ describe('createInitialState', () => {
       packId: 'late-night',
       routeId: 'standard',
       timerEnabled: true,
-    }, { lateNightVisible: false });
+    }, { visiblePackIds: ['classic'] });
     const visible = createRestartState({
       lang: 'de',
       packId: 'late-night',
       routeId: 'standard',
       timerEnabled: true,
-    }, { lateNightVisible: true });
+    }, { visiblePackIds: ['late-night'] });
 
     expect(hidden.packId).toBe('classic');
     expect(visible.packId).toBe('late-night');
+  });
+
+  it('uses the first configured visible pack rather than assuming Classic is visible', () => {
+    const state = createRestartState({
+      lang: 'en',
+      packId: 'family',
+      routeId: 'quick',
+      timerEnabled: true,
+    }, { visiblePackIds: ['friends', 'road-trip'] });
+
+    expect(state.packId).toBe('friends');
+    expect(state.routeId).toBe('quick');
   });
 });
 

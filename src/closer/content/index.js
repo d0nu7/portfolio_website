@@ -69,6 +69,7 @@ import {
   CHAOS_ROUTES,
 } from './packs/chaos';
 import { LATE_NIGHT_PACK } from './packs/late-night';
+import { ROAD_TRIP_PACK, FAMILY_PACK, COLLEAGUES_PACK } from './packs/specialist';
 
 export const PACKS = {
   classic: {
@@ -204,6 +205,30 @@ export const PACKS = {
     defaultRouteId: 'quick',
   },
   'late-night': LATE_NIGHT_PACK,
+  'road-trip': ROAD_TRIP_PACK,
+  family: FAMILY_PACK,
+  colleagues: COLLEAGUES_PACK,
 };
+
+export const DEFAULT_VISIBLE_PACK_IDS = Object.freeze([
+  'classic',
+  'first-date',
+  'date-night',
+  'couples',
+  'friends',
+  'old-friends',
+  'deep',
+  'chaos',
+]);
+
+export function normalizeVisiblePackIds(ids = DEFAULT_VISIBLE_PACK_IDS) {
+  const requested = new Set(Array.isArray(ids) ? ids : DEFAULT_VISIBLE_PACK_IDS);
+  const normalized = Object.keys(PACKS).filter((id) => requested.has(id));
+  return normalized.length ? normalized : [...DEFAULT_VISIBLE_PACK_IDS];
+}
+
+export function isPackVisible(preferences, packId) {
+  return normalizeVisiblePackIds(preferences?.visiblePackIds).includes(packId);
+}
 
 export { LATE_NIGHT_PACK };

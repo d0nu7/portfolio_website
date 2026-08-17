@@ -20,7 +20,7 @@ test.describe('Setup Back navigation', () => {
   });
 
   /*
-   * FRIENDS has exactly one style, so its forward flow already skips the
+   * OLD FRIENDS has exactly one style, so its forward flow already skips the
    * style screen entirely (duration -> intro directly). Back has to
    * mirror that -- landing on 'mode' here would show a screen the forward
    * flow itself never shows for this pack.
@@ -31,7 +31,7 @@ test.describe('Setup Back navigation', () => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Start' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
-    await page.getByText('FRIENDS', { exact: true }).click();
+    await page.getByText('OLD FRIENDS', { exact: true }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // pack -> duration
     await page.getByRole('button', { name: 'Weiter' }).click(); // duration -> intro (no style screen)
     await expect(page.getByRole('button', { name: 'Los geht’s' })).toBeVisible();

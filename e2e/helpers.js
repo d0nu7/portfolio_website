@@ -21,7 +21,7 @@ const BASE_STATE = {
   // every spec asserting against an explicitly-set value.
   phase: 'q',
   stateVersion: 1,
-  contentVersion: 3,
+  contentVersion: 4,
   lang: 'de',
   players: ['Alex', 'Sam'],
   modeId: 'datenight', // has every twist enabled; override per test as needed

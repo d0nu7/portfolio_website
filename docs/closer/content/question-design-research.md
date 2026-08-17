@@ -208,10 +208,10 @@ The NHTSA advises people to make the passenger the designated phone user or to p
 
 Required design constraints:
 
-- If either participant is driving, only the passenger handles and reads the device; the driver never looks at, touches, or operates it.
+- The initial release permits play only in a parked vehicle or when neither participant is driving. A future passenger-led moving-vehicle design requires a separate safety decision and validation.
 - Quick is the only route that may be offered while a participant is driving, and it must still not be described as safe, certified, or distraction-free. Parking remains the preferred condition.
 - Standard and Full require a parked vehicle or a setting in which neither participant is responsible for driving.
-- Silence and driving attention always override an answer. The passenger must be able to pause immediately, and a stopped or absent answer is not a Pass, failure, or reason for feedback.
+- Environmental attention always overrides an answer. A stopped or absent answer is not a failure or reason for feedback.
 - Disable `NO THINKING`, countdowns, `PREDICT`, simultaneous-answer twists, timers, eye-contact prompts, device handoffs, auto-advance, surprise audio, and any task involving the surroundings, navigation, photography, or music selection.
 - Use no private moment. End Quick directly; make any Standard or Full reflection visibly optional.
 - Do not presume cars, international travel, unrestricted mobility, a passport, a particular budget, or a romantic relationship.
@@ -358,7 +358,7 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Enforce Late Night guardrails technically and editorially.
 4. Curate Quick routes rather than sampling them randomly.
 5. Keep all person and role language gender-neutral and assumption-free.
-6. Enforce Road Trip driver/device rules in route availability and runtime behavior.
+6. Keep the implemented Road Trip release parked/no-participating-driver only unless a separately validated safety design replaces that restriction.
 7. Keep Family non-prescriptive and Colleagues voluntary, peer-oriented, confidential, and free of assessment mechanics.
 
 ### P1 – highest quality gain

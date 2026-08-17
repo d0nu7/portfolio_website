@@ -34,8 +34,6 @@ const HEADING_TO_PACK_ID = {
   COLLEAGUES: 'colleagues',
 };
 
-const EDITORIAL_ONLY_PACK_IDS = ['road-trip', 'family', 'colleagues'];
-
 function parseCatalogQuestions(markdown) {
   const byPack = {};
   let currentPackId = null;
@@ -86,11 +84,8 @@ describe('catalog fidelity', () => {
   const implementation = { ...PACKS, 'late-night': LATE_NIGHT_PACK };
   const implementedPackIds = Object.keys(implementation);
 
-  it('contains the nine implemented packs and three editorial candidates', () => {
-    expect(Object.keys(catalog)).toEqual([
-      ...implementedPackIds,
-      ...EDITORIAL_ONLY_PACK_IDS,
-    ]);
+  it('contains every implemented pack exactly once', () => {
+    expect(Object.keys(catalog)).toEqual(implementedPackIds);
   });
 
   it('keeps the published CLASSIC question set immutable', () => {
@@ -108,19 +103,6 @@ describe('catalog fidelity', () => {
     expect(catalogQuestions).toHaveLength(36);
     expect(codeQuestions).toHaveLength(36);
     expect(codeQuestions).toEqual(questionText(catalogQuestions));
-  });
-
-  it.each(EDITORIAL_ONLY_PACK_IDS)('%s has a complete bilingual 36-question master bank', (packId) => {
-    const questions = catalog[packId];
-
-    expect(questions).toHaveLength(36);
-    expect(questions.map(({ id }) => id)).toEqual(
-      Array.from({ length: 36 }, (_, index) => `q${String(index + 1).padStart(2, '0')}`)
-    );
-    questions.forEach(({ de, en }) => {
-      expect(de).toBeTruthy();
-      expect(en).toBeTruthy();
-    });
   });
 
   it('keeps the editorial route contracts explicit', () => {
@@ -155,19 +137,12 @@ describe('catalog fidelity', () => {
     }
   });
 
-  it('does not duplicate candidate question copy across the catalog', () => {
+  it('does not duplicate question copy across packs', () => {
     const normalize = (value) => value.trim().toLocaleLowerCase('de');
     const priorGerman = new Set();
     const priorEnglish = new Set();
 
     implementedPackIds.forEach((packId) => {
-      catalog[packId].forEach(({ de, en }) => {
-        priorGerman.add(normalize(de));
-        priorEnglish.add(normalize(en));
-      });
-    });
-
-    EDITORIAL_ONLY_PACK_IDS.forEach((packId) => {
       catalog[packId].forEach(({ de, en }) => {
         expect(priorGerman.has(normalize(de))).toBe(false);
         expect(priorEnglish.has(normalize(en))).toBe(false);

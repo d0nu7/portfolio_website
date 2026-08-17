@@ -58,4 +58,5 @@ npm run test:e2e
 - Documentation, source comments, test descriptions, and new commit messages are English.
 - Localized interface and question content remains German/English.
 - The question catalog is the editorial source of truth; automated fidelity tests prevent silent content drift.
+- Specialist CLOSER question modules are regenerated from that catalog with `npm run content:generate`.
 - TTS is shelved indefinitely; the existing voice branch is not planned for merge and its artifacts are outside the active CLOSER scope.

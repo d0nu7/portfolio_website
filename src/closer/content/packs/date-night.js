@@ -2,6 +2,8 @@ import {
   ROUTE_PRESETS,
   DEEPER_AND_STAY,
   ROUTE_NEUTRAL_BLURB,
+  PLAYFUL_TWISTS,
+  PLAYFUL_BLURB,
 } from '../shared';
 
 /* ======================================================================
@@ -37,6 +39,7 @@ const DATE_NIGHT_ACTS = [
         id: 'date-night-q02',
         de: 'Welches Kompliment bleibt bei dir besonders lange hängen?',
         en: 'What kind of compliment tends to stay with you?',
+        twist: 'predict',
       },
       {
         id: 'date-night-q03',
@@ -140,6 +143,7 @@ const DATE_NIGHT_ACTS = [
         id: 'date-night-q19',
         de: 'Welche Atmosphäre spricht deine Sinne besonders an?',
         en: 'What kind of atmosphere awakens your senses?',
+        twist: 'nothinking',
       },
       {
         id: 'date-night-q20',
@@ -217,6 +221,7 @@ const DATE_NIGHT_ACTS = [
         id: 'date-night-q32',
         de: 'Welches kleine Sinnesdetail dieses Abends – ein Blick, ein Geräusch, ein Geschmack oder etwas anderes – möchtest du in Erinnerung behalten?',
         en: 'What small sensory detail from tonight—a look, a sound, a taste, or something else—would you like to remember?',
+        twist: 'both',
       },
       {
         id: 'date-night-q33',
@@ -266,6 +271,13 @@ const DATE_NIGHT_MODES = [
     meta: { de: 'Prickelnd, nicht explizit', en: 'A spark, not explicit' },
     blurb: ROUTE_NEUTRAL_BLURB,
     twists: DEEPER_AND_STAY,
+  },
+  {
+    id: 'playful',
+    title: { de: 'PLAYFUL', en: 'PLAYFUL' },
+    meta: { de: 'Leicht inszeniert', en: 'Lightly staged' },
+    blurb: PLAYFUL_BLURB,
+    twists: PLAYFUL_TWISTS,
   },
 ];
 

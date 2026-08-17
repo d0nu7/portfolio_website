@@ -209,6 +209,45 @@ describe('PACKS registry', () => {
   });
 });
 
+describe('pack-aware PLAYFUL actions', () => {
+  const playfulPackIds = ['date-night', 'couples', 'friends'];
+  const actionTypes = new Set(['predict', 'both', 'nothinking']);
+
+  it.each(playfulPackIds)('%s exposes an optional PLAYFUL style', (packId) => {
+    const pack = PACKS[packId];
+    expect(pack.modes.map(({ id }) => id)).toContain('playful');
+    expect(pack.modes[0].id).not.toBe('playful');
+  });
+
+  it.each([...playfulPackIds, 'chaos'])('%s keeps action density sparse on every route', (packId) => {
+    const pack = PACKS[packId];
+    const styleId = packId === 'chaos' ? pack.modes[0].id : 'playful';
+    Object.keys(pack.routes).forEach((routeId) => {
+      const run = compileRun(packId, routeId, styleId);
+      const actionIndices = run.questions
+        .map(({ content }, index) => (actionTypes.has(content.twist) ? index : -1))
+        .filter((index) => index >= 0);
+
+      if (routeId === 'quick') expect(actionIndices.length).toBeLessThanOrEqual(3);
+      actionIndices.slice(1).forEach((index, position) => {
+        expect(index - actionIndices[position]).toBeGreaterThan(1);
+      });
+      run.acts.forEach((act) => {
+        const count = act.questions.filter((question) => actionTypes.has(question.twist)).length;
+        expect(count).toBeLessThanOrEqual(2);
+      });
+    });
+  });
+
+  it('keeps sensitive and professional packs free of pressure actions', () => {
+    ['deep', 'late-night', 'road-trip', 'family', 'colleagues'].forEach((packId) => {
+      PACKS[packId].acts.flatMap((act) => act.questions).forEach((question) => {
+        expect(actionTypes.has(question.twist)).toBe(false);
+      });
+    });
+  });
+});
+
 describe('actIndexFor', () => {
   it('maps question indices to the correct act', () => {
     expect(actIndexFor('classic', 0)).toBe(0);
@@ -280,7 +319,7 @@ describe('questionIdFor / voiceSrc', () => {
         });
       });
     });
-    expect(seen.size).toBe(324);
+    expect(seen.size).toBe(Object.values(PACKS).length * 36);
   });
 
   it('questionIdFor matches the stored id of every registered question', () => {
@@ -341,11 +380,10 @@ describe('questionIdFor / voiceSrc', () => {
  * question without a test failing.
  */
 describe('routes (iteration 7, Phase 2)', () => {
-  it('DEFAULT_ROUTE_ID is "full" and every registered pack defines it', () => {
+  it('DEFAULT_ROUTE_ID is "full" while packs may intentionally omit that route', () => {
     expect(DEFAULT_ROUTE_ID).toBe('full');
-    Object.values(PACKS).forEach((pack) => {
-      expect(pack.routes[DEFAULT_ROUTE_ID]).toBeDefined();
-    });
+    expect(PACKS.classic.routes[DEFAULT_ROUTE_ID]).toBeDefined();
+    expect(PACKS.colleagues.routes[DEFAULT_ROUTE_ID]).toBeUndefined();
   });
 
   it('getRoute falls back to the default route for an unknown or missing routeId', () => {
@@ -480,7 +518,8 @@ describe('routes (iteration 7, Phase 2)', () => {
             if (q.twist) twistCount += 1;
           })
         );
-        expect(twistCount).toBeLessThanOrEqual(ACTS_PER_PACK);
+        const ceiling = pack.modes.some(({ id }) => id === 'playful') ? ACTS_PER_PACK * 2 : ACTS_PER_PACK;
+        expect(twistCount).toBeLessThanOrEqual(ceiling);
       });
   });
 
@@ -508,7 +547,7 @@ describe('routes (iteration 7, Phase 2)', () => {
   Object.values(PACKS).forEach((pack) => {
     Object.entries(pack.routes).forEach(([routeId, route]) => {
       describe(`${pack.id} route "${routeId}"`, () => {
-        if (routeId === DEFAULT_ROUTE_ID) {
+        if (routeId === DEFAULT_ROUTE_ID && pack.routes[DEFAULT_ROUTE_ID]) {
           it('ends on the pack\'s actual closing question', () => {
             const total = totalQuestions(pack.id, routeId);
             expect(questionAt(pack.id, total - 1, routeId).last).toBe(true);
@@ -531,8 +570,10 @@ describe('routes (iteration 7, Phase 2)', () => {
           for (let i = 0; i < total; i += 1) {
             const original = originalIndexFor(pack.id, i, routeId);
             expect(original).toBeGreaterThanOrEqual(0);
-            expect(original).toBeLessThan(totalQuestions(pack.id));
-            expect(questionAt(pack.id, i, routeId)).toBe(questionAt(pack.id, original));
+            const masterQuestions = pack.acts.flatMap((act) => act.questions);
+            expect(original).toBeLessThan(masterQuestions.length);
+            const masterQuestion = masterQuestions[original];
+            expect(questionAt(pack.id, i, routeId)).toBe(masterQuestion);
           }
         });
 
