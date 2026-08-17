@@ -1,7 +1,7 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 17 August 2026
-**Scope:** current release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, FR-018–020 research closeout, and implementation of the full question-bank audit
+**Scope:** current release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, the FR-018/019 experimental adult-pack implementation, and the FR-020 question-bank audit
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## Overall assessment
@@ -12,18 +12,18 @@ The current main candidate passes its automated release gate. Public confidence 
 
 ## Delivered in this branch
 
-- Twelve implemented bilingual packs and 432 exact catalog questions.
+- Fourteen implemented bilingual packs and 489 exact catalog questions or action cards.
 - A versioned `visiblePackIds` preference with migration from the former Late Night boolean.
 - A menu checklist for every registered pack; at least one pack must remain visible.
-- Mainstream packs remain visible after migration. Late Night, Road Trip, Family, and Colleagues start hidden.
+- Mainstream packs remain visible after migration. Late Night, Power, by Choice, Slow Burn, Road Trip, Family, and Colleagues start hidden.
 - Hiding a setup selection chooses a visible fallback, while an active or resumable hidden-pack run remains valid.
 - Road Trip, Family, and Colleagues use no private handoff and have route-specific direct finales.
 - Colleagues exposes Quick and Standard only, keeps its editorial reserve out of runtime, and disables the timer by default when selected.
 - Road Trip uses the conservative first-release rule: parked vehicle or no participating driver only.
 - Date Night, Couples, and Friends expose default plus PLAYFUL styles. Chaos retains a single thematic PLAYFUL style with safe co-creative actions.
-- Deep, Late Night, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
+- Deep, Late Night, Power, by Choice, Slow Burn, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
 - PLAYFUL assignments are deterministic question data. Quick contains at most three actions; all routes enforce spacing and per-act density ceilings.
-- Content revision 6 intentionally invalidates incompatible active saves after the audited route, PLAYFUL, response-card, and route-specific finale behavior changed.
+- Content revision 7 intentionally invalidates incompatible active saves after the adult pack registry and route content changed.
 - The start screen now points to optional packs in the Menu. Adult packs are
   grouped in a collapsed 18+ section at the bottom, with Late Night and its
   explanation kept together.
@@ -32,7 +32,7 @@ The current main candidate passes its automated release gate. Public confidence 
   movement and hold phases.
 - FR-005 pack-specific Private Moments are implemented for eligible Standard/Full routes with shared opt-out, named A/B covers, asymmetric cards, route-specific use/discard points, and dedicated finales. Quick remains free of Private Moments.
 - Late Night entry and Act-II gates retain individual decisions only in memory, reveal only a collective result, restart partial gates from A after reload, and use a direct no-action finale instead of generic Question 37.
-- The FR-018–020 evidence programme is complete and citation-audited. Its FR-018/FR-019 candidate banks remain research inputs. All 37 FR-020 changes plus three full-bank-audit addenda are implemented with Classic's 36 questions unchanged; specialist, bilingual, accessibility, physical-device, and moderated-session validation remains pending.
+- POWER, BY CHOICE ships as a conversation-only adult pack. SLOW BURN ships as a separate non-resumable touch experience: every physical invitation uses two masked exact-action choices, only Yes + Yes opens it, and no session choice is stored. RaDi explicitly approved these experimental implementations after the citation-audited research. The research documents' external review and moderated-session gates remain open; Classic's 36 questions remain unchanged.
 
 ## Product review by pack
 
@@ -50,6 +50,8 @@ The current main candidate passes its automated release gate. Public confidence 
 | Road Trip | Travel-specific and inclusive without requiring distance, budget, or international travel. | Pilot parked and public-transport use before reconsidering any moving-vehicle design. |
 | Family | Inclusive of chosen and non-traditional family; avoids assuming harmony or reconciliation. | Test with varied family forms and levels of contact. |
 | Colleagues | Practical working preferences without assessment framing; reserve stays non-playable. | Use only voluntarily among near-peers and test across work contexts. |
+| Power, by Choice | Direct conversation about chosen erotic power without assigning roles or converting answers into permission. | Complete named specialist, bilingual, accessibility, legal, device, and moderated-session review before broad promotion. |
+| Slow Burn | A conservative, choice-led touch sequence with strong transient-state boundaries and no required endpoint. | Treat as experimental; run the full specialist, ethics, accessibility, legal, adverse-event, diverse-adult, and physical-device programme before broad promotion. |
 
 ## Remaining product opportunities
 
@@ -60,7 +62,7 @@ These are intentionally not blockers for closing this branch:
 3. **Real sessions:** route duration, action fatigue, pressure, passing frequency, and attention to the phone cannot be validated mechanically.
 4. **Physical platforms:** Android installed PWA, iOS Add to Home Screen, safe areas, system navigation, VoiceOver, TalkBack, and WebKit remain device checks.
 5. **Infrastructure:** offline support is not planned for the current product. The custom-subdomain question remains an explicit owner decision.
-6. **Research disposition:** decide whether to advance conversation-only POWER, BY CHOICE to specialist review and whether to fund a closed SLOW BURN prototype. Validate the implemented FR-020 changes through their named gates. Public SLOW BURN release remains a no-go.
+6. **Adult-pack validation:** POWER, BY CHOICE and SLOW BURN are implemented by owner decision, but neither is scientifically or legally validated. Complete the research memos' named reviews and moderated sessions before broad promotion, and keep the excluded SLOW BURN categories out of consumer builds.
 
 ## Verification contract
 

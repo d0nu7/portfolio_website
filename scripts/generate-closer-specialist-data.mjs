@@ -8,16 +8,19 @@ const source = fs.readFileSync(
 );
 
 const definitions = [
-  ['ROAD_TRIP_QUESTIONS', '## 11. ROAD TRIP', '## 12. FAMILY', 'road-trip'],
-  ['FAMILY_QUESTIONS', '## 12. FAMILY', '## 13. COLLEAGUES', 'family'],
-  ['COLLEAGUES_QUESTIONS', '## 13. COLLEAGUES', null, 'colleagues'],
+  ['ROAD_TRIP_QUESTIONS', '## 11. ROAD TRIP', 'road-trip'],
+  ['FAMILY_QUESTIONS', '## 12. FAMILY', 'family'],
+  ['COLLEAGUES_QUESTIONS', '## 13. COLLEAGUES', 'colleagues'],
 ];
 
-const exports = definitions.map(([name, heading, nextHeading, idPrefix]) => {
+const exports = definitions.map(([name, heading, idPrefix]) => {
   const start = source.indexOf(heading);
   if (start < 0) throw new Error(`Missing catalog heading: ${heading}`);
-  const end = nextHeading ? source.indexOf(nextHeading, start + heading.length) : source.length;
-  if (end < 0) throw new Error(`Missing catalog heading: ${nextHeading}`);
+  const remaining = source.slice(start + heading.length);
+  const nextSection = remaining.search(/^## \d+\. /m);
+  const end = nextSection < 0
+    ? source.length
+    : start + heading.length + nextSection;
   const section = source.slice(start, end);
   const questions = [...section.matchAll(/^\| Q(\d{2}) \| [^|]+ \| (.+?) \| (.+?) \|$/gm)]
     .map((match) => ({

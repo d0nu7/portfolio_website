@@ -2,7 +2,7 @@
 
 **Updated:** 17 August 2026
 **Status:** Editorial source of truth for implemented packs
-**Scope:** 12 packs · 432 master questions · German and English · curated duration routes · pack-specific finales
+**Scope:** 14 packs · 489 master questions or action cards · German and English · curated duration routes · pack-specific finales
 
 ---
 
@@ -1139,3 +1139,114 @@ The reserve belongs to the 36-question master bank but is not playable. A future
 - **Standard EN:** “If you would like, take turns naming one working preference you understand more clearly now. Reflection is enough; you do not need to agree on anything.”
 
 COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PREDICT`, `NO THINKING`, simultaneous answers, countdowns, performance-oriented twists, and the timer by default. Use at most two sparse listening cues in a run; never frame turns, completion, or disclosure as a score.
+
+---
+
+## 14. POWER, BY CHOICE (18+)
+
+**Goal:** A conversation-only adult pack about voluntarily chosen erotic roles, boundaries, stopping, and care. Fantasy, curiosity, discussion, and consent to a specific action remain separate. The pack contains no physical tasks, compatibility result, private moment, or PLAYFUL mechanics.
+
+**Routes:** Quick 12 · Standard 24 · Full 36. Pilot estimates: 18–28, 35–55, and 55–85 minutes. The app currently presents rounded planning values of 24, 45, and 70 minutes.
+
+### Act I – NEUGIER / CURIOSITY
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S/F | Wenn du an einvernehmlichen Machtaustausch denkst: Was macht das Thema für dich neugierig, interessant oder auch uninteressant? | When you think about consensual power exchange, what makes the topic feel intriguing, interesting, or not for you? |
+| Q02 | S/F | Welcher Teil des Themas interessiert dich am ehesten – Rollen, Sprache, Vertrauen, Rituale, Empfindungen, Fantasie, etwas anderes oder keiner davon? | Which part of the topic interests you most—roles, language, trust, ritual, sensation, fantasy, something else, or none of these? |
+| Q03 | F | Was bedeuten Begriffe wie dominant, submissiv, Switch, Top oder Bottom für dich – wenn sie überhaupt etwas bedeuten? | What do terms such as dominant, submissive, switch, top, or bottom mean to you—if they mean anything at all? |
+| Q04 | Q/S/F | Wie unterscheidest du eine Fantasie, über die du gern sprichst, von etwas, das du im echten Leben vielleicht wollen würdest? | How do you distinguish a fantasy you enjoy discussing from something you might want in real life? |
+| Q05 | S/F | Kann sich eine Rolle für dich wie Identität, gelegentliche Vorliebe, Experiment, gar nichts davon oder etwas anderes anfühlen? | Could a role feel like an identity, an occasional preference, an experiment, none of these, or something else to you? |
+| Q06 | F | Wodurch könnten sich Rollenwünsche je nach Person, Situation oder Tag verändern – oder für dich gleich bleiben? | What might make role preferences change with the person, situation, or day—or stay the same for you? |
+| Q07 | Q/S/F | Was würde dieses Gespräch neugierig statt wie eine Prüfung oder Erwartung wirken lassen? | What would make this conversation feel curious rather than like a test or expectation? |
+| Q08 | S/F | Welche Sprache über Macht wirkt auf dich einladend, neutral oder abschreckend? | What language about power feels inviting, neutral, or off-putting to you? |
+| Q09 | F | Welche Annahme über Dominanz oder Submission würdest du gern aus diesem Gespräch heraushalten? | What assumption about dominance or submission would you most like to keep out of this conversation? |
+| Q10 | Q/S/F | Was würde helfen, damit dieses Gespräch angenehm, freiwillig und jederzeit leicht zu beenden bleibt? | What would help this conversation stay comfortable, optional, and easy to end at any time? |
+| Q11 | F | Was könnte jemand zu diesem Thema sagen, ohne eigene Erfahrungen oder Interessen offenzulegen? | What could someone say about this topic without disclosing their own experience or interests? |
+| Q12 | S/F | Wo möchtest du eine klare Grenze zwischen freiwillig gewählten erotischen Rollen und Entscheidungen im Alltag ziehen? | Where would you want a clear boundary between chosen erotic roles and everyday decisions? |
+
+### Act II – ABSPRACHE / NEGOTIATION
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q13 | Q/S/F | Wie sollte jemand fragen, ob ein Gespräch über Machtaustausch gerade willkommen ist? | How would you like someone to ask whether a conversation about power exchange is welcome right now? |
+| Q14 | S/F | Welche Informationen bräuchtest du, um eine Idee als „nur besprechbar“, „später recherchieren“, „vielleicht“ oder „nein“ einzuordnen? | What information would you need to place an idea under “discussion only,” “research later,” “maybe,” or “no”? |
+| Q15 | F | Wie würdest du klare Neins, bedingte Vielleichts und offene Fragen benennen – oder passen andere Begriffe besser? | How would you name clear noes, conditional maybes, and open questions—or would different terms fit better? |
+| Q16 | Q/S/F | Welche Wörter oder Signale sollten in einem zukünftigen Gespräch „langsamer“, „Pause“ und „Stopp“ bedeuten? | What words or signals should mean “slow down,” “pause,” and “stop” in a future conversation? |
+| Q17 | S/F | Was sollte sofort passieren, wenn jemand seine Meinung ändert? | What should happen immediately when someone changes their mind? |
+| Q18 | F | Wenn Worte schwerfallen: Welche Anzeichen sollten zu Stopp und Nachfragen führen statt zu einer Annahme? | When words are difficult, what signs should lead to stopping and checking in rather than making an assumption? |
+| Q19 | Q/S/F | Was macht es leicht, ein „Vielleicht“ als Vielleicht stehen zu lassen, ohne Überredung? | What makes it easy to leave a “maybe” as a maybe without persuasion? |
+| Q20 | S/F | Wie kann jemand prüfen, ob etwas richtig verstanden wurde, ohne deine Antwort wie einen Vertrag zu behandeln? | How can someone check understanding without treating your answer like a contract? |
+| Q21 | F | Welche Formulierung hält eine Idee klar im Bereich „nur besprechen“, ohne daraus einen Plan oder eine Erwartung zu machen? | What wording keeps an idea clearly in “discussion only,” without turning it into a plan or expectation? |
+| Q22 | Q/S/F | Wie können zwei Menschen eine Regel im Rollenspiel von einer echten Grenze im Alltag unterscheiden? | How can two people distinguish a role-play rule from a real-life boundary? |
+| Q23 | S/F | Woran würde man merken, dass eine Absprache veränderbar bleibt statt festgeschrieben zu sein? | What would show that an agreement remains revisable rather than fixed? |
+| Q24 | F | Woran würdest du erkennen, dass Fachwissen nötig ist, statt von einer Gesprächs-App oder durch Ausprobieren zu lernen? | What would tell you that specialist knowledge is needed rather than learning from a conversation app or by experimenting? |
+
+### Act III – FÜRSORGE / CARE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q25 | Q/S/F | Welche Reaktion würde dir zeigen, dass ein Stopp oder Meinungswechsel gut angenommen wird? | What response would show you that a stop or change of mind will be received well? |
+| Q26 | S/F | Was hilft dir nach einem intensiven Gespräch zurück in den Alltag: Nähe, Abstand, Humor, Ruhe, späteres Nachfragen oder etwas anderes? | After an intense conversation, what helps you return to ordinary connection: closeness, space, humor, quiet, a later check-in, or something else? |
+| Q27 | F | Wie könnte Fürsorge nach einer intensiven Situation für beide Menschen unterschiedlich aussehen – unabhängig von ihrer Rolle? | How might care after an intense situation look different for each person, regardless of role? |
+| Q28 | Q/S/F | Wie könnte ein hilfreiches Nachfragen am nächsten Tag klingen – falls es gewünscht ist? | What could a helpful next-day check-in sound like—if one is wanted? |
+| Q29 | S/F | Welche Reaktion fühlt sich fürsorglich an, wenn jemand nur allgemein oder hypothetisch antwortet? | What response feels caring when someone answers only generally or hypothetically? |
+| Q30 | F | Welche Privatsphäre rund um Fantasien, Rollen oder solche Gespräche wäre dir wichtig? | What privacy around fantasies, roles, or conversations like this would matter to you? |
+| Q31 | Q/S/F | Was macht den Satz „Ich möchte darüber nur sprechen“ leicht verständlich und respektierbar? | What makes “I only want to talk about this” easy to understand and respect? |
+| Q32 | S/F | Wie sollte jemand reagieren, wenn eure Interessen oder Rollenwünsche nicht übereinstimmen? | How would you like someone to respond if your interests or role preferences do not match? |
+| Q33 | F | Welche Reaktion hilft, wenn jemand kein Interesse hat, ohne nach einem tieferen Grund zu suchen? | What response helps when someone is not interested, without looking for a deeper reason? |
+| Q34 | Q/S/F | Wie sieht Fürsorge aus, wenn eine Person das Thema früher beenden möchte? | What does care look like when one person wants to end the topic sooner? |
+| Q35 | S/F | Was sollte außerhalb jeder freiwillig gewählten Machtdynamik über Gleichwertigkeit und Respekt unverändert bleiben? | What should remain unchanged about equal worth and respect outside any chosen power dynamic? |
+| Q36 | F | Welcher eine Grundsatz sollte ein zukünftiges Gespräch über freiwillig gewählte Macht leiten, ohne einen Plan zum Handeln zu bedeuten? | What one principle should guide a future conversation about chosen power without implying a plan to act? |
+
+### Direct finale
+
+**DE:** „Was würde ein zukünftiges Gespräch über freiwillig gewählte Macht für dich klarer und angenehmer machen? Ihr müsst heute nichts entscheiden oder ausprobieren.“
+
+**EN:** “What would make a future conversation about chosen power feel clearer and more comfortable for you? You do not need to decide or try anything today.”
+
+---
+
+## 15. SLOW BURN (18+)
+
+**Goal:** A non-resumable, touch-forward experience for two adults. Every exact physical invitation uses a fresh masked Yes/Adjust/Skip choice from both people. It contains external touch and optional kissing, but no penetration, breath or neck play, restraint, impact, surprise touch, private moment, Question 37, PLAYFUL mechanics, timer, or stored session state.
+
+**Routes:** Quick 9 · Standard 15 · Unhurried 21. Planning estimates: approximately 20, 40, and 60 minutes. These are experience ranges, not targets or countdowns.
+
+### Act I – ANKOMMEN / ARRIVE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S/U | Vor jeder Berührung wählt ihr jeweils eine Option: ruhiger · heller oder dunkler · wärmer oder kühler · mehr Abstand · andere Unterlage · keine Änderung. Nutzt nur Änderungen, die für euch beide passen. | Before any touch, each choose one: quieter · brighter or dimmer · warmer or cooler · more space · different surface · no change. Use only changes that work for both. |
+| Q02 | S/U | Wählt jeweils eine Position, die ihr leicht verlassen oder ändern könnt: sitzend, liegend, stehend oder eine andere gut gestützte Position. Keine Position ist Teil einer Herausforderung. | Each choose a position you can leave or change easily: sitting, lying, standing, or another supported position. No position is part of the challenge. |
+| Q03 | S/U | Ohne Berührung wählt jede Person einen Abstand. Verwendet den größeren gewünschten Abstand. Beide Personen können jederzeit mehr Abstand schaffen. Blickkontakt ist optional. | With no touch, each person chooses a distance. Use the greater requested distance. Either person can create more space at any time. Looking at each other is optional. |
+| Q04 | Q/S/U | Zieht eine ruhige Berührung von Hand zu Hand in Betracht. Die empfangende Person benennt Handfläche, Handrücken oder eine andere gut erreichbare Stelle sowie eine Höchstdauer. Beide Personen können früher stoppen. | Consider one still hand-to-hand touch. The receiver names palm, back of hand, or another reachable part of the hand and a maximum duration. Either person may stop sooner. |
+| Q05 | U | Die empfangende Person zeigt an der eigenen Hand – oder sagt bzw. tippt –, wie sanft oder fest es angenehm ist. Die gebende Person kann genau diesen Druck an der gewählten Stelle der Hand ausprobieren. | The receiver shows on their own hand—or says or taps—how light or firm feels welcome. The giver may try that exact pressure on the chosen hand area. |
+| Q06 | U | Zieht eine Berührung an einer bequem erreichbaren Stelle des Unterarms in Betracht – über der Kleidung, falls dort Kleidung ist. Die empfangende Person benennt Stelle, ruhigen Kontakt oder eine Bewegung und eine Höchstdauer. | Consider touch on one comfortably reachable part of the forearm, over clothing if present. The receiver names the place, still contact or one movement, and a maximum duration. |
+| Q07 | Q/S/U | Was passt jetzt? Ohne Berührung bleiben · eine bereits gewählte Berührung genau wiederholen · mehr Abstand schaffen · zum nächsten Akt wechseln · beenden. Keine Wahl ist besser oder höher. | What fits now? Stay with no touch · repeat an already chosen touch exactly · create more space · move to the next act · end. No choice is better or higher. |
+
+### Act II – AUFBAU / BUILD
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q08 | Q/S/U | Zieht eine Form von Körperkontakt in Betracht: seitlicher Kontakt · eine kurze Umarmung · eine andere zugängliche Form, bei der beide das eigene Gewicht tragen · keine. Benennt Position und Höchstdauer. | Consider one form of body contact: side-by-side contact · a brief embrace · another accessible form where each person supports their own weight · none. Name the position and maximum duration. |
+| Q09 | S/U | Zieht eine Stelle im Gesicht, an der Kopfhaut oder an den Haaren in Betracht – oder lasst diese Kategorie aus. Die empfangende Person benennt die genaue Stelle und ruhigen Kontakt oder eine sanfte Bewegung. Nicht ziehen. | Consider one place on the face, scalp, or hair—or skip this category. The receiver names the exact place and still contact or one gentle movement. Avoid pulling. |
+| Q10 | S/U | Zieht eine äußerliche Stelle an Bauch, seitlichem Oberkörper, Hüften oder Außenseiten der Beine über der Kleidung in Betracht. Brust/Brüste, Gesäß, Innenseiten der Oberschenkel, Genitalien und Anus sind ausgeschlossen. Die empfangende Person benennt eine genaue Stelle. | Consider one external area on the abdomen, side of the torso, hips, or outer legs, over clothing. This excludes chest/breasts, buttocks, inner thighs, genitals, and anus. The receiver names one exact place. |
+| Q11 | Q/S/U | Zieht einen Kuss an Stirn, Wange, Hand, Schulter oder einer anderen bereits geöffneten äußerlichen Stelle in Betracht – oder wählt keinen Kuss. Die empfangende Person benennt die genaue Stelle. Stoppt nach einem Kuss. | Consider one kiss on the forehead, cheek, hand, shoulder, or another already opened external area—or choose no kiss. The receiver names the exact place. Stop after one kiss. |
+| Q12 | U | Zieht einen Kuss auf den Mund in Betracht. Das ist eine eigene Entscheidung, auch wenn ein anderer Kuss bereits gewählt wurde. Küsst euch einmal und stoppt; beide Personen können vorher oder währenddessen stoppen. | Consider one kiss on the mouth. This is a separate choice even if another kiss was already chosen. Kiss once and stop; either person may stop before or during contact. |
+| Q13 | U | Benennt eine frühere Handlung ohne Berührung oder mit Berührung, zu der ihr zurückkehren möchtet. Bei einer Berührung entscheidet ihr neu über die genaue Handlung. Zurückzukehren ist kein Rückschritt. | Name one earlier no-touch or touch action to return to. For touch, choose again on the exact action. Returning is not a step backward. |
+| Q14 | Q/S/U | Was passt jetzt? Hier bleiben · etwas Angenehmes genau wiederholen · Optionen aus Akt III in Betracht ziehen · mehr Abstand schaffen · beenden. | What fits now? Stay here · repeat an exact favorite · consider Act III choices · create more space · end. |
+
+### Act III – WÄHLEN / CHOOSE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q15 | Q/S/U | Wählt getrennt: bei den derzeit gewählten Optionen bleiben · eine andere passende Kategorie in Betracht ziehen · mehr Abstand schaffen · zum Abschluss wechseln · jetzt beenden. Keine Richtung ist das „höhere“ Ergebnis. | Choose separately: stay with the currently chosen options · consider one different fitting category · create more space · move to a close · end now. No direction is the “higher” result. |
+| Q16 | S/U | Wählt eine bereits gewählte Handlung und wiederholt sie genauso wie zuvor. Verstärkt sie nicht. Die empfangende Person legt die Höchstdauer fest; beide Personen können früher stoppen. | Choose one already selected action to repeat exactly as it was. Do not intensify it. The receiver sets the maximum duration; either person may stop sooner. |
+| Q17 | S/U | Zieht für eine bereits gewählte äußerliche Stelle nur diese Änderung in Betracht: über der Kleidung bleiben · direkt auf der Haut berühren · diese Stelle schließen. Direkter Hautkontakt schließt Brust/Brüste, Gesäß, Innenseiten der Oberschenkel, Genitalien und Anus aus. | For one already selected external area, consider only this change: stay over clothing · touch directly on skin · close this area. Direct skin contact excludes chest/breasts, buttocks, inner thighs, genitals, and anus. |
+| Q18 | U | Für eine bereits gewählte äußerliche Stelle kann die empfangende Person einen Weg führen, zeigen oder beschreiben. Die gebende Person geht nicht darüber hinaus und stoppt, wenn die Führung endet. | For one already selected external area, the receiver may guide, point out, or describe one path. The giver does not continue beyond it and stops when the guidance ends. |
+| Q19 | Q/S/U | Zieht bei einem bereits gewählten Kuss auf den Mund in Betracht, ohne Zeitvorgabe weiterzumachen. Beide Personen können jederzeit Abstand schaffen; Abstand bedeutet stoppen und nachfragen, nicht folgen. | For an already selected mouth kiss, consider continuing without a timer. Either person can create distance at any moment; distance means stop and check, not follow. |
+| Q20 | U | Wählt eine Pause ohne Berührung. Beide Personen finden eine bequeme Position und einen passenden Abstand. Danach muss nichts passieren. | Choose a no-touch pause. Each person finds a comfortable position and distance. Nothing needs to happen next. |
+| Q21 | Q/S/U | Wechselt zum Abschluss, ohne eine neue Berührungskategorie hinzuzufügen: Abstand · ruhige Nähe · bereits gewähltes Händehalten · bereits gewählte Umarmung · Wasser oder praktische Bequemlichkeit · ein kurzer Check-in-Satz · jetzt beenden. | Move to a close without adding a new touch category: space · quiet nearness · an already selected handhold · an already selected embrace · water or practical comfort · one check-in sentence · end now. |
+
+SLOW BURN clears its volatile choices when the app is hidden, closed, refreshed, or ended. A visibility preference may remain, but the session itself is never resumable and no selected action, adjustment, body area, or consent choice is persisted.

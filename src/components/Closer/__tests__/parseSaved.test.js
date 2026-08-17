@@ -228,6 +228,18 @@ describe('parseSaved (discriminated save parser)', () => {
     expect(result.ok).toBe(true);
   });
 
+  it('rejects every SLOW BURN save because the touch session is intentionally volatile', () => {
+    expect(parseSaved(JSON.stringify({
+      ...BASE,
+      packId: 'slow-burn',
+      routeId: 'standard',
+      modeId: 'touch',
+    }))).toEqual({
+      ok: false,
+      reason: SAVE_REJECT_REASONS.NON_RESUMABLE_PACK,
+    });
+  });
+
   it('rejects a stale runFingerprint with reason=CONTENT_DRIFT', () => {
     expect(
       parseSaved(JSON.stringify({ ...BASE, packId: 'classic', runFingerprint: 'r0-nonsense' }))

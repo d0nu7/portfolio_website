@@ -110,6 +110,12 @@ timeline remain outside the transition core.
 | `ending` | `ADVANCE_BEAT` | `ending` | Screen-local beat advances; persisted phase unchanged |
 | `ending` | `RESTART` | `start` | Canonical fresh state |
 
+## Volatile SLOW BURN controller
+
+SLOW BURN deliberately does not add phases to the persisted transition matrix. After the shared entry gate and introduction, `CloserTouchExperience` owns a local in-memory sequence for act introductions, cards, two named covers, masked Yes/Adjust/Skip choices, adjustment, pause, action, renewal, and close. Page hide, refresh, close, End, or global restart destroys that state. `parseSaved()` rejects the pack with `NON_RESUMABLE_PACK`, and browser persistence removes any record while it is selected. Only the separately versioned pack-visibility preference may survive.
+
+This boundary prevents body areas, action choices, adjustments, and consent decisions from becoming save-schema fields. Any future attempt to resume SLOW BURN or move its choices into the shared reducer requires a new privacy and safety decision, transition specification, and threat-model review.
+
 ## Migration rule
 
 For each remaining family:

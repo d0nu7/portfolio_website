@@ -69,6 +69,8 @@ import {
   CHAOS_ROUTES,
 } from './packs/chaos';
 import { LATE_NIGHT_PACK } from './packs/late-night';
+import { POWER_BY_CHOICE_PACK } from './packs/power-by-choice';
+import { SLOW_BURN_PACK } from './packs/slow-burn';
 import { ROAD_TRIP_PACK, FAMILY_PACK, COLLEAGUES_PACK } from './packs/specialist';
 import {
   CLASSIC_PRIVATE_MOMENT,
@@ -222,6 +224,8 @@ export const PACKS = {
     routes: CHAOS_ROUTES,
     defaultRouteId: 'quick',
   },
+  'power-by-choice': POWER_BY_CHOICE_PACK,
+  'slow-burn': SLOW_BURN_PACK,
   'late-night': LATE_NIGHT_PACK,
   'road-trip': ROAD_TRIP_PACK,
   family: FAMILY_PACK,
@@ -249,4 +253,4 @@ export function isPackVisible(preferences, packId) {
   return normalizeVisiblePackIds(preferences?.visiblePackIds).includes(packId);
 }
 
-export { LATE_NIGHT_PACK };
+export { LATE_NIGHT_PACK, POWER_BY_CHOICE_PACK, SLOW_BURN_PACK };

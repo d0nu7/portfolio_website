@@ -30,7 +30,7 @@ async function seedRaw(page, value) {
 // this fix existed looks like.
 const LEGACY_BASE = {
   stateVersion: 2,
-  contentVersion: 6,
+  contentVersion: 7,
   lang: 'de',
   players: ['', ''],
   modeId: 'original',

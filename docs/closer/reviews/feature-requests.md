@@ -469,7 +469,7 @@ actions or no PLAYFUL style at all.
 - Browser tests cover Pass before and during every action type, question-first
   countdown behavior, simultaneous-answer instructions, starter alternation,
   one-style screen skipping, DE/EN copy, reduced motion, and mobile layout.
-- Dedicated safety tests prove that Late Night, Road Trip,
+- Dedicated safety tests prove that Late Night, Power, by Choice, Slow Burn, Road Trip,
   Colleagues, and every individually excluded sensitive question cannot render
   an incompatible action even when an invalid style ID or saved state is
   supplied.
@@ -479,7 +479,7 @@ actions or no PLAYFUL style at all.
 
 ### FR-017 – Extensible 18+ content library
 
-**Status:** Disclosure infrastructure delivered; additional adult packs are not yet implemented
+**Status:** Delivered; three adult packs are metadata-grouped, hidden by default, and independently enabled
 
 Keep adult material discreet without making it difficult to understand once a
 person intentionally opens it. The Additional content view places every pack
@@ -504,9 +504,9 @@ Done when: future adult packs can join the disclosure through metadata, the
 group remains keyboard/screen-reader accessible at 320 px, and every pack passes
 its own participation, content, and release review.
 
-### FR-018 – POWER & TRUST adult pack research
+### FR-018 – POWER, BY CHOICE adult conversation pack
 
-**Status:** Research delivered 17 August 2026; conditional conversation-only go, with no implementation or public-release approval
+**Status:** Delivered experimentally on 17 August 2026 by explicit RaDi decision; external validation remains open
 
 Working title: **POWER & TRUST**; the evidence review recommends testing **POWER, BY CHOICE**. This is an original conversation pack about
 consensual power exchange, dominance/submission preferences, negotiation,
@@ -526,11 +526,11 @@ Editorial contract:
   orientation, relationship, or wish to act.
 - Entry and escalation use independent opt-ins and a neutral direct ending.
 
-Research gate complete: the literature map, claim limits, bilingual 36-question candidate bank, route/intensity proposal, safety matrix, and moderated pilot protocol are delivered and citation-audited. Implementation remains blocked until RaDi accepts the concept/name and the named kink/sexual-health, trauma, accessibility, bilingual, privacy, and Austrian/EU legal reviews approve the applicable scope.
+The complete 36-question bilingual bank now ships as a conversation-only adult pack with Quick, Standard, and Full routes. It has no touch tasks, private moment, Question 37, timer pressure, PLAYFUL actions, score, compatibility result, or role assignment. Independent entry and Act-II choices expose only the collective outcome. RaDi accepted the name and implementation on 17 August 2026. The named kink/sexual-health, trauma, accessibility, bilingual, privacy, Austrian/EU legal, physical-device, and moderated-session reviews remain open; delivery must not be described as validation.
 
 ### FR-019 – SLOW BURN touch-forward adult experience
 
-**Status:** Research delivered 17 August 2026; conditional go for a closed moderated prototype only, public release no-go
+**Status:** Conservative consumer subset delivered experimentally on 17 August 2026 by explicit RaDi decision; external validation remains open
 
 Working title: **SLOW BURN**. Unlike the conversation-only Late Night pack, this
 is deliberately a physical, touch-forward experience for two participating
@@ -556,7 +556,7 @@ Interaction contract:
 - Answers, chosen body areas, adjustments, and consent states are transient and
   never persisted.
 
-Research gate complete: the evidence review and non-claims, complete three-act model, category boundary, exact-action state architecture, bilingual cards, accessibility requirements, data-minimisation rules, and staged pilot protocol are delivered. Consumer V1 is limited to categories 0–6; category 7/C06 is separately reviewed, over-clothing, moderated-prototype-only content. Implementation and any public release remain blocked by the report's named specialist, ethics, privacy, legal, accessibility, and adverse-event gates plus explicit RaDi approval.
+The shipped conservative subset contains 21 bilingual cards across Quick, Standard, and Unhurried routes. Physical invitations require fresh masked **Yes / Adjust / Skip** choices from both people; only Yes + Yes opens an action. Adjust, Pause, More, Different, Not there, Stop, and End halt contact or require a new exact bilateral choice. The experience is non-resumable: no action, body area, adjustment, or consent choice is persisted, and an injected save is rejected. Category 7/C06 and penetration, breath/neck play, restraint, impact, surprise touch, and intimate-area action cards are excluded. RaDi explicitly authorized this conservative implementation on 17 August 2026. The memo's specialist, ethics, privacy, legal, accessibility, adverse-event, physical-device, and moderated-session gates remain open and should be completed before broad promotion.
 
 ### FR-020 – Cross-pack evidence and question audit
 
@@ -570,6 +570,6 @@ editorial rationale. Preserve a dated source/claim map and file individual
 content changes as separately reviewable proposals rather than silently editing
 the authoritative catalog.
 
-The completed [integrated report](../research/fr-018-fr-020-deep-research.md), [FR-020 audit memo](../research/fr-020-cross-pack-audit-memo.md), and [exhaustive post-research question-bank audit](../research/question-bank-full-audit-2026-08-17.md) cover all 12 implemented packs plus the Students/FH Salzburg draft. The full-bank pass accounts for all 432 questions and adds three exact bilingual consistency changes for Date Night Q03, Friends Q14, and Old Friends Q22. The owner subsequently approved all 40 atomic entries. Catalog copy, runtime content, route membership, response cards, PLAYFUL behavior, shared action copy, and route-specific finales are synchronized; Classic's 36 questions remain unchanged.
+The completed [integrated report](../research/fr-018-fr-020-deep-research.md), [FR-020 audit memo](../research/fr-020-cross-pack-audit-memo.md), and [exhaustive post-research question-bank audit](../research/question-bank-full-audit-2026-08-17.md) cover the 12 packs implemented at the time plus the Students/FH Salzburg draft. That pass accounts for the then-current 432 questions and adds three exact bilingual consistency changes for Date Night Q03, Friends Q14, and Old Friends Q22. The owner subsequently approved all 40 atomic entries. Catalog copy, runtime content, route membership, response cards, PLAYFUL behavior, shared action copy, and route-specific finales are synchronized; Classic's 36 questions remain unchanged.
 
 Implementation is complete when every approved atomic entry is synchronized across catalog and runtime, behavior-changing saves are versioned, Classic's question fingerprint stays unchanged, and wording/routes/mechanics/finales have regression coverage. Those conditions are met. Named bilingual, specialist, accessibility, physical-device, and moderated-session gates remain release evidence rather than code work.

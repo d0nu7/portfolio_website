@@ -4,6 +4,7 @@ import {
   DEFAULT_PACK_ID,
   DEFAULT_ROUTE_ID,
   LATE_NIGHT_PACK,
+  POWER_BY_CHOICE_PACK,
   PACKS,
   QUESTIONS_PER_ACT,
   actIndexFor,
@@ -23,6 +24,7 @@ import {
   runFingerprintFor,
   runQuestionIdsFor,
   secretAtIndexFor,
+  SLOW_BURN_PACK,
   starterFor,
   totalQuestions,
   voiceSrc,
@@ -138,10 +140,43 @@ describe('PACKS registry', () => {
     expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'en')).toBeTruthy();
   });
 
-  it('only LATE NIGHT requires the additional consent gate', () => {
+  it('only the three adult-sensitive packs require the additional consent gate', () => {
     expect(Object.values(PACKS).filter((pack) => pack.consentGate)).toEqual([
+      POWER_BY_CHOICE_PACK,
+      SLOW_BURN_PACK,
       LATE_NIGHT_PACK,
     ]);
+  });
+
+  it('keeps POWER, BY CHOICE conversational and SLOW BURN volatile and bilateral', () => {
+    expect(POWER_BY_CHOICE_PACK).toMatchObject({
+      contentGroup: 'adult',
+      discoverability: 'menu-unlock',
+      privateMoment: 'none',
+      defaultTimerEnabled: false,
+    });
+    expect(POWER_BY_CHOICE_PACK.touchExperience).toBeUndefined();
+    expect(Object.values(POWER_BY_CHOICE_PACK.routes).map((route) =>
+      compileRun('power-by-choice', route.id).questions.length
+    )).toEqual([12, 24, 36]);
+
+    expect(SLOW_BURN_PACK).toMatchObject({
+      contentGroup: 'adult',
+      discoverability: 'menu-unlock',
+      privateMoment: 'none',
+      touchExperience: true,
+      nonResumable: true,
+      defaultTimerEnabled: false,
+    });
+    expect(Object.values(SLOW_BURN_PACK.routes).map((route) =>
+      compileRun('slow-burn', route.id).questions.length
+    )).toEqual([9, 15, 21]);
+
+    const physicalCards = SLOW_BURN_PACK.acts
+      .flatMap((act) => act.questions)
+      .filter((question) => ['touch', 'kiss'].includes(question.kind));
+    expect(physicalCards.length).toBeGreaterThan(0);
+    physicalCards.forEach((question) => expect(question.requiresBilateral).toBe(true));
   });
 
   it('every registered pack has the shape CloserGame.js relies on', () => {
@@ -484,7 +519,8 @@ describe('questionIdFor / voiceSrc', () => {
         });
       });
     });
-    expect(seen.size).toBe(Object.values(PACKS).length * 36);
+    expect(seen.size).toBe(Object.values(PACKS)
+      .reduce((total, pack) => total + pack.acts.flatMap((act) => act.questions).length, 0));
   });
 
   it('questionIdFor matches the stored id of every registered question', () => {

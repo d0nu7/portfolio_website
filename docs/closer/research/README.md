@@ -8,7 +8,7 @@ This directory contains the focused evidence work for FR-018 through FR-020. Evi
 |---|---|
 | [FR-018 to FR-020 deep research](fr-018-fr-020-deep-research.md) | Primary integrated report, decisions, evidence maps, product architecture, pack audit, references, and bilingual appendices |
 | [Final citation and safety QA](fr-018-fr-020-citation-qa.md) | Independent verification of citations, evidence transfer, structure, candidate counts, and safety consistency for the frozen primary report |
-| [Full question-bank audit](question-bank-full-audit-2026-08-17.md) | Exhaustive post-research disposition of all 432 implemented questions, including three additional cross-pack consistency findings |
+| [Full question-bank audit](question-bank-full-audit-2026-08-17.md) | Exhaustive pre-FR-018/019 disposition of the then-implemented 432 questions, including three additional cross-pack consistency findings |
 
 ## Supporting workstream memos
 
@@ -21,8 +21,8 @@ This directory contains the focused evidence work for FR-018 through FR-020. Evi
 ## Authority and change rules
 
 - The primary integrated report is the current synthesis; the workstream memos preserve deeper evidence and design detail.
-- FR-018 and FR-019 candidate questions and action cards remain research proposals, not validated or approved product content. FR-020's 37 changes and the full-bank audit's three addenda were separately owner-approved and implemented on 17 August 2026; implementation is not validation.
+- RaDi explicitly approved implementing FR-018 as **POWER, BY CHOICE** and a conservative 21-card FR-019 **SLOW BURN** subset on 17 August 2026. The synchronized catalog and runtime are now the authority for shipped wording. The frozen memos remain the authority for evidence limits and rejected categories. Implementation is not validation.
 - Classic questions, translations, order, and route membership remain immutable.
 - Future FR-020-derived changes must retain the same atomic approval rule and synchronize the authoritative catalog, runtime, content revision, and regression tests.
-- FR-018 requires named specialist, legal, accessibility, bilingual, and moderated-session gates before implementation or release.
-- FR-019 remains a closed moderated-prototype proposal; public release is a no-go until every stated safety, evidence, privacy, accessibility, legal, and adverse-event gate passes.
+- The owner decision advanced both implementations before the memos' recommended external gates. Those named specialist, legal, accessibility, bilingual, privacy, adverse-event, physical-device, and moderated-session reviews therefore remain explicit release-risk debt rather than completed evidence.
+- SLOW BURN consumer V1 deliberately excludes the pilot-only intimate-area card and every prohibited category in the memo. Its choices and session state are volatile and non-resumable.

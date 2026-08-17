@@ -1,6 +1,6 @@
 # CLOSER – refactoring roadmap
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Status:** Closed
 **Basis:** independent code review, the consolidated Claude refactoring analysis, product review, and current regression findings
 **Outcome:** correctness and maintainability improved incrementally without a high-risk rewrite or unrelated product changes
@@ -40,6 +40,8 @@ src/closer/
       deep.js
       chaos.js
       late-night.js
+      power-by-choice.js
+      slow-burn.js
       specialist.js
       specialist-question-data.js
     index.js
@@ -58,6 +60,7 @@ src/components/Closer/
   CloserPrivateMomentView.js   # private capture and post-run check handoffs
   CloserFinaleView.js          # last question, Q37 branches, and ending beats
   CloserQuestionView.js        # question, twist, countdown, pass, and stay presentation
+  CloserTouchExperience.js     # volatile bilateral SLOW BURN session
   CloserScreenFrame.js         # shared background, blocking, menu, and celebration layers
 src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
@@ -183,6 +186,19 @@ Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already
 Physical Android/iOS, VoiceOver, TalkBack, and WebKit checks remain release
 validation, not unfinished FR-011 refactoring. They are tracked under BUG-010
 and the RaDi owner TODO.
+
+### Post-FR-011 extension – adult experience boundary
+
+Status: complete on 17 August 2026.
+
+- [x] Add two metadata-driven adult packs without changing Classic.
+- [x] Keep POWER, BY CHOICE on the ordinary compiled conversation path.
+- [x] Isolate SLOW BURN in a volatile, non-resumable controller rather than expanding the persisted question reducer with action/body-choice state.
+- [x] Require masked bilateral choices before every physical invitation and a fresh choice after adjustment or pause.
+- [x] Reject SLOW BURN saves in the persistence parser and remove any browser save while the pack is selected.
+- [x] Extend catalog fidelity, route, registry, persistence, mobile interaction, and no-resume coverage.
+
+This is an intentional architectural boundary, not unfinished reducer migration: persisted conversation phases remain in the transition core; transient embodied choices do not enter durable state.
 
 ## 5. Follow-up outside FR-011
 

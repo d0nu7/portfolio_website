@@ -21,10 +21,10 @@ Product code and automated tests remain the technical source of truth for what t
 
 ## Current implementation summary
 
-- Twelve catalog packs are implemented: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, and Colleagues.
+- Fourteen catalog packs are implemented: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, Power, by Choice, and Slow Burn.
 - Late Night is available through a discreet menu preference while retaining independent per-session consent. The local regression gate passes; deployed and physical-device smoke tests remain.
-- The implemented packs contain 432 German/English questions with stable IDs and automated exact catalog-fidelity coverage. CLASSIC is editorially immutable and has dedicated fingerprint regression coverage in addition to exact catalog fidelity.
-- The menu contains a versioned, persistent pack library. Mainstream packs remain visible by default; Late Night and the three specialist packs start hidden and can be enabled independently without turning visibility into consent.
+- The implemented packs contain 489 German/English questions or action cards with stable IDs and automated exact catalog-fidelity coverage. CLASSIC is editorially immutable and has dedicated fingerprint regression coverage in addition to exact catalog fidelity.
+- The menu contains a versioned, persistent pack library. Mainstream packs remain visible by default; specialist and adult packs start hidden and can be enabled independently without turning visibility into consent. Late Night remains the final item in the collapsed adult group.
 - Date Night, Couples, and Friends offer an optional pack-aware PLAYFUL style. Chaos uses the same sparse action contract in its existing PLAYFUL presentation. Sensitive and professional packs remain free of countdown, prediction, and simultaneous-answer pressure.
 - Quick, Standard, and Full are curated routes. Packs with one valid style skip the style screen.
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
@@ -32,7 +32,7 @@ Product code and automated tests remain the technical source of truth for what t
 - `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Persisted transitions, persistence parsing, browser storage, and phase presentation now have explicit tested boundaries.
 - FR-005 is implemented: eligible Standard/Full routes use pack-specific asymmetric Private Moments, stable A/B handoffs, explicit shared and individual decline paths, route-specific use/discard points, and pack-specific finales. Quick has no Private Moment; Late Night uses only transient bilateral readiness gates.
 - FR-011 is complete: compiled run structure, pure persisted transitions, persistence/storage boundaries, and focused presentation components are in place. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
-- The FR-018–020 evidence programme is complete. It conditionally supports a conversation-only **POWER, BY CHOICE** prototype and limits SLOW BURN to closed moderated research pending all release gates. All 37 FR-020 atomic changes plus the full-bank audit's three addenda are owner-approved and synchronized across the catalog, runtime, and regression tests; Classic's 36 questions remain unchanged and every named validation gate remains open.
+- The FR-018–020 evidence programme is complete. RaDi approved an experimental implementation of the conversation-only **POWER, BY CHOICE** bank and the conservative 21-card **SLOW BURN** consumer subset on 17 August 2026. SLOW BURN uses a separate volatile touch-session controller with masked bilateral choices and stores no session state. Implementation is not scientific, legal, accessibility, or safety validation; all external review and moderated-session gates named in the research remain open. Classic's 36 questions remain unchanged.
 - TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.
 
 ## Documentation conventions

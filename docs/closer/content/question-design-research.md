@@ -2,7 +2,7 @@
 
 **Updated:** 17 August 2026
 **Purpose:** Research-informed editorial guidance for CLOSER questions
-**Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, and their available routes
+**Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, Power, by Choice, Slow Burn, and their available routes
 
 This document is a design synthesis, not a claim that the new CLOSER packs or individual prompts have been scientifically validated. The bilingual [question catalog](question-catalog.de-en.md) remains the editorial source of truth for shipped wording and routes. The focused FR-018–020 evidence programme, candidate banks, and cross-pack audit are indexed separately in [research](../research/README.md).
 
@@ -377,8 +377,8 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Replace prompts with unusually high pass rates or low conversation quality.
 4. Iteratively evaluate and refine pack-specific Quick, Standard, and Full routes.
 5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
-6. Disposition the completed FR-018 evidence review and decide whether conversation-only **POWER, BY CHOICE** advances to named specialist review and moderated testing.
-7. Decide whether to fund the prerequisite reviews and closed moderated prototype for FR-019 SLOW BURN; public release remains a no-go.
+6. Validate the owner-approved conversation-only **POWER, BY CHOICE** implementation through the named specialist, bilingual, accessibility, privacy/legal, physical-device, and moderated-session gates. Do not infer validation from implementation.
+7. Validate the conservative SLOW BURN subset through the memo's specialist, ethics, accessibility, privacy/legal, adverse-event, physical-device, and staged-session gates. Keep excluded categories and C06 out of consumer builds.
 8. Validate the implemented FR-020 set—37 original atomic changes plus three full-bank addenda—through bilingual paraphrase interviews, contextual specialist review, and moderated sessions. Keep Classic's 36 questions unchanged and preserve catalog/runtime/test synchronization for every later edit.
 
 ---

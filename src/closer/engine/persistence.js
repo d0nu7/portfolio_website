@@ -198,6 +198,7 @@ export const SAVE_REJECT_REASONS = Object.freeze({
   CONTENT_DRIFT: 'content-drift',
   INDEX_OUT_OF_RANGE: 'index-out-of-range',
   BREAK_ACT_OUT_OF_RANGE: 'break-act-out-of-range',
+  NON_RESUMABLE_PACK: 'non-resumable-pack',
 });
 
 const PRIVATE_MOMENT_PHASES = new Set([
@@ -240,6 +241,9 @@ export function parseSaved(raw) {
 
   const pack = getPack(merged.packId);
   merged.packId = pack.id;
+  if (pack.nonResumable) {
+    return { ok: false, reason: SAVE_REJECT_REASONS.NON_RESUMABLE_PACK };
+  }
   merged.routeId = getRoute(pack.id, merged.routeId).id;
   if (!pack.modes.some((mode) => mode.id === merged.modeId)) {
     merged.modeId = pack.modes[0].id;

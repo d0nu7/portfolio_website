@@ -1,6 +1,6 @@
 # CLOSER – bug tracker
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Rule:** This file tracks reproducible defects only. Product additions belong in [feature-requests.md](feature-requests.md); structural work belongs in the [refactoring roadmap](../engineering/refactoring-roadmap.md).
 
 Status values:
@@ -142,6 +142,19 @@ Acceptance:
 - Count and elapsed-time text reach at least 4.5:1 against the CLOSER background.
 - Functional TopBar text is not dimmed by a parent opacity.
 - An independent contrast calculation guards the source values.
+
+### BUG-015 – SLOW BURN entry can leave a resumable consent save
+
+**Status:** Closed
+
+The shared consent flow could persist `consentGateAccepted` before the volatile touch controller began. That contradicted SLOW BURN's non-resumable contract even though no action or body-area choice had yet been stored.
+
+Acceptance:
+
+- Selecting or running SLOW BURN removes the ordinary game save.
+- `parseSaved()` rejects an injected SLOW BURN state with `NON_RESUMABLE_PACK`.
+- Reload returns to Start while the separate pack-visibility preference remains intact.
+- No action, adjustment, body area, or consent decision enters durable storage.
 
 ## P2 – correctness and resilience
 

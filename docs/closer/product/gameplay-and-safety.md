@@ -20,7 +20,7 @@ Intervention should therefore decrease across the three acts. A milestone may br
 
 | Term | Meaning |
 |---|---|
-| Pack | The question domain: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, or Colleagues. |
+| Pack | The content domain: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, Power, by Choice, or Slow Burn. |
 | Route | The curated duration/length: Quick, Standard, or Full where supported. |
 | Style | Optional rules that change presentation or twists without changing the question bank. |
 | Twist | A sparse question-level variation such as answering together or without deliberation. |
@@ -47,8 +47,8 @@ Every setup screen needs a safe route back. The global menu must be reachable be
 
 Every route is a fixed editorial sequence. It is never a random sample.
 
-- **Quick:** 12 regular questions, four per act, with a self-contained beginning, middle, and ending. No Private Moment or extended Question 37 ceremony. Late Night still requires its safety gates.
-- **Standard:** normally 24 regular questions, eight per act. It may include one short pack-appropriate private moment.
+- **Quick:** normally 12 regular questions, four per act, with a self-contained beginning, middle, and ending. SLOW BURN is the explicit exception: nine invitations, three per act. No Quick route has a Private Moment or extended Question 37 ceremony. Adult packs still require their safety gates.
+- **Standard:** normally 24 regular questions, eight per act. SLOW BURN uses 15 invitations, five per act. An eligible conversation pack may include one short pack-appropriate private moment.
 - **Full:** 36 regular questions, 12 per act, with room for the complete finale.
 
 Pack-specific pilot ranges are defined in the [question catalog](../content/question-catalog.de-en.md). They are soft estimates, not targets. A timer never advances the game automatically, and worthwhile follow-up conversation takes priority over completing the route.
@@ -122,6 +122,22 @@ Finales follow the route:
 - Full may use **Question 37** and any unresolved saved questions when the pack contract supports them.
 - Late Night does not use secret sexual or physical tasks, does not inherit the saved-question flow, and does not enter generic Question 37.
 
+### Power, by Choice
+
+POWER, BY CHOICE is adult conversation content, not an instruction set. It is hidden by default, requires independent entry and Act-II decisions, and exposes only the collective outcome. It contains no physical tasks, PLAYFUL actions, private moment, Question 37, timer pressure, role assignment, compatibility result, or implication that an answer permits action. Quick, Standard, and Full contain 12, 24, and 36 questions.
+
+### Slow Burn
+
+SLOW BURN is a deliberately separate touch experience for two adults. It is hidden by default and non-resumable. Every concrete physical invitation requires two masked choices:
+
+- **Yes + Yes** opens only the exact invitation shown;
+- **Adjust** stops contact, changes one named condition, and requires a new bilateral choice;
+- **Skip** closes the invitation without naming who chose it;
+- **Pause**, **Stop**, **Not there**, **Different**, and requests for more intensity stop or re-negotiate before contact continues;
+- hiding, refreshing, closing, ending, or injecting a saved state cannot restore a SLOW BURN session.
+
+No action choice, body area, adjustment, or consent state is persisted. The visibility preference may persist. Consumer content excludes penetration, breath or neck play, restraint, impact, surprise touch, intimate-area action cards, and the research memo's pilot-only C06 card. Entry consent is not blanket consent, and the experience has no required endpoint.
+
 ## 7. Late Night (18+)
 
 Late Night is explicit adult conversation content. Its visibility preference and in-game consent are independent:
@@ -148,7 +164,7 @@ The milestone animation should create a brief sense of reward at the start, act 
 It must:
 
 - fill enough of a mobile viewport to read as a deliberate scene rather than a tiny icon;
-- have a clear arrival, connection, and release over roughly 4.2–5 seconds (RaDi, 2026-08-16: the original 1.8–2.5s read as beautiful but cleared before it could be taken in);
+- have a compact arrival and connection over roughly 2.1 seconds, with up to 2.5 seconds for the finale; keep the last fade slower without stretching the movement and hold phases;
 - use pack color and restrained copy;
 - never activate controls that are visually covered by the celebration;
 - leave the separate global Menu operable while the covered scene is inert;
@@ -190,3 +206,4 @@ Before a public release:
 - real Android and iOS installed-PWA smoke tests are complete;
 - imprint and privacy information are directly reachable;
 - Late Night has a separate editorial, consent, safety, and legal review.
+- POWER, BY CHOICE and SLOW BURN complete the external specialist, accessibility, bilingual, privacy/legal, physical-device, and moderated-session gates named in their evidence memos before broad promotion.

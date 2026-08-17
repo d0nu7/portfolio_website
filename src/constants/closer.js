@@ -27,10 +27,15 @@ export function pick(value, lang) {
   return value;
 }
 
-import { PACKS, LATE_NIGHT_PACK } from '../closer/content';
+import {
+  PACKS,
+  LATE_NIGHT_PACK,
+  POWER_BY_CHOICE_PACK,
+  SLOW_BURN_PACK,
+} from '../closer/content';
 import { ACT_NUMERALS } from '../closer/content/shared';
 
-export { PACKS, LATE_NIGHT_PACK };
+export { PACKS, LATE_NIGHT_PACK, POWER_BY_CHOICE_PACK, SLOW_BURN_PACK };
 
 export const DEFAULT_PACK_ID = 'classic';
 export const DEFAULT_ROUTE_ID = 'full';
@@ -220,7 +225,7 @@ export function questionIdFor(packId, questionIndex) {
  * invalidate active saves. Copy-only corrections keep their existing ID and
  * version. The resolved ID list lets the save parser detect content drift.
  */
-export const CONTENT_VERSION = 6;
+export const CONTENT_VERSION = 7;
 
 export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
   const total = totalQuestions(packId, routeId);

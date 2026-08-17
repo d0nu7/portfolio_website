@@ -288,6 +288,14 @@ const COPY = {
     de: 'Wähle, welche Gesprächsmodi in deiner Auswahl sichtbar sind. Mindestens ein Modus bleibt aktiv.',
     en: 'Choose which conversation packs appear in your selector. At least one pack stays active.',
   },
+  powerByChoiceMenuIntro: {
+    de: 'POWER, BY CHOICE ist ein explizites Gespräch für Erwachsene über freiwillig gewählte erotische Rollen, Grenzen und Fürsorge. Es enthält keine körperlichen Aufgaben; Antworten sind niemals Zustimmung zu einer Handlung.',
+    en: 'POWER, BY CHOICE is an explicit adult conversation about chosen erotic roles, boundaries, and care. It contains no physical tasks; answers are never consent to an action.',
+  },
+  slowBurnMenuIntro: {
+    de: 'SLOW BURN ist ein körperlicher 18+-Modus mit äußerlichen Berührungen und optionalen Küssen. Jede konkrete Einladung beginnt nur nach einem verdeckten Ja + Ja. Die Session wird nicht gespeichert und kann nicht fortgesetzt werden.',
+    en: 'SLOW BURN is a physical 18+ mode with external touch and optional kissing. Every exact invitation begins only after a masked Yes + Yes. The session is not saved and cannot be resumed.',
+  },
   adultContentGroup: { de: 'Inhalte ab 18', en: '18+ content' },
   morePacksHint: {
     de: 'Weitere Gesprächsmodi kannst du jederzeit im Menü einblenden.',

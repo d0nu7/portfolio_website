@@ -62,6 +62,7 @@ import CloserQuestionView, { questionFrameOptions } from './CloserQuestionView';
 import CloserScreenFrame from './CloserScreenFrame';
 import CloserSetupView from './CloserSetupView';
 import CloserStartView from './CloserStartView';
+import CloserTouchExperience from './CloserTouchExperience';
 
 export { SAVE_REJECT_REASONS, parseSaved } from '../../closer/engine/persistence';
 
@@ -185,6 +186,7 @@ export default function CloserGame() {
     if (prev === null || prev === s.phase) return;
     // Start, act completion, a completed private handoff, and the finale are
     // positive milestones. Decline, pass, restart, and early exit never fire.
+    if (getPack(s.packId).touchExperience) return;
     if (prev === 'act' && s.phase === 'q' && s.qIndex === 0) {
       setPulseStage('start');
     } else if (s.phase === 'break' && s.breakAct === 0) {
@@ -194,11 +196,13 @@ export default function CloserGame() {
     } else if (prev !== 'ending' && s.phase === 'ending' && s.endReason === 'completed') {
       setPulseStage('finale');
     }
-  }, [mounted, s.phase, s.breakAct, s.qIndex, s.endReason]);
+  }, [mounted, s.phase, s.breakAct, s.qIndex, s.endReason, s.packId]);
 
   useEffect(() => {
     if (!mounted) return;
-    persistGameState(getBrowserStorage(window), s);
+    const storage = getBrowserStorage(window);
+    if (getPack(s.packId).nonResumable) clearSavedGame(storage);
+    else persistGameState(storage, s);
   }, [s, mounted]);
 
   // Keep the shared phone awake during a real run, never during setup.
@@ -760,6 +764,23 @@ export default function CloserGame() {
         })}
       />,
       { accent: consentStyle.accent, glow: consentStyle.glow, menu: true }
+    );
+  }
+
+  if (pack.touchExperience && s.phase === 'act') {
+    return frame(
+      <CloserTouchExperience
+        run={run}
+        pack={pack}
+        lang={lang}
+        starterOffset={s.starterOffset}
+        nameOf={nameOf}
+        onEnd={() => {
+          clearSavedGame(getBrowserStorage(window));
+          finish('userEnded');
+        }}
+      />,
+      { accent: pack.actStyle[0].accent, glow: 0.1, menu: true }
     );
   }
 

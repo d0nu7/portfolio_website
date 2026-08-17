@@ -28,6 +28,8 @@ const HEADING_TO_PACK_ID = {
   'OLD FRIENDS': 'old-friends',
   DEEP: 'deep',
   CHAOS: 'chaos',
+  'POWER, BY CHOICE (18+)': 'power-by-choice',
+  'SLOW BURN (18+)': 'slow-burn',
   'LATE NIGHT (18+)': 'late-night',
   'ROAD TRIP': 'road-trip',
   FAMILY: 'family',
@@ -52,7 +54,7 @@ function parseCatalogQuestions(markdown) {
       .slice(1, -1)
       .map((cell) => cell.trim());
     const [id] = cells;
-    const routeIsSecondColumn = /^(Q\/S\/F|Q\/F|S\/F|F|Q\/S|S|Reserve)$/.test(cells[1]);
+    const routeIsSecondColumn = /^(Q\/S\/F|Q\/F|S\/F|F|Q\/S|S|Reserve|Q\/S\/U|S\/U|U)$/.test(cells[1]);
     const de = cells[routeIsSecondColumn ? 2 : 1];
     const en = cells[routeIsSecondColumn ? 3 : 2];
     byPack[currentPackId].push({
@@ -85,7 +87,8 @@ describe('catalog fidelity', () => {
   const implementedPackIds = Object.keys(implementation);
 
   it('contains every implemented pack exactly once', () => {
-    expect(Object.keys(catalog)).toEqual(implementedPackIds);
+    expect(Object.keys(catalog)).toHaveLength(implementedPackIds.length);
+    expect(new Set(Object.keys(catalog))).toEqual(new Set(implementedPackIds));
   });
 
   it('keeps the published CLASSIC question set immutable', () => {
@@ -96,12 +99,11 @@ describe('catalog fidelity', () => {
     expect(fingerprint).toBe(CLASSIC_QUESTION_FINGERPRINT);
   });
 
-  it.each(implementedPackIds)('%s has 36 exact DE/EN question pairs', (packId) => {
+  it.each(implementedPackIds)('%s keeps every catalog question synchronized', (packId) => {
     const catalogQuestions = catalog[packId];
     const codeQuestions = questionsFromPack(implementation[packId]);
 
-    expect(catalogQuestions).toHaveLength(36);
-    expect(codeQuestions).toHaveLength(36);
+    expect(catalogQuestions).toHaveLength(codeQuestions.length);
     expect(codeQuestions).toEqual(questionText(catalogQuestions));
   });
 
@@ -115,6 +117,8 @@ describe('catalog fidelity', () => {
     expect(routeCounts('road-trip')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
     expect(routeCounts('family')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
     expect(routeCounts('colleagues')).toEqual({ 'Q/S': 12, S: 12, Reserve: 12 });
+    expect(routeCounts('power-by-choice')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
+    expect(routeCounts('slow-burn')).toEqual({ 'Q/S/U': 9, 'S/U': 6, U: 6 });
 
     ['road-trip', 'family'].forEach((packId) => {
       for (let act = 0; act < 3; act += 1) {
@@ -146,6 +150,9 @@ describe('catalog fidelity', () => {
       'Q/S': ['quick', 'standard'],
       S: ['standard'],
       Reserve: [],
+      'Q/S/U': ['quick', 'standard', 'unhurried'],
+      'S/U': ['standard', 'unhurried'],
+      U: ['unhurried'],
     };
 
     implementedPackIds.forEach((packId) => {
