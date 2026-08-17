@@ -593,8 +593,9 @@ describe('private-moment transition core', () => {
     });
   });
 
-  it('routes finale, skipped-finale, Quick, and direct-finale outcomes explicitly', () => {
+  it('routes finale, skipped-finale, ordinary Quick, and route-specific direct-finale outcomes explicitly', () => {
     const firstDate = compileRun('first-date', 'standard', 'calm');
+    const roadTripQuick = compileRun('road-trip', 'quick', 'calm');
     expect(transitionPrivateMoment(firstDate, privateState({
       phase: 'all36',
       privateMomentStatus: 'armed',
@@ -613,6 +614,9 @@ describe('private-moment transition core', () => {
       phase: 'ending', completed: true, endReason: 'completed',
     }));
     expect(transitionPrivateMoment(noPrivateMoment, privateState({ phase: 'all36' }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({ patch: { phase: 'directFinale' }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
+    expect(transitionPrivateMoment(roadTripQuick, privateState({ phase: 'all36' }), {
       type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
     })).toEqual({ patch: { phase: 'directFinale' }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
   });

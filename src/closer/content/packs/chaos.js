@@ -135,6 +135,7 @@ const CHAOS_ACTS = [
         de: 'Erfindet gemeinsam das absurdeste Unternehmen, das überraschend funktionieren könnte.',
         en: 'Invent the most absurd business together that might actually work.',
         twist: 'both',
+        twistRoutes: ['quick'],
       },
       {
         id: 'chaos-q17',
@@ -173,8 +174,8 @@ const CHAOS_ACTS = [
       },
       {
         id: 'chaos-q24',
-        de: 'Plant ein tatsächlich machbares Mini-Abenteuer für höchstens zehn Euro – ohne Mutprobe und ohne jemanden bloßzustellen.',
-        en: 'Plan a genuinely doable mini-adventure for no more than ten euros—with no dares and no embarrassing anyone.',
+        de: 'Plant ein tatsächlich machbares Mini-Abenteuer mit dem, was euch zur Verfügung steht – ohne Mutprobe und ohne jemanden bloßzustellen.',
+        en: 'Plan a genuinely doable mini-adventure using what is available to you—with no dares and no embarrassing anyone.',
       },
     ],
   },
@@ -193,8 +194,8 @@ const CHAOS_ACTS = [
       },
       {
         id: 'chaos-q26',
-        de: 'Welche kurze Sprachnachricht würdest du deinem Ich in fünf Jahren schicken?',
-        en: 'What short voice message would you send to yourself five years from now?',
+        de: 'Welche kurze Nachricht würdest du deinem Ich in fünf Jahren schicken?',
+        en: 'What short message would you send to yourself five years from now?',
       },
       {
         id: 'chaos-q27',

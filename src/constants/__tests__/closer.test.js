@@ -27,6 +27,7 @@ import {
   totalQuestions,
   voiceSrc,
 } from '../closer';
+import COPY from '../closerCopy';
 
 /*
  * These cover the extractable pure logic behind CLOSER's state machine --
@@ -38,6 +39,10 @@ import {
 
 const ACTS = PACKS.classic.acts;
 const MODES = PACKS.classic.modes;
+const questionById = (id) => Object.values(PACKS)
+  .flatMap((pack) => pack.acts)
+  .flatMap((act) => act.questions)
+  .find((question) => question.id === id);
 
 describe('ACTS content invariants (classic pack)', () => {
   it('has exactly 3 acts of 12 questions each, 36 total', () => {
@@ -210,6 +215,162 @@ describe('PACKS registry', () => {
       expect(pack.secretAtIndex).toBeGreaterThan(0);
       expect(pack.secretAtIndex).toBeLessThan(totalQuestions(pack.id));
     });
+  });
+});
+
+describe('17 August 2026 full question-bank audit', () => {
+  const revisedQuestions = [
+    ['first-date-q25',
+      'Was hoffst du, dass eine Person an dir bemerkt, ohne dass du es beweisen musst?',
+      'What do you hope someone notices about you without making you prove it?'],
+    ['first-date-q34',
+      'Was möchtest du, dass dein Gegenüber von dir aus diesem Abend in Erinnerung behält?',
+      'What do you hope the other person remembers about you from tonight?'],
+    ['date-night-q03',
+      'Wie kann eine Person für dich klar zeigen, dass sie flirtet, und zugleich nachfragen, ob das willkommen ist?',
+      'How can someone make it clear to you that they are flirting while also checking whether it is welcome?'],
+    ['date-night-q25',
+      'Was hilft dir, dich bei Nähe sicher und ungezwungen zu fühlen?',
+      'What helps you feel safe and at ease with closeness?'],
+    ['couples-q20',
+      'Was hilft dir nach einem Missverständnis, wieder neugierig auf die Sicht deines Gegenübers zu werden?',
+      'What helps you become curious about your partner’s perspective again after a misunderstanding?'],
+    ['couples-q28',
+      'Welche kleine Veränderung könnte euch diese Woche guttun, ohne dass daraus eine Verpflichtung wird?',
+      'What small change might feel helpful to the two of you this week without becoming an obligation?'],
+    ['friends-q14',
+      'Wie möchtest du gefragt werden, ob du gerade Rat, Gesellschaft oder etwas anderes möchtest?',
+      'How would you like a friend to ask whether you want advice, company, or something else?'],
+    ['friends-q24',
+      'Welches aktuelle Thema würdest du gern mit einer befreundeten Person teilen können, ohne dass es gelöst werden muss?',
+      'What current topic would you like to be able to share with a friend without it needing to be solved?'],
+    ['old-friends-q13',
+      'Was hat sich in deinem Leben seit der Zeit, aus der ihr euch kennt, am stärksten verändert?',
+      'What has changed most in your life since the period when the two of you first knew each other?'],
+    ['old-friends-q19',
+      'Wie hast du die Zeit mit weniger oder anderem Kontakt erlebt – falls das auf euch zutrifft?',
+      'How did you experience the period of less or different contact, if that applies to the two of you?'],
+    ['old-friends-q22',
+      'Gibt es etwas, das sich zwischen euch heute mühelos anfühlt – und wenn ja, was?',
+      'Is there anything between the two of you that feels effortless today—and if so, what?'],
+    ['deep-q34',
+      'Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes?',
+      'After this conversation, how can the other person best be there for you: through listening, questions, quiet, or something else?'],
+    ['chaos-q24',
+      'Plant ein tatsächlich machbares Mini-Abenteuer mit dem, was euch zur Verfügung steht – ohne Mutprobe und ohne jemanden bloßzustellen.',
+      'Plan a genuinely doable mini-adventure using what is available to you—with no dares and no embarrassing anyone.'],
+    ['chaos-q26',
+      'Welche kurze Nachricht würdest du deinem Ich in fünf Jahren schicken?',
+      'What short message would you send to yourself five years from now?'],
+    ['late-night-q22',
+      'Welche Rolle spielen Tempo, Wiederholung, Abwechslung oder Pausen für dein sexuelles Erleben?',
+      'What role do pace, repetition, variety, or pauses play in your sexual experience?'],
+    ['late-night-q26',
+      'Welche eindeutigen Worte oder bewusst vereinbarten Zeichen möchtest du für Zustimmung, Pause und Stopp verwenden?',
+      'What clear words or deliberately agreed signals would you like to use for consent, pause, and stop?'],
+    ['late-night-q27',
+      'Wenn ein Signal nicht eindeutig ist: Wie soll die andere Person pausieren und nachfragen?',
+      'When a signal is unclear, how should the other person pause and check in?'],
+    ['family-q01',
+      'Gibt es eine kleine Sache, die dich im Alltag mit der anderen Person verbindet oder an sie denken lässt – auch wenn ihr nicht am selben Ort lebt?',
+      'Is there a small thing that connects you with the other person in everyday life or brings them to mind—even if you do not live in the same place?'],
+    ['family-q05',
+      'Welches Essen, Ritual, Ereignis oder Alltagsdetail verbindest du mit deiner persönlichen Vorstellung von Familie?',
+      'What food, ritual, occasion, or everyday detail do you associate with your own idea of family?'],
+    ['family-q14',
+      'Wie soll die andere Person nachfragen, ob du gerade Unterstützung oder lieber Freiraum möchtest?',
+      'How would you like the other person to ask whether you want support or would prefer some space?'],
+  ];
+
+  it.each(revisedQuestions)('%s retains its approved bilingual wording', (id, de, en) => {
+    expect(questionById(id)).toMatchObject({ de, en });
+  });
+
+  it('keeps Classic questions intact while narrowing the claim and distinguishing extracts', () => {
+    expect(PACKS.classic.blurb).toEqual({
+      de: 'Die vollständige Route folgt eng einer Forschungsaufgabe zu unmittelbarer zwischenmenschlicher Nähe. Kürzere Routen sind CLOSER-Auszüge.',
+      en: 'The Full route closely follows a research task on immediate interpersonal closeness. Shorter routes are CLOSER extracts.',
+    });
+    expect(PACKS.classic.positioning.de).toContain('Liebe, Kompatibilität oder dauerhafte Wirkung wurden nicht gezeigt.');
+    expect(PACKS.classic.positioning.en).toContain('Love, compatibility, and lasting effects were not demonstrated.');
+    expect(PACKS.classic.routes.quick.title).toEqual({
+      de: 'Quick · CLOSER-Auszug', en: 'Quick · CLOSER extract',
+    });
+    expect(PACKS.classic.routes.standard.title).toEqual({
+      de: 'Standard · CLOSER-Auszug', en: 'Standard · CLOSER extract',
+    });
+    expect(PACKS.classic.routes.full.title).toEqual({
+      de: 'Full · vollständige 36-Fragen-Abfolge',
+      en: 'Full · complete 36-question sequence',
+    });
+  });
+
+  it('applies the checking-in label and removes Couples Q29 PREDICT', () => {
+    expect(PACKS.couples.acts[1].title).toEqual({ de: 'ABSTIMMEN', en: 'CHECKING IN' });
+    expect(questionById('couples-q29')).not.toHaveProperty('twist');
+  });
+
+  it('applies the audited route swaps without changing route sizes', () => {
+    const ids = (packId, routeId) => compileRun(packId, routeId).questions
+      .map((question) => question.id);
+
+    expect(ids('friends', 'quick')).toEqual(expect.arrayContaining(['friends-q36']));
+    expect(ids('friends', 'quick')).not.toContain('friends-q34');
+    expect(ids('friends', 'standard')).toContain('friends-q34');
+    expect(ids('friends', 'standard')).not.toContain('friends-q36');
+    expect(ids('old-friends', 'quick')).toContain('old-friends-q36');
+    expect(ids('old-friends', 'quick')).not.toContain('old-friends-q28');
+    expect(ids('old-friends', 'standard')).toContain('old-friends-q36');
+    expect(ids('old-friends', 'standard')).not.toContain('old-friends-q28');
+    expect(ids('deep', 'standard')).toContain('deep-q15');
+    expect(ids('deep', 'standard')).not.toContain('deep-q17');
+    expect(ids('late-night', 'standard')).toContain('late-night-q34');
+    expect(ids('late-night', 'standard')).not.toContain('late-night-q30');
+
+    expect(ids('friends', 'quick')).toHaveLength(12);
+    expect(ids('friends', 'standard')).toHaveLength(24);
+    expect(ids('old-friends', 'quick')).toHaveLength(12);
+    expect(ids('old-friends', 'standard')).toHaveLength(24);
+    expect(ids('deep', 'standard')).toHaveLength(24);
+    expect(ids('late-night', 'standard')).toHaveLength(24);
+  });
+
+  it('suppresses Chaos Q16 BOTH only on routes with Private Sparks', () => {
+    const q16 = (routeId) => compileRun('chaos', routeId, 'playful').questions
+      .find((question) => question.id === 'chaos-q16').content;
+    expect(q16('quick').twist).toBe('both');
+    expect(q16('standard').twist).toBeUndefined();
+    expect(q16('full').twist).toBeUndefined();
+  });
+
+  it('uses the revised response cards and removes the Friends Q36 card', () => {
+    expect(questionById('friends-q36')).not.toHaveProperty('responseCard');
+    expect(questionById('old-friends-q34').responseCard.text).toEqual({
+      de: 'Was daran wäre dir wichtig?',
+      en: 'What about that would matter to you?',
+    });
+    ['deep-q01', 'deep-q21'].forEach((id) => {
+      expect(questionById(id).responseCard.text).toEqual({
+        de: 'Würdige kurz, was der Person daran wichtig ist.',
+        en: 'Take a moment to acknowledge what matters to the person about it.',
+      });
+    });
+    expect(questionById('deep-q34').responseCard.text).toEqual({
+      de: 'Wenn du möchtest: Sag in einem Satz, was du verstanden hast. Daraus entsteht keine Zusage.',
+      en: 'If you like, say in one sentence what you understood. This creates no commitment.',
+    });
+  });
+
+  it('clarifies the private-card action and compiles Road Trip Quick safety copy only there', () => {
+    expect(COPY.showPrivateCards).toEqual({
+      de: 'Private Karten ansehen', en: 'View private cards',
+    });
+    expect(compileRun('road-trip', 'quick').directFinale).toEqual({
+      de: 'Hier endet die Runde. Wenn eine teilnehmende Person weiterfährt, legt das Smartphone weg; die sichere Weiterreise hat Vorrang.',
+      en: 'This round ends here. If either participant resumes driving, put the phone away; a safe onward journey comes first.',
+    });
+    expect(compileRun('road-trip', 'standard').directFinale).toBeNull();
+    expect(compileRun('road-trip', 'full').directFinale).toBeNull();
   });
 });
 
@@ -538,11 +699,10 @@ describe('routes (iteration 7, Phase 2)', () => {
    *
    * The pack's closing (`last: true`) question only has to be the actual
    * last question of its FULL route, not every route: several iteration-8
-   * packs (COUPLES, FRIENDS, OLD FRIENDS, CHAOS) deliberately end Quick/
-   * Standard one or more questions short of that closer by the catalog's
-   * own curation -- e.g. FRIENDS' Q36 is marked Full-only in
-   * docs/closer/content/question-catalog.de-en.md, reserving its
-   * closing "REFLECT" question for the complete experience. The app
+   * packs deliberately end Quick/Standard on a different curated closer.
+   * FRIENDS and OLD FRIENDS now intentionally include Q36 in Quick after
+   * the 17 August 2026 full-bank audit, while their Standard routes differ.
+   * The app
    * itself never reads `.last` at runtime (CloserGame.js's `isLast` is
    * already route-relative, via finalQuestionIndex) -- this was always
    * just an extra content-integrity check, not something the engine

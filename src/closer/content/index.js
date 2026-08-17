@@ -87,12 +87,12 @@ export const PACKS = {
     title: { de: 'CLASSIC', en: 'CLASSIC' },
     meta: { de: 'Die 36 Fragen', en: 'The 36 questions' },
     blurb: {
-      de: 'Für tiefes Kennenlernen – jede Intensität, jede Beziehung.',
-      en: 'For deep connection — any intensity, any relationship.',
+      de: 'Die vollständige Route folgt eng einer Forschungsaufgabe zu unmittelbarer zwischenmenschlicher Nähe. Kürzere Routen sind CLOSER-Auszüge.',
+      en: 'The Full route closely follows a research task on immediate interpersonal closeness. Shorter routes are CLOSER extracts.',
     },
     positioning: {
-      de: 'CLASSIC ist ein bewusst persönliches Gespräch für zwei Erwachsene. Spielt nur, wenn ihr beide Tiefe wollt. Es ist kein Test und keine Therapie.',
-      en: "CLASSIC is a deliberately personal conversation for two adults. Only play if you both want depth. It's not a test and not therapy.",
+      de: 'CLASSIC Full folgt eng der 36-Fragen-Abfolge aus Aron et al. (1997). In einer Laborstudie berichteten Teilnehmende nach der vollständigen, etwa 45-minütigen Aufgabe mehr unmittelbare Nähe als nach Small Talk. Quick, Standard, die deutsche Redaktion und alle App-Mechaniken sind CLOSER-Adaptionen. Liebe, Kompatibilität oder dauerhafte Wirkung wurden nicht gezeigt.',
+      en: 'CLASSIC Full closely follows the 36-question sequence in Aron et al. (1997). In a laboratory study, participants reported greater immediate closeness after the complete, approximately 45-minute task than after small talk. Quick, Standard, the German editorial version, and all app mechanics are CLOSER adaptations. Love, compatibility, and lasting effects were not demonstrated.',
     },
     acts: CLASSIC_ACTS,
     modes: CLASSIC_MODES,

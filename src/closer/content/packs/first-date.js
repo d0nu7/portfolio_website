@@ -189,7 +189,7 @@ const FIRST_DATE_ACTS = [
     questions: [
       {
         id: 'first-date-q25',
-        de: 'Was soll eine Person an dir bemerken, ohne dass du es beweisen musst?',
+        de: 'Was hoffst du, dass eine Person an dir bemerkt, ohne dass du es beweisen musst?',
         en: 'What do you hope someone notices about you without making you prove it?',
       },
       {
@@ -235,7 +235,7 @@ const FIRST_DATE_ACTS = [
       },
       {
         id: 'first-date-q34',
-        de: 'Was soll dein Gegenüber von dir aus diesem Abend in Erinnerung behalten?',
+        de: 'Was möchtest du, dass dein Gegenüber von dir aus diesem Abend in Erinnerung behält?',
         en: 'What do you hope the other person remembers about you from tonight?',
       },
       {

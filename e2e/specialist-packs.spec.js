@@ -44,6 +44,9 @@ test.describe('Specialist pack runtime', () => {
       await expect(page.getByText('Das waren alle 12.')).toBeVisible();
       await page.getByRole('button', { name: 'Ende' }).click();
       await expect(page.getByText(/GIB DAS HANDY/i)).toHaveCount(0);
+      if (packId === 'road-trip') {
+        await expect(page.getByText(/Wenn eine teilnehmende Person weiterfährt/)).toBeVisible();
+      }
     });
   }
 });

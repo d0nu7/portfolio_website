@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
-import { LATE_NIGHT_PACK, PACKS } from '../closer';
+import { compileRun, LATE_NIGHT_PACK, PACKS } from '../closer';
 
 const CATALOG_PATH = path.join(
   process.cwd(),
@@ -52,7 +52,7 @@ function parseCatalogQuestions(markdown) {
       .slice(1, -1)
       .map((cell) => cell.trim());
     const [id] = cells;
-    const routeIsSecondColumn = /^(Q\/S\/F|S\/F|F|Q\/S|S|Reserve)$/.test(cells[1]);
+    const routeIsSecondColumn = /^(Q\/S\/F|Q\/F|S\/F|F|Q\/S|S|Reserve)$/.test(cells[1]);
     const de = cells[routeIsSecondColumn ? 2 : 1];
     const en = cells[routeIsSecondColumn ? 3 : 2];
     byPack[currentPackId].push({
@@ -135,6 +135,37 @@ describe('catalog fidelity', () => {
       expect(actRoutes.filter((route) => route === 'S')).toHaveLength(4);
       expect(actRoutes.filter((route) => route === 'Reserve')).toHaveLength(4);
     }
+  });
+
+  it('keeps every tabular route marker synchronized with compiled runtime membership', () => {
+    const routesForMarker = {
+      'Q/S/F': ['quick', 'standard', 'full'],
+      'Q/F': ['quick', 'full'],
+      'S/F': ['standard', 'full'],
+      F: ['full'],
+      'Q/S': ['quick', 'standard'],
+      S: ['standard'],
+      Reserve: [],
+    };
+
+    implementedPackIds.forEach((packId) => {
+      const markedQuestions = catalog[packId].filter(({ route }) => route !== null);
+      if (!markedQuestions.length) return;
+
+      const compiledIds = Object.fromEntries(
+        Object.keys(implementation[packId].routes).map((routeId) => [
+          routeId,
+          new Set(compileRun(packId, routeId).questions.map(({ id }) => id)),
+        ])
+      );
+
+      markedQuestions.forEach(({ id, route }) => {
+        const expectedRoutes = new Set(routesForMarker[route]);
+        Object.entries(compiledIds).forEach(([routeId, ids]) => {
+          expect(ids.has(`${packId}-${id}`)).toBe(expectedRoutes.has(routeId));
+        });
+      });
+    });
   });
 
   it('does not duplicate question copy across packs', () => {

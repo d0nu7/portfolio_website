@@ -43,8 +43,8 @@ const DATE_NIGHT_ACTS = [
       },
       {
         id: 'date-night-q03',
-        de: 'Woran merkst du, dass jemand mit dir flirtet?',
-        en: 'How can you tell when someone is flirting with you?',
+        de: 'Wie kann eine Person für dich klar zeigen, dass sie flirtet, und zugleich nachfragen, ob das willkommen ist?',
+        en: 'How can someone make it clear to you that they are flirting while also checking whether it is welcome?',
       },
       {
         id: 'date-night-q04',
@@ -183,8 +183,8 @@ const DATE_NIGHT_ACTS = [
     questions: [
       {
         id: 'date-night-q25',
-        de: 'Was hilft dir, dich sicher genug zu fühlen, um dich fallen zu lassen?',
-        en: 'What helps you feel safe enough to let your guard down?',
+        de: 'Was hilft dir, dich bei Nähe sicher und ungezwungen zu fühlen?',
+        en: 'What helps you feel safe and at ease with closeness?',
       },
       {
         id: 'date-night-q26',

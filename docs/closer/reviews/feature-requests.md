@@ -560,7 +560,7 @@ Research gate complete: the evidence review and non-claims, complete three-act m
 
 ### FR-020 – Cross-pack evidence and question audit
 
-**Status:** Audit delivered 17 August 2026; 37 atomic proposals await individual disposition
+**Status:** Delivered 17 August 2026; all 37 original atomic changes plus three post-research addenda are implemented, with external validation pending
 
 Repeat the evidence-review method across every research-informed pack without
 altering the immutable Classic questions. Recheck construct fit, intensity
@@ -570,4 +570,6 @@ editorial rationale. Preserve a dated source/claim map and file individual
 content changes as separately reviewable proposals rather than silently editing
 the authoritative catalog.
 
-The completed [integrated report](../research/fr-018-fr-020-deep-research.md) and [FR-020 audit memo](../research/fr-020-cross-pack-audit-memo.md) cover all 12 implemented packs plus the Students/FH Salzburg draft. Classic remains unchanged. Each proposed claim, wording, route, mechanic, response-card, or finale change has an exact ID, current/proposed DE/EN or metadata, rationale, evidence, downside, and approval gate. No proposal is approved merely because it appears in the audit.
+The completed [integrated report](../research/fr-018-fr-020-deep-research.md), [FR-020 audit memo](../research/fr-020-cross-pack-audit-memo.md), and [exhaustive post-research question-bank audit](../research/question-bank-full-audit-2026-08-17.md) cover all 12 implemented packs plus the Students/FH Salzburg draft. The full-bank pass accounts for all 432 questions and adds three exact bilingual consistency changes for Date Night Q03, Friends Q14, and Old Friends Q22. The owner subsequently approved all 40 atomic entries. Catalog copy, runtime content, route membership, response cards, PLAYFUL behavior, shared action copy, and route-specific finales are synchronized; Classic's 36 questions remain unchanged.
+
+Implementation is complete when every approved atomic entry is synchronized across catalog and runtime, behavior-changing saves are versioned, Classic's question fingerprint stays unchanged, and wording/routes/mechanics/finales have regression coverage. Those conditions are met. Named bilingual, specialist, accessibility, physical-device, and moderated-session gates remain release evidence rather than code work.

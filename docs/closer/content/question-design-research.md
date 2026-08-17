@@ -379,7 +379,7 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
 6. Disposition the completed FR-018 evidence review and decide whether conversation-only **POWER, BY CHOICE** advances to named specialist review and moderated testing.
 7. Decide whether to fund the prerequisite reviews and closed moderated prototype for FR-019 SLOW BURN; public release remains a no-go.
-8. Triage the completed FR-020 audit's 37 atomic proposals individually. Do not change Classic or silently apply candidate catalog edits.
+8. Validate the implemented FR-020 set—37 original atomic changes plus three full-bank addenda—through bilingual paraphrase interviews, contextual specialist review, and moderated sessions. Keep Classic's 36 questions unchanged and preserve catalog/runtime/test synchronization for every later edit.
 
 ---
 

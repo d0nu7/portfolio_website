@@ -157,7 +157,7 @@ const COPY = {
 
   /* private moments -------------------------------------------------------- */
   privateOfferTitle: { de: 'KURZ PRIVAT', en: 'A PRIVATE MOMENT' },
-  showPrivateCards: { de: 'Karten zeigen', en: 'Show cards' },
+  showPrivateCards: { de: 'Private Karten ansehen', en: 'View private cards' },
   skipPrivateForBoth: { de: 'Für beide auslassen', en: 'Skip for both' },
   privateHandoffBody: (lang, who) =>
     lang === 'de'

@@ -829,6 +829,7 @@ export default function CloserGame() {
     return frame(
       <CloserFinaleView
         state={s}
+        run={run}
         pack={pack}
         route={route}
         lang={lang}

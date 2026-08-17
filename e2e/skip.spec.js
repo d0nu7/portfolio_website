@@ -41,7 +41,7 @@ test.describe('Free pass', () => {
     await page.getByRole('button', { name: 'Start' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
-    await page.getByText('VOLL', { exact: true }).click();
+    await page.getByText('Full · vollständige 36-Fragen-Abfolge', { exact: true }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
 

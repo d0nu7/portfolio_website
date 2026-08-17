@@ -5,6 +5,7 @@ test.describe('Classic Full Private Moment — capture', () => {
   test('offers a shared skip, shows genuinely different cards, and returns to Q28', async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 320, height: 720 });
     await seedAndResume(page, {
       phase: 'secretOffer',
       pending: 27,
@@ -14,7 +15,9 @@ test.describe('Classic Full Private Moment — capture', () => {
 
     await expect(page.getByText('KURZ PRIVAT')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Für beide auslassen' })).toBeVisible();
-    await page.getByRole('button', { name: 'Karten zeigen' }).click();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+      .toBe(true);
+    await page.getByRole('button', { name: 'Private Karten ansehen' }).click();
 
     await expect(page.getByText('GIB DAS HANDY AN ALEX', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Ich bin Alex' }).click();

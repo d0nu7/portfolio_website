@@ -363,6 +363,7 @@ const CLASSIC_SECRET_AT_INDEX = 27;
 const CLASSIC_ROUTES = {
   quick: {
     ...ROUTE_PRESETS.quick,
+    title: { de: 'Quick · CLOSER-Auszug', en: 'Quick · CLOSER extract' },
     minutes: 15,
     // Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
     actIndices: [
@@ -373,6 +374,7 @@ const CLASSIC_ROUTES = {
   },
   standard: {
     ...ROUTE_PRESETS.standard,
+    title: { de: 'Standard · CLOSER-Auszug', en: 'Standard · CLOSER extract' },
     minutes: 30,
     // Q01-Q04, Q08, Q09, Q11, Q12 · Q13-Q18, Q20, Q21 · Q25-Q31, Q36
     actIndices: [
@@ -383,6 +385,7 @@ const CLASSIC_ROUTES = {
   },
   full: {
     ...ROUTE_PRESETS.full,
+    title: { de: 'Full · vollständige 36-Fragen-Abfolge', en: 'Full · complete 36-question sequence' },
     minutes: 45,
   },
 };

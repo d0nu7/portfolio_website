@@ -13,6 +13,7 @@ test.describe('Duration / route selection', () => {
   test('the setup flow now goes players -> duration -> mode, and a chosen route carries into the game', async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 320, height: 720 });
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Start' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
@@ -20,12 +21,14 @@ test.describe('Duration / route selection', () => {
 
     await expect(page.getByText('Wie viel Zeit habt ihr?')).toBeVisible();
     // All three routes are offered, with their curated question counts.
-    await expect(page.getByText('KURZ')).toBeVisible();
-    await expect(page.getByText('STANDARD')).toBeVisible();
-    await expect(page.getByText('VOLL')).toBeVisible();
+    await expect(page.getByText('Quick · CLOSER-Auszug')).toBeVisible();
+    await expect(page.getByText('Standard · CLOSER-Auszug')).toBeVisible();
+    await expect(page.getByText('Full · vollständige 36-Fragen-Abfolge')).toBeVisible();
     await expect(page.getByText('12 Fragen · 3 Akte · etwa 15 Minuten')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+      .toBe(true);
 
-    await page.getByText('KURZ').click();
+    await page.getByText('Quick · CLOSER-Auszug').click();
     await page.getByRole('button', { name: 'Weiter' }).click();
 
     // Lands on the mode screen next, same as before this screen existed.

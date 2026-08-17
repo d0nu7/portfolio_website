@@ -11,20 +11,15 @@ import {
  * FRIENDS (iteration 8 catalog rollout) -- content transcribed verbatim
  * from docs/closer/content/question-catalog.de-en.md section 6.
  *
- * Quick/Standard end on Q34/Q35 -- Q36 (`last: true`) is marked Full-only
- * in the catalog's own per-question Route column, reserving its closing
- * "REFLECT" response card for the complete experience. See the relaxed
- * "ends on last:true" test in closer.test.js.
+ * Quick closes on Q36, Standard on Q35, and Full on Q36. The intentional
+ * Q/F route assignment for Q36 gives the short route a gratitude close
+ * without adding the former prescriptive REFLECT card.
  *
- * Response Cards (optional listening prompts the catalog recommends after
- * specific questions) and the pack's own dynamic Q37 wording are
- * transcribed below; Response Cards are not yet a CloserGame.js UI
- * feature (see the housekeeping note in this file's own commit) -- kept
- * here as a comment so the content isn't lost before that's built.
+ * Response Cards (optional listening prompts shown after selected answers)
+ * and the pack's own dynamic Q37 wording are transcribed below.
  *
  * Response Cards: after Q08/Q33 CELEBRATE; after Q18 FOLLOW UP; after
- * Q21/Q24 VALIDATE; after Q36 REFLECT (see catalog section 6 for exact
- * wording).
+ * Q21/Q24 VALIDATE (see catalog section 6 for exact wording).
  * ====================================================================== */
 
 const FRIENDS_ACTS = [
@@ -131,8 +126,8 @@ const FRIENDS_ACTS = [
       },
       {
         id: 'friends-q14',
-        de: 'Woran kann eine befreundete Person erkennen, ob du gerade Rat oder einfach Gesellschaft möchtest?',
-        en: 'How can a friend tell whether you want advice or simply some company?',
+        de: 'Wie möchtest du gefragt werden, ob du gerade Rat, Gesellschaft oder etwas anderes möchtest?',
+        en: 'How would you like a friend to ask whether you want advice, company, or something else?',
       },
       {
         id: 'friends-q15',
@@ -183,8 +178,8 @@ const FRIENDS_ACTS = [
       },
       {
         id: 'friends-q24',
-        de: 'Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen?',
-        en: 'What are you dealing with right now that a friend can simply sit with you in, without having to solve it?',
+        de: 'Welches aktuelle Thema würdest du gern mit einer befreundeten Person teilen können, ohne dass es gelöst werden muss?',
+        en: 'What current topic would you like to be able to share with a friend without it needing to be solved?',
         stayEnabled: true,
         responseCard: RESPONSE_CARDS.validateNoSolution,
       },
@@ -260,7 +255,6 @@ const FRIENDS_ACTS = [
         de: 'Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus?',
         en: 'What would you like to thank the other person for today, and what does it say about who they are?',
         last: true,
-        responseCard: RESPONSE_CARDS.reflectUnderstood,
       },
     ],
   },
@@ -309,7 +303,7 @@ const FRIENDS_ROUTES = {
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
-      [0, 3, 6, 9],
+      [0, 3, 6, 11],
     ],
   },
   standard: {

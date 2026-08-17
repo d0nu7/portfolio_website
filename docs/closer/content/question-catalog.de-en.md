@@ -27,7 +27,7 @@
 | Standard | 24 questions, 8 per act | default for most packs |
 | Full | 36 questions, 12 per act | complete master bank |
 
-In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `S/F` means Standard and Full; and `F` means Full only. `COLLEAGUES` intentionally uses `Q/S`, `S`, and `Reserve`: Reserve questions belong to its editorial master bank but to no playable route. Selected IDs always retain their listed order.
+In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `Q/F` means Quick and Full; `S/F` means Standard and Full; and `F` means Full only. `COLLEAGUES` intentionally uses `Q/S`, `S`, and `Reserve`: Reserve questions belong to its editorial master bank but to no playable route. Selected IDs always retain their listed order.
 
 `DEEP` intentionally has no Quick route. `COLLEAGUES` intentionally has no Full route until user sessions demonstrate a credible, non-intrusive use case. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts. The 36 Classic rows are immutable and protected by an automated content fingerprint.
 
@@ -54,7 +54,7 @@ Shared optional-moment copy:
 
 - **Offer DE:** „Gleich sieht jede Person eine andere, freiwillige Karte. Jede Person kann sie im Kopf behalten oder „Heute nicht“ wählen. Keine Wahl wird der anderen Person angezeigt. Gebt nichts ein und macht keinen Screenshot.“
 - **Offer EN:** “Each person will see a different optional card. Each person may keep it in mind or choose ‘Not today.’ Their choice will not be shown to the other person. Do not type anything or take a screenshot.”
-- **Shared actions:** **Karten zeigen / Show cards**, **Für beide auslassen / Skip for both**, and on each private card **Heute nicht / Not today**.
+- **Shared actions:** **Private Karten ansehen / View private cards**, **Für beide auslassen / Skip for both**, and on each private card **Heute nicht / Not today**.
 - **First handoff DE/EN:** „Gib das Handy an {who}. Erst {who} tippt weiter. Wenn ein privater Blick auf den Bildschirm gerade nicht möglich ist, lasst diesen Moment aus.“ / “Pass the phone to {who}. Only {who} should continue. If they cannot view the screen privately right now, skip this moment.”
 - **Second handoff DE/EN:** „Gib das Handy an {who}. Was die erste Person gesehen oder gewählt hat, bleibt verborgen.“ / “Pass the phone to {who}. What the first person saw or chose remains private.”
 - **Return DE:** „Legt das Handy wieder zwischen euch. Niemand muss sagen, was auf der eigenen Karte stand oder welche Wahl getroffen wurde.“
@@ -163,12 +163,16 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 **Duration:** Quick extract 20–30 min · Standard extract 35–50 min · Full 45–75 min
 **Default:** Full
 **Note:** The version below matches the current branch. Only five German phrasings were minimally made gender-neutral (Q01, Q06, Q27, Q28, Q36); question content, intensity, and order remain unchanged.
+**Positioning DE:** „Die vollständige Route folgt eng einer Forschungsaufgabe zu unmittelbarer zwischenmenschlicher Nähe. Kürzere Routen sind CLOSER-Auszüge.“
+**Positioning EN:** “The Full route closely follows a research task on immediate interpersonal closeness. Shorter routes are CLOSER extracts.”
+**Research note DE:** „CLASSIC Full folgt eng der 36-Fragen-Abfolge aus Aron et al. (1997). In einer Laborstudie berichteten Teilnehmende nach der vollständigen, etwa 45-minütigen Aufgabe mehr unmittelbare Nähe als nach Small Talk. Quick, Standard, die deutsche Redaktion und alle App-Mechaniken sind CLOSER-Adaptionen. Liebe, Kompatibilität oder dauerhafte Wirkung wurden nicht gezeigt.“
+**Research note EN:** “CLASSIC Full closely follows the 36-question sequence in Aron et al. (1997). In a laboratory study, participants reported greater immediate closeness after the complete, approximately 45-minute task than after small talk. Quick, Standard, the German editorial version, and all app mechanics are CLOSER adaptations. Love, compatibility, and lasting effects were not demonstrated.”
 
 ### Curated routes
 
-- **Quick:** Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
-- **Standard:** Q01, Q02, Q03, Q04, Q08, Q09, Q11, Q12 · Q13, Q14, Q15, Q16, Q17, Q18, Q20, Q21 · Q25, Q26, Q27, Q28, Q29, Q30, Q31, Q36
-- **Full:** Q01–Q36 in the order shown below
+- **Quick · CLOSER extract:** Q01, Q04, Q09, Q12 · Q13, Q14, Q16, Q17 · Q25, Q26, Q31, Q36
+- **Standard · CLOSER extract:** Q01, Q02, Q03, Q04, Q08, Q09, Q11, Q12 · Q13, Q14, Q15, Q16, Q17, Q18, Q20, Q21 · Q25, Q26, Q27, Q28, Q29, Q30, Q31, Q36
+- **Full · complete 36-question sequence:** Q01–Q36 in the order shown below
 
 ### Act I – NEUGIERIG / CURIOUS
 
@@ -272,7 +276,7 @@ Classic Full uses the categorical saved-question finale defined in [Private Mome
 
 | Nr. | Deutsch | English |
 |---:|---|---|
-| Q25 | Was soll eine Person an dir bemerken, ohne dass du es beweisen musst? | What do you hope someone notices about you without making you prove it? |
+| Q25 | Was hoffst du, dass eine Person an dir bemerkt, ohne dass du es beweisen musst? | What do you hope someone notices about you without making you prove it? |
 | Q26 | Woran merkst du, dass du jemanden gern wiedersehen möchtest? | How do you know when you would like to see someone again? |
 | Q27 | Welche Grenze macht Dating für dich leichter und sicherer? | What boundary makes dating feel easier and safer for you? |
 | Q28 | Welche Art von Verbindung hoffst du zu finden, ohne heute schon mehr versprechen zu müssen? | What kind of connection are you hoping for without having to promise anything tonight? |
@@ -281,7 +285,7 @@ Classic Full uses the categorical saved-question finale defined in [Private Mome
 | Q31 | Wie zeigt sich Verlässlichkeit für dich am Anfang eines Kennenlernens? | What does reliability look like to you early on? |
 | Q32 | Wie soll eine Person nachfragen, wenn sie deine Gefühle nicht sicher einschätzen kann? | How would you like someone to ask when they are unsure how you feel? |
 | Q33 | Was lässt dich respektiert fühlen, wenn Interessen oder Meinungen auseinandergehen? | What makes you feel respected when interests or opinions differ? |
-| Q34 | Was soll dein Gegenüber von dir aus diesem Abend in Erinnerung behalten? | What do you hope the other person remembers about you from tonight? |
+| Q34 | Was möchtest du, dass dein Gegenüber von dir aus diesem Abend in Erinnerung behält? | What do you hope the other person remembers about you from tonight? |
 | Q35 | Was hilft dir, ehrlich Nein zu sagen, ohne dich für die Stimmung verantwortlich zu fühlen? | What helps you say an honest no without feeling responsible for the mood? |
 | Q36 | Was würde diesen Abend für dich gut und druckfrei abrunden? | What would make this evening feel complete and pressure-free for you? |
 
@@ -310,7 +314,7 @@ First Date Standard and Full use the two-turn interest/everyday-preference final
 |---:|---|---|
 | Q01 | Welche kleine Sache findest du überraschend attraktiv? | What small thing do you find surprisingly attractive? |
 | Q02 | Welches Kompliment bleibt bei dir besonders lange hängen? | What kind of compliment tends to stay with you? |
-| Q03 | Woran merkst du, dass jemand mit dir flirtet? | How can you tell when someone is flirting with you? |
+| Q03 | Wie kann eine Person für dich klar zeigen, dass sie flirtet, und zugleich nachfragen, ob das willkommen ist? | How can someone make it clear to you that they are flirting while also checking whether it is welcome? |
 | Q04 | Bei welcher Art von Date vergisst du leicht die Zeit? | What kind of date makes it easy for you to lose track of time? |
 | Q05 | Welcher konkrete Moment zwischen euch hatte zuletzt einen besonderen Funken? | What recent moment between you had a special spark? |
 | Q06 | Welche Seite an deinem Gegenüber entdeckst du immer wieder gern neu? | What side of the person across from you do you still enjoy rediscovering? |
@@ -342,7 +346,7 @@ First Date Standard and Full use the two-turn interest/everyday-preference final
 
 | Nr. | Deutsch | English |
 |---:|---|---|
-| Q25 | Was hilft dir, dich sicher genug zu fühlen, um dich fallen zu lassen? | What helps you feel safe enough to let your guard down? |
+| Q25 | Was hilft dir, dich bei Nähe sicher und ungezwungen zu fühlen? | What helps you feel safe and at ease with closeness? |
 | Q26 | Welche Grenze macht Intimität für dich erst möglich? | What boundary helps make intimacy possible for you? |
 | Q27 | Was sollte ein Mensch über dein Verlangen verstehen, ohne es persönlich zu nehmen? | What should someone understand about your desire without taking it personally? |
 | Q28 | Was macht es dir leicht, ein ehrliches Ja oder Nein auszusprechen? | What makes it easier for you to give an honest yes or no? |
@@ -369,7 +373,7 @@ Date Night Standard and Full use the two-turn appreciation/future-date-detail fi
 
 ## 5. COUPLES
 
-**Arc:** SEHEN → REPARIEREN → WÄHLEN
+**Arc:** SEHEN → ABSTIMMEN → WÄHLEN
 **Goal:** Care for an existing relationship, make positive experiences visible, understand support preferences, and only then carefully open repair and future topics; not a substitute for therapy.
 **Duration:** Quick/check-in 12–18 min · Standard 25–40 min · Full 50–75 min
 **Default:** Quick/Check-in
@@ -391,7 +395,7 @@ Date Night Standard and Full use the two-turn appreciation/future-date-detail fi
 | Q11 | Welche Seite von dir kommt in eurer Beziehung leichter zum Vorschein? | What part of you comes out more easily in your relationship? |
 | Q12 | Welches ehrliche Kompliment über eure Beziehung kannst du gut annehmen? | What sincere compliment about your relationship can you truly accept? |
 
-### Act II – REPARIEREN / REPAIR
+### Act II – ABSTIMMEN / CHECKING IN
 
 | Nr. | Deutsch | English |
 |---:|---|---|
@@ -402,7 +406,7 @@ Date Night Standard and Full use the two-turn appreciation/future-date-detail fi
 | Q17 | Welche Reaktion wünschst du dir zuerst, wenn du Stress teilst? | What kind of response do you want first when you share something stressful? |
 | Q18 | Welche Formulierung hilft dir, um Raum zu bitten, ohne Distanz zu meinen? | What words help you ask for space without meaning emotional distance? |
 | Q19 | Was macht ein schwieriges Gespräch für dich sicherer? | What helps a difficult conversation feel safer to you? |
-| Q20 | Wie kann dein Gegenüber auf eine gute Nachricht von dir so reagieren, dass du dich wirklich begleitet fühlst? | How can your partner respond to your good news in a way that makes you feel truly supported? |
+| Q20 | Was hilft dir nach einem Missverständnis, wieder neugierig auf die Sicht deines Gegenübers zu werden? | What helps you become curious about your partner’s perspective again after a misunderstanding? |
 | Q21 | Welches Signal sollte für euch bedeuten, kurz innezuhalten statt weiterzudrängen? | What signal should tell the two of you to pause rather than push on? |
 | Q22 | Welcher frühere schwierige Moment zeigt dir, dass ihr wieder zueinanderfinden könnt? | What past difficult moment reminds you that the two of you can find your way back to each other? |
 | Q23 | Welche kleine Veränderung würde in eurem Alltag gerade spürbar Druck herausnehmen? | What small change would noticeably ease the pressure in your everyday life right now? |
@@ -415,7 +419,7 @@ Date Night Standard and Full use the two-turn appreciation/future-date-detail fi
 | Q25 | Wovon möchtest du in den nächsten drei Monaten mehr gemeinsam erleben? | What would you like the two of you to experience more of over the next three months? |
 | Q26 | Welchen gemeinsamen Wunsch habt ihr zu lange verschoben? | What shared wish have the two of you postponed for too long? |
 | Q27 | Wie könnt ihr eure Nähe schützen, wenn der Alltag stressig wird? | How can the two of you protect your closeness when everyday life gets stressful? |
-| Q28 | Welches kleine Versprechen könnt ihr euch für diese Woche geben? | What small promise can the two of you make for this week? |
+| Q28 | Welche kleine Veränderung könnte euch diese Woche guttun, ohne dass daraus eine Verpflichtung wird? | What small change might feel helpful to the two of you this week without becoming an obligation? |
 | Q29 | Welche neue gemeinsame Erfahrung würdet ihr im nächsten Monat gern ausprobieren? | What new experience would the two of you like to try in the next month? |
 | Q30 | Welche neue Tradition würde gut zu euch passen? | What new tradition would suit the two of you? |
 | Q31 | Wie sieht ein gewöhnlicher gemeinsamer Tag aus, auf den du dich auch in einigen Jahren freuen würdest? | What would an ordinary day together look like if it still felt worth looking forward to years from now? |
@@ -434,6 +438,8 @@ Date Night Standard and Full use the two-turn appreciation/future-date-detail fi
 ### Question 37
 
 Couples Standard and Full use the private listening/quality moment after Acts I and II as defined in [Private Moments (FR-005)](#private-moments-fr-005); it does not feed Question 37. Quick has no Private Moment.
+
+In PLAYFUL, Q29 is answered sequentially. `PREDICT` is disabled for that future-oriented preference so it cannot become a partner-knowledge score.
 
 ---
 
@@ -467,7 +473,7 @@ Couples Standard and Full use the private listening/quality moment after Acts I 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
 | Q13 | Q/S/F | Welche Form von Unterstützung hilft dir wirklich? | What kind of support genuinely helps you? |
-| Q14 | S/F | Woran kann eine befreundete Person erkennen, ob du gerade Rat oder einfach Gesellschaft möchtest? | How can a friend tell whether you want advice or simply some company? |
+| Q14 | S/F | Wie möchtest du gefragt werden, ob du gerade Rat, Gesellschaft oder etwas anderes möchtest? | How would you like a friend to ask whether you want advice, company, or something else? |
 | Q15 | F | Was tut jemand konkret, wenn du dich in einem Gespräch wirklich gehört fühlst? | What does someone actually do that makes you feel truly heard in a conversation? |
 | Q16 | Q/S/F | Woran merkst du, dass du in einer Freundschaft ganz du selbst sein kannst? | What tells you that you can be fully yourself in a friendship? |
 | Q17 | S/F | Welche Emotion kannst du unter befreundeten Menschen leicht zeigen, und welche eher nicht? | Which emotion can you show easily around friends, and which one is harder to show? |
@@ -477,7 +483,7 @@ Couples Standard and Full use the private listening/quality moment after Acts I 
 | Q21 | F | Wenn du einen schweren Tag teilst: Was hilft zuerst – Zuhören, Trost, Ablenkung, Ideen, praktische Hilfe oder etwas anderes? | When you share that you have had a hard day, what helps first: listening, comfort, distraction, ideas, practical help, or something else? |
 | Q22 | Q/S/F | Welche Eigenschaft der anderen Person schätzt du, die sie selbst vielleicht unterschätzt? | What quality do you appreciate in the other person that they may underestimate in themselves? |
 | Q23 | S/F | Welche Grenze macht Freundschaften für dich verlässlicher und sicherer? | What boundary makes friendships feel more reliable and safe to you? |
-| Q24 | F | Welches aktuelle Thema darf eine befreundete Person einfach mit dir aushalten, ohne es lösen zu müssen? | What are you dealing with right now that a friend can simply sit with you in, without having to solve it? |
+| Q24 | F | Welches aktuelle Thema würdest du gern mit einer befreundeten Person teilen können, ohne dass es gelöst werden muss? | What current topic would you like to be able to share with a friend without it needing to be solved? |
 
 ### Act III – WEITER / AHEAD
 
@@ -492,16 +498,15 @@ Couples Standard and Full use the private listening/quality moment after Acts I 
 | Q31 | Q/S/F | Was sollten befreundete Menschen einander öfter fragen? | What should friends ask each other more often? |
 | Q32 | S/F | Wie könnte ich in den nächsten Monaten besser für dich da sein, ohne etwas für dich zu entscheiden? | How could I show up for you better over the next few months without deciding anything for you? |
 | Q33 | F | Welchen kleinen oder großen Erfolg sollten wir als Nächstes gemeinsam feiern? | What small or big success should we celebrate together next? |
-| Q34 | Q/S/F | Wofür wären wir in einem Jahr dankbar, wenn wir es jetzt gemeinsam planen? | What would we be grateful for a year from now if we planned it together today? |
+| Q34 | S/F | Wofür wären wir in einem Jahr dankbar, wenn wir es jetzt gemeinsam planen? | What would we be grateful for a year from now if we planned it together today? |
 | Q35 | S/F | Was hilft unserer Freundschaft, auch in vollen oder anstrengenden Zeiten Raum zu behalten? | What helps our friendship keep a place in our lives when things are busy or difficult? |
-| Q36 | F | Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus? | What would you like to thank the other person for today, and what does it say about who they are? |
+| Q36 | Q/F | Wofür möchtest du der anderen Person heute danken – und was sagt das über sie aus? | What would you like to thank the other person for today, and what does it say about who they are? |
 
 ### FRIENDS – recommended response cards
 
 - After Q08 or Q33: **CELEBRATE** – „Freu dich kurz mit, bevor du deine eigene Geschichte erzählst.“ / “Take a moment to celebrate with them before sharing your own story.”
 - After Q18: **FOLLOW UP** – „Frag nach einem konkreten Detail, das dir hilft, die Antwort besser zu verstehen.“ / “Ask for one specific detail that helps you understand the answer better.”
 - After Q21 or Q24: **VALIDATE** – „Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.“ / “No solution is needed. First, show that you heard them.”
-- After Q36: **REFLECT** – „Sag in einem Satz, was du an der Antwort verstanden hast.“ / “In one sentence, say what you understood from the answer.”
 
 ### FRIENDS – Private Moment finale
 
@@ -538,16 +543,16 @@ Friends Standard and Full use the memory/celebration finale defined in [Private 
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q13 | Q/S/F | Was hat sich in deinem Leben am stärksten verändert, seit wir uns besonders nah waren? | What has changed most in your life since the time when we were especially close? |
+| Q13 | Q/S/F | Was hat sich in deinem Leben seit der Zeit, aus der ihr euch kennt, am stärksten verändert? | What has changed most in your life since the period when the two of you first knew each other? |
 | Q14 | S/F | Welcher Teil deines heutigen Lebens passt am wenigsten zu dem Bild, das ich früher von dir hatte? | What part of your life today fits least with the picture I used to have of you? |
 | Q15 | F | Welche Entscheidung aus der Zeit dazwischen hat die heutige Version von dir besonders geprägt? | What decision from the time in between most shaped who you are today? |
 | Q16 | Q/S/F | Was wünschst du dir, dass ich über die Zeit dazwischen verstehe? | What would you like me to understand about the time in between? |
 | Q17 | S/F | Was hast du in dieser Zeit über dich gelernt, das du früher noch nicht wissen konntest? | What did you learn about yourself during that time that you could not have known before? |
 | Q18 | F | Was war an unserer Distanz leichter oder schwerer, als du erwartet hattest? | What about the distance between us was easier or harder than you expected? |
-| Q19 | Q/S/F | Was hat dir geholfen, mit weniger Kontakt auf eine für dich gute Weise umzugehen? | What helped you handle having less contact in a way that worked for you? |
+| Q19 | Q/S/F | Wie hast du die Zeit mit weniger oder anderem Kontakt erlebt – falls das auf euch zutrifft? | How did you experience the period of less or different contact, if that applies to the two of you? |
 | Q20 | S/F | Gibt es etwas aus der Zeit dazwischen, das du erzählen möchtest, ohne dass es erklärt oder gelöst werden muss? | Is there something from the time in between you would like to share without needing it to be explained or solved? |
 | Q21 | F | Welche alte Annahme über die andere Person bist du heute bereit zu überprüfen? | What old assumption about the other person are you ready to reconsider today? |
-| Q22 | Q/S/F | Was fühlt sich zwischen uns noch immer mühelos an? | What still feels effortless between us? |
+| Q22 | Q/S/F | Gibt es etwas, das sich zwischen euch heute mühelos anfühlt – und wenn ja, was? | Is there anything between the two of you that feels effortless today—and if so, what? |
 | Q23 | S/F | Wie hat sich die Art von Unterstützung verändert, die dir heute wirklich hilft? | How has the kind of support that genuinely helps you changed over time? |
 | Q24 | F | Welcher Teil deines heutigen Lebens würde mich vermutlich am meisten überraschen? | What part of your life today would probably surprise me most? |
 
@@ -558,7 +563,7 @@ Friends Standard and Full use the memory/celebration finale defined in [Private 
 | Q25 | Q/S/F | Welche Form von Kontakt würde sich heute für dich stimmig anfühlen – ohne etwas für später festlegen zu müssen? | What kind of contact would feel right to you today without deciding anything about the future? |
 | Q26 | S/F | Welche alte Tradition sollten wir behalten, verändern oder bewusst ruhen lassen? | What old tradition should we keep, adapt, or consciously leave at rest? |
 | Q27 | F | Welche Gewohnheit oder Erwartung aus früher darf dort bleiben? | What habit or expectation from the past is allowed to stay there? |
-| Q28 | Q/S/F | Welche gemeinsame Tradition wäre schön wiederzubeleben oder neu zu erfinden? | What shared tradition would be good to revive or reinvent? |
+| Q28 | F | Welche gemeinsame Tradition wäre schön wiederzubeleben oder neu zu erfinden? | What shared tradition would be good to revive or reinvent? |
 | Q29 | S/F | Über welches Thema von heute wärst du neugierig, ohne dass daraus ein schwieriges Gespräch werden muss? | What present-day topic are you curious to discuss without it having to become a difficult conversation? |
 | Q30 | F | Was brauchst du heute, um dich von mir als die Person gesehen zu fühlen, die du inzwischen bist? | What do you need today to feel seen by me as the person you have become? |
 | Q31 | Q/S/F | Gibt es ein Gespräch, für das heute mehr Raum wäre als früher? | Is there a conversation that has more room to happen today than it did before? |
@@ -566,14 +571,14 @@ Friends Standard and Full use the memory/celebration finale defined in [Private 
 | Q33 | F | Welche Grenze oder Erwartung sollten wir klar aussprechen, statt sie aus früher abzuleiten? | What boundary or expectation should we say out loud instead of carrying it over from the past? |
 | Q34 | Q/S/F | Wenn wir eine echte neue Erinnerung schaffen: Welche dürfte es sein? | If we create a genuine new memory together, what would you like it to be? |
 | Q35 | S/F | Welche Seite der anderen Person möchtest du heute neu kennenlernen? | What side of the other person would you like to get to know again as they are today? |
-| Q36 | F | Welche Eigenschaft schätzt du an der Person vor dir heute – unabhängig von eurer gemeinsamen Geschichte? | What quality do you appreciate in the person in front of you today, apart from your shared history? |
+| Q36 | Q/S/F | Welche Eigenschaft schätzt du an der Person vor dir heute – unabhängig von eurer gemeinsamen Geschichte? | What quality do you appreciate in the person in front of you today, apart from your shared history? |
 
 ### OLD FRIENDS – recommended response cards
 
 - After Q02 or Q04: **FOLLOW UP** – „Frag nach einem einzigen Detail aus dieser Szene.“ / “Ask for one detail from that moment.”
 - After Q12: **REFLECT** – „Sucht nicht nach der richtigen Version. Benennt, was jede Erinnerung für euch bedeutet.“ / “Do not look for the correct version. Name what each memory means to you.”
 - After Q20 or Q30: **VALIDATE** – „Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.“ / “You do not need to justify or repair anything. First, show that you heard them.”
-- After Q34: **FOLLOW UP** – „Was wäre ein kleiner, realistischer erster Schritt?“ / “What would be one small, realistic first step?”
+- After Q34: **FOLLOW UP** – „Was daran wäre dir wichtig?“ / “What about that would matter to you?”
 
 ### OLD FRIENDS – Private Moment
 
@@ -614,9 +619,9 @@ Old Friends Standard uses the immediate detail/meaning moment defined in [Privat
 |---|---|---|---|
 | Q13 | S/F | Wann hast du dich zuletzt wirklich verstanden gefühlt – und was hat die andere Person konkret getan? | When did you last feel truly understood, and what did the other person specifically do? |
 | Q14 | S/F | Welches Bedürfnis fällt dir schwer auszusprechen? | What need do you find difficult to express? |
-| Q15 | F | Welches ehrliche Kompliment kannst du nur schwer annehmen – und warum? | What sincere compliment do you find hard to accept, and why? |
+| Q15 | S/F | Welches ehrliche Kompliment kannst du nur schwer annehmen – und warum? | What sincere compliment do you find hard to accept, and why? |
 | Q16 | S/F | Was wird an dir von nahestehenden Menschen häufig missverstanden? | What do people close to you often misunderstand about you? |
-| Q17 | S/F | Welche Veränderung oder welcher Verlust hat dich stark geprägt? | What change or loss has had a powerful influence on who you are? |
+| Q17 | F | Welche Veränderung oder welcher Verlust hat dich stark geprägt? | What change or loss has had a powerful influence on who you are? |
 | Q18 | F | Welche schwierige Emotion kannst du besser aushalten, wenn jemand auf eine bestimmte Weise bei dir bleibt? | What difficult emotion becomes easier to sit with when someone stays with you in a particular way? |
 | Q19 | F | Wofür lernst du gerade, dir selbst zu vergeben? | What are you learning to forgive yourself for? |
 | Q20 | S/F | Bei welchem Thema wünschst du dir, dass Menschen erst zuhören, bevor sie nach einer Lösung suchen? | On what topic do you wish people would listen before looking for a solution? |
@@ -638,16 +643,16 @@ Old Friends Standard uses the immediate detail/meaning moment defined in [Privat
 | Q31 | S/F | Was möchtest du über dich aussprechen dürfen, ohne dass jemand es sofort lösen oder einordnen muss? | What would you like to be able to say about yourself without anyone immediately trying to solve or categorize it? |
 | Q32 | S/F | Womit könntest du heute beginnen, wofür dir dein zukünftiges Ich einmal dankbar wäre? | What could you start today that your future self might thank you for? |
 | Q33 | F | Welchen Teil deiner Identität möchtest du in Zukunft bewusster nähren? | What part of your identity would you like to nurture more intentionally in the future? |
-| Q34 | S/F | Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes? | After this conversation, how can the other person best be there for you: by listening, asking questions, giving you space, or something else? |
+| Q34 | S/F | Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes? | After this conversation, how can the other person best be there for you: through listening, questions, quiet, or something else? |
 | Q35 | F | Welchen Satz oder Gedanken möchtest du aus diesem Gespräch mitnehmen? | What sentence or thought would you like to carry with you from this conversation? |
 | Q36 | S/F | Was möchtest du dir selbst nach diesem Gespräch mit etwas mehr Freundlichkeit zugestehen? | After this conversation, what would you like to allow yourself with a little more kindness? |
 
 ### DEEP – recommended response cards
 
-- After Q01 or Q21: **CELEBRATE** – „Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.“ / “Take a moment to honor what that moment cost the person or meant to them.”
+- After Q01 or Q21: **CELEBRATE** – „Würdige kurz, was der Person daran wichtig ist.“ / “Take a moment to acknowledge what matters to the person about it.”
 - After Q13: **FOLLOW UP** – „Frag, welches konkrete Verhalten den Unterschied gemacht hat.“ / “Ask what specific behavior made the difference.”
 - After Q17, Q19 or Q24: **VALIDATE** – „Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.“ / “No solution and no judgment. First, show that you heard them.”
-- After Q34: **REFLECT** – „Sag in einem Satz, was du künftig beachten möchtest.“ / “In one sentence, say what you would like to keep in mind from now on.”
+- After Q34: **REFLECT** – „Wenn du möchtest: Sag in einem Satz, was du verstanden hast. Daraus entsteht keine Zusage.“ / “If you like, say in one sentence what you understood. This creates no commitment.”
 
 ### DEEP – Private Moment
 
@@ -693,14 +698,14 @@ Deep Standard and Full use the listening-intention moment defined in [Private Mo
 | Q21 | F | Wie müsste dich jemand einladen, damit du bei einer herrlich albernen Idee sofort mitmachst? | How would someone have to invite you for you to join a delightfully silly idea straight away? |
 | Q22 | F | Welches unerwartete Kompliment hat dich gleichzeitig zum Lachen gebracht und wirklich erreicht? | What unexpected compliment both made you laugh and genuinely landed with you? |
 | Q23 | F | Welchen harmlosen Plot-Twist würdest du dir für den nächsten Monat wünschen? | What harmless plot twist would you like the next month to bring? |
-| Q24 | F | Plant ein tatsächlich machbares Mini-Abenteuer für höchstens zehn Euro – ohne Mutprobe und ohne jemanden bloßzustellen. | Plan a genuinely doable mini-adventure for no more than ten euros—with no dares and no embarrassing anyone. |
+| Q24 | F | Plant ein tatsächlich machbares Mini-Abenteuer mit dem, was euch zur Verfügung steht – ohne Mutprobe und ohne jemanden bloßzustellen. | Plan a genuinely doable mini-adventure using what is available to you—with no dares and no embarrassing anyone. |
 
 ### Act III – ÜBERRASCHEND ECHT / SURPRISINGLY REAL
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
 | Q25 | Q/S/F | Wofür wünschst du dir gerade mehr Erlaubnis von dir selbst? | What do you wish you gave yourself more permission to do right now? |
-| Q26 | Q/S/F | Welche kurze Sprachnachricht würdest du deinem Ich in fünf Jahren schicken? | What short voice message would you send to yourself five years from now? |
+| Q26 | Q/S/F | Welche kurze Nachricht würdest du deinem Ich in fünf Jahren schicken? | What short message would you send to yourself five years from now? |
 | Q27 | S/F | Was würdest du ausprobieren, wenn Peinlichkeit für einen Tag nicht existieren würde? | What would you try if embarrassment did not exist for one day? |
 | Q28 | Q/S/F | Welcher gemeinsame Plan ist so albern, dass er vielleicht großartig wäre? | What could you do together that sounds so silly it might be brilliant? |
 | Q29 | S/F | Welche Begeisterung von dir wird oft unterschätzt oder missverstanden? | What enthusiasm of yours is often underestimated or misunderstood? |
@@ -714,7 +719,7 @@ Deep Standard and Full use the listening-intention moment defined in [Private Mo
 
 ### Question 37
 
-Chaos Standard and Full use the two private Q16 constraints defined in [Private Moments (FR-005)](#private-moments-fr-005); they are discarded when Q16 ends and do not change the ordinary finale. Quick ends directly.
+Chaos Standard and Full use the two private Q16 constraints defined in [Private Moments (FR-005)](#private-moments-fr-005); they are discarded when Q16 ends and do not change the ordinary finale. Q16 keeps its ordinary joint instruction but does not add the `BOTH` presentation mechanic on those routes. Quick has no Private Moment and may retain `BOTH`; it ends directly.
 
 ---
 
@@ -784,7 +789,7 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 | Q19 | S/F | Was kann Sex für dich erfüllend machen, auch unabhängig von einem Orgasmus? | What can make sex fulfilling for you, independently of orgasm? |
 | Q20 | S/F | Gibt es eine erotische Idee oder einen Kink, über den du neugierig sprechen möchtest, ohne heute etwas darüber entscheiden zu müssen? | Is there an erotic idea or kink you are curious to talk about without having to decide anything about it today? |
 | Q21 | F | Wie würdest du dich damit fühlen, in einer sexuellen Situation konkrete Wünsche oder Hinweise zu geben oder zu bekommen? | How might you feel about giving or receiving specific requests or guidance in a sexual situation? |
-| Q22 | F | Wodurch baut sich Lust für dich eher auf: Tempo, Wiederholung, Abwechslung, Pausen – oder etwas anderes? | What tends to build pleasure for you: pace, repetition, variety, pauses—or something else? |
+| Q22 | F | Welche Rolle spielen Tempo, Wiederholung, Abwechslung oder Pausen für dein sexuelles Erleben? | What role do pace, repetition, variety, or pauses play in your sexual experience? |
 | Q23 | F | Wie zeigst du gern, dass sich etwas besonders gut anfühlt? | How do you like to show that something feels especially good? |
 | Q24 | F | Was würde es dir leichter machen, darüber zu sprechen, was du in einer sexuellen Situation häufiger, seltener oder anders erleben möchtest – falls das für dich relevant ist? | What would make it easier to talk about something you might want more often, less often or differently in a sexual situation, if that is relevant to you? |
 
@@ -793,15 +798,15 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 | ID | Route | Deutsch | English |
 |---|---|---|---|
 | Q25 | Q/S/F | Woran merkst du in dir selbst ein klares Ja, ein Vielleicht oder ein Nein? | How do you recognise a clear yes, maybe or no within yourself? |
-| Q26 | Q/S/F | Mit welchen Worten oder Zeichen möchtest du Zustimmung, Pause und Stopp ausdrücken? | What words or signals do you want to use to express consent, pause and stop? |
-| Q27 | Q/S/F | Wie soll die andere Person nachfragen, wenn dein Signal nicht eindeutig ist? | How would you like the other person to check in when your signal is unclear? |
+| Q26 | Q/S/F | Welche eindeutigen Worte oder bewusst vereinbarten Zeichen möchtest du für Zustimmung, Pause und Stopp verwenden? | What clear words or deliberately agreed signals would you like to use for consent, pause, and stop? |
+| Q27 | Q/S/F | Wenn ein Signal nicht eindeutig ist: Wie soll die andere Person pausieren und nachfragen? | When a signal is unclear, how should the other person pause and check in? |
 | Q28 | Q/S/F | Was brauchst du nach einem intensiven intimen Moment: Nähe, Abstand, Berührung, Ruhe oder etwas anderes? | What do you need after an intense intimate moment: closeness, space, touch, quiet or something else? |
 | Q29 | S/F | Was hilft dir, ein Nein oder einen Sinneswandel leicht auszusprechen und gut angenommen zu wissen? | What helps you voice a no or a change of mind easily and trust that it will be received well? |
-| Q30 | S/F | Welche Grenze, Verhütung oder Schutzmaßnahme darf niemals bloß angenommen werden? | What boundary, contraception or protection measure must never simply be assumed? |
+| Q30 | F | Welche Grenze, Verhütung oder Schutzmaßnahme darf niemals bloß angenommen werden? | What boundary, contraception or protection measure must never simply be assumed? |
 | Q31 | S/F | Welche Gespräche über Tests, Barrieren, Verhütung oder andere Schutzmaßnahmen brauchst du, bevor sich sexuelle Nähe sicher genug anfühlt? | What conversations about testing, barriers, contraception or other protection do you need before sexual intimacy feels safe enough? |
 | Q32 | S/F | Wie möchtest du, dass erneut nach Zustimmung gefragt wird, wenn sich eine sexuelle Aktivität verändert oder intensiviert? | How would you like consent to be checked again when a sexual activity changes or becomes more intense? |
 | Q33 | F | Welche Absprachen zu Exklusivität, weiteren Kontakten oder Privatsphäre sind für dich wichtig – falls das für eure Situation relevant ist? | What agreements about exclusivity, other partners or privacy matter to you, if they are relevant to your situation? |
-| Q34 | F | Gibt es körperliche Bedürfnisse, Empfindlichkeiten oder Zugänglichkeitsaspekte, über die du vor Intimität sprechen möchtest? | Are there any physical needs, sensitivities or accessibility considerations you would want to discuss before intimacy? |
+| Q34 | S/F | Gibt es körperliche Bedürfnisse, Empfindlichkeiten oder Zugänglichkeitsaspekte, über die du vor Intimität sprechen möchtest? | Are there any physical needs, sensitivities or accessibility considerations you would want to discuss before intimacy? |
 | Q35 | F | Wie wünschst du dir einen Check-in am nächsten Tag – wenn überhaupt? | How would you like to check in the next day, if at all? |
 | Q36 | F | Welche eine Sache soll dein Gegenüber aus diesem Gespräch mitnehmen, ohne daraus eine Erwartung für heute oder später abzuleiten? | What is one thing you want the other person to take from this conversation without turning it into an expectation for today or later? |
 
@@ -917,8 +922,8 @@ The implementation contains no moving-vehicle route, countdown, prediction, simu
 
 ### Direct finales
 
-- **Quick DE:** „Gute Weiterreise. Lasst das Gespräch weiterlaufen – oder genießt einfach die Strecke.“
-- **Quick EN:** “Enjoy the rest of the journey. Let the conversation continue—or simply enjoy the road.”
+- **Quick DE:** „Hier endet die Runde. Wenn eine teilnehmende Person weiterfährt, legt das Smartphone weg; die sichere Weiterreise hat Vorrang.“
+- **Quick EN:** “This round ends here. If either participant resumes driving, put the phone away; a safe onward journey comes first.”
 - **Standard DE:** „Wenn ihr möchtet, beendet die Runde mit je einem Satz: Etwas, das ich jetzt besser über dich verstehe, ist …“
 - **Standard EN:** “If you like, end the round with one sentence each: Something I understand better about you now is …”
 - **Full DE:** „Welche Antwort der anderen Person hat dich heute neugieriger gemacht – und was möchtest du dazu noch fragen?“
@@ -963,11 +968,11 @@ Family includes family of origin, adoptive and blended family, relatives by part
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q01 | Q/S/F | Welche kleine Sache verbindet dich im Alltag mit der anderen Person, auch wenn ihr nicht am selben Ort lebt? | What small thing connects you to the other person in everyday life, even if you do not live in the same place? |
+| Q01 | Q/S/F | Gibt es eine kleine Sache, die dich im Alltag mit der anderen Person verbindet oder an sie denken lässt – auch wenn ihr nicht am selben Ort lebt? | Is there a small thing that connects you with the other person in everyday life or brings them to mind—even if you do not live in the same place? |
 | Q02 | Q/S/F | Welche kleine Geschichte über euch fühlt sich für dich unverwechselbar nach Familie an? | What small story about the two of you feels unmistakably like family to you? |
 | Q03 | S/F | Welche Alltagssituation zeigt besonders gut, worin ihr euch ähnelt oder unterscheidet? | What everyday situation best shows how you are alike or different? |
 | Q04 | Q/S/F | Welchen kleinen Teil deines heutigen Alltags möchtest du der anderen Person näherbringen? | What small part of your life today would you like the other person to know better? |
-| Q05 | Q/S/F | Welches Essen, Ritual oder Ereignis gehört für dich zu eurer persönlichen Version von Familie? | What food, ritual, or occasion belongs to your personal version of family? |
+| Q05 | Q/S/F | Welches Essen, Ritual, Ereignis oder Alltagsdetail verbindest du mit deiner persönlichen Vorstellung von Familie? | What food, ritual, occasion, or everyday detail do you associate with your own idea of family? |
 | Q06 | S/F | Welcher Satz, Ausdruck oder Witz hat zwischen euch eine ganz eigene Bedeutung bekommen? | What phrase, expression, or little joke has taken on a meaning of its own between you? |
 | Q07 | F | Welche alltägliche Form von Fürsorge wird in Familien leicht übersehen, obwohl sie dir etwas bedeutet? | What everyday form of care is easily overlooked in families even though it matters to you? |
 | Q08 | S/F | Welcher kleine Moment hat dir zuletzt eine neue Seite der anderen Person gezeigt? | What small recent moment showed you a new side of the other person? |
@@ -985,7 +990,7 @@ Family includes family of origin, adoptive and blended family, relatives by part
 | ID | Route | Deutsch | English |
 |---|---|---|---|
 | Q13 | Q/S/F | Welche Stärke bringst du in familiäre Beziehungen oft ein, ohne dass sie ausdrücklich benannt wird? | What strength do you often bring to family relationships without it being named? |
-| Q14 | Q/S/F | Woran darf die andere Person erkennen, ob du gerade Unterstützung von ihr oder lieber Freiraum möchtest? | How can the other person tell whether you want their support or would prefer some space? |
+| Q14 | Q/S/F | Wie soll die andere Person nachfragen, ob du gerade Unterstützung oder lieber Freiraum möchtest? | How would you like the other person to ask whether you want support or would prefer some space? |
 | Q15 | Q/S/F | Welche Veränderung an dir möchtest du in deiner Familie sichtbarer machen? | What change in yourself would you like to make more visible within your family? |
 | Q16 | Q/S/F | Welche Seite der anderen Person kennst du außerhalb ihrer gewohnten Familienrolle noch zu wenig? | What side of the other person do you know least outside their usual family role? |
 | Q17 | S/F | Welche Rolle wird dir in Familien schnell zugeschrieben – und wie gut passt sie heute noch? | What role do people tend to assign you in families, and how well does it still fit? |

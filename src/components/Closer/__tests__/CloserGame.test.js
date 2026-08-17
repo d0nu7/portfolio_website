@@ -54,9 +54,9 @@ describe('CloserGame smoke test', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Weiter' }));
 
     expect(await screen.findByText('Wie viel Zeit habt ihr?')).toBeInTheDocument();
-    expect(screen.getByText('KURZ')).toBeInTheDocument();
-    expect(screen.getByText('STANDARD')).toBeInTheDocument();
-    expect(screen.getByText('VOLL')).toBeInTheDocument();
+    expect(screen.getByText('Quick · CLOSER-Auszug')).toBeInTheDocument();
+    expect(screen.getByText('Standard · CLOSER-Auszug')).toBeInTheDocument();
+    expect(screen.getByText('Full · vollständige 36-Fragen-Abfolge')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Weiter' }));
 

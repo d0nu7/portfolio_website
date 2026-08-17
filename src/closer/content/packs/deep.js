@@ -13,9 +13,9 @@ import {
  * on-ramp. Unlike FRIENDS/OLD FRIENDS/COUPLES/CHAOS, Standard here DOES
  * include Q36 (`last: true`), so no route-vs-closer mismatch applies.
  *
- * Response Cards (not yet a CloserGame.js feature): after Q01/Q21
- * CELEBRATE; after Q13 FOLLOW UP; after Q17/Q19/Q24 VALIDATE; after Q34
- * REFLECT (see catalog section 8 for exact wording).
+ * Response Cards shown after selected answers: after Q01/Q21 CELEBRATE;
+ * after Q13 FOLLOW UP; after Q17/Q19/Q24 VALIDATE; after Q34 REFLECT
+ * (see catalog section 8 for exact wording).
  * ====================================================================== */
 
 const DEEP_ACTS = [
@@ -240,7 +240,7 @@ const DEEP_ACTS = [
       {
         id: 'deep-q34',
         de: 'Wie kann die andere Person nach diesem Gespräch gut für dich da sein – durch Zuhören, Nachfragen, Ruhe oder etwas anderes?',
-        en: 'After this conversation, how can the other person best be there for you: by listening, asking questions, giving you space, or something else?',
+        en: 'After this conversation, how can the other person best be there for you: through listening, questions, quiet, or something else?',
         responseCard: RESPONSE_CARDS.reflectKeepInMind,
       },
       {
@@ -293,7 +293,7 @@ const DEEP_ROUTES = {
     minutes: 38,
     actIndices: [
       [0, 1, 3, 4, 7, 8, 10, 11],
-      [0, 1, 3, 4, 7, 8, 9, 11],
+      [0, 1, 2, 3, 7, 8, 9, 11],
       [0, 1, 3, 4, 6, 7, 9, 11],
     ],
   },

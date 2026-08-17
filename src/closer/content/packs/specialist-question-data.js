@@ -186,8 +186,8 @@ export const ROAD_TRIP_QUESTIONS = [
 export const FAMILY_QUESTIONS = [
   {
     "id": "family-q01",
-    "de": "Welche kleine Sache verbindet dich im Alltag mit der anderen Person, auch wenn ihr nicht am selben Ort lebt?",
-    "en": "What small thing connects you to the other person in everyday life, even if you do not live in the same place?"
+    "de": "Gibt es eine kleine Sache, die dich im Alltag mit der anderen Person verbindet oder an sie denken lässt – auch wenn ihr nicht am selben Ort lebt?",
+    "en": "Is there a small thing that connects you with the other person in everyday life or brings them to mind—even if you do not live in the same place?"
   },
   {
     "id": "family-q02",
@@ -206,8 +206,8 @@ export const FAMILY_QUESTIONS = [
   },
   {
     "id": "family-q05",
-    "de": "Welches Essen, Ritual oder Ereignis gehört für dich zu eurer persönlichen Version von Familie?",
-    "en": "What food, ritual, or occasion belongs to your personal version of family?"
+    "de": "Welches Essen, Ritual, Ereignis oder Alltagsdetail verbindest du mit deiner persönlichen Vorstellung von Familie?",
+    "en": "What food, ritual, occasion, or everyday detail do you associate with your own idea of family?"
   },
   {
     "id": "family-q06",
@@ -251,8 +251,8 @@ export const FAMILY_QUESTIONS = [
   },
   {
     "id": "family-q14",
-    "de": "Woran darf die andere Person erkennen, ob du gerade Unterstützung von ihr oder lieber Freiraum möchtest?",
-    "en": "How can the other person tell whether you want their support or would prefer some space?"
+    "de": "Wie soll die andere Person nachfragen, ob du gerade Unterstützung oder lieber Freiraum möchtest?",
+    "en": "How would you like the other person to ask whether you want support or would prefer some space?"
   },
   {
     "id": "family-q15",

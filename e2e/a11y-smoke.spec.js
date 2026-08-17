@@ -31,7 +31,7 @@ test('the complete setup flow reaches the first question without a mouse', async
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
   // DURATION
-  await page.getByRole('button', { name: /VOLL/i }).press('Enter');
+  await page.getByRole('button', { name: /Full · vollständige 36-Fragen-Abfolge/i }).press('Enter');
   await page.getByRole('button', { name: 'Weiter' }).press('Enter');
 
   // MODE: CLASSIC offers two style options.
@@ -59,7 +59,7 @@ test('every visible button on the first question has an accessible name', async 
   await page.getByRole('button', { name: 'Weiter' }).click();
   await page.getByRole('button', { name: /CLASSIC/i }).click();
   await page.getByRole('button', { name: 'Weiter' }).click();
-  await page.getByRole('button', { name: /VOLL/i }).click();
+  await page.getByRole('button', { name: /Full · vollständige 36-Fragen-Abfolge/i }).click();
   await page.getByRole('button', { name: 'Weiter' }).click();
   await page.getByRole('button', { name: /ORIGINAL|PLAYFUL/i }).first().click();
   await page.getByRole('button', { name: 'Weiter' }).click();

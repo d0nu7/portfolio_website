@@ -1,7 +1,7 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 17 August 2026
-**Scope:** current `main` release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, and FR-018–020 research closeout
+**Scope:** current release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, FR-018–020 research closeout, and implementation of the full question-bank audit
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## Overall assessment
@@ -23,7 +23,7 @@ The current main candidate passes its automated release gate. Public confidence 
 - Date Night, Couples, and Friends expose default plus PLAYFUL styles. Chaos retains a single thematic PLAYFUL style with safe co-creative actions.
 - Deep, Late Night, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
 - PLAYFUL assignments are deterministic question data. Quick contains at most three actions; all routes enforce spacing and per-act density ceilings.
-- Content revision 4 intentionally invalidates incompatible active saves after route/style behavior changed.
+- Content revision 6 intentionally invalidates incompatible active saves after the audited route, PLAYFUL, response-card, and route-specific finale behavior changed.
 - The start screen now points to optional packs in the Menu. Adult packs are
   grouped in a collapsed 18+ section at the bottom, with Late Night and its
   explanation kept together.
@@ -32,7 +32,7 @@ The current main candidate passes its automated release gate. Public confidence 
   movement and hold phases.
 - FR-005 pack-specific Private Moments are implemented for eligible Standard/Full routes with shared opt-out, named A/B covers, asymmetric cards, route-specific use/discard points, and dedicated finales. Quick remains free of Private Moments.
 - Late Night entry and Act-II gates retain individual decisions only in memory, reveal only a collective result, restart partial gates from A after reload, and use a direct no-action finale instead of generic Question 37.
-- The FR-018–020 evidence programme is complete and citation-audited. Its candidate banks and 37 cross-pack proposals remain research/editorial inputs, not approved runtime content.
+- The FR-018–020 evidence programme is complete and citation-audited. Its FR-018/FR-019 candidate banks remain research inputs. All 37 FR-020 changes plus three full-bank-audit addenda are implemented with Classic's 36 questions unchanged; specialist, bilingual, accessibility, physical-device, and moderated-session validation remains pending.
 
 ## Product review by pack
 
@@ -60,7 +60,7 @@ These are intentionally not blockers for closing this branch:
 3. **Real sessions:** route duration, action fatigue, pressure, passing frequency, and attention to the phone cannot be validated mechanically.
 4. **Physical platforms:** Android installed PWA, iOS Add to Home Screen, safe areas, system navigation, VoiceOver, TalkBack, and WebKit remain device checks.
 5. **Infrastructure:** offline support is not planned for the current product. The custom-subdomain question remains an explicit owner decision.
-6. **Research disposition:** decide whether to advance conversation-only POWER, BY CHOICE to specialist review, whether to fund a closed SLOW BURN prototype, and which FR-020 proposals should enter separate editorial changes. Public SLOW BURN release remains a no-go.
+6. **Research disposition:** decide whether to advance conversation-only POWER, BY CHOICE to specialist review and whether to fund a closed SLOW BURN prototype. Validate the implemented FR-020 changes through their named gates. Public SLOW BURN release remains a no-go.
 
 ## Verification contract
 

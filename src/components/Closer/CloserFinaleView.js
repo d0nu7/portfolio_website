@@ -45,6 +45,7 @@ export function finaleViewGlow(state, beat) {
 
 export default function CloserFinaleView({
   state,
+  run,
   pack,
   route,
   lang,
@@ -144,7 +145,7 @@ export default function CloserFinaleView({
       <>
         <Body $center>
           <Kicker>{t('finalQuestionLabel')}</Kicker>
-          <Question>{pick(pack.directFinale, lang)}</Question>
+          <Question>{pick(run.directFinale, lang)}</Question>
         </Body>
         <Foot><TextButton onClick={() => onQ37(Q37_EVENTS.COMPLETE)}>{t('done')}</TextButton></Foot>
       </>

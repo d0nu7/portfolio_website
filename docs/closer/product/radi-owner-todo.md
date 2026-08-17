@@ -10,7 +10,7 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 
 1. Continue gradual PLAYFUL testing and complete remaining physical-device checks when useful.
 2. Run moderated sessions for the new specialist packs and PLAYFUL rollout.
-3. Disposition the completed FR-018/019 research gates and triage the 37 FR-020 proposals atomically.
+3. Disposition the completed FR-018/019 research gates and commission the named validation work for the implemented 40-entry FR-020 set.
 4. Complete the separate Replacement Question Pool editorial task.
 5. Validate the implemented Private Moments on physical devices and in moderated sessions.
 6. Decide whether a separate subdomain is actually wanted.
@@ -167,7 +167,7 @@ sign-off list above.
 - **FR-017 / Adult library:** the collapsed 18+ disclosure is implemented. Every future adult pack still needs its own visibility, eligibility, participation, safety, and release decision.
 - **FR-018 / POWER & TRUST:** evidence review complete with a conditional conversation-only go and recommended test name **POWER, BY CHOICE**. RaDi must accept/reject the concept and name, then commission the named specialist/legal/accessibility reviews before implementation.
 - **FR-019 / SLOW BURN:** evidence and interaction design complete; closed moderated prototype only, with public release still a no-go. RaDi must decide whether to fund the prerequisite specialist, ethics, privacy, accessibility, legal, and staged-pilot work.
-- **FR-020 / Cross-pack evidence audit:** complete with 37 atomic proposals. RaDi/editorial owners must disposition each proposal independently; Classic wording, translation, order, and route membership remain immutable.
+- **FR-020 / Cross-pack evidence audit:** all 37 original atomic changes plus three cross-pack consistency addenda are approved and implemented. Classic's wording, translation, order, and route membership remain immutable. Remaining owner work is the named bilingual, specialist, accessibility, physical-device, and moderated-session validation—not another editorial triage pass.
 - **Pack/route/style terminology:** defer the persisted `modeId` rename to a separately approved save migration; FR-011 deliberately preserves it.
 
 ## Decision log
@@ -186,4 +186,5 @@ sign-off list above.
 | 2026-08-17 | FR-005 | Approve and implement the pack-specific Private Moment matrix | Asymmetric cards, explicit route triggers, ephemeral consent, private resume shields, and pack-specific finales now have a complete bilingual safety contract | Physical-device and moderated-session validation |
 | 2026-08-17 | FR-017 | Group every adult pack behind one collapsed 18+ disclosure and keep Late Night last | Explicit content stays discreet while its explanation remains adjacent and understandable | Complete for current library |
 | 2026-08-17 | FR-018/019 | Research POWER & TRUST and the touch-forward SLOW BURN as separate adult experiences | Their evidence, interaction, and participation requirements differ materially from Late Night | RaDi / editorial research |
-| 2026-08-17 | FR-018–020 | Complete the focused evidence programme without applying candidate catalog changes | The citation-audited report supports a conversation-only FR-018 prototype, restricts FR-019 to closed moderated research, and exposes 37 atomic cross-pack decisions | RaDi / named specialist and editorial owners |
+| 2026-08-17 | FR-018–020 | Complete the focused evidence programme without applying candidate catalog changes | The citation-audited report supports a conversation-only FR-018 prototype, restricts FR-019 to closed moderated research, and exposes 37 original atomic cross-pack decisions plus three post-research addenda | RaDi / named specialist and editorial owners |
+| 2026-08-17 | FR-020 | Approve and implement all 37 audit entries plus the three full-bank addenda | The atomic register preserves exact bilingual before/after copy, stable IDs, route/mechanic intent, downsides, and separate validation gates; Classic questions remain unchanged | Bilingual, specialist, accessibility, device, and moderated-session validation |

@@ -43,7 +43,7 @@ const RESPONSE_CARD_LABEL = {
 };
 
 /*
- * The catalog's twelve response cards as complete reusable objects
+ * The catalog's eleven response cards as complete reusable objects
  * (refactoring roadmap phase 1).
  *
  * Previously only the label was shared while the associated text was copied
@@ -62,8 +62,8 @@ const RESPONSE_CARDS = {
   celebrateHonor: {
     label: RESPONSE_CARD_LABEL.celebrate,
     text: {
-      de: 'Würdige kurz, was dieser Moment die Person gekostet oder ihr bedeutet hat.',
-      en: 'Take a moment to honor what that moment cost the person or meant to them.',
+      de: 'Würdige kurz, was der Person daran wichtig ist.',
+      en: 'Take a moment to acknowledge what matters to the person about it.',
     },
   },
   followUpDetail: {
@@ -90,8 +90,8 @@ const RESPONSE_CARDS = {
   followUpFirstStep: {
     label: RESPONSE_CARD_LABEL.followUp,
     text: {
-      de: 'Was wäre ein kleiner, realistischer erster Schritt?',
-      en: 'What would be one small, realistic first step?',
+      de: 'Was daran wäre dir wichtig?',
+      en: 'What about that would matter to you?',
     },
   },
   validateNoSolution: {
@@ -115,18 +115,11 @@ const RESPONSE_CARDS = {
       en: 'You do not need to justify or repair anything. First, show that you heard them.',
     },
   },
-  reflectUnderstood: {
-    label: RESPONSE_CARD_LABEL.reflect,
-    text: {
-      de: 'Sag in einem Satz, was du an der Antwort verstanden hast.',
-      en: 'In one sentence, say what you understood from the answer.',
-    },
-  },
   reflectKeepInMind: {
     label: RESPONSE_CARD_LABEL.reflect,
     text: {
-      de: 'Sag in einem Satz, was du künftig beachten möchtest.',
-      en: 'In one sentence, say what you would like to keep in mind from now on.',
+      de: 'Wenn du möchtest: Sag in einem Satz, was du verstanden hast. Daraus entsteht keine Zusage.',
+      en: 'If you like, say in one sentence what you understood. This creates no commitment.',
     },
   },
   reflectBothVersions: {

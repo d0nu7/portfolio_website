@@ -1,7 +1,7 @@
 # FR-020 — cross-pack evidence and question audit
 
 **Audit date:** 17 August 2026
-**Status:** Research and editorial memo; no catalog or runtime content changed
+**Status:** Frozen research and editorial memo. Post-audit implementation: all 37 entries in Section 13 plus the three full-bank addenda were owner-approved and synchronized across catalog, runtime, and regression tests on 17 August 2026. Named validation gates remain open.
 **Authoritative content snapshot:** `docs/closer/content/question-catalog.de-en.md`, updated 17 August 2026
 **Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, and the available Students/FH Salzburg requirements draft
 

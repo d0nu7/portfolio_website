@@ -8,12 +8,11 @@ import {
 /* ======================================================================
  * OLD FRIENDS (iteration 8 catalog rollout) -- content transcribed
  * verbatim from docs/closer/content/question-catalog.de-en.md
- * section 7. Same route-column shape as FRIENDS (every third question
- * per act); Quick/Standard end on Q34/Q35, Q36 is Full-only -- see the
- * relaxed "ends on last:true" test in closer.test.js.
+ * section 7. The third act is intentionally curated differently: Quick
+ * and Standard both close on Q36, while Q28 remains Full-only.
  *
- * Response Cards (not yet a CloserGame.js feature, see FRIENDS' own note
- * above): after Q02/Q04 FOLLOW UP; after Q12 REFLECT; after Q20/Q30
+ * Response Cards shown after selected answers: after Q02/Q04 FOLLOW UP;
+ * after Q12 REFLECT; after Q20/Q30
  * VALIDATE; after Q34 FOLLOW UP (see catalog section 7 for exact wording).
  * ====================================================================== */
 
@@ -117,8 +116,8 @@ const OLD_FRIENDS_ACTS = [
     questions: [
       {
         id: 'old-friends-q13',
-        de: 'Was hat sich in deinem Leben am stärksten verändert, seit wir uns besonders nah waren?',
-        en: 'What has changed most in your life since the time when we were especially close?',
+        de: 'Was hat sich in deinem Leben seit der Zeit, aus der ihr euch kennt, am stärksten verändert?',
+        en: 'What has changed most in your life since the period when the two of you first knew each other?',
       },
       {
         id: 'old-friends-q14',
@@ -147,8 +146,8 @@ const OLD_FRIENDS_ACTS = [
       },
       {
         id: 'old-friends-q19',
-        de: 'Was hat dir geholfen, mit weniger Kontakt auf eine für dich gute Weise umzugehen?',
-        en: 'What helped you handle having less contact in a way that worked for you?',
+        de: 'Wie hast du die Zeit mit weniger oder anderem Kontakt erlebt – falls das auf euch zutrifft?',
+        en: 'How did you experience the period of less or different contact, if that applies to the two of you?',
       },
       {
         id: 'old-friends-q20',
@@ -164,8 +163,8 @@ const OLD_FRIENDS_ACTS = [
       },
       {
         id: 'old-friends-q22',
-        de: 'Was fühlt sich zwischen uns noch immer mühelos an?',
-        en: 'What still feels effortless between us?',
+        de: 'Gibt es etwas, das sich zwischen euch heute mühelos anfühlt – und wenn ja, was?',
+        en: 'Is there anything between the two of you that feels effortless today—and if so, what?',
       },
       {
         id: 'old-friends-q23',
@@ -291,7 +290,7 @@ const OLD_FRIENDS_ROUTES = {
     actIndices: [
       [0, 3, 6, 9],
       [0, 3, 6, 9],
-      [0, 3, 6, 9],
+      [0, 6, 9, 11],
     ],
   },
   standard: {
@@ -300,7 +299,7 @@ const OLD_FRIENDS_ROUTES = {
     actIndices: [
       [0, 1, 3, 4, 6, 7, 9, 10],
       [0, 1, 3, 4, 6, 7, 9, 10],
-      [0, 1, 3, 4, 6, 7, 9, 10],
+      [0, 1, 4, 6, 7, 9, 10, 11],
     ],
   },
   full: {

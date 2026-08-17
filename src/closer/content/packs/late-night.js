@@ -186,8 +186,8 @@ const LATE_NIGHT_ACTS = [
       },
       {
         id: 'late-night-q22',
-        de: 'Wodurch baut sich Lust für dich eher auf: Tempo, Wiederholung, Abwechslung, Pausen – oder etwas anderes?',
-        en: 'What tends to build pleasure for you: pace, repetition, variety, pauses—or something else?',
+        de: 'Welche Rolle spielen Tempo, Wiederholung, Abwechslung oder Pausen für dein sexuelles Erleben?',
+        en: 'What role do pace, repetition, variety, or pauses play in your sexual experience?',
       },
       {
         id: 'late-night-q23',
@@ -216,13 +216,13 @@ const LATE_NIGHT_ACTS = [
       },
       {
         id: 'late-night-q26',
-        de: 'Mit welchen Worten oder Zeichen möchtest du Zustimmung, Pause und Stopp ausdrücken?',
-        en: 'What words or signals do you want to use to express consent, pause and stop?',
+        de: 'Welche eindeutigen Worte oder bewusst vereinbarten Zeichen möchtest du für Zustimmung, Pause und Stopp verwenden?',
+        en: 'What clear words or deliberately agreed signals would you like to use for consent, pause, and stop?',
       },
       {
         id: 'late-night-q27',
-        de: 'Wie soll die andere Person nachfragen, wenn dein Signal nicht eindeutig ist?',
-        en: 'How would you like the other person to check in when your signal is unclear?',
+        de: 'Wenn ein Signal nicht eindeutig ist: Wie soll die andere Person pausieren und nachfragen?',
+        en: 'When a signal is unclear, how should the other person pause and check in?',
       },
       {
         id: 'late-night-q28',
@@ -321,7 +321,7 @@ const LATE_NIGHT_ROUTES = {
     actIndices: [
       [0, 1, 2, 3, 4, 5, 6, 7],
       [0, 1, 2, 3, 4, 5, 6, 7],
-      [0, 1, 2, 3, 4, 5, 6, 7],
+      [0, 1, 2, 3, 4, 6, 7, 9],
     ],
   },
   full: {

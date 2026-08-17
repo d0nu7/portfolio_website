@@ -100,7 +100,7 @@ const COUPLES_ACTS = [
   },
   {
     id: 'repair',
-    title: { de: 'REPARIEREN', en: 'REPAIR' },
+    title: { de: 'ABSTIMMEN', en: 'CHECKING IN' },
     intro: {
       de: 'Kein Therapieersatz – nur ein bisschen mehr Verständnis für das, was manchmal schwer ist.',
       en: "Not a substitute for therapy—just a little more understanding for what's sometimes hard.",
@@ -152,8 +152,8 @@ const COUPLES_ACTS = [
       },
       {
         id: 'couples-q20',
-        de: 'Wie kann dein Gegenüber auf eine gute Nachricht von dir so reagieren, dass du dich wirklich begleitet fühlst?',
-        en: 'How can your partner respond to your good news in a way that makes you feel truly supported?',
+        de: 'Was hilft dir nach einem Missverständnis, wieder neugierig auf die Sicht deines Gegenübers zu werden?',
+        en: 'What helps you become curious about your partner’s perspective again after a misunderstanding?',
       },
       {
         id: 'couples-q21',
@@ -203,14 +203,13 @@ const COUPLES_ACTS = [
       },
       {
         id: 'couples-q28',
-        de: 'Welches kleine Versprechen könnt ihr euch für diese Woche geben?',
-        en: 'What small promise can the two of you make for this week?',
+        de: 'Welche kleine Veränderung könnte euch diese Woche guttun, ohne dass daraus eine Verpflichtung wird?',
+        en: 'What small change might feel helpful to the two of you this week without becoming an obligation?',
       },
       {
         id: 'couples-q29',
         de: 'Welche neue gemeinsame Erfahrung würdet ihr im nächsten Monat gern ausprobieren?',
         en: 'What new experience would the two of you like to try in the next month?',
-        twist: 'predict',
       },
       {
         id: 'couples-q30',
@@ -320,7 +319,7 @@ const COUPLES_ROUTES = {
 };
 
 // Grounded, trust-oriented -- soft green (noticing/gratitude), warm amber
-// (repair), calm blue (choosing/future).
+// (checking in/calibration), calm blue (choosing/future).
 const COUPLES_ACT_STYLE = [
   { accent: '#5FBF8B', chrome: 1, progress: 'full', glow: 0.26 },
   { accent: '#E0985B', chrome: 0.5, progress: 'count', glow: 0.14 },

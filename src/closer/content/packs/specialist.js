@@ -98,6 +98,12 @@ const ROAD_TRIP_PACK = {
     { accent: '#E9C46A', chrome: 0.22, progress: 'number', glow: 0.06 },
   ],
   q37: ROAD_TRIP_Q37,
+  directFinaleByRoute: {
+    quick: {
+      de: 'Hier endet die Runde. Wenn eine teilnehmende Person weiterfährt, legt das Smartphone weg; die sichere Weiterreise hat Vorrang.',
+      en: 'This round ends here. If either participant resumes driving, put the phone away; a safe onward journey comes first.',
+    },
+  },
   secretAtIndex: 27,
   routes: ROAD_TRIP_ROUTES,
   defaultRouteId: 'quick',

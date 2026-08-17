@@ -220,7 +220,7 @@ export function questionIdFor(packId, questionIndex) {
  * invalidate active saves. Copy-only corrections keep their existing ID and
  * version. The resolved ID list lets the save parser detect content drift.
  */
-export const CONTENT_VERSION = 5;
+export const CONTENT_VERSION = 6;
 
 export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
   const total = totalQuestions(packId, routeId);
@@ -286,11 +286,14 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
   acts.forEach((act, actIndex) => {
     act.questions.forEach((q, localIndex) => {
       const routeRelativeIndex = actStarts[actIndex] + localIndex;
+      const content = q.twist && Array.isArray(q.twistRoutes) && !q.twistRoutes.includes(route.id)
+        ? Object.freeze({ ...q, twist: undefined })
+        : q;
       questions.push(Object.freeze({
         id: q.id,
         actIndex,
         sourceIndex: originalIndexFor(pack.id, routeRelativeIndex, route.id),
-        content: q,
+        content,
       }));
     });
   });
@@ -307,7 +310,7 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
     timing: Object.freeze(timing),
     secretAtIndex: secretAtIndexFor(pack.id, route.id),
     privateMoment: privateMomentFor(pack.id, route.id),
-    directFinale: pack.directFinale || null,
+    directFinale: pack.directFinaleByRoute?.[route.id] || pack.directFinale || null,
     contentRevision: CONTENT_VERSION,
     fingerprint: runFingerprintFor(pack.id, route.id, resolvedModeId),
   });
