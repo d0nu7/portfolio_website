@@ -135,7 +135,7 @@ SLOW BURN is a touch-forward guide for two adults, hidden by default. The phone 
 - softer, slower, different, not there, more space, Pause, Stop, and End are communicated to each other rather than entered into the phone;
 - there are no per-person handoffs, repeated Act-II gates, choice matrices, scores, or action-state fields.
 
-Ordinary route/question progress may be resumed, but no answer, action choice, body area, adjustment, or agreement is entered or persisted. Consumer content excludes penetration, breath or neck play, restraint, impact, surprise touch, intimate-area action cards, and the research memo's pilot-only C06 card. The experience has no required endpoint.
+Ordinary route/question progress may be resumed, but no answer, action choice, body area, adjustment, or agreement is entered or persisted. The sequence may explicitly invite the people to name and guide touch at the chest or breasts, buttocks, and inner thighs. It excludes genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch. The experience has no required endpoint.
 
 ## 7. Late Night (18+)
 

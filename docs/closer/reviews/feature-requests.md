@@ -530,7 +530,7 @@ The complete 36-question bilingual bank now ships as a conversation-only adult p
 
 ### FR-019 – SLOW BURN touch-forward adult experience
 
-**Status:** Conservative consumer subset delivered experimentally on 17 August 2026 by explicit RaDi decision; external validation remains open
+**Status:** Expanded 21-card consumer sequence delivered experimentally on 17 August 2026 by explicit RaDi decision; external validation remains open
 
 Working title: **SLOW BURN**. Unlike the conversation-only Late Night pack, this
 is deliberately a physical, touch-forward experience for two participating
@@ -554,7 +554,7 @@ Interaction contract:
   structure, experience level, or desired endpoint.
 - Answers, chosen body areas, adjustments, and agreement are never entered or persisted. Only ordinary pack, route, and question progress may be resumed.
 
-The shipped conservative subset contains 21 bilingual cards across Quick, Standard, and Unhurried routes. The first device test rejected the initial masked-choice controller as excessive UI that pulled attention away from the other person. SLOW BURN now uses the standard CLOSER flow: one shared introduction, one prompt at a time, Continue, free Pass, and the global End action. No action, body area, adjustment, or agreement is entered into the app; resumable data is limited to ordinary route progress. Category 7/C06 and penetration, breath/neck play, restraint, impact, surprise touch, and intimate-area action cards are excluded. RaDi explicitly authorized the implementation and simplification on 17 August 2026. The memo's specialist, ethics, privacy, legal, accessibility, adverse-event, physical-device, and moderated-session gates remain open and should be completed before broad promotion.
+The shipped sequence contains 21 bilingual cards across Quick, Standard, and Unhurried routes. The first device test rejected the initial masked-choice controller as excessive UI that pulled attention away from the other person. SLOW BURN therefore uses the standard CLOSER flow: one shared introduction, one prompt at a time, Continue, free Pass, and the global End action. No action, body area, adjustment, or agreement is entered into the app; resumable data is limited to ordinary route progress. A later owner-approved editorial pass allows people to name and guide touch at the chest or breasts, buttocks, and inner thighs. Genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch remain excluded. This deliberately supersedes the narrower consumer boundary proposed in the frozen evidence memo without claiming validation. The memo's specialist, ethics, privacy, legal, accessibility, adverse-event, physical-device, and moderated-session gates remain open and should be completed before broad promotion.
 
 ### FR-020 – Cross-pack evidence and question audit
 

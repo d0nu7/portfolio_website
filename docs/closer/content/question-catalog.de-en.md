@@ -726,11 +726,11 @@ Chaos Standard and Full use the two private Q16 constraints defined in [Private 
 
 **DE**
 
-> Nur für Erwachsene ab 18 Jahren. Beide Personen nehmen freiwillig teil und können jede Frage überspringen oder das Spiel jederzeit beenden. Eine Antwort beschreibt nur Gedanken, Gefühle oder Vorlieben. Sie ist niemals Zustimmung zu einer Handlung. Zustimmung muss außerhalb des Spiels konkret, freiwillig, informiert und jederzeit widerrufbar eingeholt werden.
+> Ein ausdrücklich sexuelles Gespräch für zwei Erwachsene ab 18 Jahren. Klärt vor dem Start direkt miteinander, ob das Thema für euch beide gerade passt. Jede Frage kann kostenlos ausgelassen und das Spiel jederzeit beendet werden. Antworten beschreiben Gedanken oder Vorlieben; sie sind keine Zustimmung zu einer Handlung.
 
 **EN**
 
-> For adults aged 18 and over only. Both people are taking part voluntarily and may skip any question or end the game at any time. An answer only describes thoughts, feelings or preferences. It is never consent to an action. Consent must be sought outside the game and must be specific, voluntary, informed and withdrawable at any time.
+> An explicitly sexual conversation for two adults aged 18 or over. Before starting, check directly with each other that the topic feels right for both of you now. Any question can be passed for free and the game can be ended at any time. Answers describe thoughts or preferences; they are not consent to an action.
 
 ### Editorial game rules
 
@@ -739,7 +739,7 @@ Chaos Standard and Full use the two private Q16 constraints defined in [Private 
 - Answers are always sequential. `PREDICT` and `NO THINKING` are completely disabled for this pack.
 - `BOTH` is also disabled for boundaries, consent, safer sex, fantasies, and physical needs; nobody answers simultaneously or on another person’s behalf.
 - There are no touch tasks, dares, or prompts to act on anything discussed.
-- The Quick route is a self-contained safe progression: four questions about atmosphere, four about wishes, and four about trust. It is not a random sample of explicit questions.
+- The Quick route is a self-contained editorial progression: four questions about erotic tension, four about explicit preferences, and four about candid erotic self-disclosure. It is not a random sample of explicit questions.
 - Answers may draw on personal experience, be hypothetical, or simply be “not relevant to me.”
 - The duration estimate is only used when selecting a route. LATE NIGHT has no visible countdown or time pressure during play.
 
@@ -747,52 +747,52 @@ Chaos Standard and Full use the two private Q16 constraints defined in [Private 
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q01 | Q/S/F | Woran merkst du, dass ein Gespräch für dich flirtend oder erotisch wird? | What tells you that a conversation is becoming flirtatious or erotic for you? |
-| Q02 | Q/S/F | Welche Art von Blick, Stimme, Worten oder Bewegung kann auf dich besonders anziehend wirken? | What kind of gaze, voice, words or movement can feel especially attractive to you? |
-| Q03 | Q/S/F | Welche Umgebung hilft dir, dich offen für erotische Stimmung zu fühlen? | What kind of setting helps you feel open to an erotic mood? |
-| Q04 | Q/S/F | Wie zeigst du Interesse an mehr Nähe, ohne vorauszusetzen, dass die andere Person dasselbe möchte? | How do you show interest in more intimacy without assuming the other person wants the same thing? |
-| Q05 | S/F | Welche Art von erotischem Kompliment fühlt sich für dich gut an – und welche eher nicht? | What kind of erotic compliment feels good to you—and what kind tends not to? |
-| Q06 | S/F | Welches Tempo fühlt sich beim Flirten oder beim Aufbau von Intimität für dich angenehm an? | What pace feels comfortable to you when flirting or building intimacy? |
-| Q07 | S/F | Was hilft dir, dich sicher genug für ein ausdrücklich sexuelles Gespräch zu fühlen? | What helps you feel safe enough to begin an explicitly sexual conversation? |
-| Q08 | S/F | Welche Stimmung passt bei erotischen Gesprächen zu dir: verspielt, direkt, zärtlich, ernst – oder etwas anderes? | What tone suits you in erotic conversations: playful, direct, tender, serious—or something else? |
-| Q09 | F | Welche nichtsexuelle Form von Nähe kann bei dir Lust wecken – falls es eine gibt? | What non-sexual form of closeness can awaken desire in you, if any? |
-| Q10 | F | Wie soll jemand prüfen, ob Flirten für dich gerade willkommen ist? | How would you like someone to check whether flirting is welcome for you in that moment? |
-| Q11 | F | Wodurch kannst du dich begehrt fühlen, ohne dich unter Druck gesetzt zu fühlen? | What can make you feel desired without making you feel pressured? |
-| Q12 | F | Was hilft dir, während wachsender Intimität präsent und mit dir selbst verbunden zu bleiben? | What helps you stay present and connected to yourself as intimacy builds? |
+| Q01 | Q/S/F | Woran merkst du, dass zwischen zwei Menschen erotische Spannung entsteht – an einem Blick, einer Stimme, einem Satz oder dem Abstand? | What tells you that erotic tension is building between two people—a look, a voice, a sentence, or the distance between them? |
+| Q02 | Q/S/F | Welche Art von Blick oder Stimme kann dich anmachen, bevor es überhaupt zu einer Berührung kommt? | What kind of gaze or voice can turn you on before any touch even happens? |
+| Q03 | Q/S/F | Welcher Geruch, welche Bewegung oder welches Kleidungsdetail kann deine Fantasie sofort beschäftigen? | What scent, movement, or detail of someone’s clothing can immediately capture your imagination? |
+| Q04 | Q/S/F | Wie zeigst du jemandem, dass du die Person begehrst, ohne ihre Reaktion vorwegzunehmen? | How do you show someone that you desire them without presuming how they will respond? |
+| Q05 | S/F | Welche Art erotisches Kompliment trifft dich wirklich – über deine Ausstrahlung, deinen Körper, deine Stimme oder etwas anderes? | What kind of erotic compliment really lands for you—about your presence, your body, your voice, or something else? |
+| Q06 | S/F | Magst du erotische Spannung eher langsam aufgebaut, verspielt unterbrochen oder direkt ausgesprochen – und was daran macht dich an? | Do you like erotic tension built slowly, interrupted playfully, or spoken directly—and what about that turns you on? |
+| Q07 | S/F | Was macht einen ersten Kuss für dich besonders heiß oder erinnerungswürdig? | What makes a first kiss especially hot or memorable for you? |
+| Q08 | S/F | Welche Mischung aus zärtlichen, direkten oder dreckigen Worten passt zu dir? | What mix of tender, direct, or dirty words works for you? |
+| Q09 | F | Was können Kleidung, Unterwäsche oder langsames Ausziehen für deine Lust tun? | What can clothing, underwear, or slowly undressing add to your desire? |
+| Q10 | F | Welche nichtsexuelle Berührung kann dich unerwartet erregen? | What non-sexual touch can arouse you unexpectedly? |
+| Q11 | F | Wodurch fühlst du dich begehrt – durch Aufmerksamkeit, Worte, einen Blick, Initiative oder etwas anderes? | What makes you feel desired—attention, words, a look, initiative, or something else? |
+| Q12 | F | Woran merkt man dir an, dass deine Erregung wächst – falls du es zeigen möchtest? | How might someone notice that your arousal is building—if you want to show it? |
 
 ### Act II – WUNSCH / DESIRE
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q13 | Q/S/F | Welche Art erotischer Berührung könnte sich für dich gut anfühlen – wenn überhaupt und nur wenn du sie ausdrücklich möchtest? | What kind of erotic touch might feel good to you—if any, and only when you explicitly want it? |
-| Q14 | Q/S/F | Wie möchtest du, dass sexuelle Nähe initiiert wird? | How do you like sexual intimacy to be initiated? |
-| Q15 | Q/S/F | Welche Worte oder Laute könnten sich in einer sexuellen Situation für dich gut anfühlen – und welche eher nicht? | What words or sounds might feel good to you in a sexual situation—and which might not? |
-| Q16 | Q/S/F | Welche Fantasie kannst du teilen, ohne dass daraus eine Erwartung für heute oder später entstehen soll? | What fantasy could you share without it creating any expectation for today or later? |
-| Q17 | S/F | Welche Rolle spielen Vorfreude oder spielerisches Hinauszögern für deine Lust? | What role do anticipation or playful delay play in your desire? |
-| Q18 | S/F | Welche Rolle spielen Spielzeuge, erotische Medien oder andere Hilfsmittel in deiner Sexualität – wenn überhaupt? | What role do toys, erotic media or other aids play in your sexuality, if any? |
-| Q19 | S/F | Was kann Sex für dich erfüllend machen, auch unabhängig von einem Orgasmus? | What can make sex fulfilling for you, independently of orgasm? |
-| Q20 | S/F | Gibt es eine erotische Idee oder einen Kink, über den du neugierig sprechen möchtest, ohne heute etwas darüber entscheiden zu müssen? | Is there an erotic idea or kink you are curious to talk about without having to decide anything about it today? |
-| Q21 | F | Wie würdest du dich damit fühlen, in einer sexuellen Situation konkrete Wünsche oder Hinweise zu geben oder zu bekommen? | How might you feel about giving or receiving specific requests or guidance in a sexual situation? |
-| Q22 | F | Welche Rolle spielen Tempo, Wiederholung, Abwechslung oder Pausen für dein sexuelles Erleben? | What role do pace, repetition, variety, or pauses play in your sexual experience? |
-| Q23 | F | Wie zeigst du gern, dass sich etwas besonders gut anfühlt? | How do you like to show that something feels especially good? |
-| Q24 | F | Was würde es dir leichter machen, darüber zu sprechen, was du in einer sexuellen Situation häufiger, seltener oder anders erleben möchtest – falls das für dich relevant ist? | What would make it easier to talk about something you might want more often, less often or differently in a sexual situation, if that is relevant to you? |
+| Q13 | Q/S/F | An welchen Stellen deines Körpers wirst du besonders gern geküsst oder berührt – und wie? | Where on your body do you especially enjoy being kissed or touched—and how? |
+| Q14 | Q/S/F | Wie küsst du am liebsten – weich oder fordernd, langsam oder hungrig, mit Lippen, Zunge oder kleinen Bissen? | How do you most enjoy kissing—soft or demanding, slow or hungry, with lips, tongue, or gentle bites? |
+| Q15 | Q/S/F | Welche Art von Stimulation macht dich am neugierigsten – Hände, Mund, Toys, Penetration, Alternativen dazu oder eine Mischung? | What kind of stimulation makes you most curious—hands, mouth, toys, penetration, alternatives to it, or a mix? |
+| Q16 | Q/S/F | Welche Fantasie kannst du teilen, die heiß sein darf, auch wenn sie reine Fantasie bleibt? | What fantasy can you share that is allowed to be hot even if it remains purely a fantasy? |
+| Q17 | S/F | Was macht Oralverkehr für dich besonders lustvoll – beim Geben oder Empfangen, durch Tempo, Druck, Rhythmus, Worte oder Blickkontakt? | What makes oral sex especially pleasurable for you—giving or receiving, pace, pressure, rhythm, words, or eye contact? |
+| Q18 | S/F | Was kann Penetration oder Sex ohne Penetration für dich richtig gut machen – Position, Winkel, Tiefe, Rhythmus, Bewegung oder etwas anderes? | What can make penetration or sex without penetration really good for you—position, angle, depth, rhythm, movement, or something else? |
+| Q19 | S/F | Welche Rolle spielt Solo-Sex für dich – und wie wäre es, dabei beobachtet, angeleitet oder begleitet zu werden? | What role does solo sex play for you—and how would it feel to be watched, guided, or accompanied? |
+| Q20 | S/F | Welcher Kink oder welche erotische Idee macht dich neugierig, selbst wenn du noch nicht weißt, ob du sie je ausprobieren möchtest? | What kink or erotic idea makes you curious even if you do not yet know whether you would ever want to try it? |
+| Q21 | F | Welche Art von Dirty Talk oder konkreter Anweisung würdest du beim Sex gern sagen oder hören? | What kind of dirty talk or specific instruction would you enjoy saying or hearing during sex? |
+| Q22 | F | Welche Mischung aus Tempo, Druck, Rhythmus, Wiederholung, Pausen oder Edging bringt dich besonders in Fahrt? | What mix of pace, pressure, rhythm, repetition, pauses, or edging gets you especially worked up? |
+| Q23 | F | Was erregt dich mehr: Lust zu geben, Lust zu empfangen, zuzusehen, geführt zu werden oder selbst zu führen? | What arouses you more: giving pleasure, receiving it, watching, being guided, or taking the lead? |
+| Q24 | F | Was hilft dir, dich einem Orgasmus hinzugeben – und was macht Sex auch ohne Orgasmus erfüllend? | What helps you surrender to an orgasm—and what makes sex fulfilling even without one? |
 
 ### Act III – VERTRAUEN / TRUST
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q25 | Q/S/F | Woran merkst du in dir selbst ein klares Ja, ein Vielleicht oder ein Nein? | How do you recognise a clear yes, maybe or no within yourself? |
-| Q26 | Q/S/F | Welche eindeutigen Worte oder bewusst vereinbarten Zeichen möchtest du für Zustimmung, Pause und Stopp verwenden? | What clear words or deliberately agreed signals would you like to use for consent, pause, and stop? |
-| Q27 | Q/S/F | Wenn ein Signal nicht eindeutig ist: Wie soll die andere Person pausieren und nachfragen? | When a signal is unclear, how should the other person pause and check in? |
-| Q28 | Q/S/F | Was brauchst du nach einem intensiven intimen Moment: Nähe, Abstand, Berührung, Ruhe oder etwas anderes? | What do you need after an intense intimate moment: closeness, space, touch, quiet or something else? |
-| Q29 | S/F | Was hilft dir, ein Nein oder einen Sinneswandel leicht auszusprechen und gut angenommen zu wissen? | What helps you voice a no or a change of mind easily and trust that it will be received well? |
-| Q30 | F | Welche Grenze, Verhütung oder Schutzmaßnahme darf niemals bloß angenommen werden? | What boundary, contraception or protection measure must never simply be assumed? |
-| Q31 | S/F | Welche Gespräche über Tests, Barrieren, Verhütung oder andere Schutzmaßnahmen brauchst du, bevor sich sexuelle Nähe sicher genug anfühlt? | What conversations about testing, barriers, contraception or other protection do you need before sexual intimacy feels safe enough? |
-| Q32 | S/F | Wie möchtest du, dass erneut nach Zustimmung gefragt wird, wenn sich eine sexuelle Aktivität verändert oder intensiviert? | How would you like consent to be checked again when a sexual activity changes or becomes more intense? |
-| Q33 | F | Welche Absprachen zu Exklusivität, weiteren Kontakten oder Privatsphäre sind für dich wichtig – falls das für eure Situation relevant ist? | What agreements about exclusivity, other partners or privacy matter to you, if they are relevant to your situation? |
-| Q34 | S/F | Gibt es körperliche Bedürfnisse, Empfindlichkeiten oder Zugänglichkeitsaspekte, über die du vor Intimität sprechen möchtest? | Are there any physical needs, sensitivities or accessibility considerations you would want to discuss before intimacy? |
-| Q35 | F | Wie wünschst du dir einen Check-in am nächsten Tag – wenn überhaupt? | How would you like to check in the next day, if at all? |
-| Q36 | F | Welche eine Sache soll dein Gegenüber aus diesem Gespräch mitnehmen, ohne daraus eine Erwartung für heute oder später abzuleiten? | What is one thing you want the other person to take from this conversation without turning it into an expectation for today or later? |
+| Q25 | Q/S/F | Was reizt dich mehr: Vorfreude, Initiative ergreifen, Kontrolle abgeben, beobachtet werden, führen – oder etwas anderes? | What excites you more: anticipation, taking initiative, giving up control, being watched, leading—or something else? |
+| Q26 | Q/S/F | Welchen Satz würdest du in einem sehr aufgeladenen Moment besonders gern hören oder sagen? | What sentence would you especially like to hear or say in a highly charged moment? |
+| Q27 | Q/S/F | Welche Lust oder Fantasie fällt dir leichter zu denken als laut auszusprechen? | What desire or fantasy is easier for you to think about than to say aloud? |
+| Q28 | Q/S/F | Was macht einen sexuellen Moment für dich unvergesslich – Orgasmus, Nähe, Überraschung, Intensität, Lachen oder etwas anderes? | What makes a sexual moment unforgettable for you—orgasm, closeness, surprise, intensity, laughter, or something else? |
+| Q29 | S/F | Wie möchtest du, dass ein Nein, eine Pause oder ein Sinneswandel aufgenommen wird, ohne die Stimmung gegen dich zu wenden? | How would you like a no, a pause, or a change of mind to be received without the mood being turned against you? |
+| Q30 | F | Welche Absprachen zu Schutz, Tests oder Verhütung brauchst du, bevor Sex für dich entspannt werden kann? | What agreements about protection, testing, or contraception do you need before sex can feel relaxed for you? |
+| Q31 | S/F | Gibt es körperliche Empfindlichkeiten, Bedürfnisse oder Zugänglichkeitsaspekte, die guten Sex für dich leichter machen? | Are there physical sensitivities, needs, or accessibility considerations that make good sex easier for you? |
+| Q32 | S/F | Welche Form von Nähe, Berührung, Worten oder Abstand möchtest du nach intensivem Sex? | What kind of closeness, touch, words, or space do you want after intense sex? |
+| Q33 | F | Welche Privatsphäre oder Absprachen zu weiteren sexuellen Kontakten sind dir wichtig? | What privacy or agreements about other sexual connections matter to you? |
+| Q34 | S/F | Was würdest du am nächsten Tag nach einer besonders heißen Nacht gern spüren oder hören? | What would you like to feel or hear the day after an especially hot night? |
+| Q35 | F | Welche Antwort aus diesem Gespräch hat dich überrascht, neugierig gemacht oder vielleicht angemacht? | Which answer in this conversation surprised you, made you curious, or perhaps turned you on? |
+| Q36 | F | Welches erotische Detail aus diesem Gespräch darf in deiner Fantasie bleiben, auch wenn daraus heute nichts entstehen muss? | What erotic detail from this conversation may stay in your imagination even if nothing has to come from it today? |
 
 ### Question 37
 
@@ -1128,7 +1128,7 @@ COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PR
 
 ## 14. POWER, BY CHOICE (18+)
 
-**Goal:** A conversation-only adult pack about voluntarily chosen erotic roles, boundaries, stopping, and care. Fantasy, curiosity, discussion, and consent to a specific action remain separate. The pack contains no physical tasks, compatibility result, private moment, or PLAYFUL mechanics.
+**Goal:** An explicit conversation-only adult pack about the erotic charge of chosen control, surrender, language, ritual, fantasy, and care. It assigns no roles and turns no answer into a task or agreement. Fantasy, curiosity, discussion, and consent to a specific action remain separate.
 
 **Routes:** Quick 12 · Standard 24 · Full 36. Pilot estimates: 18–28, 35–55, and 55–85 minutes. The app currently presents rounded planning values of 24, 45, and 70 minutes.
 
@@ -1136,101 +1136,107 @@ COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PR
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q01 | Q/S/F | Wenn du an einvernehmlichen Machtaustausch denkst: Was macht das Thema für dich neugierig, interessant oder auch uninteressant? | When you think about consensual power exchange, what makes the topic feel intriguing, interesting, or not for you? |
-| Q02 | S/F | Welcher Teil des Themas interessiert dich am ehesten – Rollen, Sprache, Vertrauen, Rituale, Empfindungen, Fantasie, etwas anderes oder keiner davon? | Which part of the topic interests you most—roles, language, trust, ritual, sensation, fantasy, something else, or none of these? |
+| Q01 | Q/S/F | Was ist für dich erotisch daran, Kontrolle zu übernehmen, sie abzugeben oder zwischen beidem zu wechseln? | What feels erotic to you about taking control, giving it up, or moving between the two? |
+| Q02 | S/F | Welche Seite von Machtaustausch zieht dich am stärksten an – Befehle, Gehorsam, Rituale, Lob, Erniedrigung, Service, Orgasmuskontrolle oder etwas anderes? | Which side of power exchange draws you most—commands, obedience, ritual, praise, degradation, service, orgasm control, or something else? |
 | Q03 | F | Was bedeuten Begriffe wie dominant, submissiv, Switch, Top oder Bottom für dich – wenn sie überhaupt etwas bedeuten? | What do terms such as dominant, submissive, switch, top, or bottom mean to you—if they mean anything at all? |
-| Q04 | Q/S/F | Wie unterscheidest du eine Fantasie, über die du gern sprichst, von etwas, das du im echten Leben vielleicht wollen würdest? | How do you distinguish a fantasy you enjoy discussing from something you might want in real life? |
-| Q05 | S/F | Kann sich eine Rolle für dich wie Identität, gelegentliche Vorliebe, Experiment, gar nichts davon oder etwas anderes anfühlen? | Could a role feel like an identity, an occasional preference, an experiment, none of these, or something else to you? |
-| Q06 | F | Wodurch könnten sich Rollenwünsche je nach Person, Situation oder Tag verändern – oder für dich gleich bleiben? | What might make role preferences change with the person, situation, or day—or stay the same for you? |
-| Q07 | Q/S/F | Was würde dieses Gespräch neugierig statt wie eine Prüfung oder Erwartung wirken lassen? | What would make this conversation feel curious rather than like a test or expectation? |
-| Q08 | S/F | Welche Sprache über Macht wirkt auf dich einladend, neutral oder abschreckend? | What language about power feels inviting, neutral, or off-putting to you? |
-| Q09 | F | Welche Annahme über Dominanz oder Submission würdest du gern aus diesem Gespräch heraushalten? | What assumption about dominance or submission would you most like to keep out of this conversation? |
-| Q10 | Q/S/F | Was würde helfen, damit dieses Gespräch angenehm, freiwillig und jederzeit leicht zu beenden bleibt? | What would help this conversation stay comfortable, optional, and easy to end at any time? |
-| Q11 | F | Was könnte jemand zu diesem Thema sagen, ohne eigene Erfahrungen oder Interessen offenzulegen? | What could someone say about this topic without disclosing their own experience or interests? |
+| Q04 | Q/S/F | Wenn du an eine freiwillige erotische Machtszene denkst: Welches erste Bild oder welcher Moment kommt dir in den Kopf? | When you imagine a chosen erotic power scene, what first image or moment comes to mind? |
+| Q05 | S/F | Was kann Autorität für dich erotisch machen, statt bloß streng oder kontrollierend zu wirken? | What can make authority feel erotic to you rather than merely strict or controlling? |
+| Q06 | F | Was könnte sich an Hingabe lustvoll anfühlen – Entlastung, Intensität, Verletzlichkeit, Aufmerksamkeit oder etwas anderes? | What could feel pleasurable about surrender—release, intensity, vulnerability, attention, or something else? |
+| Q07 | Q/S/F | Welche Sprache kann für dich erotische Macht tragen – ein Titel, ein Befehl, eine Erlaubnis, Lob oder etwas anderes? | What language can carry erotic power for you—a title, a command, permission, praise, or something else? |
+| Q08 | S/F | Wie wirken Lob und Erniedrigung auf dich: Was könnte dich anmachen, und welche Worte würden die Stimmung sofort zerstören? | How do praise and degradation affect you: what might turn you on, and what words would immediately ruin the mood? |
+| Q09 | F | Welche Wirkung können Kleidung, Körperhaltung, Knien, Warten oder ein Ritual in einer Machtfantasie haben? | What effect can clothing, posture, kneeling, waiting, or ritual have in a power fantasy? |
+| Q10 | Q/S/F | Was hält eine Machtfantasie für dich verspielt und erotisch, statt sie wie eine Prüfung oder Aufführung wirken zu lassen? | What keeps a power fantasy playful and erotic for you rather than making it feel like a test or performance? |
+| Q11 | F | Was könnte an Service oder daran, bedient zu werden, erotisch sein? | What could feel erotic about service or being served? |
 | Q12 | S/F | Wo möchtest du eine klare Grenze zwischen freiwillig gewählten erotischen Rollen und Entscheidungen im Alltag ziehen? | Where would you want a clear boundary between chosen erotic roles and everyday decisions? |
 
-### Act II – ABSPRACHE / NEGOTIATION
+### Act II – SPIELRAUM / PLAYSPACE
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q13 | Q/S/F | Wie sollte jemand fragen, ob ein Gespräch über Machtaustausch gerade willkommen ist? | How would you like someone to ask whether a conversation about power exchange is welcome right now? |
-| Q14 | S/F | Welche Informationen bräuchtest du, um eine Idee als „nur besprechbar“, „später recherchieren“, „vielleicht“ oder „nein“ einzuordnen? | What information would you need to place an idea under “discussion only,” “research later,” “maybe,” or “no”? |
-| Q15 | F | Wie würdest du klare Neins, bedingte Vielleichts und offene Fragen benennen – oder passen andere Begriffe besser? | How would you name clear noes, conditional maybes, and open questions—or would different terms fit better? |
-| Q16 | Q/S/F | Welche Wörter oder Signale sollten in einem zukünftigen Gespräch „langsamer“, „Pause“ und „Stopp“ bedeuten? | What words or signals should mean “slow down,” “pause,” and “stop” in a future conversation? |
-| Q17 | S/F | Was sollte sofort passieren, wenn jemand seine Meinung ändert? | What should happen immediately when someone changes their mind? |
-| Q18 | F | Wenn Worte schwerfallen: Welche Anzeichen sollten zu Stopp und Nachfragen führen statt zu einer Annahme? | When words are difficult, what signs should lead to stopping and checking in rather than making an assumption? |
-| Q19 | Q/S/F | Was macht es leicht, ein „Vielleicht“ als Vielleicht stehen zu lassen, ohne Überredung? | What makes it easy to leave a “maybe” as a maybe without persuasion? |
-| Q20 | S/F | Wie kann jemand prüfen, ob etwas richtig verstanden wurde, ohne deine Antwort wie einen Vertrag zu behandeln? | How can someone check understanding without treating your answer like a contract? |
-| Q21 | F | Welche Formulierung hält eine Idee klar im Bereich „nur besprechen“, ohne daraus einen Plan oder eine Erwartung zu machen? | What wording keeps an idea clearly in “discussion only,” without turning it into a plan or expectation? |
-| Q22 | Q/S/F | Wie können zwei Menschen eine Regel im Rollenspiel von einer echten Grenze im Alltag unterscheiden? | How can two people distinguish a role-play rule from a real-life boundary? |
-| Q23 | S/F | Woran würde man merken, dass eine Absprache veränderbar bleibt statt festgeschrieben zu sein? | What would show that an agreement remains revisable rather than fixed? |
-| Q24 | F | Woran würdest du erkennen, dass Fachwissen nötig ist, statt von einer Gesprächs-App oder durch Ausprobieren zu lernen? | What would tell you that specialist knowledge is needed rather than learning from a conversation app or by experimenting? |
+| Q13 | Q/S/F | Welcher Befehl könnte für dich heiß sein, ihn zu geben oder zu erhalten – zumindest in der Fantasie? | What command might feel hot for you to give or receive—at least in fantasy? |
+| Q14 | S/F | Welche Titel oder Besitzsprache könnten dich anmachen, und welche würden überhaupt nicht zu dir passen? | What titles or ownership language might turn you on, and what would not suit you at all? |
+| Q15 | F | Welche Art von Ritual oder Service könnte erotische Spannung aufbauen, bevor überhaupt etwas Körperliches passiert? | What kind of ritual or service could build erotic tension before anything physical happens? |
+| Q16 | Q/S/F | Welche Form von Kontrolle reizt dich am meisten – über Bewegung, Sprache, Blickkontakt, Tempo, Berührung oder Orgasmus? | What kind of control excites you most—over movement, speech, eye contact, pace, touch, or orgasm? |
+| Q17 | S/F | Welche Art von Lob oder Erniedrigung würdest du gern hören, und wie müsste sie klingen, damit sie wirklich wirkt? | What kind of praise or degradation would you like to hear, and how would it need to sound to truly work for you? |
+| Q18 | F | Welche Fantasie rund um Fesseln, Schläge oder Sinnesreize findest du interessant – auch wenn sie nur Gesprächsstoff bleibt? | What fantasy involving restraint, impact, or sensory play interests you—even if it remains only something to discuss? |
+| Q19 | Q/S/F | Was reizt dich an Orgasmuskontrolle, Erlaubnis, Edging oder bewusstem Verweigern – oder lässt dich daran kalt? | What excites you about orgasm control, permission, edging, or deliberate denial—or leaves you cold? |
+| Q20 | S/F | Welche Körperhaltung oder Form des Präsentierens könnte sich in einer Machtfantasie besonders aufgeladen anfühlen? | What posture or form of presentation could feel especially charged in a power fantasy? |
+| Q21 | F | Was könnte daran erotisch sein, beobachtet, vorgeführt oder ganz bewusst im Mittelpunkt der Aufmerksamkeit zu sein? | What could feel erotic about being watched, displayed, or deliberately made the centre of attention? |
+| Q22 | Q/S/F | Welcher Teil einer Machtfantasie müsste am klarsten besprochen werden, damit sie aufregend statt verunsichernd wirkt? | Which part of a power fantasy would need the clearest discussion for it to feel exciting rather than unsettling? |
+| Q23 | S/F | Welche Worte oder Signale sollen in einer intensiven Dynamik eindeutig langsamer, Pause und Stopp bedeuten? | What words or signals should unambiguously mean slow down, pause, and stop in an intense dynamic? |
+| Q24 | F | Bei welchen Themen – etwa Fesseln, Schlägen oder intensiven Sinnesreizen – würdest du zuerst fundiertes Wissen statt spontanes Ausprobieren wollen? | For which topics—such as restraint, impact, or intense sensory play—would you want sound knowledge before any spontaneous experimentation? |
 
-### Act III – FÜRSORGE / CARE
+### Act III – NACHKLANG / AFTERGLOW
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q25 | Q/S/F | Welche Reaktion würde dir zeigen, dass ein Stopp oder Meinungswechsel gut angenommen wird? | What response would show you that a stop or change of mind will be received well? |
-| Q26 | S/F | Was hilft dir nach einem intensiven Gespräch zurück in den Alltag: Nähe, Abstand, Humor, Ruhe, späteres Nachfragen oder etwas anderes? | After an intense conversation, what helps you return to ordinary connection: closeness, space, humor, quiet, a later check-in, or something else? |
-| Q27 | F | Wie könnte Fürsorge nach einer intensiven Situation für beide Menschen unterschiedlich aussehen – unabhängig von ihrer Rolle? | How might care after an intense situation look different for each person, regardless of role? |
-| Q28 | Q/S/F | Wie könnte ein hilfreiches Nachfragen am nächsten Tag klingen – falls es gewünscht ist? | What could a helpful next-day check-in sound like—if one is wanted? |
-| Q29 | S/F | Welche Reaktion fühlt sich fürsorglich an, wenn jemand nur allgemein oder hypothetisch antwortet? | What response feels caring when someone answers only generally or hypothetically? |
-| Q30 | F | Welche Privatsphäre rund um Fantasien, Rollen oder solche Gespräche wäre dir wichtig? | What privacy around fantasies, roles, or conversations like this would matter to you? |
-| Q31 | Q/S/F | Was macht den Satz „Ich möchte darüber nur sprechen“ leicht verständlich und respektierbar? | What makes “I only want to talk about this” easy to understand and respect? |
-| Q32 | S/F | Wie sollte jemand reagieren, wenn eure Interessen oder Rollenwünsche nicht übereinstimmen? | How would you like someone to respond if your interests or role preferences do not match? |
-| Q33 | F | Welche Reaktion hilft, wenn jemand kein Interesse hat, ohne nach einem tieferen Grund zu suchen? | What response helps when someone is not interested, without looking for a deeper reason? |
-| Q34 | Q/S/F | Wie sieht Fürsorge aus, wenn eine Person das Thema früher beenden möchte? | What does care look like when one person wants to end the topic sooner? |
-| Q35 | S/F | Was sollte außerhalb jeder freiwillig gewählten Machtdynamik über Gleichwertigkeit und Respekt unverändert bleiben? | What should remain unchanged about equal worth and respect outside any chosen power dynamic? |
-| Q36 | F | Welcher eine Grundsatz sollte ein zukünftiges Gespräch über freiwillig gewählte Macht leiten, ohne einen Plan zum Handeln zu bedeuten? | What one principle should guide a future conversation about chosen power without implying a plan to act? |
+| Q25 | Q/S/F | Wie soll eine erotische Machtdynamik enden: sofort auflösen, langsam ausklingen oder noch eine Weile spielerisch nachwirken? | How should an erotic power dynamic end: dissolve immediately, fade gradually, or linger playfully for a while? |
+| Q26 | S/F | Welche Form von Fürsorge passt nach einer intensiven Situation zu dir – Nähe, Worte, praktische Hilfe, Humor, Ruhe oder etwas anderes? | What kind of care suits you after an intense situation—closeness, words, practical help, humour, quiet, or something else? |
+| Q27 | F | Was hilft dir, nach einer Rolle wieder vollständig im gleichwertigen Alltag anzukommen? | What helps you return fully to an equal everyday relationship after a role ends? |
+| Q28 | Q/S/F | Welche Worte oder Gesten würden dir nach einer intensiven Rolle das Gefühl geben, begehrt und gut aufgehoben zu sein? | What words or gestures would make you feel desired and cared for after an intense role? |
+| Q29 | S/F | Welche Privatsphäre rund um Fantasien, Rollen oder solche Gespräche ist dir wichtig? | What privacy around fantasies, roles, or conversations like this matters to you? |
+| Q30 | F | Wie sollte jemand reagieren, wenn eure Rollenwünsche oder Kinks nicht übereinstimmen? | How would you like someone to respond if your desired roles or kinks do not match? |
+| Q31 | Q/S/F | Was soll dein Gegenüber darüber verstehen, was erotische Macht für dich reizvoll macht? | What would you like the other person to understand about what makes erotic power appealing to you? |
+| Q32 | S/F | Welche Machtfantasie würdest du gern einmal genauer beschreiben, ohne daraus einen Plan zu machen? | What power fantasy would you like to describe in more detail without turning it into a plan? |
+| Q33 | F | Welcher Teil einer Fantasie soll für dich lieber Fantasie bleiben – und was macht ihn gerade dort so reizvoll? | What part of a fantasy would you rather keep as fantasy—and what makes it so compelling there? |
+| Q34 | Q/S/F | Was hast du heute gehört, das dich überrascht, neugierig gemacht oder vielleicht angemacht hat? | What did you hear today that surprised you, made you curious, or perhaps turned you on? |
+| Q35 | S/F | Was muss außerhalb jeder freiwillig gewählten Machtdynamik über Gleichwertigkeit, Freiheit und Respekt unverändert bleiben? | What must remain unchanged about equality, freedom, and respect outside every chosen power dynamic? |
+| Q36 | F | Wenn aus diesem Gespräch kein Plan entsteht: Welches Element möchtest du trotzdem in deiner Fantasie mitnehmen? | If no plan comes from this conversation, what element would you still like to carry into your imagination? |
 
 ### Direct finale
 
-**DE:** „Was würde ein zukünftiges Gespräch über freiwillig gewählte Macht für dich klarer und angenehmer machen? Ihr müsst heute nichts entscheiden oder ausprobieren.“
+**DE:** „Damit endet POWER, BY CHOICE. Was Fantasie bleibt und was ihr später weiter besprecht, entscheidet ihr außerhalb des Spiels.“
 
-**EN:** “What would make a future conversation about chosen power feel clearer and more comfortable for you? You do not need to decide or try anything today.”
+**EN:** “This is the end of POWER, BY CHOICE. What remains fantasy and what you discuss further later is for you to decide outside the game.”
 
 ---
 
 ## 15. SLOW BURN (18+)
 
-**Goal:** A touch-forward guide for two adults that keeps the phone in a passive moderator role. One shared introduction asks both people to talk before beginning; afterward they communicate agreement, wishes, changes, pause, and stop directly to each other. The app only presents prompts plus ordinary Continue and free Pass actions. It contains external touch and optional kissing, but no penetration, breath or neck play, restraint, impact, surprise touch, private moment, Question 37, PLAYFUL mechanics, or timer.
+**Goal:** A sensual, touch-forward guide for two adults that keeps the phone in a passive moderator role. It progresses from gaze and first contact to kissing and guided touch, including optionally named touch to the chest or breasts, buttocks, and inner thighs. Genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch remain outside this guide. The app presents only prompts plus ordinary Continue and free Pass actions; wishes and changes are spoken directly between the people.
 
 **Routes:** Quick 9 · Standard 15 · Unhurried 21. Planning estimates: approximately 20, 40, and 60 minutes. These are experience ranges, not targets or countdowns.
 
-### Act I – ANKOMMEN / ARRIVE
+### Act I – SPANNUNG / TENSION
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q01 | Q/S/U | Vor jeder Berührung wählt ihr jeweils eine Option: ruhiger · heller oder dunkler · wärmer oder kühler · mehr Abstand · andere Unterlage · keine Änderung. Nutzt nur Änderungen, die für euch beide passen. | Before any touch, each choose one: quieter · brighter or dimmer · warmer or cooler · more space · different surface · no change. Use only changes that work for both. |
-| Q02 | S/U | Wählt jeweils eine Position, die ihr leicht verlassen oder ändern könnt: sitzend, liegend, stehend oder eine andere gut gestützte Position. Keine Position ist Teil einer Herausforderung. | Each choose a position you can leave or change easily: sitting, lying, standing, or another supported position. No position is part of the challenge. |
-| Q03 | S/U | Ohne Berührung wählt jede Person einen Abstand. Verwendet den größeren gewünschten Abstand. Beide Personen können jederzeit mehr Abstand schaffen. Blickkontakt ist optional. | With no touch, each person chooses a distance. Use the greater requested distance. Either person can create more space at any time. Looking at each other is optional. |
-| Q04 | Q/S/U | Zieht eine ruhige Berührung von Hand zu Hand in Betracht. Die empfangende Person benennt Handfläche, Handrücken oder eine andere gut erreichbare Stelle sowie eine Höchstdauer. Beide Personen können früher stoppen. | Consider one still hand-to-hand touch. The receiver names palm, back of hand, or another reachable part of the hand and a maximum duration. Either person may stop sooner. |
-| Q05 | U | Die empfangende Person zeigt an der eigenen Hand – oder sagt bzw. tippt –, wie sanft oder fest es angenehm ist. Die gebende Person kann genau diesen Druck an der gewählten Stelle der Hand ausprobieren. | The receiver shows on their own hand—or says or taps—how light or firm feels welcome. The giver may try that exact pressure on the chosen hand area. |
-| Q06 | U | Zieht eine Berührung an einer bequem erreichbaren Stelle des Unterarms in Betracht – über der Kleidung, falls dort Kleidung ist. Die empfangende Person benennt Stelle, ruhigen Kontakt oder eine Bewegung und eine Höchstdauer. | Consider touch on one comfortably reachable part of the forearm, over clothing if present. The receiver names the place, still contact or one movement, and a maximum duration. |
-| Q07 | Q/S/U | Was passt jetzt? Ohne Berührung bleiben · eine bereits gewählte Berührung genau wiederholen · mehr Abstand schaffen · zum nächsten Akt wechseln · beenden. Keine Wahl ist besser oder höher. | What fits now? Stay with no touch · repeat an already chosen touch exactly · create more space · move to the next act · end. No choice is better or higher. |
+| Q01 | Q/S/U | Macht den Raum gemeinsam angenehmer: Licht, Temperatur, Musik, Stille oder etwas anderes. Verändert nur, was für euch beide passt. | Make the space feel better together: light, temperature, music, quiet, or something else. Change only what works for both of you. |
+| Q02 | S/U | Findet eine Position, in der ihr euch entspannt ansehen und leicht näherkommen oder wieder Abstand nehmen könnt. | Find a position where you can look at each other comfortably and easily move closer or create space again. |
+| Q03 | S/U | Schaut einander für ein paar Atemzüge an, wenn es sich gut anfühlt. Achtet darauf, was die Stille und der Abstand mit der Spannung zwischen euch machen. | Look at each other for a few breaths if it feels good. Notice what the silence and distance do to the tension between you. |
+| Q04 | Q/S/U | Bringt eure Hände langsam zueinander. Die empfangende Person sagt, wo und wie der erste Kontakt angenehm wäre; beginnt erst dann. | Bring your hands slowly towards each other. The receiver says where and how the first contact would feel good; only then begin. |
+| Q05 | U | Erkundet eine Hand langsam mit Fingerspitzen oder Handfläche. Die empfangende Person führt mit Worten zu Druck, Tempo und Stelle. | Explore one hand slowly with fingertips or palm. The receiver guides pressure, pace, and location with words. |
+| Q06 | U | Lasst eine Berührung langsam über Unterarm und Ellbogen wandern – über Stoff oder Haut. Die empfangende Person bestimmt Richtung und Tempo. | Let a touch travel slowly along the forearm and elbow—over fabric or skin. The receiver sets direction and pace. |
+| Q07 | Q/S/U | Haltet kurz inne und sagt einander nur, was jetzt passt: genauso · langsamer · näher · mehr Abstand · etwas anderes · Abschluss. | Pause briefly and tell each other only what fits now: just like this · slower · closer · more space · something different · close. |
 
-### Act II – AUFBAU / BUILD
-
-| ID | Route | Deutsch | English |
-|---|---|---|---|
-| Q08 | Q/S/U | Zieht eine Form von Körperkontakt in Betracht: seitlicher Kontakt · eine kurze Umarmung · eine andere zugängliche Form, bei der beide das eigene Gewicht tragen · keine. Benennt Position und Höchstdauer. | Consider one form of body contact: side-by-side contact · a brief embrace · another accessible form where each person supports their own weight · none. Name the position and maximum duration. |
-| Q09 | S/U | Zieht eine Stelle im Gesicht, an der Kopfhaut oder an den Haaren in Betracht – oder lasst diese Kategorie aus. Die empfangende Person benennt die genaue Stelle und ruhigen Kontakt oder eine sanfte Bewegung. Nicht ziehen. | Consider one place on the face, scalp, or hair—or skip this category. The receiver names the exact place and still contact or one gentle movement. Avoid pulling. |
-| Q10 | S/U | Zieht eine äußerliche Stelle an Bauch, seitlichem Oberkörper, Hüften oder Außenseiten der Beine über der Kleidung in Betracht. Brust/Brüste, Gesäß, Innenseiten der Oberschenkel, Genitalien und Anus sind ausgeschlossen. Die empfangende Person benennt eine genaue Stelle. | Consider one external area on the abdomen, side of the torso, hips, or outer legs, over clothing. This excludes chest/breasts, buttocks, inner thighs, genitals, and anus. The receiver names one exact place. |
-| Q11 | Q/S/U | Zieht einen Kuss an Stirn, Wange, Hand, Schulter oder einer anderen bereits geöffneten äußerlichen Stelle in Betracht – oder wählt keinen Kuss. Die empfangende Person benennt die genaue Stelle. Stoppt nach einem Kuss. | Consider one kiss on the forehead, cheek, hand, shoulder, or another already opened external area—or choose no kiss. The receiver names the exact place. Stop after one kiss. |
-| Q12 | U | Zieht einen Kuss auf den Mund in Betracht. Das ist eine eigene Entscheidung, auch wenn ein anderer Kuss bereits gewählt wurde. Küsst euch einmal und stoppt; beide Personen können vorher oder währenddessen stoppen. | Consider one kiss on the mouth. This is a separate choice even if another kiss was already chosen. Kiss once and stop; either person may stop before or during contact. |
-| Q13 | U | Benennt eine frühere Handlung ohne Berührung oder mit Berührung, zu der ihr zurückkehren möchtet. Bei einer Berührung entscheidet ihr neu über die genaue Handlung. Zurückzukehren ist kein Rückschritt. | Name one earlier no-touch or touch action to return to. For touch, choose again on the exact action. Returning is not a step backward. |
-| Q14 | Q/S/U | Was passt jetzt? Hier bleiben · etwas Angenehmes genau wiederholen · Optionen aus Akt III in Betracht ziehen · mehr Abstand schaffen · beenden. | What fits now? Stay here · repeat an exact favorite · consider Act III choices · create more space · end. |
-
-### Act III – WÄHLEN / CHOOSE
+### Act II – NÄHE / CLOSENESS
 
 | ID | Route | Deutsch | English |
 |---|---|---|---|
-| Q15 | Q/S/U | Wählt getrennt: bei den derzeit gewählten Optionen bleiben · eine andere passende Kategorie in Betracht ziehen · mehr Abstand schaffen · zum Abschluss wechseln · jetzt beenden. Keine Richtung ist das „höhere“ Ergebnis. | Choose separately: stay with the currently chosen options · consider one different fitting category · create more space · move to a close · end now. No direction is the “higher” result. |
-| Q16 | S/U | Wählt eine bereits gewählte Handlung und wiederholt sie genauso wie zuvor. Verstärkt sie nicht. Die empfangende Person legt die Höchstdauer fest; beide Personen können früher stoppen. | Choose one already selected action to repeat exactly as it was. Do not intensify it. The receiver sets the maximum duration; either person may stop sooner. |
-| Q17 | S/U | Zieht für eine bereits gewählte äußerliche Stelle nur diese Änderung in Betracht: über der Kleidung bleiben · direkt auf der Haut berühren · diese Stelle schließen. Direkter Hautkontakt schließt Brust/Brüste, Gesäß, Innenseiten der Oberschenkel, Genitalien und Anus aus. | For one already selected external area, consider only this change: stay over clothing · touch directly on skin · close this area. Direct skin contact excludes chest/breasts, buttocks, inner thighs, genitals, and anus. |
-| Q18 | U | Für eine bereits gewählte äußerliche Stelle kann die empfangende Person einen Weg führen, zeigen oder beschreiben. Die gebende Person geht nicht darüber hinaus und stoppt, wenn die Führung endet. | For one already selected external area, the receiver may guide, point out, or describe one path. The giver does not continue beyond it and stops when the guidance ends. |
-| Q19 | Q/S/U | Zieht bei einem bereits gewählten Kuss auf den Mund in Betracht, ohne Zeitvorgabe weiterzumachen. Beide Personen können jederzeit Abstand schaffen; Abstand bedeutet stoppen und nachfragen, nicht folgen. | For an already selected mouth kiss, consider continuing without a timer. Either person can create distance at any moment; distance means stop and check, not follow. |
-| Q20 | U | Wählt eine Pause ohne Berührung. Beide Personen finden eine bequeme Position und einen passenden Abstand. Danach muss nichts passieren. | Choose a no-touch pause. Each person finds a comfortable position and distance. Nothing needs to happen next. |
-| Q21 | Q/S/U | Wechselt zum Abschluss, ohne eine neue Berührungskategorie hinzuzufügen: Abstand · ruhige Nähe · bereits gewähltes Händehalten · bereits gewählte Umarmung · Wasser oder praktische Bequemlichkeit · ein kurzer Check-in-Satz · jetzt beenden. | Move to a close without adding a new touch category: space · quiet nearness · an already selected handhold · an already selected embrace · water or practical comfort · one check-in sentence · end now. |
+| Q08 | Q/S/U | Kommt so nah zusammen, wie es für euch beide gut ist: Schulter an Schulter, in einer Umarmung oder auf eine andere Weise. Bleibt einen Moment dort. | Come as close as feels good for both of you: shoulder to shoulder, in an embrace, or another way. Stay there for a moment. |
+| Q09 | S/U | Die empfangende Person wählt Gesicht, Haaransatz, Haare oder Nacken und beschreibt eine langsame Berührung, die dort gut wäre. | The receiver chooses face, hairline, hair, or nape and describes a slow touch that would feel good there. |
+| Q10 | S/U | Die empfangende Person wählt Rücken, Taille, Bauch, Hüfte oder Außenseite eines Beins und sagt, ob sie dort ruhigen Kontakt oder eine langsame Bewegung möchte. | The receiver chooses back, waist, abdomen, hip, or outer leg and says whether they want still contact or slow movement there. |
+| Q11 | Q/S/U | Die empfangende Person nennt eine Stelle, an der sie jetzt einen langsamen Kuss möchte. Lasst den Kuss einen Moment länger dauern als erwartet. | The receiver names a place where they want a slow kiss now. Let the kiss last a moment longer than expected. |
+| Q12 | U | Wenn ihr beide möchtet, küsst euch auf den Mund. Beginnt langsam, trennt euch nach einem Kuss wieder und sagt einander, was ihr beim nächsten gern anders oder genauso hättet. | If you both want to, kiss on the mouth. Begin slowly, separate after one kiss, and tell each other what you would like differently or the same next time. |
+| Q13 | U | Die empfangende Person führt eine Hand zu einer Stelle, an der sie gerade gern berührt werden möchte, oder beschreibt die Stelle mit Worten. Bleibt genau dort. | The receiver guides a hand to a place where they would like to be touched now, or describes the place in words. Stay exactly there. |
+| Q14 | Q/S/U | Wählt gemeinsam den Moment aus diesem Akt, den ihr länger wiederholen möchtet. Verändert nur das, was ihr einander direkt sagt. | Choose together the moment from this act that you want to repeat for longer. Change only what you say directly to each other. |
 
-SLOW BURN stores only the same route/progress state as an ordinary CLOSER run. It has no fields or controls for agreement, selected actions, adjustments, or body areas. Those remain in the conversation between the two people and are never entered into the app. The direct finale states accurately that answers and choices were not saved; ordinary local route progress is deleted when the run completes.
+### Act III – HINGABE / SURRENDER
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q15 | Q/S/U | Sagt einander direkt, wo ihr jetzt gern berührt oder geküsst werden möchtet. Brust oder Brüste, Gesäß und Innenseiten der Oberschenkel dürfen genannt werden; Genitalien und Anus bleiben in diesem Guide außen vor. | Tell each other directly where you would like to be touched or kissed now. Chest or breasts, buttocks, and inner thighs may be named; genitals and anus remain outside this guide. |
+| Q16 | S/U | Wählt eine eben genannte Stelle. Berührt sie über Kleidung oder direkt auf der Haut und lasst die empfangende Person Druck, Rhythmus und Bewegung führen. | Choose one place just named. Touch it over clothing or directly on skin, and let the receiver guide pressure, rhythm, and movement. |
+| Q17 | S/U | Die empfangende Person legt ihre Hand auf die Hand der gebenden Person und führt sie langsam auf einem gewünschten Weg. Wenn die Führung endet, bleibt die Hand stehen. | The receiver places their hand over the giver’s hand and slowly guides it along a desired path. When the guidance ends, the hand becomes still. |
+| Q18 | U | Kehrt zu einem Kuss zurück. Eine Person gibt zunächst Tempo und Tiefe vor; danach könnt ihr wechseln oder genau dort bleiben. | Return to a kiss. One person sets the pace and depth at first; then you may switch or stay exactly there. |
+| Q19 | Q/S/U | Verbindet einen längeren Kuss mit genau einer Berührung, die ihr bereits miteinander benannt habt. Lasst alles andere weg und spürt, was die Kombination verändert. | Combine a longer kiss with exactly one touch you have already named together. Leave everything else out and notice what the combination changes. |
+| Q20 | U | Macht eine Pause, ohne sofort Abstand zu nehmen. Sagt einander einen Moment, eine Berührung oder einen Kuss, den ihr besonders gern hattet. | Take a pause without immediately moving apart. Tell each other one moment, touch, or kiss you especially enjoyed. |
+| Q21 | Q/S/U | Entscheidet gemeinsam, wie der Guide endet: noch einen Lieblingsmoment wiederholen · ruhig nah bleiben · Abstand nehmen · ohne Guide privat weitermachen · jetzt abschließen. Danach moderiert das Smartphone nichts mehr. | Decide together how the guide ends: repeat one favourite moment · stay quietly close · create space · continue privately without the guide · close now. After that, the phone no longer moderates. |
+
+### Direct finale
+
+**DE:** „Der Guide endet hier. Eure Worte und Entscheidungen wurden nicht gespeichert. Was danach passiert, entscheidet ihr ohne das Smartphone.“
+
+**EN:** “The guide ends here. Your words and choices were not saved. What happens next is for you to decide without the phone.”
+
+SLOW BURN stores only the same route/progress state as an ordinary CLOSER run. It has no fields or controls for agreement, selected actions, adjustments, or body areas. Those remain in the conversation between the two people and are never entered into the app. The direct finale states accurately that words and choices were not saved; ordinary local route progress is deleted when the run completes.

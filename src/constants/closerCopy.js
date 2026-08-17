@@ -293,8 +293,8 @@ const COPY = {
     en: 'POWER, BY CHOICE is an explicit adult conversation about chosen erotic roles, boundaries, and care. It contains no physical tasks; answers are never consent to an action.',
   },
   slowBurnMenuIntro: {
-    de: 'SLOW BURN ist eine körperliche 18+-Anleitung mit äußerlichen Berührungen und optionalen Küssen. Ihr sprecht Wünsche, Änderungen, Pause und Stopp direkt miteinander ab; die App gibt nur den nächsten Impuls.',
-    en: 'SLOW BURN is a physical 18+ guide with external touch and optional kissing. You communicate wishes, changes, pause, and stop directly to each other; the app only offers the next prompt.',
+    de: 'SLOW BURN ist ein körperlicher 18+-Guide mit sinnlicher Berührung und Küssen. Er kann auch Berührung an Brust oder Brüsten, Gesäß und Innenseiten der Oberschenkel ansprechen; Genitalien bleiben außen vor. Ihr sprecht Wünsche, Änderungen, Pause und Stopp direkt miteinander ab; die App gibt nur den nächsten Impuls.',
+    en: 'SLOW BURN is a physical 18+ guide with sensual touch and kissing. It may also invite touch to the chest or breasts, buttocks, and inner thighs; genitals remain outside the guide. You communicate wishes, changes, pause, and stop directly to each other; the app only offers the next prompt.',
   },
   adultContentGroup: { de: 'Inhalte ab 18', en: '18+ content' },
   morePacksHint: {

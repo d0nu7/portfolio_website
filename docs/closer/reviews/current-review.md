@@ -1,7 +1,7 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 17 August 2026
-**Scope:** current release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, the FR-018/019 experimental adult-pack implementation, and the FR-020 question-bank audit
+**Scope:** current release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, the FR-018/019 experimental adult-pack implementation, the FR-020 question-bank audit, and the complete adult-pack editorial rewrite
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## Overall assessment
@@ -23,7 +23,7 @@ The current main candidate passes its automated release gate. Public confidence 
 - Date Night, Couples, and Friends expose default plus PLAYFUL styles. Chaos retains a single thematic PLAYFUL style with safe co-creative actions.
 - Deep, Late Night, Power, by Choice, Slow Burn, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
 - PLAYFUL assignments are deterministic question data. Quick contains at most three actions; all routes enforce spacing and per-act density ceilings.
-- Content revision 8 intentionally invalidates saves from the first high-interaction adult-pack prototype.
+- Content revision 9 intentionally invalidates saves created before the complete adult-pack editorial rewrite.
 - The start screen now points to optional packs in the Menu. Adult packs are
   grouped in a collapsed 18+ section at the bottom, with Late Night and its
   explanation kept together.
@@ -32,7 +32,7 @@ The current main candidate passes its automated release gate. Public confidence 
   movement and hold phases.
 - FR-005 pack-specific Private Moments are implemented for eligible Standard/Full routes with shared opt-out, named A/B covers, asymmetric cards, route-specific use/discard points, and dedicated finales. Quick remains free of Private Moments.
 - Late Night now follows the same low-attention participation model as the other adult packs: one shared 18+ introduction, no per-person or Act-II gate, direct interpersonal check-ins, and a direct no-action finale instead of generic Question 37.
-- POWER, BY CHOICE ships as a conversation-only adult pack. SLOW BURN is a touch-forward guide using the ordinary CLOSER question flow. All three adult packs explain the participation contract once at the shared introduction; afterward people communicate agreement, changes, pause, and stop directly to each other. There are no per-person handoffs, repeated Act-II gates, choice matrices, or action-state fields. RaDi explicitly approved the experimental packs and the interaction simplification after the first device playtest. The research documents' external review and moderated-session gates remain open; Classic's 36 questions remain unchanged.
+- LATE NIGHT now moves from tension through explicit sexual preferences to erotic self-disclosure. POWER, BY CHOICE covers commands, surrender, erotic authority, role language, orgasm control, and aftercare as conversation rather than assigned action. SLOW BURN is a touch-forward guide that progresses from gaze and first contact to kissing and explicitly named intimate touch outside the genital area. All three adult packs explain the participation contract once at the shared introduction; afterward people communicate wishes, changes, pause, and stop directly to each other. There are no per-person handoffs, repeated Act-II gates, choice matrices, or action-state fields. RaDi explicitly approved the experimental packs, low-attention interaction model, and sharper editorial direction. The research documents' external review and moderated-session gates remain open; Classic's 36 questions remain unchanged.
 
 ## Product review by pack
 
@@ -50,8 +50,8 @@ The current main candidate passes its automated release gate. Public confidence 
 | Road Trip | Travel-specific and inclusive without requiring distance, budget, or international travel. | Pilot parked and public-transport use before reconsidering any moving-vehicle design. |
 | Family | Inclusive of chosen and non-traditional family; avoids assuming harmony or reconciliation. | Test with varied family forms and levels of contact. |
 | Colleagues | Practical working preferences without assessment framing; reserve stays non-playable. | Use only voluntarily among near-peers and test across work contexts. |
-| Power, by Choice | Direct conversation about chosen erotic power without assigning roles or converting answers into permission. | Complete named specialist, bilingual, accessibility, legal, device, and moderated-session review before broad promotion. |
-| Slow Burn | A conservative touch guide that keeps communication between the people and gives the phone only the next prompt. | Treat as experimental; test whether the shared introduction is understood and run the full specialist, ethics, accessibility, legal, adverse-event, diverse-adult, and physical-device programme before broad promotion. |
+| Power, by Choice | Explicit conversation about chosen erotic power, including commands, role language, surrender, orgasm control, and aftercare, without assigning roles or converting answers into permission. | Complete named specialist, bilingual, accessibility, legal, device, and moderated-session review before broad promotion. |
+| Slow Burn | A progressively sensual touch guide from gaze and first contact to kissing and named intimate touch, while the phone supplies only the next prompt. | Treat as experimental; test whether the shared introduction and body-area limits are understood, and run the full specialist, ethics, accessibility, legal, adverse-event, diverse-adult, and physical-device programme before broad promotion. |
 
 ## Remaining product opportunities
 
@@ -62,7 +62,7 @@ These are intentionally not blockers for closing this branch:
 3. **Real sessions:** route duration, action fatigue, pressure, passing frequency, and attention to the phone cannot be validated mechanically.
 4. **Physical platforms:** Android installed PWA, iOS Add to Home Screen, safe areas, system navigation, VoiceOver, TalkBack, and WebKit remain device checks.
 5. **Infrastructure:** offline support is not planned for the current product. The custom-subdomain question remains an explicit owner decision.
-6. **Adult-pack validation:** POWER, BY CHOICE and SLOW BURN are implemented by owner decision, but neither is scientifically or legally validated. Complete the research memos' named reviews and moderated sessions before broad promotion, and keep the excluded SLOW BURN categories out of consumer builds.
+6. **Adult-pack validation:** POWER, BY CHOICE and SLOW BURN are implemented by owner decision, but neither is scientifically or legally validated. Complete the research memos' named reviews and moderated sessions before broad promotion. For SLOW BURN, keep genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch out of consumer builds unless a later explicit product decision changes the boundary.
 
 ## Verification contract
 
@@ -77,3 +77,5 @@ git diff --check
 ```
 
 `npm run test:e2e` creates a fresh static export. Do not treat a run against an older `out/` directory as release evidence.
+
+Latest local result on 17 August 2026: content generation, lint, and the production build passed; all 473 unit tests and all 148 mobile Chromium end-to-end tests passed.

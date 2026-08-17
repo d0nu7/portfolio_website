@@ -378,7 +378,7 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 4. Iteratively evaluate and refine pack-specific Quick, Standard, and Full routes.
 5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
 6. Validate the owner-approved conversation-only **POWER, BY CHOICE** implementation through the named specialist, bilingual, accessibility, privacy/legal, physical-device, and moderated-session gates. Do not infer validation from implementation.
-7. Validate the conservative SLOW BURN subset through the memo's specialist, ethics, accessibility, privacy/legal, adverse-event, physical-device, and staged-session gates. Keep excluded categories and C06 out of consumer builds.
+7. Validate the owner-approved SLOW BURN sequence through the memo's specialist, ethics, accessibility, privacy/legal, adverse-event, physical-device, and staged-session gates. The current consumer boundary permits explicitly named touch at the chest or breasts, buttocks, and inner thighs, while excluding genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch.
 8. Validate the implemented FR-020 set—37 original atomic changes plus three full-bank addenda—through bilingual paraphrase interviews, contextual specialist review, and moderated sessions. Keep Classic's 36 questions unchanged and preserve catalog/runtime/test synchronization for every later edit.
 
 ---
