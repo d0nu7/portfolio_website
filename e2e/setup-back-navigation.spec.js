@@ -87,13 +87,7 @@ test.describe('Setup Back navigation', () => {
     );
   });
 
-  /*
-   * LATE NIGHT's Intro is only ever reached after both required consent
-   * confirmations -- deliberately no Back button there, so stepping back
-   * can never bypass having to re-consent. discoverLateNight mirrors
-   * late-night.spec.js's own unlockLateNight/reachEntryConsent helpers.
-   */
-  test('no Back button appears on Intro for a pack with a consent gate', async ({ page }) => {
+  test('Back from the shared Late Night introduction returns to duration', async ({ page }) => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
@@ -106,14 +100,10 @@ test.describe('Setup Back navigation', () => {
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
     await page.getByRole('button', { name: /^LATE NIGHT/ }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // pack -> duration
-    await page.getByRole('button', { name: 'Weiter' }).click(); // duration -> consent gate
-    await page.getByRole('button', { name: /^Ich bin Person [12]$/ }).click();
-    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
-    await page.getByRole('button', { name: /^Ich bin Person [12]$/ }).click();
-    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
-    await page.getByRole('button', { name: 'Weiter' }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click(); // duration -> intro
 
     await expect(page.getByRole('button', { name: 'Los geht’s' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Zurück' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Zurück' }).click();
+    await expect(page.getByText('Wie viel Zeit habt ihr?')).toBeVisible();
   });
 });

@@ -281,8 +281,8 @@ const COPY = {
   menuAdditionalContent: { de: 'Zusätzliche Inhalte', en: 'Additional content' },
   menuAdditionalContentTitle: { de: 'Zusätzliche Inhalte', en: 'Additional content' },
   lateNightMenuIntro: {
-    de: 'LATE NIGHT ist ein ausdrücklich sexueller Gesprächsmodus für zwei Erwachsene (18+). Er bleibt standardmäßig verborgen. Sichtbarkeit ersetzt keine Zustimmung: Vor dem Start und vor Akt II entscheiden beide Personen jeweils privat und unabhängig.',
-    en: 'LATE NIGHT is an explicitly sexual conversation mode for two adults (18+). It stays hidden by default. Visibility is not consent: before starting and before Act II, both people decide privately and independently.',
+    de: 'LATE NIGHT ist ein ausdrücklich sexueller Gesprächsmodus für zwei Erwachsene (18+). Er bleibt standardmäßig verborgen. Vor dem Start klärt ihr direkt miteinander, ob das Thema für euch beide gerade passt.',
+    en: 'LATE NIGHT is an explicitly sexual conversation mode for two adults (18+). It stays hidden by default. Before starting, check directly with each other that the topic feels right for both of you now.',
   },
   packLibraryIntro: {
     de: 'Wähle, welche Gesprächsmodi in deiner Auswahl sichtbar sind. Mindestens ein Modus bleibt aktiv.',
@@ -293,8 +293,8 @@ const COPY = {
     en: 'POWER, BY CHOICE is an explicit adult conversation about chosen erotic roles, boundaries, and care. It contains no physical tasks; answers are never consent to an action.',
   },
   slowBurnMenuIntro: {
-    de: 'SLOW BURN ist ein körperlicher 18+-Modus mit äußerlichen Berührungen und optionalen Küssen. Jede konkrete Einladung beginnt nur nach einem verdeckten Ja + Ja. Die Session wird nicht gespeichert und kann nicht fortgesetzt werden.',
-    en: 'SLOW BURN is a physical 18+ mode with external touch and optional kissing. Every exact invitation begins only after a masked Yes + Yes. The session is not saved and cannot be resumed.',
+    de: 'SLOW BURN ist eine körperliche 18+-Anleitung mit äußerlichen Berührungen und optionalen Küssen. Ihr sprecht Wünsche, Änderungen, Pause und Stopp direkt miteinander ab; die App gibt nur den nächsten Impuls.',
+    en: 'SLOW BURN is a physical 18+ guide with external touch and optional kissing. You communicate wishes, changes, pause, and stop directly to each other; the app only offers the next prompt.',
   },
   adultContentGroup: { de: 'Inhalte ab 18', en: '18+ content' },
   morePacksHint: {

@@ -6,7 +6,7 @@
 
 ## Overall assessment
 
-CLOSER is a coherent, testable shared-device conversation product. The current branch completes pack-specific Private Moments and finales, makes Late Night's individual readiness choices transient and collectively resolved, and hardens private resume/persistence behavior without storing spoken answers or private free text. The core experience still keeps the phone secondary: answers are spoken, Pass is free, timers never advance the game, and high-intensity or professionally sensitive packs do not inherit pressure actions.
+CLOSER is a coherent, testable shared-device conversation product. The current branch completes pack-specific Private Moments and finales and hardens private resume/persistence behavior without storing spoken answers or private free text. The adult packs use one shared participation introduction and then keep check-ins between the people. The core experience keeps the phone secondary: answers are spoken, Pass is free, timers never advance the game, and high-intensity or professionally sensitive packs do not inherit pressure actions.
 
 The current main candidate passes its automated release gate. Public confidence still benefits from deployment smoke checks, broader physical Android/iOS coverage, and moderated sessions. RaDi has accepted the initial Android check and decided not to commission professional legal advice or offline support at the current stage; those decisions should be reopened only after a material product or risk change.
 
@@ -23,7 +23,7 @@ The current main candidate passes its automated release gate. Public confidence 
 - Date Night, Couples, and Friends expose default plus PLAYFUL styles. Chaos retains a single thematic PLAYFUL style with safe co-creative actions.
 - Deep, Late Night, Power, by Choice, Slow Burn, Road Trip, Family, and Colleagues cannot render `PREDICT`, `BOTH`, or `NO THINKING` actions.
 - PLAYFUL assignments are deterministic question data. Quick contains at most three actions; all routes enforce spacing and per-act density ceilings.
-- Content revision 7 intentionally invalidates incompatible active saves after the adult pack registry and route content changed.
+- Content revision 8 intentionally invalidates saves from the first high-interaction adult-pack prototype.
 - The start screen now points to optional packs in the Menu. Adult packs are
   grouped in a collapsed 18+ section at the bottom, with Late Night and its
   explanation kept together.
@@ -31,8 +31,8 @@ The current main candidate passes its automated release gate. Public confidence 
   only the final scene/overlay fade is slowed, avoiding the previous stretched
   movement and hold phases.
 - FR-005 pack-specific Private Moments are implemented for eligible Standard/Full routes with shared opt-out, named A/B covers, asymmetric cards, route-specific use/discard points, and dedicated finales. Quick remains free of Private Moments.
-- Late Night entry and Act-II gates retain individual decisions only in memory, reveal only a collective result, restart partial gates from A after reload, and use a direct no-action finale instead of generic Question 37.
-- POWER, BY CHOICE ships as a conversation-only adult pack. SLOW BURN ships as a separate non-resumable touch experience: every physical invitation uses two masked exact-action choices, only Yes + Yes opens it, and no session choice is stored. RaDi explicitly approved these experimental implementations after the citation-audited research. The research documents' external review and moderated-session gates remain open; Classic's 36 questions remain unchanged.
+- Late Night now follows the same low-attention participation model as the other adult packs: one shared 18+ introduction, no per-person or Act-II gate, direct interpersonal check-ins, and a direct no-action finale instead of generic Question 37.
+- POWER, BY CHOICE ships as a conversation-only adult pack. SLOW BURN is a touch-forward guide using the ordinary CLOSER question flow. All three adult packs explain the participation contract once at the shared introduction; afterward people communicate agreement, changes, pause, and stop directly to each other. There are no per-person handoffs, repeated Act-II gates, choice matrices, or action-state fields. RaDi explicitly approved the experimental packs and the interaction simplification after the first device playtest. The research documents' external review and moderated-session gates remain open; Classic's 36 questions remain unchanged.
 
 ## Product review by pack
 
@@ -46,12 +46,12 @@ The current main candidate passes its automated release gate. Public confidence 
 | Old Friends | Specific and non-prescriptive about renewed closeness. | Keep the current restrained style until reunion-sensitive testing is complete. |
 | Deep | Correctly intentional, slower, and free of pressure mechanics. | Monitor fatigue and difficult-valence density. |
 | Chaos | Co-creation and harmless absurdity support the strongest game-like identity. | Test whether Full sustains novelty without action fatigue. |
-| Late Night | Explicit, discreet, independently consent-gated, and communication-centered. | Legal, safety, and diverse-adult sessions remain mandatory before broad promotion. |
+| Late Night | Explicit, discreet, communication-centered, and introduced once without repeated device rituals. | Verify that the shared contract is understood; legal, safety, and diverse-adult sessions remain mandatory before broad promotion. |
 | Road Trip | Travel-specific and inclusive without requiring distance, budget, or international travel. | Pilot parked and public-transport use before reconsidering any moving-vehicle design. |
 | Family | Inclusive of chosen and non-traditional family; avoids assuming harmony or reconciliation. | Test with varied family forms and levels of contact. |
 | Colleagues | Practical working preferences without assessment framing; reserve stays non-playable. | Use only voluntarily among near-peers and test across work contexts. |
 | Power, by Choice | Direct conversation about chosen erotic power without assigning roles or converting answers into permission. | Complete named specialist, bilingual, accessibility, legal, device, and moderated-session review before broad promotion. |
-| Slow Burn | A conservative, choice-led touch sequence with strong transient-state boundaries and no required endpoint. | Treat as experimental; run the full specialist, ethics, accessibility, legal, adverse-event, diverse-adult, and physical-device programme before broad promotion. |
+| Slow Burn | A conservative touch guide that keeps communication between the people and gives the phone only the next prompt. | Treat as experimental; test whether the shared introduction is understood and run the full specialist, ethics, accessibility, legal, adverse-event, diverse-adult, and physical-device programme before broad promotion. |
 
 ## Remaining product opportunities
 

@@ -91,8 +91,8 @@ export const POWER_BY_CHOICE_PACK = {
     en: 'A conversation about chosen erotic power—without tasks or a compatibility test.',
   },
   positioning: {
-    de: 'Ein research-informiertes Gespräch für zwei Erwachsene. Fantasie, Neugier, Gespräch und konkrete Zustimmung bleiben getrennt. Keine Antwort erlaubt eine Handlung.',
-    en: 'A research-informed conversation for two adults. Fantasy, curiosity, discussion, and specific consent remain separate. No answer authorizes an action.',
+    de: 'Ein research-informiertes Gespräch für zwei Erwachsene. Klärt vor dem Start kurz miteinander, ob das Thema für euch beide gerade passt. Sagt direkt Bescheid, wenn ihr eine Frage auslassen, das Thema wechseln oder aufhören möchtet. Fantasie, Gespräch und konkrete Zustimmung bleiben getrennt; keine Antwort erlaubt eine Handlung.',
+    en: 'A research-informed conversation for two adults. Before starting, briefly check with each other that the topic feels right for both of you now. Say so directly if you want to skip a question, change the subject, or stop. Fantasy, conversation, and specific consent remain separate; no answer authorizes an action.',
   },
   acts,
   modes: [{
@@ -119,18 +119,5 @@ export const POWER_BY_CHOICE_PACK = {
   directFinale: {
     de: 'Was würde ein zukünftiges Gespräch über freiwillig gewählte Macht für dich klarer und angenehmer machen? Ihr müsst heute nichts entscheiden oder ausprobieren.',
     en: 'What would make a future conversation about chosen power feel clearer and more comfortable for you? You do not need to decide or try anything today.',
-  },
-  consentGate: {
-    notice: card(
-      'Nur für Erwachsene. Dieses Paket ist ein Gespräch über freiwillig gewählte erotische Rollen, Grenzen und Fürsorge. Es enthält keine körperlichen Aufgaben. Startet nicht, wenn jemand berauscht, in der Entscheidung beeinträchtigt oder nicht frei ist, Nein zu sagen. Passen und Beenden brauchen keine Erklärung. Eine Antwort ist niemals Zustimmung zu einer Handlung.',
-      'Adults only. This pack is a conversation about chosen erotic roles, boundaries, and care. It contains no physical tasks. Do not start if either person is intoxicated, impaired, or not free to say no. Passing and ending need no explanation. An answer is never consent to an action.'
-    ),
-    act2OptIn: card('Der nächste Akt spricht direkter über Absprachen, Grenzen und Stoppen.', 'The next act speaks more directly about agreements, boundaries, and stopping.'),
-    entryCards: [0, 1].map(() => card('Möchtest du dieses Gespräch jetzt freiwillig führen?', 'Do you freely want to have this conversation now?')),
-    act2Cards: [0, 1].map(() => card('Möchtest du mit dem direkteren Gespräch über Absprachen und Grenzen fortfahren?', 'Do you want to continue with the more direct conversation about agreements and boundaries?')),
-    entryAccepted: card('Ihr habt beide unabhängig dieses Gespräch gewählt. Das ist keine Zustimmung zu einer Handlung.', 'You both independently chose this conversation. This is not consent to an action.'),
-    act2Accepted: card('Ihr habt beide unabhängig gewählt weiterzusprechen. Jede Frage bleibt freiwillig.', 'You both independently chose to keep talking. Every question remains optional.'),
-    entryDeclined: card('Heute nicht. Niemand muss etwas erklären.', 'Not today. No one needs to explain.'),
-    act2Declined: card('Das Gespräch endet hier. Niemand muss etwas erklären.', 'The conversation ends here. No one needs to explain.'),
   },
 };

@@ -188,15 +188,15 @@ Appropriate prompt types ask how someone wants to be asked, how they recognize t
 
 Required guardrails:
 
-- An explicit 18+ notice and deliberate opt-in from both people.
-- Repeated copy that answers never constitute consent to an action.
+- An explicit 18+ notice and one shared introduction asking both people to check directly with each other before starting.
+- Clear initial and finale copy that answers never constitute consent to an action; avoid repeating UI rituals that displace attention from the conversation.
 - Consent is specific, contextual, voluntary, and withdrawable at any time.
 - Passing and ending remain available without tokens or explanations.
 - No surprise unlock from a non-explicit pack.
 - No `NO THINKING`, countdown, `PREDICT`, proxy answers, or forced eye contact.
 - No assumptions about gender, orientation, monogamy, relationship status, bodies, or experience.
 - No task that the app expects or asks people to confirm they completed.
-- Discovery may be discreet, but hiding or showing the pack is separate from per-session consent.
+- Discovery may be discreet, but hiding or showing the pack is separate from the shared per-session participation check.
 
 ### 4.10 Road Trip
 

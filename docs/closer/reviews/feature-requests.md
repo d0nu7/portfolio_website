@@ -18,7 +18,7 @@ Requirements:
 - Visibility is a versioned preference separate from game progress.
 - Hiding the pack does not make a valid in-progress Late Night save unresolvable.
 - Deleting local CLOSER data also deletes the preference.
-- Revealing the pack does not bypass either in-session consent gate.
+- Revealing the pack is only a visibility preference; the shared 18+ participation introduction still appears when a run is started.
 - No suggestive thumbnail, copy, or surprise reveal appears in the normal selector.
 
 ### FR-002 – In-app imprint and privacy information
@@ -53,7 +53,7 @@ Not verified from this environment: an actual browser console check for a CSP vi
 
 Replace the tiny pulse with a full, calm, pack-colored milestone scene that creates a brief sense of reward between acts while leaving conversation screens quiet.
 
-Trigger only on public shared transitions: start, act completion, and natural finale. Private handoffs and consent/readiness decisions stay quiet. Do not use points, streaks, confetti, disclosure ratings, or rewards after consent decline/early end.
+Trigger only on public shared transitions: start, act completion, and natural finale. Private handoffs stay quiet. Do not use points, streaks, confetti, disclosure ratings, or rewards after early end.
 
 See the visual contract in [gameplay-and-safety.md](../product/gameplay-and-safety.md#8-milestone-celebration).
 
@@ -75,12 +75,12 @@ Approved product matrix:
 | Old Friends | Optional memory detail/meaning | Standard only | after Act I | immediate shared use screen; discard immediately afterward |
 | Deep | Optional reflection/silence intentions | Standard, Full | after Act I | shared close after Act II; discard immediately afterward |
 | Chaos | Optional surprise constraints | Standard, Full | immediately before Q16 | supplement Q16; discard when leaving Q16 |
-| Late Night | Required independent consent/readiness | all routes | entry and after Act I | collective accepted/declined result; direct safe finale after the route |
+| Late Night | None | all routes | — | shared participation introduction; direct safe finale after the route |
 | Road Trip / Family / Colleagues | None | all routes | — | — |
 
 Required task deliverables:
 
-- one explicit `none | optional | consent/readiness` decision for every implemented pack;
+- one explicit `none | optional` Private Moment decision for every implemented pack;
 - a threat-model review covering pressure, covert behavior, loyalty testing, unwanted disclosure, touch, sex, conflict, workplace/family power, and unsafe device handoffs;
 - exact route eligibility and trigger placement;
 - genuinely asymmetric card A/card B content rather than the same instruction shown twice;
@@ -89,9 +89,9 @@ Required task deliverables:
 - an explicit rule for when private information is used and irreversibly discarded;
 - RaDi editorial approval before implementation begins. Approval was recorded on 17 August 2026.
 
-Road Trip, Family, and Colleagues remain `privateMoment: none` for the current release. Late Night may use only independent readiness/consent checks, never secret sexual or physical tasks. Every card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
+Road Trip, Family, Colleagues, and Late Night remain `privateMoment: none` for the current release. Late Night never uses secret sexual or physical tasks. Every private card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
 
-Implementation preserves A/B roles from the person selected to open Q1. Non-Classic private card choices never persist as individual accept/decline values. Classic stores only `none | pending | asked | discarded`; Late Night consent decisions exist only in memory long enough to compute a collective result and are excluded from local storage. Private card screens resume behind a named handoff cover. Natural completion and every early end scrub private categorical state. Spoken answers and private free text never enter application state.
+Implementation preserves A/B roles from the person selected to open Q1. Non-Classic private card choices never persist as individual accept/decline values. Classic stores only `none | pending | asked | discarded`. Private card screens resume behind a named handoff cover. Natural completion and every early end scrub private categorical state. Spoken answers and private free text never enter application state.
 
 Acceptance: the matrix, localized copy, lifecycle, threat review, route triggers, and finale semantics are implemented without borrowing from FR-006 or changing PLAYFUL eligibility. The exact bilingual catalog is in [question-catalog.de-en.md](../content/question-catalog.de-en.md#private-moments-fr-005), and the runtime/safety contract is in [gameplay-and-safety.md](../product/gameplay-and-safety.md#6-private-moments-and-finales).
 
@@ -127,7 +127,7 @@ Acceptance: an implementation can choose and persist a valid replacement determi
 
 Singleton style and route screens are skipped. Menu was already available from the landing screen onward.
 
-Delivered: an internal Back action at every core setup stage (players, pack, duration, style), mirroring each stage's own singleton-skip logic in reverse so Back never lands on a screen the forward flow would have skipped. User choices already survive a step back and forward again, since phase changes alone never clear `players`/`packId`/`routeId`/`modeId`. Deliberately no Back button on Intro for a pack with a consent gate (Late Night): that Intro is only ever reached after both required consent confirmations, and reversing into that flow is a distinct, safety-sensitive concern this change does not take on. Covered by `e2e/setup-back-navigation.spec.js`.
+Delivered: an internal Back action at every core setup stage (players, pack, duration, style), mirroring each stage's own singleton-skip logic in reverse so Back never lands on a screen the forward flow would have skipped. User choices survive a step back and forward again, since phase changes alone never clear `players`/`packId`/`routeId`/`modeId`. The shared Late Night introduction returns directly to duration like every other single-style pack. Covered by `e2e/setup-back-navigation.spec.js`.
 
 While implementing this, found and fixed an unrelated pre-existing gap: the setup screens stayed reachable in the accessibility tree while the global menu dialog was open on top of them (a background "Go back" and the dialog's own same-named control were both matchable at once). The screen behind an open dialog is now `inert`, matching the treatment the milestone celebration overlay already had.
 
@@ -211,7 +211,7 @@ Product intent:
   independently;
 - keep the ordinary pack selector focused on the situations that matter to the
   current device owner;
-- preserve discreet discovery and per-session consent for Late Night.
+- preserve discreet discovery and the shared participation introduction for Late Night.
 
 Requirements:
 
@@ -229,8 +229,8 @@ Requirements:
 - Resetting all local CLOSER data restores the documented default set.
 - Every checklist item exposes a clear checked state, pack name, short context,
   keyboard operation, and adequate touch target.
-- Late Night retains its neutral 18+ explanation and both independent consent
-  gates. Making it visible is never consent to play it.
+- Late Night retains its neutral 18+ explanation and shared participation
+  introduction. Making it visible merely adds it to the selector.
 - Adult packs are grouped behind a separate collapsed **18+ content**
   disclosure at the bottom of the library. Their neutral explanation is shown
   beside the relevant toggle rather than below unrelated packs.
@@ -524,9 +524,9 @@ Editorial contract:
   answer proof of permission.
 - Do not assume prior experience, exclusivity, a specific body, gender,
   orientation, relationship, or wish to act.
-- Entry and escalation use independent opt-ins and a neutral direct ending.
+- One shared introduction asks both people to confirm the topic directly with each other. Ordinary free Pass and End remain available throughout; the phone does not repeatedly mediate that conversation.
 
-The complete 36-question bilingual bank now ships as a conversation-only adult pack with Quick, Standard, and Full routes. It has no touch tasks, private moment, Question 37, timer pressure, PLAYFUL actions, score, compatibility result, or role assignment. Independent entry and Act-II choices expose only the collective outcome. RaDi accepted the name and implementation on 17 August 2026. The named kink/sexual-health, trauma, accessibility, bilingual, privacy, Austrian/EU legal, physical-device, and moderated-session reviews remain open; delivery must not be described as validation.
+The complete 36-question bilingual bank now ships as a conversation-only adult pack with Quick, Standard, and Full routes. It has no touch tasks, private moment, Question 37, timer pressure, PLAYFUL actions, score, compatibility result, or role assignment. Following device feedback, one shared introduction replaces the former per-person entry and Act-II UI gates. RaDi accepted the name, implementation, and simplification on 17 August 2026. The named kink/sexual-health, trauma, accessibility, bilingual, privacy, Austrian/EU legal, physical-device, and moderated-session reviews remain open; delivery must not be described as validation.
 
 ### FR-019 – SLOW BURN touch-forward adult experience
 
@@ -543,9 +543,8 @@ The dedicated review is complete in the [integrated FR-018–020 report](../rese
 
 Interaction contract:
 
-- Both adults knowingly choose a touch-based mode and confirm that intention
-  independently before it starts.
-- Every physical start or restart and every materially changed action or condition uses a fresh exact bilateral **Yes + Yes** gate. **Adjust** and **Skip** remain equal-status choices; less, slower, more space, no touch, Pause, Stop, and End take effect immediately.
+- Both adults knowingly choose a touch-based mode and use the shared introduction to confirm that intention directly with each other before it starts.
+- Before a new touch or material change, the people ask and answer directly. Less, slower, more space, no touch, Pause, Stop, and End are spoken to each other and take effect immediately; they are not app inputs.
 - The experience may give concrete, tasteful touch or kissing invitations and
   may ask where or how touch feels good. It must also make “not there”, “not
   now”, “different”, Pause, and End equally immediate.
@@ -553,10 +552,9 @@ Interaction contract:
   a changed answer takes effect immediately and needs no explanation.
 - No step assumes a particular anatomy, ability, orientation, relationship
   structure, experience level, or desired endpoint.
-- Answers, chosen body areas, adjustments, and consent states are transient and
-  never persisted.
+- Answers, chosen body areas, adjustments, and agreement are never entered or persisted. Only ordinary pack, route, and question progress may be resumed.
 
-The shipped conservative subset contains 21 bilingual cards across Quick, Standard, and Unhurried routes. Physical invitations require fresh masked **Yes / Adjust / Skip** choices from both people; only Yes + Yes opens an action. Adjust, Pause, More, Different, Not there, Stop, and End halt contact or require a new exact bilateral choice. The experience is non-resumable: no action, body area, adjustment, or consent choice is persisted, and an injected save is rejected. Category 7/C06 and penetration, breath/neck play, restraint, impact, surprise touch, and intimate-area action cards are excluded. RaDi explicitly authorized this conservative implementation on 17 August 2026. The memo's specialist, ethics, privacy, legal, accessibility, adverse-event, physical-device, and moderated-session gates remain open and should be completed before broad promotion.
+The shipped conservative subset contains 21 bilingual cards across Quick, Standard, and Unhurried routes. The first device test rejected the initial masked-choice controller as excessive UI that pulled attention away from the other person. SLOW BURN now uses the standard CLOSER flow: one shared introduction, one prompt at a time, Continue, free Pass, and the global End action. No action, body area, adjustment, or agreement is entered into the app; resumable data is limited to ordinary route progress. Category 7/C06 and penetration, breath/neck play, restraint, impact, surprise touch, and intimate-area action cards are excluded. RaDi explicitly authorized the implementation and simplification on 17 August 2026. The memo's specialist, ethics, privacy, legal, accessibility, adverse-event, physical-device, and moderated-session gates remain open and should be completed before broad promotion.
 
 ### FR-020 – Cross-pack evidence and question audit
 

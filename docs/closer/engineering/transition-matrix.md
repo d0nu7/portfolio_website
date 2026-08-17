@@ -10,7 +10,7 @@ coverage. Screen-local presentation state such as a countdown tick, a menu
 subview, or an animation frame is not persisted and is listed only where it
 changes the next game event.
 
-Implementation status: setup/entry, consent, act-entry/break, private-moment
+Implementation status: setup/entry, the dormant generic consent family, act-entry/break, private-moment
 capture/resolution, final-question reveal, Question 37, end-run reasons, and
 compiled question destinations, question completion/pass, language, and timer changes are pure and characterized in
 `src/closer/engine/transitions.js`. Canonical state creation and discriminated
@@ -27,8 +27,8 @@ to this event layer.
 |---|---|---|
 | `RESTART` | Every rendered phase | Canonical fresh `start` state; retain allowed preferences only |
 | `END_RUN(userEnded)` | Any started run through Menu | `ending`, completed, scrub private categories/decisions, no completion reward |
-| `END_RUN(consentDeclined)` | After both consent decisions | Neutral `ending`, completed, scrub private categories/decisions, no completion reward |
-| `RESUME` | Valid persisted phase | Restore the compiled run; direct private content returns to its named cover; a partial consent gate restarts from A |
+| `END_RUN(consentDeclined)` | Dormant generic consent family | Neutral `ending`, completed, scrub private categories/decisions, no completion reward |
+| `RESUME` | Valid persisted phase | Restore the compiled run; direct private content returns to its named cover |
 | `SET_LANGUAGE` | Every rendered phase | Pure `transitionGlobal()` patch; same phase and run, different supported language |
 | `SET_TIMER` | Every phase where Menu exposes it | Pure `transitionGlobal()` patch; same phase and run, updated timer preference |
 
@@ -41,9 +41,9 @@ to this event layer.
 | `players` | `BACK` | `start` | Preserve setup selections |
 | `pack` | `CONTINUE` | `duration` | Selected pack owns default route and style |
 | `pack` | `BACK` | `players` | Preserve setup selections |
-| `duration` | `CONTINUE` | `mode`, `consentGatePassA`, or `intro` | Skip singleton style; enter consent gate only when configured |
+| `duration` | `CONTINUE` | `mode` or `intro` | Skip singleton style; no current pack enters a device-mediated consent gate |
 | `duration` | `BACK` | `pack` | Preserve setup selections |
-| `mode` | `CONTINUE` | `consentGatePassA` or `intro` | Preserve selected style |
+| `mode` | `CONTINUE` | `intro` | Preserve selected style |
 | `mode` | `BACK` | `duration` | Preserve setup selections |
 | `consentGatePassA` | `HANDOFF_CONFIRMED` | `consentGateA` | Person A receives the phone |
 | `consentGateA` | yes or no | `consentGatePassB` | Hold A's choice in memory only; never persist it |
@@ -51,7 +51,7 @@ to this event layer.
 | `consentGateB` | yes or no | `consentGateAccepted` or `ending` | Evaluate only after both decisions; expose collective result, never who declined |
 | `consentGateAccepted` | `CONTINUE_AFTER_CONSENT` | `intro` | Both independently opted in; decisions already cleared |
 | `intro` | `BEGIN_RUN` | `act` | `pending=0`, `qIndex=0` |
-| `intro` | `BACK` | `mode` or `duration` | Not available after a completed consent gate |
+| `intro` | `BACK` | `mode` or `duration` | Mirror singleton-style skipping |
 
 ## Acts and questions
 
@@ -65,7 +65,7 @@ to this event layer.
 | compiled destination | configured before-question trigger | `secretOffer` | Enabled route, stable question ID, status `not-started` |
 | compiled destination | final question index | `lastIntro` | Set `pending`; final-question feedback only |
 | compiled destination | past final index | `all36` | Begin completion sequence |
-| `break` | `CONTINUE` | `consentAct2PassA`, `secretOffer`, `privateUse`, or `act` | Apply Late Night gate first, then configured after-act trigger/use; reset act time |
+| `break` | `CONTINUE` | `secretOffer`, `privateUse`, or `act` | Apply configured after-act trigger/use; reset act time |
 | `consentAct2PassA` | `HANDOFF_CONFIRMED` | `consentAct2A` | Person A receives the phone |
 | `consentAct2A` | yes or no | `consentAct2PassB` | Hold A's choice in memory only; keep break context |
 | `consentAct2PassB` | `HANDOFF_CONFIRMED` | `consentAct2B` | Person B receives the phone |
@@ -73,7 +73,7 @@ to this event layer.
 | `consentAct2Accepted` | `CONTINUE_AFTER_CONSENT` | `act` | Clear decisions and reset act time |
 | `lastIntro` | `REVEAL_LAST` | `q` | Enter the stored `pending` index |
 
-Setup/entry, consent, act-entry/break, private-moment capture/resolution,
+The consent rows above describe retained generic engine capability; no current pack sets `requiresConsent` or enters those phases. Setup/entry, consent, act-entry/break, private-moment capture/resolution,
 final-question reveal, Question 37, end-run reasons, and compiled question
 destinations are implemented in `src/closer/engine/transitions.js`. Canonical
 state creation and save validation are implemented in
@@ -110,11 +110,9 @@ timeline remain outside the transition core.
 | `ending` | `ADVANCE_BEAT` | `ending` | Screen-local beat advances; persisted phase unchanged |
 | `ending` | `RESTART` | `start` | Canonical fresh state |
 
-## Volatile SLOW BURN controller
+## SLOW BURN interaction boundary
 
-SLOW BURN deliberately does not add phases to the persisted transition matrix. After the shared entry gate and introduction, `CloserTouchExperience` owns a local in-memory sequence for act introductions, cards, two named covers, masked Yes/Adjust/Skip choices, adjustment, pause, action, renewal, and close. Page hide, refresh, close, End, or global restart destroys that state. `parseSaved()` rejects the pack with `NON_RESUMABLE_PACK`, and browser persistence removes any record while it is selected. Only the separately versioned pack-visibility preference may survive.
-
-This boundary prevents body areas, action choices, adjustments, and consent decisions from becoming save-schema fields. Any future attempt to resume SLOW BURN or move its choices into the shared reducer requires a new privacy and safety decision, transition specification, and threat-model review.
+SLOW BURN uses the ordinary setup, introduction, act, question, Pass, break, finale, and resume transitions. It deliberately adds no action, body-area, adjustment, or agreement phase/state. Its shared introduction tells the people to communicate those matters directly. Reintroducing device-mediated action choices would require a new product decision and explicit evidence that the extra phone interaction improves rather than disrupts the experience.
 
 ## Migration rule
 

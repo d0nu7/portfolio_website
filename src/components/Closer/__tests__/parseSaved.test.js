@@ -215,7 +215,7 @@ describe('parseSaved (discriminated save parser)', () => {
     ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE });
   });
 
-  it('accepts a resumable Late Night entry gate without marking the run started', () => {
+  it('rejects a legacy Late Night consent phase after the interaction simplification', () => {
     const result = parseSaved(JSON.stringify({
       ...BASE,
       packId: 'late-night',
@@ -225,18 +225,9 @@ describe('parseSaved (discriminated save parser)', () => {
       hasStarted: false,
       consentDecisions: undefined,
     }));
-    expect(result.ok).toBe(true);
-  });
-
-  it('rejects every SLOW BURN save because the touch session is intentionally volatile', () => {
-    expect(parseSaved(JSON.stringify({
-      ...BASE,
-      packId: 'slow-burn',
-      routeId: 'standard',
-      modeId: 'touch',
-    }))).toEqual({
+    expect(result).toEqual({
       ok: false,
-      reason: SAVE_REJECT_REASONS.NON_RESUMABLE_PACK,
+      reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE,
     });
   });
 
@@ -294,28 +285,8 @@ describe('parseSaved (discriminated save parser)', () => {
     expect(result.ok).toBe(true);
   });
 
-  /*
-   * BUG-008: the renewed Act II consent gate is only ever entered from the
-   * 'break' screen while breakAct still holds Act I's value (0) -- nothing
-   * afterward changes it before these phases render, so breakAct 1 can
-   * never legitimately coexist with them.
-   */
-  it('rejects the Act II consent gate with a stale breakAct, reason=ACT2_CONSENT_PHASE_INVALID_BREAK_ACT', () => {
-    expect(
-      parseSaved(
-        JSON.stringify({
-          ...BASE,
-          packId: 'late-night',
-          routeId: 'standard',
-          phase: 'consentAct2PassA',
-          breakAct: 1,
-        })
-      )
-    ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.ACT2_CONSENT_PHASE_INVALID_BREAK_ACT });
-  });
-
-  it('accepts the Act II consent gate with breakAct 0 for a pack that actually has a consent gate', () => {
-    const result = parseSaved(
+  it('rejects a legacy Late Night Act II consent phase', () => {
+    expect(parseSaved(
       JSON.stringify({
         ...BASE,
         packId: 'late-night',
@@ -323,8 +294,10 @@ describe('parseSaved (discriminated save parser)', () => {
         phase: 'consentAct2PassA',
         breakAct: 0,
       })
-    );
-    expect(result.ok).toBe(true);
+    )).toEqual({
+      ok: false,
+      reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE,
+    });
   });
 
   it('accepts a plausible save and returns the normalized value', () => {

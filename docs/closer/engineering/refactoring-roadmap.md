@@ -17,7 +17,7 @@ This is the completed FR-011 implementation record. Dated iteration reports were
 6. **Timing has one numerical source.** Route estimate, act budget, timer, and overtime must derive from the same data.
 7. **Persistence is versioned and invariant-aware.** A save is valid only when its content version, run definition, and phase state agree.
 8. **Milestones celebrate shared time, not disclosure.** Animation must never reward intensity, speed, or consent.
-9. **Late Night discovery and consent are separate.** A discreet menu preference may reveal the pack; both adults must still consent independently for every session.
+9. **Late Night discovery and participation are separate.** A discreet menu preference may reveal the pack; a shared introduction asks both adults to check directly with each other before starting.
 10. **TTS is not part of the active product scope.** The existing voice branch is not planned for merge and must not influence FR-011 architecture, tests, or release decisions. Reconsidering TTS requires a new explicit product decision.
 
 ## 2. Current architecture
@@ -60,7 +60,6 @@ src/components/Closer/
   CloserPrivateMomentView.js   # private capture and post-run check handoffs
   CloserFinaleView.js          # last question, Q37 branches, and ending beats
   CloserQuestionView.js        # question, twist, countdown, pass, and stay presentation
-  CloserTouchExperience.js     # volatile bilateral SLOW BURN session
   CloserScreenFrame.js         # shared background, blocking, menu, and celebration layers
 src/constants/closer.js        # compatibility exports, resolution, and compileRun()
 ```
@@ -111,7 +110,7 @@ Status: complete. Device-only release checks remain tracked in [bugs.md](../revi
 - [x] Remove the multi-step saved-question sequence from Quick.
 - [x] Distinguish natural completion from an early end before showing a reward.
 - [x] Add reusable dialog, handoff, and choice-list primitives.
-- [x] Verify the repaired menu/timer layout, celebration animation, dialog subview focus, and Late Night consent routes in the local Chromium regression suite.
+- [x] Verify the repaired menu/timer layout, celebration animation, dialog subview focus, and Late Night low-attention route in the local Chromium regression suite.
 - [x] Remove the six-second STAY interaction trap and provide an immediately available safe exit.
 - [x] Make covered milestone scenes inert and pause their active timer and ending timelines.
 - [x] Keep Pass available throughout twist lead-ins and countdowns.
@@ -193,12 +192,12 @@ Status: complete on 17 August 2026.
 
 - [x] Add two metadata-driven adult packs without changing Classic.
 - [x] Keep POWER, BY CHOICE on the ordinary compiled conversation path.
-- [x] Isolate SLOW BURN in a volatile, non-resumable controller rather than expanding the persisted question reducer with action/body-choice state.
-- [x] Require masked bilateral choices before every physical invitation and a fresh choice after adjustment or pause.
-- [x] Reject SLOW BURN saves in the persistence parser and remove any browser save while the pack is selected.
-- [x] Extend catalog fidelity, route, registry, persistence, mobile interaction, and no-resume coverage.
+- [x] Keep SLOW BURN on the ordinary compiled question path after device feedback showed that a separate controller created excessive phone interaction.
+- [x] Use one shared introduction; keep agreement, adjustment, Pause, and Stop in direct interpersonal communication.
+- [x] Store only ordinary route/question progress and add no action, body-area, adjustment, or agreement fields.
+- [x] Extend catalog fidelity, route, registry, persistence, and mobile interaction coverage.
 
-This is an intentional architectural boundary, not unfinished reducer migration: persisted conversation phases remain in the transition core; transient embodied choices do not enter durable state.
+This is an intentional simplification, not unfinished reducer work. The dedicated `CloserTouchExperience` prototype was removed. SLOW BURN now reuses the same low-attention prompt controller as the rest of CLOSER, and embodied choices never enter application state.
 
 ## 5. Follow-up outside FR-011
 

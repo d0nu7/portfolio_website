@@ -42,7 +42,7 @@ Current decision is complete. Reopen only if circumstances, processing, monetiza
 - [ ] Test iOS Add to Home Screen, including safe areas and the home indicator.
 - [ ] Check the milestone celebration on a mid-range phone in normal and reduced-motion settings.
 - [ ] Complete one TalkBack and one VoiceOver smoke test.
-- [ ] Confirm that Menu, Pass, legal views, consent gates, and ending controls remain reachable.
+- [ ] Confirm that Menu, Pass, legal views, shared adult introductions, and ending controls remain reachable.
 
 Done when: device, OS version, browser, result, and any defect are recorded for every check.
 
@@ -55,7 +55,7 @@ For every pack, decide whether a private handoff genuinely improves the experien
 This remained a dedicated editorial/product task, independent from PLAYFUL and the Replacement Question Pool task. RaDi approved the completed specification on 17 August 2026; implementation followed only after that approval.
 
 - [x] Audit the current saved-question sequence and identify which parts should be retained, replaced, or removed.
-- [x] Decide explicitly for every implemented pack: no private moment, optional private moment, or required consent/readiness handoff.
+- [x] Decide explicitly for every implemented pack: no private moment or optional private moment.
 - [x] Choose eligible routes and one exact trigger point. Quick has none; DEEP has no Quick route.
 - [x] Define genuinely asymmetric information or intention for each participating person; mirrored cards are not used.
 - [x] Specify the complete lifecycle: private display, device handoff, decline, storage state, reveal/use point, discard point, finale consequences, early exit, and resume behavior.
@@ -77,7 +77,7 @@ Editorial worksheet:
 | Old Friends | Optional | Standard only | A: concrete detail; B: feeling/meaning | immediately after private cards | “Heute nicht” / “Not today”; shared skip | Yes |
 | Deep | Optional | Standard, Full | A: reflect understanding; B: allow silence/space | after Act II | “Heute nicht” / “Not today”; shared skip | Yes |
 | Chaos | Optional | Standard, Full | A: problem constraint; B: naming constraint | supplement Q16, then discard | “Heute nicht” / “Not today”; shared skip | Yes |
-| Late Night | Required readiness/consent only | Quick, Standard, Full | two independent decisions; no secret task | entry and after Act I; collective result only | “Nein, heute nicht” / “No, not today” | Yes |
+| Late Night | None | Quick, Standard, Full | shared 18+ introduction; no secret task | direct finale | ordinary Pass and End | Yes |
 | Road Trip | No | None | None | None | Not applicable | Yes |
 | Family | No | None | None | None | Not applicable | Yes |
 | Colleagues | No | None | None | None | Not applicable | Yes |
@@ -188,4 +188,6 @@ sign-off list above.
 | 2026-08-17 | FR-018/019 | Research POWER & TRUST and the touch-forward SLOW BURN as separate adult experiences | Their evidence, interaction, and participation requirements differ materially from Late Night | RaDi / editorial research |
 | 2026-08-17 | FR-018–020 | Complete the focused evidence programme without applying candidate catalog changes | The citation-audited report supports a conversation-only FR-018 prototype, restricts FR-019 to closed moderated research, and exposes 37 original atomic cross-pack decisions plus three post-research addenda | RaDi / named specialist and editorial owners |
 | 2026-08-17 | FR-020 | Approve and implement all 37 audit entries plus the three full-bank addenda | The atomic register preserves exact bilingual before/after copy, stable IDs, route/mechanic intent, downsides, and separate validation gates; Classic questions remain unchanged | Bilingual, specialist, accessibility, device, and moderated-session validation |
-| 2026-08-17 | FR-018/019 | Approve experimental implementation of POWER, BY CHOICE and the conservative SLOW BURN consumer subset | The first remains conversation-only; the second uses exact masked bilateral choices, a restricted category set, and no resumable session state | Named external reviews and moderated sessions before broad promotion |
+| 2026-08-17 | FR-018/019 | Approve experimental implementation of POWER, BY CHOICE and the conservative SLOW BURN consumer subset | Both use a restricted content set and disclose their purpose before starting | Named external reviews and moderated sessions before broad promotion |
+| 2026-08-17 | FR-018/019 interaction | Replace repeated device-mediated consent rituals with one shared introduction and direct interpersonal communication | The first SLOW BURN device test showed that repeated handoffs and choice controls displaced attention from the other person and undermined the product's moderator principle | Verify comprehension, flow, and comfort in real sessions |
+| 2026-08-17 | Adult-pack interaction | Apply the same low-attention contract to Late Night: one shared introduction and no renewed Act-II gate | The phone should moderate the conversation, not repeatedly interrupt it with individual confirmations | Verify comprehension, flow, and comfort in real sessions |

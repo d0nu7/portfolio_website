@@ -38,7 +38,7 @@ Do not use “mode” for both pack and style in new code or documentation.
 3. Pack selection.
 4. Route selection only when more than one route exists.
 5. Style selection only when more than one style exists.
-6. Pack-specific introduction and, if required, consent.
+6. Pack-specific introduction, including any shared participation contract.
 7. Start.
 
 Every setup screen needs a safe route back. The global menu must be reachable before and during a game. A selector with one valid option is skipped; zero valid options produce a controlled configuration error.
@@ -47,7 +47,7 @@ Every setup screen needs a safe route back. The global menu must be reachable be
 
 Every route is a fixed editorial sequence. It is never a random sample.
 
-- **Quick:** normally 12 regular questions, four per act, with a self-contained beginning, middle, and ending. SLOW BURN is the explicit exception: nine invitations, three per act. No Quick route has a Private Moment or extended Question 37 ceremony. Adult packs still require their safety gates.
+- **Quick:** normally 12 regular questions, four per act, with a self-contained beginning, middle, and ending. SLOW BURN is the explicit exception: nine invitations, three per act. No Quick route has a Private Moment or extended Question 37 ceremony. Adult packs state their participation contract once in the shared introduction.
 - **Standard:** normally 24 regular questions, eight per act. SLOW BURN uses 15 invitations, five per act. An eligible conversation pack may include one short pack-appropriate private moment.
 - **Full:** 36 regular questions, 12 per act, with room for the complete finale.
 
@@ -96,9 +96,8 @@ The person selected to open Q1 is role A; the other person is role B. That mappi
 3. Show different A and B cards. No text field, microphone, transcription, or spoken-answer capture exists.
 4. A non-Classic card choice only advances the handoff; accept and decline produce identical durable state. The app retains only the collective lifecycle status needed to route the later use point.
 5. Classic Full may retain only a categorical per-person state: `none | pending | asked | discarded`. It never retains the question itself.
-6. Late Night’s individual readiness decisions exist only in memory until both people have decided. They are excluded from local storage. Reloading an incomplete gate restarts it from A, and the shared result never identifies who declined.
-7. Resume always covers direct private content. It must never reopen a saved private card or private check without another named handoff.
-8. Use or discard the moment only at its approved point. Early exit and natural completion replace any remaining private categorical state with discarded/consumed values; completed games are removed from storage.
+6. Resume always covers direct private content. It must never reopen a saved private card or private check without another named handoff.
+7. Use or discard the moment only at its approved point. Early exit and natural completion replace any remaining private categorical state with discarded/consumed values; completed games are removed from storage.
 
 ### Threat-model review
 
@@ -124,34 +123,31 @@ Finales follow the route:
 
 ### Power, by Choice
 
-POWER, BY CHOICE is adult conversation content, not an instruction set. It is hidden by default, requires independent entry and Act-II decisions, and exposes only the collective outcome. It contains no physical tasks, PLAYFUL actions, private moment, Question 37, timer pressure, role assignment, compatibility result, or implication that an answer permits action. Quick, Standard, and Full contain 12, 24, and 36 questions.
+POWER, BY CHOICE is adult conversation content, not an instruction set. It is hidden by default and uses one shared introduction asking the people to confirm directly with each other that the topic fits. It contains no physical tasks, PLAYFUL actions, private moment, Question 37, timer pressure, role assignment, compatibility result, or implication that an answer permits action. Quick, Standard, and Full contain 12, 24, and 36 questions.
 
 ### Slow Burn
 
-SLOW BURN is a deliberately separate touch experience for two adults. It is hidden by default and non-resumable. Every concrete physical invitation requires two masked choices:
+SLOW BURN is a touch-forward guide for two adults, hidden by default. The phone remains a passive moderator:
 
-- **Yes + Yes** opens only the exact invitation shown;
-- **Adjust** stops contact, changes one named condition, and requires a new bilateral choice;
-- **Skip** closes the invitation without naming who chose it;
-- **Pause**, **Stop**, **Not there**, **Different**, and requests for more intensity stop or re-negotiate before contact continues;
-- hiding, refreshing, closing, ending, or injecting a saved state cannot restore a SLOW BURN session.
+- one shared introduction asks both people to agree directly with each other before starting;
+- each screen offers one prompt, ordinary Continue, free Pass, and the global End action;
+- before new touch or a material change, people ask and answer aloud;
+- softer, slower, different, not there, more space, Pause, Stop, and End are communicated to each other rather than entered into the phone;
+- there are no per-person handoffs, repeated Act-II gates, choice matrices, scores, or action-state fields.
 
-No action choice, body area, adjustment, or consent state is persisted. The visibility preference may persist. Consumer content excludes penetration, breath or neck play, restraint, impact, surprise touch, intimate-area action cards, and the research memo's pilot-only C06 card. Entry consent is not blanket consent, and the experience has no required endpoint.
+Ordinary route/question progress may be resumed, but no answer, action choice, body area, adjustment, or agreement is entered or persisted. Consumer content excludes penetration, breath or neck play, restraint, impact, surprise touch, intimate-area action cards, and the research memo's pilot-only C06 card. The experience has no required endpoint.
 
 ## 7. Late Night (18+)
 
-Late Night is explicit adult conversation content. Its visibility preference and in-game consent are independent:
+Late Night is explicit adult conversation content. Discovery remains discreet while participation stays interpersonal:
 
 1. The pack is hidden from the normal selector by default.
 2. A person may reveal it through **Menu → Additional content** after reading a neutral 18+ explanation.
 3. The visibility preference is stored separately from game progress and can be hidden again.
-4. Selecting the pack still requires each person to confirm 18+ and voluntary participation separately before any question appears.
-5. Both people opt in again before Act II, where content becomes more explicit.
-6. Each decision remains private until both have answered. The app then shows only a collective accepted screen or ends the path neutrally; it never identifies who declined.
-7. The action to decline and the action to agree have equal visual prominence.
-8. Reloading a partial gate restarts it for both people because individual decisions are never stored.
-9. Every question remains passable and ending remains available throughout.
-10. Every route ends with a direct reminder that answers create no expectation of action; Late Night never enters generic Question 37.
+4. One shared introduction states that the pack is 18+, explicit, passable, and stoppable, and asks the people to check directly with each other that it fits now.
+5. There are no per-person handoffs or repeated Act-II confirmations; changes of mind are communicated to each other rather than entered into the phone.
+6. Every question remains passable and ending remains available throughout.
+7. Every route ends with a direct reminder that answers create no expectation of action; Late Night never enters generic Question 37.
 
 An answer describes thoughts, feelings, or preferences. It never constitutes consent to an action. Consent outside the game must be specific, informed, voluntary, and withdrawable at any time.
 
@@ -159,7 +155,7 @@ Forbidden mechanics include `NO THINKING`, countdown pressure, `PREDICT`, proxy 
 
 ## 8. Milestone celebration
 
-The milestone animation should create a brief sense of reward at the start, act transitions, and natural completion. Private handoffs and consent decisions remain quiet and do not trigger a celebration.
+The milestone animation should create a brief sense of reward at the start, act transitions, and natural completion. Private handoffs remain quiet and do not trigger a celebration.
 
 It must:
 
@@ -198,7 +194,7 @@ Before a public release:
 - all supported pack/route/style combinations compile to valid runs;
 - DE/EN content matches the catalog exactly;
 - Quick, Standard, and Full reach the correct finale;
-- Pass, resume, restart, early end, saved-question branches, and all consent declines are tested;
+- Pass, resume, restart, early end, saved-question branches, and adult-pack introductions are tested;
 - menu, timer, and safety actions do not overlap from 320–430 px;
 - dialogs pass keyboard and focus tests;
 - the celebration passes normal- and reduced-motion visual checks;

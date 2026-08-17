@@ -177,16 +177,12 @@ describe('setup transition core', () => {
       .toEqual({ modeId: 'calm', phase: 'intro' });
   });
 
-  it('routes a consent-gated run through its private entry gate', () => {
-    expect(lateNight.requiresConsent).toBe(true);
+  it('routes current adult packs directly to their shared introduction', () => {
+    expect(lateNight.requiresConsent).toBe(false);
     expect(transitionSetup(lateNight, { phase: 'duration' }, { type: SETUP_EVENTS.CONTINUE }))
-      .toEqual({
-        modeId: 'explicit',
-        phase: 'consentGatePassA',
-        consentDecisions: [null, null],
-      });
+      .toEqual({ modeId: 'explicit', phase: 'intro' });
     expect(transitionSetup(lateNight, { phase: 'mode' }, { type: SETUP_EVENTS.CONTINUE }))
-      .toEqual({ phase: 'consentGatePassA', consentDecisions: [null, null] });
+      .toEqual({ phase: 'intro' });
   });
 
   it('walks Back through exactly the screens the forward flow can show', () => {
@@ -203,7 +199,7 @@ describe('setup transition core', () => {
     expect(transitionSetup(firstDate, { phase: 'intro' }, { type: SETUP_EVENTS.BACK }))
       .toEqual({ phase: 'duration' });
     expect(transitionSetup(lateNight, { phase: 'intro' }, { type: SETUP_EVENTS.BACK }))
-      .toBeNull();
+      .toEqual({ phase: 'duration' });
   });
 
   it('enters the first act from intro and rejects unrelated phase/event pairs', () => {
@@ -216,7 +212,10 @@ describe('setup transition core', () => {
 });
 
 describe('consent transition core', () => {
-  const lateNight = compileRun('late-night', 'standard', 'explicit');
+  const lateNight = {
+    ...compileRun('late-night', 'standard', 'explicit'),
+    requiresConsent: true,
+  };
   const classic = compileRun('classic', 'standard', 'original');
 
   it.each([
@@ -356,15 +355,11 @@ describe('act transition core', () => {
     });
   });
 
-  it('routes only the first Late Night break through renewed consent', () => {
+  it('continues Late Night breaks without renewed device confirmation', () => {
     expect(transitionAct(lateNight, { phase: 'break', breakAct: 0 }, {
       type: ACT_EVENTS.CONTINUE_FROM_BREAK,
     })).toEqual({
-      patch: {
-        phase: 'consentAct2PassA',
-        actElapsedMs: 0,
-        consentDecisions: [null, null],
-      },
+      patch: { phase: 'act', actElapsedMs: 0 },
       effect: ACT_EFFECTS.NONE,
     });
     expect(transitionAct(lateNight, { phase: 'break', breakAct: 1 }, {

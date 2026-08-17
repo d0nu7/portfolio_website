@@ -28,18 +28,18 @@ Acceptance:
 - Consent and Pass remain available; no answer is framed as permission to act.
 - E2E coverage reaches every Late Night finale branch that still exists.
 
-### BUG-002 – Consent decline is not neutral and actions are visually unequal
+### BUG-002 – Legacy consent decline was not neutral and actions were visually unequal
 
 **Status:** Closed
-**Affected:** Late Night entry gate and renewed Act II opt-in
+**Affected:** retired Late Night entry and Act II gates
 
-The affirmative action used a stronger button than the decline action, and decline entered generic completion copy implying that the game had naturally succeeded.
+The former affirmative action used a stronger button than the decline action, and decline entered generic completion copy implying that the game had naturally succeeded. The later low-attention redesign removed these device-mediated gates entirely; all adult packs now use one shared introduction and direct interpersonal communication.
 
 Acceptance:
 
 - Agree and decline actions have equal prominence, size, and focus treatment.
 - A decline ends with truthful neutral copy, does not trigger a completion reward, and leaves no resumable run.
-- Each person makes an independent decision at both required gates.
+- No current pack renders the retired gate actions.
 
 ## P1 – high-priority defects closed in the local build
 
@@ -143,19 +143,6 @@ Acceptance:
 - Functional TopBar text is not dimmed by a parent opacity.
 - An independent contrast calculation guards the source values.
 
-### BUG-015 – SLOW BURN entry can leave a resumable consent save
-
-**Status:** Closed
-
-The shared consent flow could persist `consentGateAccepted` before the volatile touch controller began. That contradicted SLOW BURN's non-resumable contract even though no action or body-area choice had yet been stored.
-
-Acceptance:
-
-- Selecting or running SLOW BURN removes the ordinary game save.
-- `parseSaved()` rejects an injected SLOW BURN state with `NON_RESUMABLE_PACK`.
-- Reload returns to Start while the separate pack-visibility preference remains intact.
-- No action, adjustment, body area, or consent decision enters durable storage.
-
 ## P2 – correctness and resilience
 
 ### BUG-007 – Run fingerprint omits a behavior-defining selection
@@ -175,9 +162,9 @@ Validation checked broad shape and several invariants, but accepted combinations
 `parseSaved()` is now explicitly staged, matching the recommended fix: (1) versioned envelope — shape, `stateVersion`, setup/completed/no-progress gates, `contentVersion`; (2) the immutable run reference — fingerprint/legacy-ID-list content drift, index bounds; (3) phase-specific required/forbidden fields, via two named phase-family checks derived directly from `goTo()`/`nextCheckPhase()`'s own transition conditions:
 
 - Private-card, Classic-check, private-use, and private-finale phases require the canonicalized run to resolve an enabled route-specific Private Moment (`run.privateMoment !== 'none'`).
-- `consentAct2PassA`/`consentAct2A`/`consentAct2PassB`/`consentAct2B`/`consentAct2Accepted` require `breakAct === 0` — they are only ever entered from the `break` screen while `breakAct` still holds Act I's value; nothing changes it before they render.
+- Legacy consent phases are rejected for every current pack because no current pack configures a device-mediated gate. The generic transition family remains characterized but dormant.
 
-The FR-005 state-version change replaced the former `hasSecretQuestion`/`secretAsked` pair with the validated categorical `privateQuestionState`, added the new phase families, and made partial consent decisions non-durable. The parser remains deliberately conservative about additional historical invariants so it does not reject a legitimate resume without a demonstrated benefit.
+The FR-005 state-version change replaced the former `hasSecretQuestion`/`secretAsked` pair with the validated categorical `privateQuestionState`. The later adult-flow simplification invalidated legacy consent phases through the content-version boundary. The parser remains deliberately conservative about additional historical invariants so it does not reject a legitimate resume without a demonstrated benefit.
 
 Further per-phase schema tightening may be considered as optional hardening if a concrete invalid state is found. It is not unfinished FR-011 work and should not reject plausible legacy saves without a demonstrated benefit.
 

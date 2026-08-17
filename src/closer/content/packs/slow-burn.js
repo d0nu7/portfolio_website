@@ -1,9 +1,9 @@
 import { NO_TWISTS, ROUTE_NEUTRAL_BLURB, ROUTE_PRESETS } from '../shared';
 
-const card = (de, en, requiresBilateral = false, kind = 'orientation') => ({
+const card = (de, en, requiresVerbalAgreement = false, kind = 'orientation') => ({
   de,
   en,
-  requiresBilateral,
+  requiresVerbalAgreement,
   kind,
 });
 
@@ -47,7 +47,7 @@ const actMeta = [
   {
     id: 'build',
     title: { de: 'AUFBAU', en: 'BUILD' },
-    intro: { de: 'Nähe, äußerliche Berührung und Küsse – jede Kategorie beginnt mit einem neuen Ja + Ja.', en: 'Closeness, external touch, and kissing—every category begins with a fresh Yes + Yes.' },
+    intro: { de: 'Nähe, äußerliche Berührung und Küsse – fragt einander direkt, bevor ihr etwas Neues beginnt.', en: 'Closeness, external touch, and kissing—ask each other directly before beginning something new.' },
     breakText: { de: 'Aufbau bedeutet bessere Abstimmung, nicht automatisch mehr Intensität.', en: 'Building means better responsiveness, not automatically more intensity.' },
   },
   {
@@ -75,17 +75,15 @@ export const SLOW_BURN_PACK = {
   contentGroup: 'adult',
   discoveryNoticeKey: 'slowBurnMenuIntro',
   privateMoment: 'none',
-  touchExperience: true,
-  nonResumable: true,
   title: { de: 'SLOW BURN', en: 'SLOW BURN' },
   meta: { de: '18+ · Berührung, Tempo und Küsse', en: '18+ · Touch, tempo, and kissing' },
   blurb: {
-    de: 'Ein körperliches Erlebnis mit Ja + Ja vor jeder konkreten Einladung. Kein vorgegebenes Ziel.',
-    en: 'A physical experience with Yes + Yes before every exact invitation. No required destination.',
+    de: 'Eine körperliche Anleitung, bei der ihr Wünsche und Grenzen direkt miteinander besprecht. Kein vorgegebenes Ziel.',
+    en: 'A physical guide where you discuss wishes and boundaries directly with each other. No required destination.',
   },
   positioning: {
-    de: 'SLOW BURN ist berührungsorientiert. Es enthält optionale Nähe, äußerliche Berührungen und Küsse, aber keine Penetration, Atem- oder Halsspiele, Fesseln, Schläge oder Überraschungsberührungen. Alle Berührungen können über der Kleidung bleiben – oder ihr wählt keine Berührung.',
-    en: 'SLOW BURN is touch-forward. It includes optional closeness, external touch, and kissing, but no penetration, breath or neck play, restraint, impact, or surprise touch. All touch can stay over clothing—or you can choose no touch.',
+    de: 'SLOW BURN ist eine berührungsorientierte Anleitung für zwei Erwachsene. Sprecht vor dem Start kurz miteinander ab, ob ihr das beide möchtet. Fragt vor jeder neuen Berührung direkt nach, hört auf ein klares Ja und sagt Wünsche wie sanfter, langsamer, anders, nicht dort, Pause oder Stopp zueinander – nicht zur App. Es gibt kein Ziel und ihr könnt jederzeit auslassen oder beenden. Enthalten sind optionale Nähe, äußerliche Berührungen und Küsse, aber keine Penetration, Atem- oder Halsspiele, Fesseln, Schläge oder Überraschungsberührungen.',
+    en: 'SLOW BURN is a touch-forward guide for two adults. Before starting, briefly agree with each other that you both want this. Ask directly before each new touch, wait for a clear yes, and say wishes such as softer, slower, different, not there, pause, or stop to each other—not to the app. There is no goal, and you can skip or end at any time. It includes optional closeness, external touch, and kissing, but no penetration, breath or neck play, restraint, impact, or surprise touch.',
   },
   acts,
   modes: [{
@@ -125,18 +123,5 @@ export const SLOW_BURN_PACK = {
   },
   defaultRouteId: 'standard',
   defaultTimerEnabled: false,
-  directFinale: localized('Diese Session ist beendet. Es wurde nichts gespeichert. Was danach passiert, ist eine neue Entscheidung.', 'This session is closed. Nothing was saved. What happens next is a new choice.'),
-  consentGate: {
-    notice: localized(
-      'Nur für Erwachsene. Macht nur weiter, wenn ihr beide wach, entscheidungsfähig, frei von Druck und jetzt bereit seid, ein körperliches Erlebnis in Betracht zu ziehen. Die App kann das nicht überprüfen. Ohne klares Ja beginnt keine Handlung. Beide Personen können jederzeit auslassen, anpassen, pausieren, stoppen oder beenden.',
-      'Adults only. Continue only if both of you are awake, able to decide, free from pressure, and willing to consider a physical experience now. The app cannot verify that. No action begins without a clear yes. Either person can skip, adjust, pause, stop, or end at any time.'
-    ),
-    act2OptIn: localized('Der nächste Akt enthält Nähe, äußerliche Berührung und optionale Küsse.', 'The next act includes closeness, external touch, and optional kissing.'),
-    entryCards: [0, 1].map(() => localized('Möchtest du diese berührungsorientierte Session jetzt freiwillig beginnen?', 'Do you freely want to begin this touch-forward session now?')),
-    act2Cards: [0, 1].map(() => localized('Möchtest du jetzt weitere Kategorien in Betracht ziehen?', 'Do you want to consider further categories now?')),
-    entryAccepted: localized('Ihr habt beide unabhängig gewählt zu beginnen. Jede konkrete Berührung braucht trotzdem ein eigenes Ja + Ja.', 'You both independently chose to begin. Every exact touch still needs its own Yes + Yes.'),
-    act2Accepted: localized('Ihr habt beide unabhängig gewählt fortzufahren. Jede konkrete Einladung bleibt eine neue Entscheidung.', 'You both independently chose to continue. Every exact invitation remains a new choice.'),
-    entryDeclined: localized('Heute nicht. Niemand muss etwas erklären.', 'Not today. No one needs to explain.'),
-    act2Declined: localized('Die Session endet hier. Niemand muss etwas erklären.', 'The session ends here. No one needs to explain.'),
-  },
+  directFinale: localized('Diese Session ist beendet. Eure Antworten und Entscheidungen wurden nicht gespeichert. Was danach passiert, ist eine neue Entscheidung.', 'This session is closed. Your answers and choices were not saved. What happens next is a new choice.'),
 };

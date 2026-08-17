@@ -132,23 +132,11 @@ describe('PACKS registry', () => {
     expect(LATE_NIGHT_PACK.privateMoment).toBe('none');
   });
 
-  it("LATE_NIGHT_PACK's consentGate has both required, non-empty prompts", () => {
-    expect(LATE_NIGHT_PACK.consentGate).toBeDefined();
-    expect(pick(LATE_NIGHT_PACK.consentGate.notice, 'de')).toBeTruthy();
-    expect(pick(LATE_NIGHT_PACK.consentGate.notice, 'en')).toBeTruthy();
-    expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'de')).toBeTruthy();
-    expect(pick(LATE_NIGHT_PACK.consentGate.act2OptIn, 'en')).toBeTruthy();
+  it('keeps device-mediated consent gates out of every current pack', () => {
+    expect(Object.values(PACKS).filter((pack) => pack.consentGate)).toEqual([]);
   });
 
-  it('only the three adult-sensitive packs require the additional consent gate', () => {
-    expect(Object.values(PACKS).filter((pack) => pack.consentGate)).toEqual([
-      POWER_BY_CHOICE_PACK,
-      SLOW_BURN_PACK,
-      LATE_NIGHT_PACK,
-    ]);
-  });
-
-  it('keeps POWER, BY CHOICE conversational and SLOW BURN volatile and bilateral', () => {
+  it('keeps POWER, BY CHOICE conversational and SLOW BURN verbally coordinated', () => {
     expect(POWER_BY_CHOICE_PACK).toMatchObject({
       contentGroup: 'adult',
       discoverability: 'menu-unlock',
@@ -164,8 +152,6 @@ describe('PACKS registry', () => {
       contentGroup: 'adult',
       discoverability: 'menu-unlock',
       privateMoment: 'none',
-      touchExperience: true,
-      nonResumable: true,
       defaultTimerEnabled: false,
     });
     expect(Object.values(SLOW_BURN_PACK.routes).map((route) =>
@@ -176,7 +162,10 @@ describe('PACKS registry', () => {
       .flatMap((act) => act.questions)
       .filter((question) => ['touch', 'kiss'].includes(question.kind));
     expect(physicalCards.length).toBeGreaterThan(0);
-    physicalCards.forEach((question) => expect(question.requiresBilateral).toBe(true));
+    physicalCards.forEach((question) => expect(question.requiresVerbalAgreement).toBe(true));
+    expect(POWER_BY_CHOICE_PACK.consentGate).toBeUndefined();
+    expect(SLOW_BURN_PACK.consentGate).toBeUndefined();
+    expect(LATE_NIGHT_PACK.consentGate).toBeUndefined();
   });
 
   it('every registered pack has the shape CloserGame.js relies on', () => {

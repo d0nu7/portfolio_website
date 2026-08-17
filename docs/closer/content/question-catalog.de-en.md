@@ -33,7 +33,7 @@ In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `Q/F
 
 ### Private Moments (FR-005)
 
-This section is the authoritative editorial catalog for the implemented Private Moment behavior and supersedes the former universal saved-question flow. Role A is the person selected to open Q1; role B is the other person. Quick has no Private Moment. Late Night’s consent/readiness gates are a separate safety mechanism and never create a secret task.
+This section is the authoritative editorial catalog for the implemented Private Moment behavior and supersedes the former universal saved-question flow. Role A is the person selected to open Q1; role B is the other person. Quick has no Private Moment. Adult-pack participation is explained once in a shared introduction and never creates a secret task.
 
 | Pack | Decision | Routes | Trigger | Use and irreversible discard |
 |---|---|---|---|---|
@@ -45,7 +45,7 @@ This section is the authoritative editorial catalog for the implemented Private 
 | Old Friends | optional | Standard only | after Act I | immediate shared use; discard immediately afterward |
 | Deep | optional | Standard, Full | after Act I | shared close after Act II; discard immediately afterward |
 | Chaos | optional | Standard, Full | before Q16 | supplement Q16; discard when leaving Q16 |
-| Late Night | consent/readiness | Quick, Standard, Full | entry and after Act I | collective result only; no generic Question 37 |
+| Late Night | none | all | — | direct finale; no generic Question 37 |
 | Road Trip | none | all | — | — |
 | Family | none | all | — | — |
 | Colleagues | none | all available routes | — | — |
@@ -60,7 +60,7 @@ Shared optional-moment copy:
 - **Return DE:** „Legt das Handy wieder zwischen euch. Niemand muss sagen, was auf der eigenen Karte stand oder welche Wahl getroffen wurde.“
 - **Return EN:** “Put the phone back between you. Nobody needs to say what their card said or which choice they made.”
 
-No answer or private free text enters application state. Non-Classic accept/decline choices produce identical durable state. Classic stores only `none | pending | asked | discarded`, never the saved question. Late Night individual choices are in-memory only and excluded from local storage. Resume and background return direct private content to a named handoff cover; an incomplete Late Night gate restarts from A. Early exit and completion scrub remaining private categories.
+No answer or private free text enters application state. Non-Classic accept/decline choices produce identical durable state. Classic stores only `none | pending | asked | discarded`, never the saved question. Resume and background return direct private content to a named handoff cover. Early exit and completion scrub remaining private categories.
 
 #### Classic — `classic-saved-questions`
 
@@ -137,17 +137,10 @@ No answer or private free text enters application state. Non-Classic accept/decl
 - **B DE/EN:** „Dein privater Funke für die nächste gemeinsame Aufgabe: Das Unternehmen bekommt einen dramatisch ernsten Namen für etwas völlig Albernes.“ / “Your private spark for the next shared task: the business gets a dramatically serious name for something completely silly.”
 - **Q16 supplement DE/EN:** „Wenn du einen privaten Funken behalten hast, baue ihn ein. Niemand muss erraten, welche Karte die andere Person gesehen hat, und beide Funken dürfen ignoriert werden.“ / “If you kept a private spark, work it in. Nobody has to guess which card the other person saw, and either spark may be ignored.”
 
-#### Late Night — independent readiness and consent
+#### Late Night — shared participation introduction
 
-- **Entry A DE/EN:** „Entscheide nur für dich. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören. Deine Wahl wird zunächst niemandem angezeigt.“ / “Decide only for yourself. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time. Your choice will not initially be shown to anyone.”
-- **Entry B DE/EN:** „Entscheide unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören.“ / “Decide independently. The first choice is not shown to you and does not obligate you. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time.”
-- **Act II A DE/EN:** „Möchtest du für dich freiwillig mit ausdrücklich sexuellen Fragen über Berührung, Sex, Fantasien und Grenzen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.“ / “Do you freely want to continue with explicitly sexual questions about touch, sex, fantasies, and boundaries? You may pass any question, change your mind, or end here. No answer is consent to an action.”
-- **Act II B DE/EN:** „Entscheide erneut unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Möchtest du freiwillig mit den ausdrücklich sexuellen Fragen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.“ / “Decide independently again. The first choice is not shown to you and does not obligate you. Do you freely want to continue with the explicitly sexual questions? You may pass any question, change your mind, or end here. No answer is consent to an action.”
-- **Actions DE/EN:** **Ja, freiwillig / Yes, voluntarily** and **Hier enden / End here**, with equal visual prominence.
-- **Entry accepted DE/EN:** „Ihr habt beide unabhängig gewählt, LATE NIGHT zu starten. Das ist nur Zustimmung zum Gespräch, niemals zu einer Handlung.“ / “You both independently chose to start LATE NIGHT. This is consent only to the conversation, never to an action.”
-- **Act II accepted DE/EN:** „Ihr habt beide unabhängig gewählt, mit Akt II fortzufahren. Jede einzelne Frage bleibt freiwillig; keine Antwort ist Zustimmung zu einer Handlung.“ / “You both independently chose to continue to Act II. Every individual question remains optional; no answer is consent to an action.”
-- **Entry declined DE/EN:** „Alles gut. LATE NIGHT startet nicht. Niemand muss erklären, wer beendet hat oder warum.“ / “All good. LATE NIGHT will not start. Nobody has to explain who ended it or why.”
-- **Act II declined DE/EN:** „Alles gut. LATE NIGHT endet hier, bevor die expliziteren Fragen beginnen. Niemand muss erklären, wer beendet hat oder warum.“ / “All good. LATE NIGHT ends here before the more explicit questions begin. Nobody has to explain who ended it or why.”
+- **DE:** „Ein ausdrücklich sexuelles Gespräch für zwei Erwachsene ab 18 Jahren. Klärt vor dem Start direkt miteinander, ob das Thema für euch beide gerade passt. Jede Frage kann kostenlos ausgelassen und das Spiel jederzeit beendet werden. Antworten beschreiben Gedanken oder Vorlieben; sie sind keine Zustimmung zu einer Handlung.“
+- **EN:** “An explicitly sexual conversation for two adults aged 18 or over. Before starting, check directly with each other that the topic feels right for both of you now. Any question can be passed for free and the game can be ended at any time. Answers describe thoughts or preferences; they are not consent to an action.”
 - **Direct finale DE/EN:** „Damit endet LATE NIGHT. Was ihr gesagt habt, ist Information – keine Zustimmung zu einer Handlung. Alles Weitere braucht außerhalb des Spiels eine konkrete, freiwillige und jederzeit widerrufbare Zustimmung.“ / “This is the end of LATE NIGHT. What you said is information—not consent to an action. Anything further requires specific, voluntary, and withdrawable consent outside the game.”
 
 Full displays **FRAGE 37 / QUESTION 37** only for Classic’s saved-question finale. Standard uses **FINALE** for optional pack finales. Listed response cards are optional listening cues and do not count as questions.
@@ -741,7 +734,7 @@ Chaos Standard and Full use the two private Q16 constraints defined in [Private 
 
 ### Editorial game rules
 
-- Each person separately confirms that they are 18 or older and participating voluntarily before any question is shown.
+- The shared introduction asks both people to confirm directly with each other that they are adults and that the conversation fits now; no choice is entered into the app.
 - Either person may pass on each question individually without explanation; passing must not create pressure to justify the choice.
 - Answers are always sequential. `PREDICT` and `NO THINKING` are completely disabled for this pack.
 - `BOTH` is also disabled for boundaries, consent, safer sex, fantasies, and physical needs; nobody answers simultaneously or on another person’s behalf.
@@ -766,15 +759,6 @@ Chaos Standard and Full use the two private Q16 constraints defined in [Private 
 | Q10 | F | Wie soll jemand prüfen, ob Flirten für dich gerade willkommen ist? | How would you like someone to check whether flirting is welcome for you in that moment? |
 | Q11 | F | Wodurch kannst du dich begehrt fühlen, ohne dich unter Druck gesetzt zu fühlen? | What can make you feel desired without making you feel pressured? |
 | Q12 | F | Was hilft dir, während wachsender Intimität präsent und mit dir selbst verbunden zu bleiben? | What helps you stay present and connected to yourself as intimacy builds? |
-
-### Renewed opt-in before Act II
-
-Before explicit questions about touch, sex, fantasies, and kinks appear, both people confirm again and separately:
-
-- **DE:** „Ich möchte freiwillig mit expliziteren Gesprächsfragen fortfahren. Ich kann jede Frage überspringen oder hier beenden.“
-- **EN:** “I freely choose to continue with more explicit conversation prompts. I may skip any question or end here.”
-
-**Hier beenden / End here** has equal prominence and is not visually subordinate. If active consent is not given twice, the pack ends neutrally.
 
 ### Act II – WUNSCH / DESIRE
 
@@ -812,7 +796,7 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 
 ### Question 37
 
-Late Night sets `privateMoment: 'none'`, never enters a saved-question or secret-task flow, and never renders generic Question 37. All routes use the independent entry and Act II gates plus the direct safety finale defined in [Private Moments (FR-005)](#private-moments-fr-005).
+Late Night sets `privateMoment: 'none'`, never enters a saved-question, secret-task, or device-mediated consent flow, and never renders generic Question 37. All routes use one shared introduction plus the direct safety finale defined in [Private Moments (FR-005)](#private-moments-fr-005).
 
 ### Final editorial checks for LATE NIGHT
 
@@ -1209,7 +1193,7 @@ COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PR
 
 ## 15. SLOW BURN (18+)
 
-**Goal:** A non-resumable, touch-forward experience for two adults. Every exact physical invitation uses a fresh masked Yes/Adjust/Skip choice from both people. It contains external touch and optional kissing, but no penetration, breath or neck play, restraint, impact, surprise touch, private moment, Question 37, PLAYFUL mechanics, timer, or stored session state.
+**Goal:** A touch-forward guide for two adults that keeps the phone in a passive moderator role. One shared introduction asks both people to talk before beginning; afterward they communicate agreement, wishes, changes, pause, and stop directly to each other. The app only presents prompts plus ordinary Continue and free Pass actions. It contains external touch and optional kissing, but no penetration, breath or neck play, restraint, impact, surprise touch, private moment, Question 37, PLAYFUL mechanics, or timer.
 
 **Routes:** Quick 9 · Standard 15 · Unhurried 21. Planning estimates: approximately 20, 40, and 60 minutes. These are experience ranges, not targets or countdowns.
 
@@ -1249,4 +1233,4 @@ COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PR
 | Q20 | U | Wählt eine Pause ohne Berührung. Beide Personen finden eine bequeme Position und einen passenden Abstand. Danach muss nichts passieren. | Choose a no-touch pause. Each person finds a comfortable position and distance. Nothing needs to happen next. |
 | Q21 | Q/S/U | Wechselt zum Abschluss, ohne eine neue Berührungskategorie hinzuzufügen: Abstand · ruhige Nähe · bereits gewähltes Händehalten · bereits gewählte Umarmung · Wasser oder praktische Bequemlichkeit · ein kurzer Check-in-Satz · jetzt beenden. | Move to a close without adding a new touch category: space · quiet nearness · an already selected handhold · an already selected embrace · water or practical comfort · one check-in sentence · end now. |
 
-SLOW BURN clears its volatile choices when the app is hidden, closed, refreshed, or ended. A visibility preference may remain, but the session itself is never resumable and no selected action, adjustment, body area, or consent choice is persisted.
+SLOW BURN stores only the same route/progress state as an ordinary CLOSER run. It has no fields or controls for agreement, selected actions, adjustments, or body areas. Those remain in the conversation between the two people and are never entered into the app. The direct finale states accurately that answers and choices were not saved; ordinary local route progress is deleted when the run completes.

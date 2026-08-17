@@ -135,11 +135,6 @@ function Privacy({ lang, accent }) {
             Drittanbietern.
           </p>
           <p>
-            Bei SLOW BURN werden auch Entscheidungen zu Berührungen, Anpassungen und Körperbereichen nicht
-            gespeichert. Diese Session kann nicht fortgesetzt werden. Nur die Auswahl, welche Pakete im
-            Menü sichtbar sind, kann als lokale Einstellung bestehen bleiben.
-          </p>
-          <p>
             Die lokalen Daten bleiben im Browser, bis ihr im Menü „Lokale Daten löschen“ wählt oder die
             Website-Daten im Browser entfernt. Ihr könnt CLOSER auch ohne Namen verwenden.
           </p>
@@ -215,11 +210,6 @@ function Privacy({ lang, accent }) {
         <p>
           Your answers are not entered, recorded, or stored. CLOSER currently uses no analytics or
           advertising services, sets no cookies, and loads no fonts from third parties.
-        </p>
-        <p>
-          SLOW BURN choices about touch, adjustments, and body areas are not stored either. That session
-          cannot be resumed. Only the preference controlling which packs are visible in the menu may remain
-          as a local setting.
         </p>
         <p>
           Local data remains in the browser until you choose “Delete local data” in the menu or remove the
