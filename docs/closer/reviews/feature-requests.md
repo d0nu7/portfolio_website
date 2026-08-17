@@ -1,6 +1,6 @@
 # CLOSER – feature requests
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Status convention:** Proposed, Planned, In progress, Verification pending, Delivered, or Shelved
 
 Product-owner decisions and editorial work are collected in the [RaDi owner TODO](../product/radi-owner-todo.md). FR-011 is delivered; later product changes require their own approved scope.
@@ -23,7 +23,7 @@ Requirements:
 
 ### FR-002 – In-app imprint and privacy information
 
-**Status:** Delivered; owner-supplied operator details incorporated 2026-08-16; professional legal review still recommended, not yet obtained
+**Status:** Delivered; owner-supplied operator details incorporated 2026-08-16; RaDi decided on 2026-08-17 not to commission professional legal advice at the current stage
 
 Add bilingual Imprint and Privacy views to the global CLOSER menu so installed-PWA users can reach them without returning to the portfolio footer.
 
@@ -35,7 +35,7 @@ Requirements:
 - Deliberately NOT added: bank details (IBAN/BIC), even though RaDi supplied them. Austrian ECG §5 does not require payment/banking details in an Imprint, CLOSER takes no payments, and publishing IBAN/BIC on a public legal page is an avoidable disclosure with no legal upside here — flagged rather than silently included or silently dropped.
 - State purposes, legal basis, recipients/transfers where applicable, retention logic, rights, and the Austrian data-protection complaint route. — Unchanged; already present in the existing draft.
 - Keep the links constantly, easily, and directly accessible. — Unchanged; already delivered.
-- Obtain owner and, where appropriate, professional legal review before treating the text as final legal advice. — **Still open.** RaDi asked directly whether a broader legal review is needed and doesn't know either; this is not something either of us can determine with confidence here. Given the site now discloses a VAT ID (indicating a registered business, not purely personal use), includes an explicit 18+ content path (Late Night), and operates under Austrian/EU jurisdiction, a short review by an Austrian lawyer or a DSGVO-focused service is a reasonable precaution before wide release — but this is judgment, not a verified legal conclusion, and the actual decision belongs to RaDi.
+- Professional review decision. — RaDi decided not to commission legal advice at the current stage. The in-app text remains a practical transparency baseline, not lawyer-certified legal advice. Reopen the decision after material changes to processing, monetization, product risk, or applicable operator details.
 
 ### FR-003 – Deployment security headers
 
@@ -59,7 +59,7 @@ See the visual contract in [gameplay-and-safety.md](../product/gameplay-and-safe
 
 ### FR-005 – Pack-specific private moments
 
-**Status:** Proposed
+**Status:** Dedicated editorial task defined; implementation intentionally not started
 
 Replace the universal saved-question ritual with a small library of safe, pack-appropriate asymmetric moments.
 
@@ -77,11 +77,24 @@ Editorial directions:
 | Chaos | Use a short secret spark or constraint for a co-created answer. |
 | Late Night | No secret sexual/physical tasks; readiness and consent checks only. |
 
-Every card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
+Required task deliverables:
+
+- one explicit `none | optional | consent/readiness` decision for every implemented pack;
+- a threat-model review covering pressure, covert behavior, loyalty testing, unwanted disclosure, touch, sex, conflict, workplace/family power, and unsafe device handoffs;
+- exact route eligibility and trigger placement;
+- genuinely asymmetric card A/card B content rather than the same instruction shown twice;
+- exact DE/EN copy for display, handoff, decline, reveal/use, early exit, resume, and every affected finale branch;
+- a state lifecycle that stores only categorical navigation state, never an answer or private free text;
+- an explicit rule for when private information is used and irreversibly discarded;
+- RaDi editorial approval before a separate implementation branch begins.
+
+Road Trip, Family, and Colleagues remain `privateMoment: none` for the current release. Late Night may use only independent readiness/consent checks, never secret sexual or physical tasks. Every card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
+
+Acceptance: the approved matrix is sufficiently complete that engineering does not need to invent content, safety behavior, persistence rules, or finale semantics.
 
 ### FR-006 – Curated replacement-question joker
 
-**Status:** Proposed; blocked by editorial content
+**Status:** Dedicated editorial task defined; implementation blocked by approved pool content
 
 After sufficient replacement questions exist, add an optional limited **Another question** action. It must not replace or weaken the unconditional Pass action.
 
@@ -92,6 +105,18 @@ Requirements:
 - deterministic selection persisted across resume;
 - no penalty, heart, or moral framing;
 - disabled when no valid replacement exists.
+
+The dedicated task must additionally decide:
+
+- eligible packs/routes and the exact number of replacements available per run;
+- whether a replacement may itself be replaced (recommended initial rule: at most once per slot);
+- progress semantics (recommended: replace the current slot without increasing route length or advertised time);
+- minimum editorial coverage (at least two valid alternatives for every supported context, otherwise mark it unsupported);
+- exhaustion and unavailable copy;
+- stable bilingual IDs, catalog location, duplicate/near-duplicate checks, and sensitive-pack exclusions;
+- RaDi editorial approval before a separate implementation branch begins.
+
+Acceptance: an implementation can choose and persist a valid replacement deterministically without weakening Pass, extending the route, repeating content, changing intensity, or falling back across languages.
 
 ### FR-007 – Setup simplification and navigation
 
@@ -115,7 +140,7 @@ Run moderated sessions for every pack and route. Record completion time, number 
 
 ### FR-009 – Offline-capable PWA
 
-**Status:** Decision required
+**Status:** Not planned for the current product; reopen only if offline play becomes a real requirement
 
 The manifest can remove the address bar in an installed display mode, but installability does not guarantee offline operation. Add a service worker only if offline use is a real product requirement.
 

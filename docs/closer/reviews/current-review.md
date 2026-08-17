@@ -50,7 +50,7 @@ These are intentionally not blockers for closing this branch:
 2. **PLAYFUL expansion:** First Date and Old Friends are later pilot candidates. Deep, Late Night, moving-vehicle Road Trip, and Colleagues require different or no interaction concepts rather than inherited Classic actions.
 3. **Real sessions:** route duration, action fatigue, pressure, passing frequency, and attention to the phone cannot be validated mechanically.
 4. **Physical platforms:** Android installed PWA, iOS Add to Home Screen, safe areas, system navigation, VoiceOver, TalkBack, and WebKit remain device checks.
-5. **Infrastructure:** custom subdomain and offline/service-worker behavior remain explicit owner decisions.
+5. **Infrastructure:** offline support is not planned for the current product. The custom-subdomain question remains an explicit owner decision.
 
 ## Verification contract
 

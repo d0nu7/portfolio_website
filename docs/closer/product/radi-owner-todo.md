@@ -8,12 +8,11 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 
 ## Recommended order
 
-1. Decide whether to obtain professional Austrian legal review for the implemented legal text.
-2. Complete physical-device release checks for the current product.
-3. Decide whether offline support and a separate subdomain are actually wanted.
-4. Run moderated sessions for the new specialist packs and PLAYFUL rollout.
-5. Define and approve pack-specific private moments.
-6. Build and approve replacement-question pools.
+1. Continue gradual PLAYFUL testing and complete remaining physical-device checks when useful.
+2. Run moderated sessions for the new specialist packs and PLAYFUL rollout.
+3. Complete the dedicated Private Moments editorial task.
+4. Complete the separate Replacement Question Pool editorial task.
+5. Decide whether a separate subdomain is actually wanted.
 
 ## Immediate release decisions
 
@@ -28,13 +27,14 @@ Current state: bilingual Imprint and Privacy views are implemented. RaDi's suppl
 - [x] Confirm the current Vercel Hobby plan and keep provider-retention wording plan-neutral.
 - [x] Verify the current local-storage, answer-storage, cookie, analytics, font-hosting, hosting, transfer, and retention statements against the source.
 - [ ] Confirm whether any further business, professional, trade, or regulatory identifiers apply beyond the supplied VAT ID.
-- [ ] Decide whether professional Austrian legal review is required before broader release.
-- [ ] If reviewed, record approval date, reviewer, and required corrections in the legal copy or release notes.
+- [x] Decide not to commission professional legal advice at the current stage.
+- [ ] Revisit legal review before commercialization, material data-processing changes, or if the product risk/profile changes.
 
-Done when: RaDi has confirmed whether further identifiers apply, made an explicit legal-review decision, and any resulting corrections are implemented in DE and EN.
+Current decision is complete. Reopen only if circumstances, processing, monetization, or product risk materially change.
 
 ### Delivered items – physical-device sign-off
 
+- [x] Complete an initial Android phone smoke test; no blocking issue was observed.
 - [ ] Open the deployed production build with desktop browser developer tools and confirm there are no CSP violations, console errors, or failed CLOSER assets.
 - [ ] Test the installed Android PWA with gesture navigation.
 - [ ] Test the installed Android PWA with three-button navigation.
@@ -51,13 +51,18 @@ Done when: device, OS version, browser, result, and any defect are recorded for 
 
 For every pack, decide whether a private handoff genuinely improves the experience. A private screen should contain asymmetric information or a meaningful private intention; otherwise, omit it.
 
-- [ ] Choose eligible routes for each pack. Quick should normally have none.
-- [ ] Choose one clear private-moment concept per eligible pack.
-- [ ] Write exact German and English copy for both people and every handoff.
-- [ ] Add an unconditional decline path and truthful follow-up copy.
-- [ ] Specify when the private information is revealed, used, or discarded.
-- [ ] Review every card for pressure, manipulation, assumed attraction, covert touch, humiliation, diagnosis, or unwanted disclosure.
-- [ ] Keep Late Night free of secret sexual or physical tasks; use readiness and consent checks only.
+Treat this as a dedicated editorial/product task. Do not combine it with implementation or the Replacement Question Pool task. Its output is an approved private-moment contract that can later be implemented on its own branch.
+
+- [ ] Audit the current saved-question sequence and identify which parts should be retained, replaced, or removed.
+- [ ] Decide explicitly for every implemented pack: no private moment, optional private moment, or required consent/readiness handoff.
+- [ ] Choose eligible routes and one exact trigger point. Quick should normally have none.
+- [ ] Define genuinely asymmetric information or intention for each participating person; mirrored cards are not sufficient.
+- [ ] Specify the complete lifecycle: private display, device handoff, decline, storage state, reveal/use point, discard point, finale consequences, early exit, and resume behavior.
+- [ ] Write exact gender-neutral German and English copy for every card, handoff, decline, reminder, and finale branch.
+- [ ] Ensure no spoken answer or private free text is entered or stored.
+- [ ] Review for pressure, manipulation, assumed attraction, covert observation or touch, humiliation, diagnosis, loyalty testing, unwanted disclosure, and relationship obligation.
+- [ ] Keep Late Night free of secret sexual/physical tasks and keep Road Trip, Family, and Colleagues at `privateMoment: none` unless a separate safety decision reopens them.
+- [ ] Obtain explicit RaDi approval for the editorial matrix before implementation begins.
 
 Editorial worksheet:
 
@@ -76,21 +81,24 @@ Editorial worksheet:
 | Family | No | None |  |  |  | Yes |
 | Colleagues | No | None |  |  |  | Yes |
 
-Done when: each eligible pack has approved DE/EN copy, route placement, a decline path, and an explicit reveal/use rule.
+Done when: every implemented pack has an explicit decision, every eligible moment has approved DE/EN copy plus a complete state/lifecycle contract, safety exclusions are documented, and implementation can proceed without inventing product behavior.
 
 ### FR-006 – Curate replacement-question pools
 
-This starts only after the private-moment direction is settled and the core catalog is considered stable.
+Treat this as a separate editorial/product task. It may research and specify the mechanic in parallel, but implementation starts only after the core catalog is stable and RaDi approves the pool.
 
-- [ ] Decide whether the joker is needed after observing real sessions.
-- [ ] Define how many replacements each pack, act, route, and intensity needs.
-- [ ] Write and review every replacement in German and English.
-- [ ] Assign stable IDs and catalog metadata.
-- [ ] Check for duplicates, near-duplicates, intensity jumps, and route mismatch.
-- [ ] Confirm that **Another question** is optional variety and never replaces **Pass**.
-- [ ] Approve behavior when no valid replacement remains.
+- [ ] Define the user promise: **Another question** offers optional variety; **Pass** remains free, unlimited, immediate, and visually distinct.
+- [ ] Decide eligible packs/routes, the number of jokers per run, whether a replacement can itself be replaced, and whether unused jokers have any end-state meaning (recommended: none).
+- [ ] Define pool keys and selection constraints by pack, act, intensity, route compatibility, and safety exclusions.
+- [ ] Define progress and timing semantics: replacing a prompt keeps the same slot and must not silently extend the advertised route.
+- [ ] Define deterministic selection, persisted choice, resume behavior, and exhaustion behavior without render-time randomness.
+- [ ] Write complete bilingual replacement banks with stable IDs and paired DE/EN content objects.
+- [ ] Provide at least two valid alternatives for every supported replacement context, or explicitly mark that context unsupported.
+- [ ] Check exact and semantic duplicates against the master catalog, intensity jumps, unsafe topic substitutions, and mode-specific exclusions.
+- [ ] Specify a neutral unavailable state; never charge a token or advance because the pool is empty.
+- [ ] Obtain explicit RaDi editorial approval before implementation begins.
 
-Done when: implementation can select a valid replacement deterministically without repeats, pressure, or missing-language fallbacks.
+Done when: the mechanic contract and complete approved bilingual pools allow deterministic implementation without repeats, route/intensity drift, pressure, missing-language fallbacks, or ambiguity with Pass.
 
 ## Real-user validation
 
@@ -114,15 +122,15 @@ Done when: findings are summarized without answer content, duration ranges have 
 
 ### FR-009 – Decide on offline support
 
-- [ ] Decide **yes** or **no**: must an installed game start and complete without a network connection?
-- [ ] If no, document that installability/fullscreen presentation is the only current PWA goal.
+- [x] Decide **no for now**: an installed game does not currently need to start and complete without a network connection.
+- [x] Keep installability/fullscreen presentation as the current PWA goal and do not add a service worker.
 - [ ] If yes, approve the precached app shell and content scope.
 - [ ] If yes, define cache invalidation using the content revision.
 - [ ] If yes, define update notification, stale-version recovery, and offline test devices.
 
 Recommendation: do not add a service worker merely to earn a PWA label. Add it only if offline play is a real user requirement and the update strategy is owned.
 
-Done when: the decision and rationale are recorded; a **yes** includes an approved caching and recovery contract.
+Decision complete for the current release. Reopen only if offline play becomes a real user requirement.
 
 ### FR-010 – Decide on `closer.radi.solutions`
 
@@ -166,3 +174,7 @@ sign-off list above.
 | 2026-08-16 | FR-011 | Freeze all product behavior and authorize incremental run-definition and transition-core work | A stable target and characterization coverage reduce the risk of changing fragile phase paths during the refactor | Engineering |
 | 2026-08-16 | FR-012 | Shelve TTS indefinitely; do not merge the existing voice branch | TTS is not currently planned and must not complicate the active engine refactor | Reopen only by explicit RaDi decision |
 | 2026-08-16 | FR-011 | Complete the incremental transition, persistence, storage, and view extraction without product changes | The characterized slices pass the automated release gate and preserve save compatibility | Complete |
+| 2026-08-17 | FR-002 | Do not commission professional legal advice at the current stage | Revisit after material changes to risk, processing, monetization, or operator circumstances | RaDi |
+| 2026-08-17 | Device check | Accept the initial Android phone smoke test | The first real-device check found no blocking issue; deeper platform/accessibility coverage can follow incrementally | RaDi |
+| 2026-08-17 | FR-009 | Do not add offline support or a service worker for now | Installability and fullscreen presentation are sufficient for the current product need | Complete |
+| 2026-08-17 | FR-005/006 | Split Private Moments and Replacement Question Pools into independent tasks | Both require substantial editorial decisions before safe implementation | Editorial tasks |
