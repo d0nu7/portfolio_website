@@ -23,7 +23,13 @@ import {
   transitionAct,
 } from '../transitions';
 
-const state = (patch = {}) => ({ secretSeen: [false, false], ...patch });
+const state = (patch = {}) => ({
+  privateMomentStatus: 'not-started',
+  privateQuestionState: ['unseen', 'unseen'],
+  consentDecisions: [null, null],
+  starterOffset: 0,
+  ...patch,
+});
 
 describe('question destination transition core', () => {
   const full = compileRun('classic', 'full', 'original');
@@ -60,17 +66,20 @@ describe('question destination transition core', () => {
   });
 
   it('enters the private handoff only when the compiled run permits it', () => {
-    expect(resolveQuestionDestination(full, state(), full.secretAtIndex)).toEqual({
-      patch: { phase: 'secretPass1', pending: full.secretAtIndex },
+    const triggerIndex = full.questions.findIndex(
+      (question) => question.id === full.privateMoment.trigger.questionId
+    );
+    expect(resolveQuestionDestination(full, state(), triggerIndex)).toEqual({
+      patch: { phase: 'secretOffer', pending: triggerIndex },
       effect: QUESTION_DESTINATION_EFFECTS.NONE,
     });
-    expect(resolveQuestionDestination(full, state({ secretSeen: [true, true] }), full.secretAtIndex))
+    expect(resolveQuestionDestination(full, state({ privateMomentStatus: 'armed' }), triggerIndex))
       .toEqual({
-        patch: { phase: 'q', qIndex: full.secretAtIndex },
+        patch: { phase: 'q', qIndex: triggerIndex },
         effect: QUESTION_DESTINATION_EFFECTS.ENTER_QUESTION,
       });
-    expect(resolveQuestionDestination(quick, state(), quick.secretAtIndex).patch.phase)
-      .not.toBe('secretPass1');
+    expect(resolveQuestionDestination(quick, state(), triggerIndex).patch.phase)
+      .not.toBe('secretOffer');
   });
 
   it('stages the compiled final question before entering it', () => {
@@ -89,7 +98,9 @@ describe('question destination transition core', () => {
   });
 
   it('does not mutate the run or state inputs', () => {
-    const current = Object.freeze({ secretSeen: Object.freeze([false, false]) });
+    const current = Object.freeze({
+      privateMomentStatus: 'not-started',
+    });
     const before = JSON.stringify(full);
     resolveQuestionDestination(full, current, 1);
     expect(JSON.stringify(full)).toBe(before);
@@ -115,6 +126,19 @@ describe('question completion transition core', () => {
     expect(transitionQuestion(run, state({ phase: 'q', qIndex: 0 }), {
       type: 'UNKNOWN',
     })).toBeNull();
+  });
+
+  it('consumes the CHAOS sparks only when Q16 is left', () => {
+    const chaos = compileRun('chaos', 'standard', 'playful');
+    const sparkIndex = chaos.questions.findIndex(
+      (question) => question.id === chaos.privateMoment.use.questionId
+    );
+    const result = transitionQuestion(chaos, state({
+      phase: 'q',
+      qIndex: sparkIndex,
+      privateMomentStatus: 'armed',
+    }), { type: QUESTION_EVENTS.ANSWER_DONE });
+    expect(result.patch.privateMomentStatus).toBe('consumed');
   });
 });
 
@@ -156,9 +180,13 @@ describe('setup transition core', () => {
   it('routes a consent-gated run through its private entry gate', () => {
     expect(lateNight.requiresConsent).toBe(true);
     expect(transitionSetup(lateNight, { phase: 'duration' }, { type: SETUP_EVENTS.CONTINUE }))
-      .toEqual({ modeId: 'explicit', phase: 'consentGatePassA' });
+      .toEqual({
+        modeId: 'explicit',
+        phase: 'consentGatePassA',
+        consentDecisions: [null, null],
+      });
     expect(transitionSetup(lateNight, { phase: 'mode' }, { type: SETUP_EVENTS.CONTINUE }))
-      .toEqual({ phase: 'consentGatePassA' });
+      .toEqual({ phase: 'consentGatePassA', consentDecisions: [null, null] });
   });
 
   it('walks Back through exactly the screens the forward flow can show', () => {
@@ -203,24 +231,73 @@ describe('consent transition core', () => {
   });
 
   it.each([
-    ['consentGateA', { phase: 'consentGatePassB' }],
-    ['consentGateB', { phase: 'intro' }],
-    ['consentAct2A', { phase: 'consentAct2PassB' }],
-    ['consentAct2B', { phase: 'act', actElapsedMs: 0 }],
-  ])('continues the consent sequence from %s', (phase, expected) => {
-    expect(transitionConsent(lateNight, { phase }, {
+    ['consentGateA', 'consentGatePassB'],
+    ['consentAct2A', 'consentAct2PassB'],
+  ])('records the first private decision and always continues to person B from %s', (
+    phase,
+    nextPhase
+  ) => {
+    expect(transitionConsent(lateNight, state({ phase }), {
       type: CONSENT_EVENTS.CONFIRM_CONSENT,
-    })).toEqual(expected);
+    })).toEqual({ phase: nextPhase, consentDecisions: ['yes', null] });
+    expect(transitionConsent(lateNight, state({ phase }), {
+      type: CONSENT_EVENTS.DECLINE_CONSENT,
+    })).toEqual({ phase: nextPhase, consentDecisions: ['no', null] });
   });
 
-  it.each(['consentGateA', 'consentGateB', 'consentAct2A', 'consentAct2B'])(
-    'ends neutrally when consent is declined from %s',
-    (phase) => {
-      expect(transitionConsent(lateNight, { phase }, {
-        type: CONSENT_EVENTS.DECLINE_CONSENT,
-      })).toEqual({ phase: 'ending', completed: true, endReason: 'consentDeclined' });
-    }
-  );
+  it.each([
+    ['consentGateB', 'consentGateAccepted'],
+    ['consentAct2B', 'consentAct2Accepted'],
+  ])('reveals only the collective accepted result from %s', (phase, nextPhase) => {
+    expect(transitionConsent(lateNight, state({
+      phase,
+      consentDecisions: ['yes', null],
+    }), {
+      type: CONSENT_EVENTS.CONFIRM_CONSENT,
+    })).toEqual({ phase: nextPhase, consentDecisions: [null, null] });
+  });
+
+  it.each([
+    ['consentGateB', 'entry'],
+    ['consentAct2B', 'act2'],
+  ])('ends neutrally after B when either private decision is no from %s', (
+    phase,
+    consentDeclinedAt
+  ) => {
+    expect(transitionConsent(lateNight, state({
+      phase,
+      consentDecisions: ['no', null],
+    }), {
+      type: CONSENT_EVENTS.CONFIRM_CONSENT,
+    })).toEqual(expect.objectContaining({
+      phase: 'ending',
+      completed: true,
+      endReason: 'consentDeclined',
+      consentDeclinedAt,
+      consentDecisions: [null, null],
+    }));
+    expect(transitionConsent(lateNight, state({
+      phase,
+      consentDecisions: ['yes', null],
+    }), {
+      type: CONSENT_EVENTS.DECLINE_CONSENT,
+    })).toEqual(expect.objectContaining({
+      phase: 'ending',
+      completed: true,
+      endReason: 'consentDeclined',
+      consentDeclinedAt,
+      consentDecisions: [null, null],
+    }));
+  });
+
+  it('continues only from a collective accepted screen', () => {
+    expect(transitionConsent(lateNight, { phase: 'consentGateAccepted' }, {
+      type: CONSENT_EVENTS.CONTINUE_AFTER_CONSENT,
+    })).toEqual({ phase: 'intro' });
+    expect(transitionConsent(lateNight, { phase: 'consentAct2Accepted' }, {
+      type: CONSENT_EVENTS.CONTINUE_AFTER_CONSENT,
+    })).toEqual({ phase: 'act', actElapsedMs: 0 });
+  });
 
   it('rejects consent events for runs without a consent gate', () => {
     expect(transitionConsent(classic, { phase: 'consentGateA' }, {
@@ -283,13 +360,81 @@ describe('act transition core', () => {
     expect(transitionAct(lateNight, { phase: 'break', breakAct: 0 }, {
       type: ACT_EVENTS.CONTINUE_FROM_BREAK,
     })).toEqual({
-      patch: { phase: 'consentAct2PassA', actElapsedMs: 0 },
+      patch: {
+        phase: 'consentAct2PassA',
+        actElapsedMs: 0,
+        consentDecisions: [null, null],
+      },
       effect: ACT_EFFECTS.NONE,
     });
     expect(transitionAct(lateNight, { phase: 'break', breakAct: 1 }, {
       type: ACT_EVENTS.CONTINUE_FROM_BREAK,
     })).toEqual({
       patch: { phase: 'act', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+  });
+
+  it('offers First Date after Act I and uses Couples after Act II when armed', () => {
+    const firstDate = compileRun('first-date', 'standard', 'calm');
+    const couples = compileRun('couples', 'standard', 'tender');
+    expect(transitionAct(firstDate, state({ phase: 'break', breakAct: 0 }), {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'secretOffer', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+    expect(transitionAct(couples, state({
+      phase: 'break',
+      breakAct: 1,
+      privateMomentStatus: 'armed',
+    }), {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'privateUse', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+  });
+
+  it.each([
+    ['first-date', 'standard', 'calm', 0],
+    ['date-night', 'standard', 'warm', 0],
+    ['couples', 'standard', 'grounded', 0],
+    ['friends', 'standard', 'easy', 1],
+    ['old-friends', 'standard', 'easy', 0],
+    ['deep', 'standard', 'still', 0],
+  ])('%s offers its configured after-act moment on %s', (
+    packId,
+    routeId,
+    modeId,
+    breakAct
+  ) => {
+    const configuredRun = compileRun(packId, routeId, modeId);
+    expect(transitionAct(configuredRun, state({
+      phase: 'break',
+      breakAct,
+      privateMomentStatus: 'not-started',
+    }), {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'secretOffer', actElapsedMs: 0 },
+      effect: ACT_EFFECTS.NONE,
+    });
+  });
+
+  it.each([
+    ['couples', 'grounded'],
+    ['deep', 'still'],
+  ])('%s consumes its armed intention after Act II', (packId, modeId) => {
+    const configuredRun = compileRun(packId, 'standard', modeId);
+    expect(transitionAct(configuredRun, state({
+      phase: 'break',
+      breakAct: 1,
+      privateMomentStatus: 'armed',
+    }), {
+      type: ACT_EVENTS.CONTINUE_FROM_BREAK,
+    })).toEqual({
+      patch: { phase: 'privateUse', actElapsedMs: 0 },
       effect: ACT_EFFECTS.NONE,
     });
   });
@@ -308,13 +453,49 @@ describe('private-moment transition core', () => {
   const full = compileRun('classic', 'full', 'original');
   const quick = compileRun('classic', 'quick', 'original');
   const noPrivateMoment = compileRun('late-night', 'standard', 'explicit');
+  const triggerIndex = full.questions.findIndex(
+    (question) => question.id === full.privateMoment.trigger.questionId
+  );
   const privateState = (patch = {}) => ({
-    phase: 'secretPass1',
-    pending: full.secretAtIndex,
-    secretSeen: [false, false],
-    hasSecretQuestion: [null, null],
-    secretAsked: [null, null],
+    phase: 'secretOffer',
+    pending: triggerIndex,
+    privateMomentStatus: 'not-started',
+    privateQuestionState: ['unseen', 'unseen'],
+    starterOffset: 0,
     ...patch,
+  });
+
+  it('starts only from the shared offer and keeps a shared skip available', () => {
+    expect(transitionPrivateMoment(full, privateState(), {
+      type: PRIVATE_MOMENT_EVENTS.START,
+    })).toEqual({
+      patch: { phase: 'secretPass1', privateMomentStatus: 'in-progress' },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+    expect(transitionPrivateMoment(full, privateState({ phase: 'secret1' }), {
+      type: PRIVATE_MOMENT_EVENTS.SKIP_ALL,
+    })).toEqual({
+      patch: {
+        phase: 'q',
+        qIndex: triggerIndex,
+        privateMomentStatus: 'skipped',
+        privateQuestionState: ['discarded', 'discarded'],
+      },
+      effect: PRIVATE_MOMENT_EFFECTS.ENTER_QUESTION,
+    });
+  });
+
+  it('shared skip discards a Classic category already selected by A', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'secretPass2',
+      privateMomentStatus: 'in-progress',
+      privateQuestionState: ['pending', 'unseen'],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SKIP_ALL,
+    }).patch).toEqual(expect.objectContaining({
+      privateMomentStatus: 'skipped',
+      privateQuestionState: ['discarded', 'discarded'],
+    }));
   });
 
   it.each([
@@ -332,11 +513,15 @@ describe('private-moment transition core', () => {
     });
   });
 
-  it('returns from the private capture to the pending compiled question', () => {
+  it('arms Classic and returns to the triggered compiled question', () => {
     expect(transitionPrivateMoment(full, privateState({ phase: 'secretPassBack' }), {
       type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
     })).toEqual({
-      patch: { phase: 'q', qIndex: full.secretAtIndex },
+      patch: {
+        phase: 'q',
+        qIndex: triggerIndex,
+        privateMomentStatus: 'armed',
+      },
       effect: PRIVATE_MOMENT_EFFECTS.ENTER_QUESTION,
     });
   });
@@ -344,100 +529,169 @@ describe('private-moment transition core', () => {
   it.each([
     ['secret1', 0, 'secretPass2'],
     ['secret2', 1, 'secretPassBack'],
-  ])('records the private choice for %s without mutating state', (phase, player, nextPhase) => {
+  ])('records only the Classic categorical state for %s without mutating state', (
+    phase,
+    player,
+    nextPhase
+  ) => {
     const current = privateState({ phase });
     const result = transitionPrivateMoment(full, current, {
-      type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
-      hasQuestion: false,
+      type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+      accepted: true,
     });
-    expect(result.patch.secretSeen).toEqual(player === 0 ? [true, false] : [false, true]);
-    expect(result.patch.hasSecretQuestion).toEqual(player === 0 ? [false, null] : [null, false]);
+    expect(result.patch.privateQuestionState).toEqual(
+      player === 0 ? ['pending', 'unseen'] : ['unseen', 'pending']
+    );
     expect(result.patch.phase).toBe(nextPhase);
-    expect(current.secretSeen).toEqual([false, false]);
-    expect(current.hasSecretQuestion).toEqual([null, null]);
+    expect(current.privateQuestionState).toEqual(['unseen', 'unseen']);
   });
 
-  it('ends Quick directly after its regular questions', () => {
-    expect(transitionPrivateMoment(quick, privateState({ phase: 'all36' }), {
-      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+  it('maps Classic A/B roles to the actual players selected at setup', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'secret1',
+      starterOffset: 1,
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+      accepted: false,
+    }).patch).toEqual({
+      phase: 'secretPass2',
+      privateQuestionState: ['unseen', 'none'],
+    });
+  });
+
+  it('does not retain a non-Classic person’s accept/decline choice', () => {
+    const firstDate = compileRun('first-date', 'standard', 'calm');
+    const current = privateState({ phase: 'secret1' });
+    const accepted = transitionPrivateMoment(firstDate, current, {
+      type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+      accepted: true,
+    });
+    const declined = transitionPrivateMoment(firstDate, current, {
+      type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+      accepted: false,
+    });
+    expect(accepted).toEqual(declined);
+    expect(accepted.patch).not.toHaveProperty('privateQuestionState');
+  });
+
+  it('shows and consumes an immediate-use moment before resuming the next act', () => {
+    const oldFriends = compileRun('old-friends', 'standard', 'warm');
+    expect(transitionPrivateMoment(oldFriends, privateState({ phase: 'secretPassBack' }), {
+      type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
     })).toEqual({
-      patch: { phase: 'ending', completed: true, endReason: 'completed' },
+      patch: {
+        phase: 'privateUse',
+        privateMomentStatus: 'armed',
+      },
       effect: PRIVATE_MOMENT_EFFECTS.NONE,
     });
+    expect(transitionPrivateMoment(oldFriends, privateState({ phase: 'privateUse' }), {
+      type: PRIVATE_MOMENT_EVENTS.COMPLETE_USE,
+    })).toEqual({
+      patch: { phase: 'act', privateMomentStatus: 'consumed', actElapsedMs: 0 },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+  });
+
+  it('routes finale, skipped-finale, Quick, and direct-finale outcomes explicitly', () => {
+    const firstDate = compileRun('first-date', 'standard', 'calm');
+    expect(transitionPrivateMoment(firstDate, privateState({
+      phase: 'all36',
+      privateMomentStatus: 'armed',
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    }).patch.phase).toBe('privateFinaleIntro');
+    expect(transitionPrivateMoment(firstDate, privateState({
+      phase: 'all36',
+      privateMomentStatus: 'skipped',
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    }).patch.phase).toBe('privateFinaleSkipped');
+    expect(transitionPrivateMoment(quick, privateState({ phase: 'all36' }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    }).patch).toEqual(expect.objectContaining({
+      phase: 'ending', completed: true, endReason: 'completed',
+    }));
+    expect(transitionPrivateMoment(noPrivateMoment, privateState({ phase: 'all36' }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({ patch: { phase: 'directFinale' }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
   });
 
   it.each([
-    [[true, true], 'checkPass1'],
-    [[false, true], 'checkPass2'],
-    [[false, false], 'q37intro'],
-  ])('selects the first applicable post-game check for %j', (hasSecretQuestion, phase) => {
-    expect(transitionPrivateMoment(full, privateState({
+    ['first-date', 'calm'],
+    ['date-night', 'warm'],
+    ['friends', 'easy'],
+  ])('%s sends an armed Standard run to its two-turn finale', (packId, modeId) => {
+    const configuredRun = compileRun(packId, 'standard', modeId);
+    expect(transitionPrivateMoment(configuredRun, privateState({
       phase: 'all36',
-      hasSecretQuestion,
-    }), {
-      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
-    })).toEqual({ patch: { phase }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
-  });
-
-  it('preserves legacy null as an applicable private question', () => {
-    expect(transitionPrivateMoment(full, privateState({
-      phase: 'all36',
-      hasSecretQuestion: [null, null],
-    }), {
-      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
-    }).patch.phase).toBe('checkPass1');
-  });
-
-  it('skips private checks for a pack whose compiled policy disables them', () => {
-    expect(transitionPrivateMoment(noPrivateMoment, privateState({
-      phase: 'all36',
-      hasSecretQuestion: [true, true],
+      privateMomentStatus: 'armed',
     }), {
       type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
     })).toEqual({
-      patch: { phase: 'q37intro' },
+      patch: { phase: 'privateFinaleIntro' },
       effect: PRIVATE_MOMENT_EFFECTS.NONE,
     });
+  });
+
+  it('checks pending Classic cards in A/B role order before the finale', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'all36',
+      privateQuestionState: ['pending', 'pending'],
+      starterOffset: 1,
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({ patch: { phase: 'checkPass2' }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'check2',
+      privateQuestionState: ['pending', 'pending'],
+      starterOffset: 1,
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_STATUS,
+      status: 'asked',
+    })).toEqual({
+      patch: {
+        phase: 'checkPass1',
+        privateQuestionState: ['pending', 'asked'],
+      },
+      effect: PRIVATE_MOMENT_EFFECTS.NONE,
+    });
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'check1',
+      privateQuestionState: ['pending', 'asked'],
+      starterOffset: 1,
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_STATUS,
+      status: 'discarded',
+    }).patch).toEqual({
+      phase: 'checkPassBack',
+      privateQuestionState: ['discarded', 'asked'],
+    });
+  });
+
+  it('skips Classic checks when no private question remains pending', () => {
+    expect(transitionPrivateMoment(full, privateState({
+      phase: 'all36',
+      privateQuestionState: ['asked', 'discarded'],
+    }), {
+      type: PRIVATE_MOMENT_EVENTS.CONTINUE_AFTER_QUESTIONS,
+    })).toEqual({ patch: { phase: 'q37intro' }, effect: PRIVATE_MOMENT_EFFECTS.NONE });
+  });
+
+  it('rejects private phases for packs whose compiled policy disables them', () => {
     expect(transitionPrivateMoment(noPrivateMoment, privateState({ phase: 'secretPass1' }), {
       type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
     })).toBeNull();
   });
 
-  it('records check answers and skips a non-applicable second check', () => {
-    expect(transitionPrivateMoment(full, privateState({
-      phase: 'check1',
-      hasSecretQuestion: [true, false],
-    }), {
-      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-      asked: true,
-    })).toEqual({
-      patch: { secretAsked: [true, null], phase: 'checkPassBack' },
-      effect: PRIVATE_MOMENT_EFFECTS.NONE,
-    });
-    expect(transitionPrivateMoment(full, privateState({
-      phase: 'check1',
-      hasSecretQuestion: [true, true],
-    }), {
-      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-      asked: false,
-    }).patch).toEqual({ secretAsked: [false, null], phase: 'checkPass2' });
-    expect(transitionPrivateMoment(full, privateState({
-      phase: 'check2',
-      hasSecretQuestion: [false, true],
-    }), {
-      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-      asked: true,
-    }).patch).toEqual({ secretAsked: [null, true], phase: 'checkPassBack' });
-  });
-
   it('rejects malformed choices and phase/event mismatches', () => {
     expect(transitionPrivateMoment(full, privateState({ phase: 'secret1' }), {
-      type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
-      hasQuestion: 'yes',
+      type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+      accepted: 'yes',
     })).toBeNull();
     expect(transitionPrivateMoment(full, privateState({ phase: 'q' }), {
-      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-      asked: true,
+      type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_STATUS,
+      status: 'asked',
     })).toBeNull();
   });
 });
@@ -447,44 +701,59 @@ describe('Question 37 transition core', () => {
   const noPrivateMoment = compileRun('late-night', 'full', 'explicit');
   const q37State = (patch = {}) => ({
     phase: 'q37intro',
-    secretAsked: [null, null],
-    hasSecretQuestion: [null, null],
+    privateQuestionState: ['unseen', 'unseen'],
     ...patch,
   });
 
   it('opens two sequential turns only when both applicable questions remain', () => {
     expect(transitionQ37(full, q37State({
-      secretAsked: [false, false],
-      hasSecretQuestion: [true, true],
+      privateQuestionState: ['pending', 'pending'],
     }), { type: Q37_EVENTS.ACCEPT_FINALE })).toEqual({ phase: 'q37a' });
   });
 
   it.each([
-    [[false, true], [true, true]],
-    [[true, true], [true, true]],
-    [[null, null], [false, false]],
-  ])('opens the single shared prompt for asked/opt-out state %j / %j', (
-    secretAsked,
-    hasSecretQuestion
-  ) => {
-    expect(transitionQ37(full, q37State({ secretAsked, hasSecretQuestion }), {
+    { privateQuestionState: ['pending', 'asked'] },
+    { privateQuestionState: ['asked', 'discarded'] },
+    { privateQuestionState: ['none', 'none'] },
+  ])('opens one final prompt for categorical state $privateQuestionState', ({
+    privateQuestionState,
+  }) => {
+    expect(transitionQ37(full, q37State({ privateQuestionState }), {
       type: Q37_EVENTS.ACCEPT_FINALE,
     })).toEqual({ phase: 'q37' });
   });
 
   it('uses the ordinary shared bonus when the compiled run has no private moment', () => {
     expect(transitionQ37(noPrivateMoment, q37State({
-      secretAsked: [false, false],
-      hasSecretQuestion: [true, true],
+      privateQuestionState: ['pending', 'pending'],
     }), { type: Q37_EVENTS.ACCEPT_FINALE })).toEqual({ phase: 'q37' });
+  });
+
+  it('runs an armed pack-specific finale in two explicit turns', () => {
+    const firstDate = compileRun('first-date', 'standard', 'calm');
+    expect(transitionQ37(firstDate, q37State({ phase: 'privateFinaleIntro' }), {
+      type: Q37_EVENTS.ACCEPT_FINALE,
+    })).toEqual({ phase: 'privateFinaleA' });
+    expect(transitionQ37(firstDate, q37State({ phase: 'privateFinaleA' }), {
+      type: Q37_EVENTS.CONTINUE_SECOND_TURN,
+    })).toEqual({ phase: 'privateFinaleB' });
+    expect(transitionQ37(firstDate, q37State({ phase: 'privateFinaleB' }), {
+      type: Q37_EVENTS.COMPLETE,
+    })).toEqual(expect.objectContaining({
+      phase: 'ending', completed: true, endReason: 'completed',
+    }));
   });
 
   it('allows an optional end from the intro and between two sequential turns', () => {
     expect(transitionQ37(full, q37State(), { type: Q37_EVENTS.END_OPTIONAL }))
-      .toEqual({ phase: 'ending', completed: true, endReason: 'userEnded' });
+      .toEqual(expect.objectContaining({
+        phase: 'ending', completed: true, endReason: 'userEnded',
+      }));
     expect(transitionQ37(full, q37State({ phase: 'q37a' }), {
       type: Q37_EVENTS.END_OPTIONAL,
-    })).toEqual({ phase: 'ending', completed: true, endReason: 'userEnded' });
+    })).toEqual(expect.objectContaining({
+      phase: 'ending', completed: true, endReason: 'userEnded',
+    }));
   });
 
   it('continues the sequential branch and completes both final prompt forms', () => {
@@ -493,10 +762,14 @@ describe('Question 37 transition core', () => {
     })).toEqual({ phase: 'q37b' });
     expect(transitionQ37(full, q37State({ phase: 'q37b' }), {
       type: Q37_EVENTS.COMPLETE,
-    })).toEqual({ phase: 'ending', completed: true, endReason: 'completed' });
+    })).toEqual(expect.objectContaining({
+      phase: 'ending', completed: true, endReason: 'completed',
+    }));
     expect(transitionQ37(full, q37State({ phase: 'q37' }), {
       type: Q37_EVENTS.COMPLETE,
-    })).toEqual({ phase: 'ending', completed: true, endReason: 'completed' });
+    })).toEqual(expect.objectContaining({
+      phase: 'ending', completed: true, endReason: 'completed',
+    }));
   });
 
   it('rejects events outside their exact Q37 phases', () => {
@@ -540,7 +813,14 @@ describe('final-question and global transition core', () => {
       expect(transitionGlobal({ phase: 'q' }, {
         type: GLOBAL_EVENTS.END_RUN,
         reason,
-      })).toEqual({ phase: 'ending', completed: true, endReason: reason });
+      })).toEqual({
+        phase: 'ending',
+        completed: true,
+        endReason: reason,
+        privateMomentStatus: 'consumed',
+        privateQuestionState: ['discarded', 'discarded'],
+        consentDecisions: [null, null],
+      });
     }
   );
 

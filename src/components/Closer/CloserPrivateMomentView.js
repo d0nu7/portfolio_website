@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { pick } from '../../constants/closer';
 import CloserHandoff from './CloserHandoff';
 import {
   Body,
@@ -14,11 +15,13 @@ import {
 } from './CloserStyles';
 
 export const PRIVATE_MOMENT_VIEW_PHASES = new Set([
+  'secretOffer',
   'secretPass1',
   'secret1',
   'secretPass2',
   'secret2',
   'secretPassBack',
+  'privateUse',
   'checkPass1',
   'check1',
   'checkPass2',
@@ -26,58 +29,112 @@ export const PRIVATE_MOMENT_VIEW_PHASES = new Set([
   'checkPassBack',
 ]);
 
+function formatNames(text, names) {
+  return String(text || '')
+    .replaceAll('{A}', names[0])
+    .replaceAll('{B}', names[1])
+    .replaceAll('{who}', names[0])
+    .replaceAll('{other}', names[1]);
+}
+
 export default function CloserPrivateMomentView({
   state,
+  moment,
+  lang,
   accent,
   nameOf,
   t,
   tf,
+  onStart,
+  onSkipAll,
   onHandoff,
-  onSetQuestion,
-  onSetAsked,
+  onSetCardChoice,
+  onSetQuestionStatus,
+  onCompleteUse,
 }) {
   const phase = state.phase;
+  const starterOffset = state.starterOffset === 1 ? 1 : 0;
+  const rolePlayers = [starterOffset, 1 - starterOffset];
+  const names = rolePlayers.map(nameOf);
 
-  if (phase === 'secretPass1' || phase === 'secretPass2') {
-    const person = phase === 'secretPass1' ? 0 : 1;
-    return (
-      <CloserHandoff
-        accent={accent}
-        kicker={phase === 'secretPass1' ? tf('passPhoneTo', nameOf(0)) : t('passPhone')}
-        body={phase === 'secretPass2'
-          ? tf('passPhoneText', nameOf(1), state.hasSecretQuestion[0] === true)
-          : null}
-        action={phase === 'secretPass1' ? tf('iAm', nameOf(0)) : t('done')}
-        onAction={onHandoff}
-      />
-    );
-  }
-
-  if (phase === 'secret1' || phase === 'secret2') {
-    const person = phase === 'secret1' ? 0 : 1;
+  if (phase === 'secretOffer') {
     return (
       <>
         <Body $center>
-          <Kicker $accent={accent}>{tf('forOnly', nameOf(person))}</Kicker>
-          <Lede>{tf('secretTask', nameOf(1 - person))}</Lede>
+          <Kicker $accent={accent}>{t('privateOfferTitle')}</Kicker>
+          <Lede>{pick(moment.offer, lang)}</Lede>
         </Body>
         <Foot>
-          <Button $accent={accent} onClick={() => onSetQuestion(true)}>{t('iHaveOne')}</Button>
-          <TextButton onClick={() => onSetQuestion(false)}>{t('noSecretToday')}</TextButton>
+          <Row>
+            <GhostButton onClick={onStart}>{t('showPrivateCards')}</GhostButton>
+            <GhostButton onClick={onSkipAll}>{t('skipPrivateForBoth')}</GhostButton>
+          </Row>
         </Foot>
       </>
     );
   }
 
-  if (phase === 'secretPassBack' || phase === 'checkPassBack') {
+  if (phase === 'secretPass1' || phase === 'secretPass2') {
+    const roleIndex = phase === 'secretPass1' ? 0 : 1;
+    const person = rolePlayers[roleIndex];
     return (
       <CloserHandoff
         accent={accent}
-        kicker={t('passPhoneBack')}
-        body={t('passPhoneBackText')}
+        kicker={tf('passPhoneTo', nameOf(person))}
+        body={phase === 'secretPass1'
+          ? tf('privateHandoffBody', nameOf(person))
+          : tf('privateSecondHandoffBody', nameOf(person))}
+        action={tf('iAm', nameOf(person))}
+        secondaryAction={t('skipPrivateForBoth')}
+        onAction={onHandoff}
+        onSecondaryAction={onSkipAll}
+      />
+    );
+  }
+
+  if (phase === 'secret1' || phase === 'secret2') {
+    const roleIndex = phase === 'secret1' ? 0 : 1;
+    const person = rolePlayers[roleIndex];
+    const other = 1 - person;
+    const card = moment.cards[roleIndex];
+    const body = formatNames(pick(card.body, lang), [nameOf(person), nameOf(other)]);
+    return (
+      <>
+        <Body $center>
+          <Kicker $accent={accent}>{tf('forOnly', nameOf(person))}</Kicker>
+          <Lede>{body}</Lede>
+        </Body>
+        <Foot>
+          <Button $accent={accent} onClick={() => onSetCardChoice(true)}>
+            {pick(card.action, lang)}
+          </Button>
+          <TextButton onClick={() => onSetCardChoice(false)}>{t('noPrivateToday')}</TextButton>
+        </Foot>
+      </>
+    );
+  }
+
+  if (phase === 'secretPassBack') {
+    return (
+      <CloserHandoff
+        accent={accent}
+        kicker={t('privateReturnTitle')}
+        body={pick(moment.returnCopy, lang)}
         action={t('continue')}
         onAction={onHandoff}
       />
+    );
+  }
+
+  if (phase === 'privateUse') {
+    return (
+      <>
+        <Body $center>
+          <Kicker $accent={accent}>{t('privateUseTitle')}</Kicker>
+          <Lede>{formatNames(pick(moment.use.copy, lang), names)}</Lede>
+        </Body>
+        <Foot><Button $accent={accent} onClick={onCompleteUse}>{t('continue')}</Button></Foot>
+      </>
     );
   }
 
@@ -87,7 +144,20 @@ export default function CloserPrivateMomentView({
       <CloserHandoff
         accent={accent}
         kicker={tf('passPhoneTo', nameOf(person))}
+        body={tf('privateHandoffBody', nameOf(person))}
         action={tf('iAm', nameOf(person))}
+        onAction={onHandoff}
+      />
+    );
+  }
+
+  if (phase === 'checkPassBack') {
+    return (
+      <CloserHandoff
+        accent={accent}
+        kicker={t('privateReturnTitle')}
+        body={pick(moment.returnCopy, lang)}
+        action={t('continue')}
         onAction={onHandoff}
       />
     );
@@ -98,13 +168,18 @@ export default function CloserPrivateMomentView({
     <>
       <Body $center>
         <Kicker>{tf('forOnly', nameOf(person))}</Kicker>
-        <Question>{tf('didYouAsk', nameOf(1 - person))}</Question>
+        <Question>{t('privateQuestionCheck')}</Question>
       </Body>
       <Foot>
-        <Row>
-          <GhostButton onClick={() => onSetAsked(true)}>{t('yes')}</GhostButton>
-          <GhostButton onClick={() => onSetAsked(false)}>{t('no')}</GhostButton>
-        </Row>
+        <GhostButton onClick={() => onSetQuestionStatus('asked')}>
+          {t('privateAlreadyAsked')}
+        </GhostButton>
+        <GhostButton onClick={() => onSetQuestionStatus('pending')}>
+          {t('privateStillOpen')}
+        </GhostButton>
+        <TextButton onClick={() => onSetQuestionStatus('discarded')}>
+          {t('privateDiscard')}
+        </TextButton>
       </Foot>
     </>
   );

@@ -29,10 +29,8 @@ export function pick(value, lang) {
 
 import { PACKS, LATE_NIGHT_PACK } from '../closer/content';
 import { ACT_NUMERALS } from '../closer/content/shared';
-import { classifySecretAsked } from '../closer/engine/transitions';
 
 export { PACKS, LATE_NIGHT_PACK };
-export { classifySecretAsked };
 
 export const DEFAULT_PACK_ID = 'classic';
 export const DEFAULT_ROUTE_ID = 'full';
@@ -48,6 +46,14 @@ export function getRoute(packId, routeId) {
   const requested = pack.routes && pack.routes[routeId];
   if (requested) return requested;
   return pack.routes[DEFAULT_ROUTE_ID] || Object.values(pack.routes)[0];
+}
+
+export function privateMomentFor(packId, routeId = DEFAULT_ROUTE_ID) {
+  const pack = getPack(packId);
+  const route = getRoute(pack.id, routeId);
+  const moment = pack.privateMoment;
+  if (!moment || moment === 'none') return 'none';
+  return moment.routes.includes(route.id) ? moment : 'none';
 }
 
 function actSubtitle(count, minutes) {
@@ -214,7 +220,7 @@ export function questionIdFor(packId, questionIndex) {
  * invalidate active saves. Copy-only corrections keep their existing ID and
  * version. The resolved ID list lets the save parser detect content drift.
  */
-export const CONTENT_VERSION = 4;
+export const CONTENT_VERSION = 5;
 
 export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
   const total = totalQuestions(packId, routeId);
@@ -300,7 +306,8 @@ export function compileRun(packId, routeId = DEFAULT_ROUTE_ID, modeId) {
     actStarts: Object.freeze(actStarts),
     timing: Object.freeze(timing),
     secretAtIndex: secretAtIndexFor(pack.id, route.id),
-    privateMoment: pack.privateMoment ?? null,
+    privateMoment: privateMomentFor(pack.id, route.id),
+    directFinale: pack.directFinale || null,
     contentRevision: CONTENT_VERSION,
     fingerprint: runFingerprintFor(pack.id, route.id, resolvedModeId),
   });

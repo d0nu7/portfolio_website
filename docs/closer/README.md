@@ -10,6 +10,7 @@ This directory contains the current product, content, review, and engineering do
 | Product-owner actions | [RaDi owner TODO](product/radi-owner-todo.md) | Legal approval, editorial work, user sessions, infrastructure decisions, and release sign-off |
 | Questions and routes | [Question catalog DE/EN](content/question-catalog.de-en.md) | Exact bilingual wording, stable IDs, route membership, pack finales, and pilot durations |
 | Editorial rationale | [Question-design research](content/question-design-research.md) | Research synthesis, limitations, question criteria, and pack-specific editorial guidance |
+| Focused evidence reviews | [Research index](research/README.md) | FR-018–020 evidence base, source limits, candidate banks, cross-pack audit, and independent citation/safety QA |
 | Current assessment | [Holistic review](reviews/current-review.md) | Latest product/code assessment and priorities |
 | Defects | [Bug tracker](reviews/bugs.md) | Reproducible bugs, status, and acceptance criteria |
 | Enhancements | [Feature requests](reviews/feature-requests.md) | Product additions and platform improvements |
@@ -29,7 +30,9 @@ Product code and automated tests remain the technical source of truth for what t
 - Passing is unconditional; the former heart-based Skip mechanic is removed.
 - Pack content is modularized under `src/closer/content/`; specialist question data is reproducibly generated from the authoritative catalog with `npm run content:generate`.
 - `compileRun()` is the controller and save parser's runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting. Persisted transitions, persistence parsing, browser storage, and phase presentation now have explicit tested boundaries.
+- FR-005 is implemented: eligible Standard/Full routes use pack-specific asymmetric Private Moments, stable A/B handoffs, explicit shared and individual decline paths, route-specific use/discard points, and pack-specific finales. Quick has no Private Moment; Late Night uses only transient bilateral readiness gates.
 - FR-011 is complete: compiled run structure, pure persisted transitions, persistence/storage boundaries, and focused presentation components are in place. Local automated verification passes; see [bugs](reviews/bugs.md) for remaining device work.
+- The FR-018–020 evidence programme is complete. It conditionally supports a conversation-only **POWER, BY CHOICE** prototype, limits SLOW BURN to closed moderated research pending all release gates, and records 37 atomic cross-pack proposals without changing Classic.
 - TTS is shelved indefinitely and the existing voice branch is not planned for merge. It is outside the active roadmap unless a new product decision reopens it.
 
 ## Documentation conventions

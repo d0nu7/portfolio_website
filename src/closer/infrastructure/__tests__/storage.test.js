@@ -1,4 +1,5 @@
 import { CONTENT_VERSION, compileRun } from '../../../constants/closer';
+import { STATE_VERSION } from '../../engine/persistence';
 import {
   DEFAULT_PREFERENCES,
   GAME_STORAGE_KEY,
@@ -27,7 +28,7 @@ function createStorage(initial = {}) {
 function resumableState(overrides = {}) {
   const run = compileRun('classic', 'full', 'playful');
   return {
-    stateVersion: 1,
+    stateVersion: STATE_VERSION,
     contentVersion: CONTENT_VERSION,
     phase: 'q',
     qIndex: 5,
@@ -37,6 +38,9 @@ function resumableState(overrides = {}) {
     routeId: run.routeId,
     modeId: run.styleId,
     runFingerprint: run.fingerprint,
+    privateMomentStatus: 'not-started',
+    privateQuestionState: ['unseen', 'unseen'],
+    consentDecisions: [null, null],
     ...overrides,
   };
 }
@@ -65,13 +69,43 @@ describe('CLOSER storage boundary', () => {
     const active = resumableState();
 
     persistGameState(storage, active);
-    expect(JSON.parse(storage.valueFor(GAME_STORAGE_KEY))).toEqual(active);
+    const saved = JSON.parse(storage.valueFor(GAME_STORAGE_KEY));
+    expect(saved).toEqual(expect.objectContaining({
+      phase: active.phase,
+      packId: active.packId,
+      privateQuestionState: active.privateQuestionState,
+    }));
+    expect(saved).not.toHaveProperty('consentDecisions');
 
     persistGameState(storage, { ...active, completed: true });
     expect(storage.valueFor(GAME_STORAGE_KEY)).toBeUndefined();
 
     persistGameState(storage, { ...active, phase: 'start', hasStarted: false });
     expect(storage.setItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('never persists either person’s partial consent decision', () => {
+    const storage = createStorage();
+    persistGameState(storage, resumableState({
+      phase: 'consentGatePassB',
+      consentDecisions: ['no', null],
+    }));
+
+    expect(JSON.parse(storage.valueFor(GAME_STORAGE_KEY))).not.toHaveProperty('consentDecisions');
+  });
+
+  it('persists the entry consent gate as resumable progress without marking play started', () => {
+    const storage = createStorage();
+    persistGameState(storage, resumableState({
+      phase: 'consentGatePassB',
+      hasStarted: false,
+      consentDecisions: ['yes', null],
+    }));
+
+    const saved = JSON.parse(storage.valueFor(GAME_STORAGE_KEY));
+    expect(saved.phase).toBe('consentGatePassB');
+    expect(saved.hasStarted).toBe(false);
+    expect(saved).not.toHaveProperty('consentDecisions');
   });
 
   it('normalizes, persists, and defaults preferences', () => {

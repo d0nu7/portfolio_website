@@ -12,7 +12,7 @@ const BASE_STATE = {
   // 'start' is deliberately never resumable (see loadSaved() in
   // CloserGame.js) -- default to a plain question phase so specs that only
   // override qIndex/etc. still land on "Spiel fortsetzen".
-  // Specs targeting a specific interstitial (secretPass1, q37intro, ...)
+  // Specs targeting a specific interstitial (secretOffer, q37intro, ...)
   // override this explicitly.
   //
   // No `packId` here on purpose: it exercises the same migration path a
@@ -20,8 +20,8 @@ const BASE_STATE = {
   // loadSaved() defaults a missing packId to the classic pack), rather than
   // every spec asserting against an explicitly-set value.
   phase: 'q',
-  stateVersion: 1,
-  contentVersion: 4,
+  stateVersion: 2,
+  contentVersion: 5,
   lang: 'de',
   players: ['Alex', 'Sam'],
   modeId: 'datenight', // has every twist enabled; override per test as needed
@@ -29,14 +29,10 @@ const BASE_STATE = {
   qIndex: 0,
   pending: 0,
   breakAct: 0,
-  // secretSeen tracks whether a person completed their private secret-
-  // question screen; hasSecretQuestion tracks whether they actually formed
-  // one there rather than choosing "Heute keine" (bugfix-report iteration
-  // 7, BF-08/FR-07 -- renamed from a single `secretReady` array that
-  // conflated the two).
-  secretSeen: [false, false],
-  hasSecretQuestion: [null, null],
-  secretAsked: [null, null],
+  privateMomentStatus: 'not-started',
+  privateQuestionState: ['unseen', 'unseen'],
+  consentDecisions: [null, null],
+  consentDeclinedAt: null,
   starterOffset: 0,
   // Active conversation time for the current act. This replaces the old
   // wall-clock `actStartedAt`; see the timer effect in CloserGame.js.

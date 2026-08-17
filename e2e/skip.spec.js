@@ -28,8 +28,7 @@ test.describe('Free pass', () => {
   test('passing is available on the final regular question', async ({ page }) => {
     await seedAndResume(page, {
       qIndex: 35,
-      secretSeen: [true, true],
-      hasSecretQuestion: [true, true],
+      privateMomentStatus: 'consumed',
     });
 
     await page.getByRole('button', { name: 'Lieber nicht' }).click();

@@ -1,10 +1,10 @@
 # CLOSER – question-design research
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Purpose:** Research-informed editorial guidance for CLOSER questions
 **Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, and their available routes
 
-This document is a design synthesis, not a claim that the new CLOSER packs or individual prompts have been scientifically validated. The bilingual [question catalog](question-catalog.de-en.md) remains the editorial source of truth for shipped wording and routes.
+This document is a design synthesis, not a claim that the new CLOSER packs or individual prompts have been scientifically validated. The bilingual [question catalog](question-catalog.de-en.md) remains the editorial source of truth for shipped wording and routes. The focused FR-018–020 evidence programme, candidate banks, and cross-pack audit are indexed separately in [research](../research/README.md).
 
 ---
 
@@ -377,9 +377,9 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 3. Replace prompts with unusually high pass rates or low conversation quality.
 4. Iteratively evaluate and refine pack-specific Quick, Standard, and Full routes.
 5. Do not promote Colleagues reserve questions into a Full route without a separate product decision and safety review.
-6. Run a dedicated evidence review before drafting POWER & TRUST, an adult conversation pack about consensual power exchange.
-7. Run a separate evidence and interaction-design review for SLOW BURN, an intentionally touch-forward adult experience with a three-act physical progression and brief bilateral choices at each increase in intensity.
-8. After those focused reviews, repeat the evidence and question audit across every research-informed pack while leaving Classic unchanged.
+6. Disposition the completed FR-018 evidence review and decide whether conversation-only **POWER, BY CHOICE** advances to named specialist review and moderated testing.
+7. Decide whether to fund the prerequisite reviews and closed moderated prototype for FR-019 SLOW BURN; public release remains a no-go.
+8. Triage the completed FR-020 audit's 37 atomic proposals individually. Do not change Classic or silently apply candidate catalog edits.
 
 ---
 

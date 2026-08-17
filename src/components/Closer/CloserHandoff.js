@@ -1,12 +1,20 @@
 import React from 'react';
 
-import { Body, Button, Foot, Kicker, Lede } from './CloserStyles';
+import { Body, Button, Foot, Kicker, Lede, TextButton } from './CloserStyles';
 
 /*
  * Shared handoff presentation for consent gates and private questions.
  * It deliberately owns no phase or transition logic.
  */
-export default function CloserHandoff({ accent, kicker, body, action, onAction }) {
+export default function CloserHandoff({
+  accent,
+  kicker,
+  body,
+  action,
+  secondaryAction,
+  onAction,
+  onSecondaryAction,
+}) {
   return (
     <>
       <Body $center>
@@ -17,6 +25,9 @@ export default function CloserHandoff({ accent, kicker, body, action, onAction }
         <Button $accent={accent} onClick={onAction}>
           {action}
         </Button>
+        {secondaryAction ? (
+          <TextButton onClick={onSecondaryAction}>{secondaryAction}</TextButton>
+        ) : null}
       </Foot>
     </>
   );

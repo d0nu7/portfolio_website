@@ -10,18 +10,22 @@ import {
 import { isPackVisible, normalizeVisiblePackIds } from '../content';
 
 // Bump only when an older saved shape cannot be migrated safely.
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 
 const END_REASONS = new Set(['completed', 'userEnded', 'consentDeclined']);
 
 const VALID_PHASES = new Set([
   'players', 'pack', 'duration', 'mode', 'intro', 'act', 'break', 'q',
-  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'secretOffer', 'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'privateUse',
   'lastIntro', 'all36',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
-  'q37intro', 'q37', 'q37a', 'q37b', 'ending',
+  'q37intro', 'q37', 'q37a', 'q37b',
+  'privateFinaleIntro', 'privateFinaleA', 'privateFinaleB', 'privateFinaleSkipped',
+  'directFinale', 'ending',
   'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
   'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
+  'consentGateAccepted', 'consentAct2Accepted',
 ]);
 
 /*
@@ -46,9 +50,10 @@ export function createInitialState(options = {}) {
     qIndex: 0,
     pending: 0,
     breakAct: 0,
-    secretSeen: [false, false],
-    hasSecretQuestion: [null, null],
-    secretAsked: [null, null],
+    privateMomentStatus: 'not-started',
+    privateQuestionState: ['unseen', 'unseen'],
+    consentDecisions: [null, null],
+    consentDeclinedAt: null,
     starterOffset: 0,
     actElapsedMs: 0,
     completed: false,
@@ -73,10 +78,24 @@ export function createRestartState(currentState = {}, preferences = {}) {
 
 export function resumeSavedState(savedState, lang) {
   if (!savedState || typeof savedState !== 'object') return null;
-  return {
+  const resumed = {
     ...savedState,
     lang: LANGS.includes(lang) ? lang : savedState.lang,
+    consentDecisions: [null, null],
   };
+  resumed.phase = {
+    secret1: 'secretPass1',
+    secret2: 'secretPass2',
+    check1: 'checkPass1',
+    check2: 'checkPass2',
+    consentGateA: 'consentGatePassA',
+    consentGateB: 'consentGatePassA',
+    consentGatePassB: 'consentGatePassA',
+    consentAct2A: 'consentAct2PassA',
+    consentAct2B: 'consentAct2PassA',
+    consentAct2PassB: 'consentAct2PassA',
+  }[resumed.phase] || resumed.phase;
+  return resumed;
 }
 
 const initialState = createInitialState();
@@ -118,20 +137,30 @@ function isPlausibleSaved(saved) {
   if (saved.lang !== undefined && !LANGS.includes(saved.lang)) return false;
   const isPairOf = (value, predicate) =>
     Array.isArray(value) && value.length === 2 && value.every(predicate);
-  const isBooleanOrNull = (value) => typeof value === 'boolean' || value === null;
   if (saved.players !== undefined && !isPairOf(saved.players, (value) => typeof value === 'string')) {
     return false;
   }
-  if (saved.secretSeen !== undefined && !isPairOf(saved.secretSeen, (value) => typeof value === 'boolean')) {
-    return false;
-  }
-  if (saved.secretAsked !== undefined && !isPairOf(saved.secretAsked, isBooleanOrNull)) return false;
   if (
-    saved.hasSecretQuestion !== undefined &&
-    !isPairOf(saved.hasSecretQuestion, isBooleanOrNull)
+    saved.privateQuestionState !== undefined &&
+    !isPairOf(saved.privateQuestionState, (value) =>
+      ['unseen', 'none', 'pending', 'asked', 'discarded'].includes(value))
   ) {
     return false;
   }
+  if (
+    saved.consentDecisions !== undefined &&
+    !isPairOf(saved.consentDecisions, (value) => ['yes', 'no', null].includes(value))
+  ) return false;
+  if (
+    saved.privateMomentStatus !== undefined &&
+    !['not-started', 'in-progress', 'armed', 'skipped', 'consumed'].includes(
+      saved.privateMomentStatus
+    )
+  ) return false;
+  if (
+    saved.consentDeclinedAt !== undefined &&
+    !['entry', 'act2', null].includes(saved.consentDeclinedAt)
+  ) return false;
   if (saved.endReason !== undefined && saved.endReason !== null && !END_REASONS.has(saved.endReason)) {
     return false;
   }
@@ -140,10 +169,15 @@ function isPlausibleSaved(saved) {
 
 const SETUP_ONLY_PHASES = new Set([
   'players', 'pack', 'duration', 'mode', 'intro',
+]);
+
+const ENTRY_CONSENT_PHASES = new Set([
   'consentGatePassA', 'consentGateA', 'consentGatePassB', 'consentGateB',
+  'consentGateAccepted',
 ]);
 
 function hasRealProgress(saved) {
+  if (ENTRY_CONSENT_PHASES.has(saved.phase)) return true;
   if (typeof saved.hasStarted === 'boolean') return saved.hasStarted;
   if (SETUP_ONLY_PHASES.has(saved.phase)) return false;
   if (saved.phase === 'act') return (saved.pending || 0) > 0 || (saved.qIndex || 0) > 0;
@@ -167,12 +201,15 @@ export const SAVE_REJECT_REASONS = Object.freeze({
 });
 
 const PRIVATE_MOMENT_PHASES = new Set([
-  'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'secretOffer', 'secretPass1', 'secret1', 'secretPass2', 'secret2', 'secretPassBack',
+  'privateUse',
   'checkPass1', 'check1', 'checkPass2', 'check2', 'checkPassBack',
+  'privateFinaleIntro', 'privateFinaleA', 'privateFinaleB', 'privateFinaleSkipped',
 ]);
 
 const ACT2_CONSENT_PHASES = new Set([
   'consentAct2PassA', 'consentAct2A', 'consentAct2PassB', 'consentAct2B',
+  'consentAct2Accepted',
 ]);
 
 /*
@@ -234,7 +271,7 @@ export function parseSaved(raw) {
     return { ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE };
   }
   if (PRIVATE_MOMENT_PHASES.has(merged.phase)) {
-    const privateMomentEnabled = run.routeId !== 'quick' && run.privateMoment !== 'none';
+    const privateMomentEnabled = run.privateMoment !== 'none';
     if (!privateMomentEnabled) {
       return { ok: false, reason: SAVE_REJECT_REASONS.PRIVATE_MOMENT_PHASE_UNAVAILABLE };
     }

@@ -53,8 +53,8 @@ test.describe('Resume-state validation (BF-12)', () => {
     await expectFreshStartScreen(page);
   });
 
-  test('a wrong-length secretAsked array falls back to a fresh start screen', async ({ page }) => {
-    await seedRaw(page, { ...BASE_STATE, secretAsked: [true] });
+  test('a wrong-length privateQuestionState array falls back to a fresh start screen', async ({ page }) => {
+    await seedRaw(page, { ...BASE_STATE, privateQuestionState: ['pending'] });
     await expectFreshStartScreen(page);
   });
 
@@ -98,7 +98,7 @@ test.describe('Resume-state validation (BF-12)', () => {
     page,
   }) => {
     const runQuestionIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
-    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 4 });
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds, contentVersion: 5 });
     await expect(page.getByText('Willkommen zurück.')).toBeVisible();
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
   });
@@ -108,7 +108,7 @@ test.describe('Resume-state validation (BF-12)', () => {
   }) => {
     const staleIds = Array.from({ length: 36 }, (_, i) => `classic-q${String(i + 1).padStart(2, '0')}`);
     staleIds[10] = 'classic-q99'; // simulates content that shifted since this save was written
-    await seedRaw(page, { ...BASE_STATE, runQuestionIds: staleIds, contentVersion: 4 });
+    await seedRaw(page, { ...BASE_STATE, runQuestionIds: staleIds, contentVersion: 5 });
     await expectFreshStartScreen(page);
   });
 
@@ -137,7 +137,7 @@ test.describe('Resume-state validation (BF-12)', () => {
       phase: 'act',
       qIndex: 12,
       pending: 12,
-      contentVersion: 4,
+      contentVersion: 5,
     });
     await page.getByText('Spiel fortsetzen').click();
     await page.getByRole('button', { name: 'Weiter' }).click();
@@ -151,7 +151,7 @@ test.describe('Resume-state validation (BF-12)', () => {
     expect(typeof written).toBe('string');
     expect(written.length).toBeGreaterThan(0);
 
-    await seedRaw(page, { ...BASE_STATE, contentVersion: 4, runFingerprint: written });
+    await seedRaw(page, { ...BASE_STATE, contentVersion: 5, runFingerprint: written });
     await expect(page.getByText('Willkommen zurück.')).toBeVisible();
     await expect(page.getByText('Spiel fortsetzen')).toBeVisible();
   });
@@ -161,7 +161,7 @@ test.describe('Resume-state validation (BF-12)', () => {
   }) => {
     await seedRaw(page, {
       ...BASE_STATE,
-      contentVersion: 4,
+      contentVersion: 5,
       runFingerprint: 'r3-driftedvalue',
     });
     await expectFreshStartScreen(page);
@@ -175,7 +175,7 @@ test.describe('Resume-state validation (BF-12)', () => {
     );
     await seedRaw(page, {
       ...BASE_STATE,
-      contentVersion: 4,
+      contentVersion: 5,
       runQuestionIds,
       runFingerprint: 'r3-driftedvalue',
     });

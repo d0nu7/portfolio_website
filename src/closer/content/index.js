@@ -70,6 +70,16 @@ import {
 } from './packs/chaos';
 import { LATE_NIGHT_PACK } from './packs/late-night';
 import { ROAD_TRIP_PACK, FAMILY_PACK, COLLEAGUES_PACK } from './packs/specialist';
+import {
+  CLASSIC_PRIVATE_MOMENT,
+  FIRST_DATE_PRIVATE_MOMENT,
+  DATE_NIGHT_PRIVATE_MOMENT,
+  COUPLES_PRIVATE_MOMENT,
+  FRIENDS_PRIVATE_MOMENT,
+  OLD_FRIENDS_PRIVATE_MOMENT,
+  DEEP_PRIVATE_MOMENT,
+  CHAOS_PRIVATE_MOMENT,
+} from './privateMoments';
 
 export const PACKS = {
   classic: {
@@ -88,6 +98,7 @@ export const PACKS = {
     modes: CLASSIC_MODES,
     actStyle: CLASSIC_ACT_STYLE,
     q37: CLASSIC_Q37,
+    privateMoment: CLASSIC_PRIVATE_MOMENT,
     secretAtIndex: CLASSIC_SECRET_AT_INDEX,
     routes: CLASSIC_ROUTES,
     defaultRouteId: 'full',
@@ -104,6 +115,7 @@ export const PACKS = {
     modes: FIRST_DATE_MODES,
     actStyle: FIRST_DATE_ACT_STYLE,
     q37: FIRST_DATE_Q37,
+    privateMoment: FIRST_DATE_PRIVATE_MOMENT,
     secretAtIndex: FIRST_DATE_SECRET_AT_INDEX,
     routes: FIRST_DATE_ROUTES,
     defaultRouteId: 'quick',
@@ -120,6 +132,7 @@ export const PACKS = {
     modes: DATE_NIGHT_MODES,
     actStyle: DATE_NIGHT_ACT_STYLE,
     q37: DATE_NIGHT_Q37,
+    privateMoment: DATE_NIGHT_PRIVATE_MOMENT,
     secretAtIndex: DATE_NIGHT_SECRET_AT_INDEX,
     routes: DATE_NIGHT_ROUTES,
     defaultRouteId: 'standard',
@@ -136,6 +149,7 @@ export const PACKS = {
     modes: COUPLES_MODES,
     actStyle: COUPLES_ACT_STYLE,
     q37: COUPLES_Q37,
+    privateMoment: COUPLES_PRIVATE_MOMENT,
     secretAtIndex: COUPLES_SECRET_AT_INDEX,
     routes: COUPLES_ROUTES,
     defaultRouteId: 'quick',
@@ -152,6 +166,7 @@ export const PACKS = {
     modes: FRIENDS_MODES,
     actStyle: FRIENDS_ACT_STYLE,
     q37: FRIENDS_Q37,
+    privateMoment: FRIENDS_PRIVATE_MOMENT,
     secretAtIndex: FRIENDS_SECRET_AT_INDEX,
     routes: FRIENDS_ROUTES,
     defaultRouteId: 'standard',
@@ -168,6 +183,7 @@ export const PACKS = {
     modes: OLD_FRIENDS_MODES,
     actStyle: OLD_FRIENDS_ACT_STYLE,
     q37: OLD_FRIENDS_Q37,
+    privateMoment: OLD_FRIENDS_PRIVATE_MOMENT,
     secretAtIndex: OLD_FRIENDS_SECRET_AT_INDEX,
     routes: OLD_FRIENDS_ROUTES,
     defaultRouteId: 'standard',
@@ -184,6 +200,7 @@ export const PACKS = {
     modes: DEEP_MODES,
     actStyle: DEEP_ACT_STYLE,
     q37: DEEP_Q37,
+    privateMoment: DEEP_PRIVATE_MOMENT,
     secretAtIndex: DEEP_SECRET_AT_INDEX,
     routes: DEEP_ROUTES,
     defaultRouteId: 'standard',
@@ -200,6 +217,7 @@ export const PACKS = {
     modes: CHAOS_MODES,
     actStyle: CHAOS_ACT_STYLE,
     q37: CHAOS_Q37,
+    privateMoment: CHAOS_PRIVATE_MOMENT,
     secretAtIndex: CHAOS_SECRET_AT_INDEX,
     routes: CHAOS_ROUTES,
     defaultRouteId: 'quick',

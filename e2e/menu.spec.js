@@ -61,7 +61,11 @@ test.describe('In-game menu', () => {
   });
 
   test('the menu is reachable from a Question-37 phase too', async ({ page }) => {
-    await seedAndResume(page, { phase: 'q37intro', secretAsked: [true, true] });
+    await seedAndResume(page, {
+      phase: 'q37intro',
+      privateMomentStatus: 'armed',
+      privateQuestionState: ['asked', 'asked'],
+    });
     await page.getByRole('button', { name: 'Menü' }).click();
     await expect(page.getByRole('heading', { name: 'Menü' })).toBeVisible();
   });

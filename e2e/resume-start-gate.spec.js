@@ -29,17 +29,17 @@ async function seedRaw(page, value) {
 // deliberately missing `hasStarted` -- exactly what a save written before
 // this fix existed looks like.
 const LEGACY_BASE = {
-  stateVersion: 1,
-  contentVersion: 4,
+  stateVersion: 2,
+  contentVersion: 5,
   lang: 'de',
   players: ['', ''],
   modeId: 'original',
   timerEnabled: true,
   pending: 0,
   breakAct: 0,
-  secretSeen: [false, false],
-  hasSecretQuestion: [null, null],
-  secretAsked: [null, null],
+  privateMomentStatus: 'not-started',
+  privateQuestionState: ['unseen', 'unseen'],
+  consentDecisions: [null, null],
   starterOffset: 0,
   actStartedAt: null,
   completed: false,

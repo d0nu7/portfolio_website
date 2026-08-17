@@ -155,7 +155,32 @@ const COPY = {
   /* acts ------------------------------------------------------------------- */
   complete: { de: 'ABGESCHLOSSEN', en: 'COMPLETE' },
 
-  /* secret question -------------------------------------------------------- */
+  /* private moments -------------------------------------------------------- */
+  privateOfferTitle: { de: 'KURZ PRIVAT', en: 'A PRIVATE MOMENT' },
+  showPrivateCards: { de: 'Karten zeigen', en: 'Show cards' },
+  skipPrivateForBoth: { de: 'Für beide auslassen', en: 'Skip for both' },
+  privateHandoffBody: (lang, who) =>
+    lang === 'de'
+      ? `Gib das Handy an ${who}. Erst ${who} tippt weiter. Wenn ein privater Blick auf den Bildschirm gerade nicht möglich ist, lasst diesen Moment aus.`
+      : `Pass the phone to ${who}. Only ${who} should continue. If they cannot view the screen privately right now, skip this moment.`,
+  privateSecondHandoffBody: (lang, who) =>
+    lang === 'de'
+      ? `Gib das Handy an ${who}. Was die erste Person gesehen oder gewählt hat, bleibt verborgen.`
+      : `Pass the phone to ${who}. What the first person saw or chose remains private.`,
+  privateReturnTitle: { de: 'ZURÜCK ZU EUCH', en: 'BACK TOGETHER' },
+  noPrivateToday: { de: 'Heute nicht', en: 'Not today' },
+  privateUseTitle: { de: 'WIEDER GEMEINSAM', en: 'BACK TOGETHER' },
+  privateQuestionCheck: {
+    de: 'Was ist aus deiner vorgemerkten Frage geworden?',
+    en: 'What happened to the question you saved?',
+  },
+  privateAlreadyAsked: { de: 'Schon gestellt', en: 'Already asked' },
+  privateStillOpen: { de: 'Noch offen', en: 'Still open' },
+  privateDiscard: { de: 'Verwerfen', en: 'Let it go' },
+  privateFinaleTitle: { de: 'FREIWILLIGES FINALE', en: 'OPTIONAL FINALE' },
+  startFinale: { de: 'Finale beginnen', en: 'Start finale' },
+  continueTo: (lang, who) =>
+    lang === 'de' ? `Weiter zu ${who}` : `Continue to ${who}`,
   passPhoneTo: (lang, who) =>
     lang === 'de' ? `GIB DAS HANDY AN ${who.toUpperCase()}` : `PASS THE PHONE TO ${who.toUpperCase()}`,
   iAm: (lang, who) => (lang === 'de' ? `Ich bin ${who}` : `I'm ${who}`),
@@ -189,7 +214,7 @@ const COPY = {
   // Route totals vary, so the completion line is generated dynamically.
   allThirtySix: (lang, total) =>
     lang === 'de' ? `Das waren alle ${total}.` : `That's all ${total}.`,
-  secretSummary: (lang, count) =>
+  privateQuestionSummary: (lang, count) =>
     lang === 'de'
       ? count === 1
         ? 'Eine vorgemerkte Frage ist noch zu klären.'
@@ -231,7 +256,8 @@ const COPY = {
   end: { de: 'Ende', en: 'End' },
 
   /* per-pack consent gates --------------------------------------------- */
-  consentAgree: { de: 'Ich stimme zu', en: 'I agree' },
+  consentAgree: { de: 'Ja, freiwillig', en: 'Yes, voluntarily' },
+  consentAcceptedTitle: { de: 'BEIDE HABEN GEWÄHLT', en: 'BOTH HAVE CHOSEN' },
   // Its separate label and equal styling keep decline calm and unambiguous.
   endHere: { de: 'Hier enden', en: 'End here' },
   consentDeclinedTitle: {
@@ -298,7 +324,6 @@ const COPY = {
       start: { de: 'Los geht’s', en: "Let's begin" },
       actI: { de: 'Akt I geschafft', en: 'Act I complete' },
       actII: { de: 'Akt II geschafft', en: 'Act II complete' },
-      secret: { de: 'Ein Stück näher', en: 'One step closer' },
       finale: { de: 'Dieser Moment gehört euch', en: 'This moment is yours' },
     };
     return labels[stage]?.[lang] || labels.start[lang];
@@ -316,10 +341,6 @@ const COPY = {
       actII: {
         de: 'Das Spiel wird leiser. Euer Gespräch bleibt.',
         en: 'The game gets quieter. Your conversation remains.',
-      },
-      secret: {
-        de: 'Eine private Frage wartet auf den richtigen Moment.',
-        en: 'A private question is waiting for the right moment.',
       },
       finale: {
         de: 'Kein Score. Nur das, was zwischen euch entstanden ist.',

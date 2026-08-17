@@ -31,10 +31,16 @@ export function loadSavedGame(storage) {
 export function persistGameState(storage, state) {
   if (!storage || !state) return;
   try {
+    const resumableEntryConsent = state.phase.startsWith('consentGate');
     if (state.completed) {
       storage.removeItem(GAME_STORAGE_KEY);
-    } else if (state.hasStarted && state.phase !== 'start') {
-      storage.setItem(GAME_STORAGE_KEY, JSON.stringify(state));
+    } else if ((state.hasStarted || resumableEntryConsent) && state.phase !== 'start') {
+      // Consent choices exist only long enough to evaluate a complete private
+      // gate. They are deliberately excluded from durable storage; a reload
+      // during a partial gate restarts that gate for both people.
+      const persisted = { ...state };
+      delete persisted.consentDecisions;
+      storage.setItem(GAME_STORAGE_KEY, JSON.stringify(persisted));
     }
   } catch (error) {
     // Storage is optional; the in-memory game remains usable.

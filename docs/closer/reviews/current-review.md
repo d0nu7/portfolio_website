@@ -1,12 +1,12 @@
 # CLOSER – current holistic review
 
 **Reviewed:** 17 August 2026
-**Scope:** current `main` release candidate after pack-library and final UI polish
+**Scope:** current `main` release candidate after pack-library, FR-005 Private Moments, consent/persistence hardening, and FR-018–020 research closeout
 **Detailed trackers:** [bugs](bugs.md) · [feature requests](feature-requests.md) · [refactoring roadmap](../engineering/refactoring-roadmap.md)
 
 ## Overall assessment
 
-CLOSER is a coherent, testable shared-device conversation product. The current branch completes the configurable pack library, makes Road Trip, Family, and Colleagues playable, and introduces a deliberately sparse pack-aware PLAYFUL rollout. The core experience still keeps the phone secondary: answers are spoken, Pass is free, timers never advance the game, and high-intensity or professionally sensitive packs do not inherit pressure actions.
+CLOSER is a coherent, testable shared-device conversation product. The current branch completes pack-specific Private Moments and finales, makes Late Night's individual readiness choices transient and collectively resolved, and hardens private resume/persistence behavior without storing spoken answers or private free text. The core experience still keeps the phone secondary: answers are spoken, Pass is free, timers never advance the game, and high-intensity or professionally sensitive packs do not inherit pressure actions.
 
 The current main candidate passes its automated release gate. Public confidence still benefits from deployment smoke checks, broader physical Android/iOS coverage, and moderated sessions. RaDi has accepted the initial Android check and decided not to commission professional legal advice or offline support at the current stage; those decisions should be reopened only after a material product or risk change.
 
@@ -30,6 +30,9 @@ The current main candidate passes its automated release gate. Public confidence 
 - Milestone scenes use their original compact 2.1/2.5-second duration again;
   only the final scene/overlay fade is slowed, avoiding the previous stretched
   movement and hold phases.
+- FR-005 pack-specific Private Moments are implemented for eligible Standard/Full routes with shared opt-out, named A/B covers, asymmetric cards, route-specific use/discard points, and dedicated finales. Quick remains free of Private Moments.
+- Late Night entry and Act-II gates retain individual decisions only in memory, reveal only a collective result, restart partial gates from A after reload, and use a direct no-action finale instead of generic Question 37.
+- The FR-018–020 evidence programme is complete and citation-audited. Its candidate banks and 37 cross-pack proposals remain research/editorial inputs, not approved runtime content.
 
 ## Product review by pack
 
@@ -57,6 +60,7 @@ These are intentionally not blockers for closing this branch:
 3. **Real sessions:** route duration, action fatigue, pressure, passing frequency, and attention to the phone cannot be validated mechanically.
 4. **Physical platforms:** Android installed PWA, iOS Add to Home Screen, safe areas, system navigation, VoiceOver, TalkBack, and WebKit remain device checks.
 5. **Infrastructure:** offline support is not planned for the current product. The custom-subdomain question remains an explicit owner decision.
+6. **Research disposition:** decide whether to advance conversation-only POWER, BY CHOICE to specialist review, whether to fund a closed SLOW BURN prototype, and which FR-020 proposals should enter separate editorial changes. Public SLOW BURN release remains a no-go.
 
 ## Verification contract
 

@@ -1,6 +1,6 @@
 # CLOSER – complete question catalog DE/EN
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Status:** Editorial source of truth for implemented packs
 **Scope:** 12 packs · 432 master questions · German and English · curated duration routes · pack-specific finales
 
@@ -31,27 +31,126 @@ In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `S/F
 
 `DEEP` intentionally has no Quick route. `COLLEAGUES` intentionally has no Full route until user sessions demonstrate a credible, non-intrusive use case. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts. The 36 Classic rows are immutable and protected by an automated content fingerprint.
 
-### Privately saved question
+### Private Moments (FR-005)
 
-In Standard and Full, each person privately receives this choice unless the pack explicitly sets `privateMoment: 'none'`. Quick intentionally omits the multi-step handoff. Late Night, Road Trip, Family, and Colleagues currently opt out on every route:
+This section is the authoritative editorial catalog for the implemented Private Moment behavior and supersedes the former universal saved-question flow. Role A is the person selected to open Q1; role B is the other person. Quick has no Private Moment. Late Night’s consent/readiness gates are a separate safety mechanism and never create a secret task.
 
-- **DE:** „Denk an eine Frage, die du deinem Gegenüber später gerne stellen würdest. Sag sie nicht laut. Gib sie nirgendwo ein. Merk sie dir einfach.“
-- **EN:** “Think of one question you would like to ask the other person later. Don’t say it out loud. Don’t type it anywhere. Just remember it.”
+| Pack | Decision | Routes | Trigger | Use and irreversible discard |
+|---|---|---|---|---|
+| Classic | optional | Full | before Q28 | resolve saved-question categories after Q36, then dynamic Question 37; discard on resolution/end |
+| First Date | optional | Standard, Full | after Act I | optional A/B finale; discard at finale/end |
+| Date Night | optional | Standard, Full | after Act I | optional A/B finale; discard at finale/end |
+| Couples | optional | Standard, Full | after Act I | shared use after Act II; discard immediately afterward |
+| Friends | optional | Standard, Full | after Act II | optional A/B finale; discard at finale/end |
+| Old Friends | optional | Standard only | after Act I | immediate shared use; discard immediately afterward |
+| Deep | optional | Standard, Full | after Act I | shared close after Act II; discard immediately afterward |
+| Chaos | optional | Standard, Full | before Q16 | supplement Q16; discard when leaving Q16 |
+| Late Night | consent/readiness | Quick, Standard, Full | entry and after Act I | collective result only; no generic Question 37 |
+| Road Trip | none | all | — | — |
+| Family | none | all | — | — |
+| Colleagues | none | all available routes | — | — |
 
-Equal alternative: **„Heute keine“ / “Not today”**. The pack-specific Question 37 accounts for whether zero, one, or two genuinely saved questions remain open.
+Shared optional-moment copy:
 
-**Authoritative state contract:** „Heute keine“ must not be stored as `false` in `secretAsked`; there, `false` means an existing question is still open. The current implementation correctly represents this with two separate values per person:
+- **Offer DE:** „Gleich sieht jede Person eine andere, freiwillige Karte. Jede Person kann sie im Kopf behalten oder „Heute nicht“ wählen. Keine Wahl wird der anderen Person angezeigt. Gebt nichts ein und macht keinen Screenshot.“
+- **Offer EN:** “Each person will see a different optional card. Each person may keep it in mind or choose ‘Not today.’ Their choice will not be shown to the other person. Do not type anything or take a screenshot.”
+- **Shared actions:** **Karten zeigen / Show cards**, **Für beide auslassen / Skip for both**, and on each private card **Heute nicht / Not today**.
+- **First handoff DE/EN:** „Gib das Handy an {who}. Erst {who} tippt weiter. Wenn ein privater Blick auf den Bildschirm gerade nicht möglich ist, lasst diesen Moment aus.“ / “Pass the phone to {who}. Only {who} should continue. If they cannot view the screen privately right now, skip this moment.”
+- **Second handoff DE/EN:** „Gib das Handy an {who}. Was die erste Person gesehen oder gewählt hat, bleibt verborgen.“ / “Pass the phone to {who}. What the first person saw or chose remains private.”
+- **Return DE:** „Legt das Handy wieder zwischen euch. Niemand muss sagen, was auf der eigenen Karte stand oder welche Wahl getroffen wurde.“
+- **Return EN:** “Put the phone back between you. Nobody needs to say what their card said or which choice they made.”
 
-- `hasSecretQuestion: true | false | null` – was a question saved at all?
-- `secretAsked: true | false | null` – has the person already asked their own saved question during the conversation?
+No answer or private free text enters application state. Non-Classic accept/decline choices produce identical durable state. Classic stores only `none | pending | asked | discarded`, never the saved question. Late Night individual choices are in-memory only and excluded from local storage. Resume and background return direct private content to a named handoff cover; an incomplete Late Night gate restarts from A. Early exit and completion scrub remaining private categories.
 
-Semantically, `hasSecretQuestion === false` → `none`; existing question plus `secretAsked === false` → `pending`; and existing question plus `secretAsked === true` → `asked`. A later enum refactor to `none | pending | asked` is possible but not required. The current model derives the open questions and three branches as follows:
+#### Classic — `classic-saved-questions`
 
-- `neither`: two saved questions remain open;
-- `one`: exactly one saved question remains open;
-- `both`: no saved question remains open; only the optional pack-specific bonus question appears. This includes questions already asked or explicitly declined. If both people selected **Heute keine**, the UI may additionally show the existing no-secret copy.
+- **A DE:** „Denk an etwas, das {other} heute gesagt hat und worüber du ehrlich neugierig bist. Formuliere im Kopf eine offene Nachfrage dazu. Sag sie nicht laut und gib sie nirgends ein. Du darfst sie später stellen oder jederzeit verwerfen.“
+- **A EN:** “Think of something {other} said tonight that made you genuinely curious. Form one open follow-up question in your mind. Do not say it aloud or type it anywhere. You may ask it later or discard it at any time.”
+- **B DE:** „Denk an eine Seite von {other}s Sicht, die heute noch keinen Raum hatte. Formuliere im Kopf eine offene Frage, die keine Antwort unterstellt. Sag sie nicht laut und gib sie nirgends ein. Du darfst sie später stellen oder jederzeit verwerfen.“
+- **B EN:** “Think of a part of {other}’s perspective that has not had room tonight. Form one open question that does not assume its answer. Do not say it aloud or type it anywhere. You may ask it later or discard it at any time.”
+- **Private check DE/EN:** „Was ist aus deiner vorgemerkten Frage geworden?“ / “What happened to the question you saved?” Actions: **Schon gestellt / Already asked**, **Noch offen / Still open**, **Verwerfen / Let it go**.
+- **Two pending DE:** „Zwei vorgemerkte Fragen sind noch offen. Ihr könnt hier enden. Wenn ihr beide weitermachen möchtet, beginnt {A}; vor {B}s Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf ohne Begründung ausgelassen werden.“
+- **Two pending EN:** “Two saved questions are still open. You can end here. If you both want to continue, {A} goes first; you will choose again before {B}’s question. Either question or answer may be passed without explanation.”
+- **One pending DE:** „Eine vorgemerkte Frage ist noch offen. {who} darf sie {other} stellen, wenn ihr beide weitermachen möchtet. Die Frage und die Antwort dürfen ausgelassen werden.“
+- **One pending EN:** “One saved question is still open. {who} may ask {other} if you both want to continue. Either the question or the answer may be passed.”
+- **Turn DE/EN:** „{who}, du darfst deine vorgemerkte Frage stellen. {other} darf ohne Begründung passen.“ / “{who}, you may ask the question you saved. {other} may pass without explanation.”
+- **None pending DE:** „Keine vorgemerkte Frage ist mehr offen. Ihr könnt hier enden – oder gemeinsam eine freiwillige letzte Frage nehmen. Keine Antwort ist geschuldet.“
+- **None pending EN:** “No saved question remains open. You can end here—or take one optional shared closer. No answer is owed.”
+- **Bonus DE/EN:** „Welche Frage hätte dieses Gespräch gut abgerundet? Ihr müsst sie nicht beantworten.“ / “What question would have rounded out this conversation well? You do not have to answer it.”
 
-`Question 37` may remain as the internal mechanic name for packs that support the saved-question finale. Full displays **FRAGE 37 / QUESTION 37**; Standard uses the neutral label **FINALE**. Quick ends after its last regular question without a private handoff, and packs with `privateMoment: 'none'` use their own direct finale. Listed response cards are optional listening cues and do not count as questions.
+#### First Date — `first-date-curiosities`
+
+- **A DE:** „Denk an eine leichte Nachfrage zu etwas, wofür sich {other} begeistert oder worauf sich {other} freut. Sie darf neugierig sein, aber nichts über Anziehung, Zustimmung oder ein weiteres Date voraussetzen. Behalte sie im Kopf; gib sie nirgends ein.“
+- **A EN:** “Think of one light follow-up about something {other} enjoys or is looking forward to. It may be curious, but it must not assume attraction, consent, or another date. Keep it in mind; do not type it anywhere.”
+- **B DE:** „Denk an eine leichte Frage zu einer alltäglichen Vorliebe von {other} – etwa zu Essen, Routinen, Orten oder kleinen Freuden. Mach daraus keinen Kompatibilitätstest. Behalte sie im Kopf; gib sie nirgends ein.“
+- **B EN:** “Think of one light question about an everyday preference of {other}—such as food, routines, places, or small pleasures. Do not turn it into a compatibility test. Keep it in mind; do not type it anywhere.”
+- **Finale DE:** „Wenn ihr möchtet, könnt ihr die zwei verschiedenen privaten Fragen jetzt nacheinander nutzen. {A} beginnt mit einer Nachfrage zu einer Begeisterung; danach kann {B} eine Frage zu einer Alltagsvorliebe stellen. Jede Frage und jede Antwort darf ausgelassen werden. Keine Antwort verspricht ein weiteres Date.“
+- **Finale EN:** “If you like, you may use the two different private questions now. {A} begins with a follow-up about an interest; {B} may then ask about an everyday preference. Either question or answer may be passed. No answer promises another date.”
+- **Each turn DE/EN:** „{who}, wenn du eine Frage behalten hast, kannst du sie jetzt stellen. {other} darf ohne Begründung passen.“ / “{who}, if you kept a question, you may ask it now. {other} may pass without explanation.”
+- **Skipped DE/EN:** „Ihr könnt hier enden. Nichts aus diesem Gespräch verspricht ein weiteres Date.“ / “You can end here. Nothing in this conversation promises another date.”
+
+#### Date Night — `date-night-appreciation`
+
+- **A DE:** „Wähle eine konkrete, nicht körperbewertende Sache, die du heute an {other}s Art, Aufmerksamkeit oder Ausstrahlung schätzt. Du kannst sie im Finale benennen. Ein Kompliment ist keine Einladung zu mehr Nähe.“
+- **A EN:** “Choose one specific, non-body-evaluating thing you appreciate about {other}’s manner, attention, or presence tonight. You may name it in the finale. A compliment is not an invitation to greater intimacy.”
+- **B DE:** „Wähle ein kleines Detail, das ein mögliches künftiges Date angenehm machen könnte – eine Stimmung, einen Ortstyp, ein Essen, eine Aktivität oder etwas anderes. Behalte es als Möglichkeit, nicht als Einladung oder Versprechen.“
+- **B EN:** “Choose one small detail that could make a possible future date enjoyable—a mood, type of place, food, activity, or something else. Hold it as a possibility, not an invitation or promise.”
+- **Finale DE:** „Wenn ihr möchtet, kann {A} zuerst die Wertschätzung teilen; danach kann {B} das mögliche Detail für ein künftiges Date nennen. Beides darf privat bleiben. Niemand muss reagieren oder zustimmen; daraus entstehen weder ein Plan noch Zustimmung zu Nähe.“
+- **Finale EN:** “If you like, {A} may share the appreciation first; {B} may then name the possible future-date detail. Either may remain private. Nobody has to respond or agree; neither creates a plan or consent to intimacy.”
+- **A turn DE/EN:** „{who}, wenn du eine Wertschätzung behalten hast, kannst du sie jetzt in einem Satz teilen. {other} muss sie nicht erwidern.“ / “{who}, if you kept an appreciation in mind, you may share it in one sentence. {other} does not have to reciprocate.”
+- **B turn DE/EN:** „{who}, wenn du ein mögliches Detail behalten hast, kannst du es jetzt nennen. Es ist kein Plan und keine Einladung.“ / “{who}, if you kept a possible detail in mind, you may name it now. It is not a plan or invitation.”
+- **Skipped DE/EN:** „Ihr könnt hier enden. Was ihr geteilt habt, ist keine Einladung zu mehr Nähe und kein Plan für später.“ / “You can end here. What you shared is not an invitation to greater intimacy or a plan for later.”
+
+#### Couples — `couples-listening`
+
+- **A DE:** „Nimm dir für Akt II vor, auf eine schwierige Antwort zuerst mit Zuhören zu reagieren: kurz spiegeln oder nachfragen, bevor du etwas lösen möchtest. Du musst dieses Vorhaben nicht ankündigen.“
+- **A EN:** “For Act II, intend to meet a difficult answer with listening first: briefly reflect or ask before trying to solve anything. You do not need to announce this intention.”
+- **B DE:** „Denk an eine konkrete Stärke, die {other} in schwierige gemeinsame Momente einbringt. Du kannst sie am Ende von Akt II in einem Satz benennen. Nutze sie nicht, um etwas Schwieriges kleinzureden oder eine Gegenleistung zu erwarten.“
+- **B EN:** “Think of one specific quality {other} brings to difficult moments between you. You may name it in one sentence at the end of Act II. Do not use it to minimize anything difficult or expect something in return.”
+- **Use DE:** „Bevor ihr weitergeht: Wer eine Stärke im Kopf behalten hat, kann sie jetzt in einem Satz benennen. Zuhören reicht; niemand muss erwidern. Eine Wertschätzung löscht nichts Schwieriges aus. Die private Zuhör-Intention endet hier.“
+- **Use EN:** “Before continuing: anyone who kept a quality in mind may name it in one sentence now. Listening is enough; nobody has to reciprocate. Appreciation does not erase anything difficult. The private listening intention ends here.”
+
+#### Friends — `friends-memory-celebration`
+
+- **A DE/EN:** „Denk an eine gemeinsame Erinnerung, die du im Finale gern kurz nennen würdest. Wähle etwas, das dir wichtig ist, ohne dass {other} dieselbe Bedeutung oder Version bestätigen muss.“ / “Think of one shared memory you might like to name briefly in the finale. Choose something that matters to you without requiring {other} to confirm the same meaning or version.”
+- **B DE/EN:** „Denk an etwas, das {other} heute erzählt hat und das du ehrlich mitfeiern möchtest – klein oder groß. Kein Rat, kein Vergleich und kein nächster Schritt.“ / “Think of something {other} shared tonight that you would genuinely like to celebrate—large or small. No advice, comparison, or next step.”
+- **Finale DE/EN:** „Wenn ihr möchtet, kann {A} zuerst eine gemeinsame Erinnerung nennen und sagen, was sie {A} bedeutet. Danach kann {B} etwas aus dem heutigen Gespräch würdigen. Beides darf privat bleiben; niemand muss zustimmen, erwidern oder Nähe versprechen.“ / “If you like, {A} may first name a shared memory and say what it means to {A}. {B} may then appreciate something from tonight’s conversation. Either may remain private; nobody has to agree, reciprocate, or promise closeness.”
+- **A turn DE/EN:** „{who}, wenn du eine Erinnerung behalten hast, kannst du sie jetzt nennen und sagen, was sie dir bedeutet. {other} muss dieselbe Version nicht bestätigen.“ / “{who}, if you kept a memory in mind, you may name it and say what it means to you. {other} does not have to confirm the same version.”
+- **B turn DE/EN:** „{who}, wenn du etwas aus dem Gespräch mitfeiern möchtest, kannst du es jetzt würdigen. Rat oder ein nächster Schritt sind nicht nötig.“ / “{who}, if you kept something from the conversation that you want to celebrate, you may appreciate it now. No advice or next step is needed.”
+- **Skipped DE/EN:** „Ihr könnt hier enden – oder noch eine freiwillige Frage nehmen: Was möchtest du, dass die andere Person aus diesem Gespräch über dich mitnimmt?“ / “You can end here—or take one optional final question: What would you like the other person to take away from this conversation about you?”
+
+#### Old Friends — `old-friends-memory-lenses`
+
+- **A DE/EN:** „Denk an ein konkretes sinnliches Detail aus der letzten gemeinsamen Erinnerung, über die ihr gesprochen habt – einen Ort, Klang, Gegenstand oder etwas Ähnliches. Behalte es als deine Erinnerung, nicht als Beweis. Wenn keine gemeinsame Erinnerung aufkam, wähle „Heute nicht“.“ / “Think of one concrete sensory detail from the most recent shared memory you discussed—a place, sound, object, or something similar. Hold it as your memory, not as evidence. If no shared memory came up, choose ‘Not today.’”
+- **B DE/EN:** „Denk bei derselben Erinnerung daran, wie der Moment sich für dich angefühlt hat oder was er dir heute bedeutet. Behalte es als deine Perspektive, nicht als Korrektur. Wenn keine gemeinsame Erinnerung aufkam, wähle „Heute nicht“.“ / “For that same memory, think about how the moment felt to you or what it means to you today. Hold it as your perspective, not as a correction. If no shared memory came up, choose ‘Not today.’”
+- **Immediate use DE/EN:** „Falls ihr in Akt I über eine gemeinsame Erinnerung gesprochen habt, kann {A} jetzt ein konkretes Detail nennen; danach kann {B} sagen, wie sich derselbe Moment angefühlt hat oder was er heute bedeutet. Unterschiedliche Erinnerungen dürfen nebeneinanderstehen. Ihr sucht keine richtige Version, und beides darf privat bleiben.“ / “If a shared memory came up in Act I, {A} may name one concrete detail now; {B} may then say how the same moment felt or what it means today. Different memories may stand side by side. You are not looking for the correct version, and either part may remain private.”
+
+#### Deep — `deep-listening`
+
+- **A DE/EN:** „Nimm dir für Akt II vor, nach einer intensiven Antwort zuerst in einem kurzen Satz zu spiegeln, was du verstanden hast – ohne die Person zu deuten oder zu diagnostizieren.“ / “For Act II, intend to respond to an intense answer first with one brief sentence reflecting what you understood—without interpreting or diagnosing the person.”
+- **B DE/EN:** „Nimm dir für Akt II vor, nach einer intensiven Antwort einen Moment Stille zuzulassen, bevor du nachfragst. Nutze die Stille nicht, um mehr Offenheit zu erwarten.“ / “For Act II, intend to allow a moment of silence after an intense answer before asking anything. Do not use the silence to expect greater disclosure.”
+- **Use DE/EN:** „Die privaten Zuhör-Intentionen enden hier. Nichts muss nachbesprochen, eingeordnet oder gelöst werden. Ihr könnt mit Akt III weitergehen oder das Spiel beenden.“ / “The private listening intentions end here. Nothing has to be revisited, categorized, or solved. You may continue to Act III or end the game.”
+
+#### Chaos — `chaos-private-sparks`
+
+- **A DE/EN:** „Dein privater Funke für die nächste gemeinsame Aufgabe: Das erfundene Unternehmen löst ein Problem, das wirklich niemand hat.“ / “Your private spark for the next shared task: the invented business solves a problem that nobody actually has.”
+- **B DE/EN:** „Dein privater Funke für die nächste gemeinsame Aufgabe: Das Unternehmen bekommt einen dramatisch ernsten Namen für etwas völlig Albernes.“ / “Your private spark for the next shared task: the business gets a dramatically serious name for something completely silly.”
+- **Q16 supplement DE/EN:** „Wenn du einen privaten Funken behalten hast, baue ihn ein. Niemand muss erraten, welche Karte die andere Person gesehen hat, und beide Funken dürfen ignoriert werden.“ / “If you kept a private spark, work it in. Nobody has to guess which card the other person saw, and either spark may be ignored.”
+
+#### Late Night — independent readiness and consent
+
+- **Entry A DE/EN:** „Entscheide nur für dich. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören. Deine Wahl wird zunächst niemandem angezeigt.“ / “Decide only for yourself. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time. Your choice will not initially be shown to anyone.”
+- **Entry B DE/EN:** „Entscheide unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören.“ / “Decide independently. The first choice is not shown to you and does not obligate you. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time.”
+- **Act II A DE/EN:** „Möchtest du für dich freiwillig mit ausdrücklich sexuellen Fragen über Berührung, Sex, Fantasien und Grenzen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.“ / “Do you freely want to continue with explicitly sexual questions about touch, sex, fantasies, and boundaries? You may pass any question, change your mind, or end here. No answer is consent to an action.”
+- **Act II B DE/EN:** „Entscheide erneut unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Möchtest du freiwillig mit den ausdrücklich sexuellen Fragen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.“ / “Decide independently again. The first choice is not shown to you and does not obligate you. Do you freely want to continue with the explicitly sexual questions? You may pass any question, change your mind, or end here. No answer is consent to an action.”
+- **Actions DE/EN:** **Ja, freiwillig / Yes, voluntarily** and **Hier enden / End here**, with equal visual prominence.
+- **Entry accepted DE/EN:** „Ihr habt beide unabhängig gewählt, LATE NIGHT zu starten. Das ist nur Zustimmung zum Gespräch, niemals zu einer Handlung.“ / “You both independently chose to start LATE NIGHT. This is consent only to the conversation, never to an action.”
+- **Act II accepted DE/EN:** „Ihr habt beide unabhängig gewählt, mit Akt II fortzufahren. Jede einzelne Frage bleibt freiwillig; keine Antwort ist Zustimmung zu einer Handlung.“ / “You both independently chose to continue to Act II. Every individual question remains optional; no answer is consent to an action.”
+- **Entry declined DE/EN:** „Alles gut. LATE NIGHT startet nicht. Niemand muss erklären, wer beendet hat oder warum.“ / “All good. LATE NIGHT will not start. Nobody has to explain who ended it or why.”
+- **Act II declined DE/EN:** „Alles gut. LATE NIGHT endet hier, bevor die expliziteren Fragen beginnen. Niemand muss erklären, wer beendet hat oder warum.“ / “All good. LATE NIGHT ends here before the more explicit questions begin. Nobody has to explain who ended it or why.”
+- **Direct finale DE/EN:** „Damit endet LATE NIGHT. Was ihr gesagt habt, ist Information – keine Zustimmung zu einer Handlung. Alles Weitere braucht außerhalb des Spiels eine konkrete, freiwillige und jederzeit widerrufbare Zustimmung.“ / “This is the end of LATE NIGHT. What you said is information—not consent to an action. Anything further requires specific, voluntary, and withdrawable consent outside the game.”
+
+Full displays **FRAGE 37 / QUESTION 37** only for Classic’s saved-question finale. Standard uses **FINALE** for optional pack finales. Listed response cards are optional listening cues and do not count as questions.
 
 The stated durations are **pilot ranges**, not promises. They must be calibrated through real user testing and must never trigger automatic progress or visible time pressure.
 
@@ -124,11 +223,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 
 ### Question 37
 
-| Case | German | English |
-|---|---|---|
-| `neither` – beide vorgemerkten Fragen sind noch offen | Stellt euch nacheinander eure vorgemerkten Fragen. | Take turns asking the questions you saved for later. |
-| `one` – genau eine ist noch offen | **[Name]**, stell **[anderer Name]** deine vorgemerkte Frage. | **[Name]**, ask **[other name]** the question you saved for later. |
-| `both` – beide wurden bereits gestellt oder keine ist mehr offen | Stellt die Frage, von der ihr euch gewünscht hättet, dass sie heute Abend vorgekommen wäre. | Ask the question you wish had appeared tonight. |
+Classic Full uses the categorical saved-question finale defined in [Private Moments (FR-005)](#private-moments-fr-005). Classic Quick and Standard have no Private Moment; Quick ends directly and Standard uses its ordinary shared finale.
 
 ---
 
@@ -198,16 +293,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 
 ### Question 37
 
-
-- **`neither` / both saved questions remain open**
-  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen – ohne Erwartungsdruck.“
-  - EN: “Take turns asking the questions you saved for later — without pressure.”
-- **`one` / one saved question remains open**
-  - DE: „{who}, stell {other} deine vorgemerkte Frage – ohne Erwartungsdruck.“
-  - EN: “{who}, ask {other} the question you saved for later — without pressure.”
-- **`both` / no saved question remains open; optional bonus question**
-  - DE: „Stellt euch noch eine Frage, die diesen ersten Abend gut abrundet.“
-  - EN: “Ask each other one more question that would bring this first evening to a good close.”
+First Date Standard and Full use the two-turn interest/everyday-preference finale defined in [Private Moments (FR-005)](#private-moments-fr-005). Quick ends directly.
 
 ---
 
@@ -277,16 +363,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 
 ### Question 37
 
-
-- **`neither` / both saved questions remain open**
-  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen, wenn es sich für euch gut anfühlt.“
-  - EN: “Take turns asking the questions you saved, if that feels good to both of you.”
-- **`one` / one saved question remains open**
-  - DE: „{who}, stell {other} deine vorgemerkte Frage, wenn es sich für euch gut anfühlt.“
-  - EN: “{who}, ask {other} the question you saved, if that feels good to both of you.”
-- **`both` / no saved question remains open; optional bonus question**
-  - DE: „Stellt euch noch eine Frage, die den Funken dieses Abends mit in morgen nimmt.“
-  - EN: “Ask each other one more question that carries tonight’s spark into tomorrow.”
+Date Night Standard and Full use the two-turn appreciation/future-date-detail finale defined in [Private Moments (FR-005)](#private-moments-fr-005). Quick ends directly.
 
 ---
 
@@ -356,16 +433,7 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 
 ### Question 37
 
-
-- **`neither` / both saved questions remain open**
-  - DE: „Stellt euch nacheinander eure vorgemerkten Fragen. Zuhören reicht; ihr müsst nichts sofort lösen.“
-  - EN: “Take turns asking the questions you saved. Listening is enough; nothing has to be solved now.”
-- **`one` / one saved question remains open**
-  - DE: „{who}, stell {other} deine vorgemerkte Frage. Zuhören reicht; ihr müsst nichts sofort lösen.“
-  - EN: “{who}, ask {other} the question you saved. Listening is enough; nothing has to be solved now.”
-- **`both` / no saved question remains open; optional bonus question**
-  - DE: „Stellt euch noch eine Frage, die euch auch morgen an etwas Wertvolles zwischen euch erinnert.“
-  - EN: “Ask each other one more question that will remind you tomorrow of something valuable between you.”
+Couples Standard and Full use the private listening/quality moment after Acts I and II as defined in [Private Moments (FR-005)](#private-moments-fr-005); it does not feed Question 37. Quick has no Private Moment.
 
 ---
 
@@ -435,15 +503,9 @@ The stated durations are **pilot ranges**, not promises. They must be calibrated
 - After Q21 or Q24: **VALIDATE** – „Keine Lösung nötig. Zeig zuerst, dass du es gehört hast.“ / “No solution is needed. First, show that you heard them.”
 - After Q36: **REFLECT** – „Sag in einem Satz, was du an der Antwort verstanden hast.“ / “In one sentence, say what you understood from the answer.”
 
-### FRIENDS – dynamic Q37 copy
+### FRIENDS – Private Moment finale
 
-The keys follow the existing pack structure: `neither` means both saved questions remain; `one` means exactly one remains; `both` means no saved question remains and the displayed question is an optional bonus.
-
-| Case | German | English |
-|---|---|---|
-| `neither` | Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are waiting. If it feels right, ask them one at a time now. No answer is owed. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
-| `both` | Was möchtest du, dass die andere Person aus diesem Gespräch über dich mitnimmt? | What would you like the other person to take away from this conversation about you? |
+Friends Standard and Full use the memory/celebration finale defined in [Private Moments (FR-005)](#private-moments-fr-005). Quick ends directly.
 
 ---
 
@@ -513,13 +575,9 @@ The keys follow the existing pack structure: `neither` means both saved question
 - After Q20 or Q30: **VALIDATE** – „Du musst nichts rechtfertigen oder reparieren. Zeig zuerst, dass du es gehört hast.“ / “You do not need to justify or repair anything. First, show that you heard them.”
 - After Q34: **FOLLOW UP** – „Was wäre ein kleiner, realistischer erster Schritt?“ / “What would be one small, realistic first step?”
 
-### OLD FRIENDS – dynamic Q37 copy
+### OLD FRIENDS – Private Moment
 
-| Case | German | English |
-|---|---|---|
-| `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Keine Antwort ist geschuldet. | Two saved questions are still open. If it feels right, ask them one at a time. No answer is owed. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
-| `both` | Welche Seite der Person vor dir macht dich heute neugierig – unabhängig davon, wie es weitergeht? | What side of the person in front of you makes you curious today, regardless of what happens next? |
+Old Friends Standard uses the immediate detail/meaning moment defined in [Private Moments (FR-005)](#private-moments-fr-005). Quick and Full have no Private Moment.
 
 ---
 
@@ -591,13 +649,9 @@ The keys follow the existing pack structure: `neither` means both saved question
 - After Q17, Q19 or Q24: **VALIDATE** – „Keine Lösung und keine Bewertung. Zeig zuerst, dass du es gehört hast.“ / “No solution and no judgment. First, show that you heard them.”
 - After Q34: **REFLECT** – „Sag in einem Satz, was du künftig beachten möchtest.“ / “In one sentence, say what you would like to keep in mind from now on.”
 
-### DEEP – dynamic Q37 copy
+### DEEP – Private Moment
 
-| Case | German | English |
-|---|---|---|
-| `neither` | Zwei vorgemerkte Fragen sind noch offen. Wenn es sich für euch gut anfühlt, stellt sie jetzt nacheinander. Jede Frage und jede Antwort bleibt freiwillig. | Two saved questions are still open. If it feels right, ask them one at a time now. Every question and every answer remains optional. |
-| `one` | `{who}`, wenn es sich für dich gut anfühlt: Stell `{other}` jetzt deine vorgemerkte Frage. Eine Antwort bleibt freiwillig. | `{who}`, if it feels right, ask `{other}` the question you saved. Answering is still optional. |
-| `both` | Wann hast du dich in diesem Gespräch am meisten verstanden gefühlt – und wodurch? | When did you feel most understood during this conversation, and what made you feel that way? |
+Deep Standard and Full use the listening-intention moment defined in [Private Moments (FR-005)](#private-moments-fr-005). Deep has no Quick route.
 
 ---
 
@@ -660,37 +714,7 @@ The keys follow the existing pack structure: `neither` means both saved question
 
 ### Question 37
 
-The branches reflect whether each person has already asked their own saved question. If someone selected „Heute keine“, that person has no open question. If none remain in total, only the optional bonus question is offered. **Hier enden / End here** always remains visible next to **Weiter**.
-
-#### `neither` – both saved questions remain open
-
-**DE**
-
-> Zwei vorgemerkte Fragen warten noch. Wenn es sich für euch beide gut anfühlt, stellt sie nacheinander. Jede Frage und jede Antwort darf ohne Begründung ausgelassen werden – und ihr könnt jederzeit hier enden.
-
-**EN**
-
-> Two saved questions are still waiting. If continuing feels good to both of you, ask them one at a time. Either question or answer may be passed without explanation — and you can end here at any time.
-
-#### `one` – exactly one saved question remains open
-
-**DE**
-
-> Eine vorgemerkte Frage wartet noch. Wenn es sich für euch beide weiterhin gut anfühlt, darf **{questionOwner}** sie **{otherPerson}** jetzt stellen. **{otherPerson}** darf sie ohne Begründung überspringen. Ihr könnt auch einfach hier enden.
-
-**EN**
-
-> One saved question is still waiting. If continuing still feels good to both of you, **{questionOwner}** may ask **{otherPerson}** now. **{otherPerson}** may pass without giving a reason. You can also simply end here.
-
-#### `both` – no saved question remains open
-
-**DE**
-
-> Ihr könnt hier enden – oder gemeinsam eine freiwillige Bonusfrage nehmen: Welche Regel sollte euer nächstes absurd gutes Abenteuer haben?
-
-**EN**
-
-> You can end here—or take one optional bonus question together: What rule should your next absurdly good adventure have?
+Chaos Standard and Full use the two private Q16 constraints defined in [Private Moments (FR-005)](#private-moments-fr-005); they are discarded when Q16 ends and do not change the ordinary finale. Quick ends directly.
 
 ---
 
@@ -783,37 +807,7 @@ Before explicit questions about touch, sex, fantasies, and kinks appear, both pe
 
 ### Question 37
 
-**Inactive editorial archive:** Late Night currently sets `privateMoment: 'none'` and must not enter a saved-question or secret-handoff flow on any route. The bilingual variants below are preserved verbatim for editorial traceability but must not be rendered. Any future Late Night finale still needs explicit opt-in, an equally prominent end option, and the repeated rule that **an answer is never consent to an action**.
-
-#### `neither` – both saved questions remain open
-
-**DE**
-
-> Zwei vorgemerkte Fragen warten noch. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, stellt ihr sie nacheinander; vor der zweiten Frage entscheidet ihr erneut. Jede Frage und jede Antwort darf ausgelassen werden. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
-
-**EN**
-
-> Two saved questions are still waiting. You can end here. Only if you both freely want to continue, ask them one at a time and choose again before the second question. Either question or answer may be passed. An answer is information, never consent to an action.
-
-#### `one` – exactly one saved question remains open
-
-**DE**
-
-> Eine vorgemerkte Frage wartet noch, aber niemand schuldet sie oder eine Antwort darauf. Ihr könnt hier enden. Nur wenn ihr beide frei weitermachen möchtet, darf **{questionOwner}** sie **{otherPerson}** stellen. **{otherPerson}** kann ohne Begründung passen. Eine Antwort ist Information, niemals Zustimmung zu einer Handlung.
-
-**EN**
-
-> One saved question is still waiting, but no one owes the question or an answer to it. You can end here. Only if you both freely want to continue may **{questionOwner}** ask **{otherPerson}**. **{otherPerson}** may pass without giving a reason. An answer is information, never consent to an action.
-
-#### `both` – no saved question remains open
-
-**DE**
-
-> Ihr könnt hier enden. Wenn ihr beide noch eine freiwillige letzte Gesprächsfrage möchtet: Was würde zukünftige Gespräche über Sex für dich noch ehrlicher und sicherer machen? Auch diese Frage darf übersprungen werden; aus keiner Antwort entsteht eine Handlungserwartung.
-
-**EN**
-
-> You can end here. If you both want one optional final conversation prompt: What would make future conversations about sex feel even more honest and safe for you? You may skip this question too; no answer creates an expectation of action.
+Late Night sets `privateMoment: 'none'`, never enters a saved-question or secret-task flow, and never renders generic Question 37. All routes use the independent entry and Act II gates plus the direct safety finale defined in [Private Moments (FR-005)](#private-moments-fr-005).
 
 ### Final editorial checks for LATE NIGHT
 

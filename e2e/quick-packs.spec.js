@@ -43,7 +43,7 @@ test.describe('Quick pack flow', () => {
         routeId: 'quick',
         modeId: config.modeId,
         qIndex: config.formerSecretIndex,
-        secretSeen: [false, false],
+        privateMomentStatus: 'not-started',
       });
 
       await page.getByRole('button', { name: 'Weiter' }).click();

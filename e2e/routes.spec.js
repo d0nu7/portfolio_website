@@ -6,7 +6,7 @@ const { seedAndResume, STORAGE_KEY } = require('./helpers');
  * assumption that every playthrough is the full 36 questions. These pin
  * the new Duration screen in the setup flow, and that a shorter route
  * actually behaves shorter end-to-end -- act break position, the "that's
- * all N" copy, and the secret-question interrupt all move with the
+ * all N" copy, and Private Moment eligibility all move with the
  * route, not just the question count.
  */
 test.describe('Duration / route selection', () => {
@@ -92,8 +92,7 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
       routeId: 'quick',
       modeId: 'original',
       qIndex: 11,
-      secretSeen: [true, true],
-      hasSecretQuestion: [true, true],
+      privateMomentStatus: 'consumed',
     });
     // Index 11 is quick's own last question (no chrome, "Fertig" instead
     // of "Weiter" -- same as the pack's real last question always does).
@@ -101,14 +100,14 @@ test.describe('Quick route (12 questions, 4 per act)', () => {
     await expect(page.getByText('Das waren alle 12.')).toBeVisible();
   });
 
-  test('quick omits the multi-screen secret-question interrupt', async ({
+  test('quick omits the multi-screen Private Moment', async ({
     page,
   }) => {
     await seedAndResume(page, {
       routeId: 'quick',
       modeId: 'original',
       qIndex: 9,
-      secretSeen: [false, false],
+      privateMomentStatus: 'not-started',
     });
     // Quick's question at index 9 is Q26 (BF8-02's corrected curation),
     // which carries the 'deeper' twist -- the first "Weiter" only opens

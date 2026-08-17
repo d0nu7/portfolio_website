@@ -107,10 +107,11 @@ test.describe('Setup Back navigation', () => {
     await page.getByRole('button', { name: /^LATE NIGHT/ }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // pack -> duration
     await page.getByRole('button', { name: 'Weiter' }).click(); // duration -> consent gate
-    await page.getByRole('button', { name: 'Ich bin Person 1' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await page.getByRole('button', { name: 'Ich bin Person 2' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
+    await page.getByRole('button', { name: /^Ich bin Person [12]$/ }).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+    await page.getByRole('button', { name: /^Ich bin Person [12]$/ }).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+    await page.getByRole('button', { name: 'Weiter' }).click();
 
     await expect(page.getByRole('button', { name: 'Los geht’s' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Zurück' })).toHaveCount(0);

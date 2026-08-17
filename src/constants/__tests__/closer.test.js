@@ -8,13 +8,13 @@ import {
   QUESTIONS_PER_ACT,
   actIndexFor,
   actStartIndices,
-  classifySecretAsked,
   compileRun,
   finalQuestionIndex,
   getPack,
   getRoute,
   originalIndexFor,
   pick,
+  privateMomentFor,
   questionAt,
   questionIdFor,
   resolvedActs,
@@ -786,7 +786,7 @@ describe('compileRun (Phase 3, RunDefinition)', () => {
     const run = compileRun('classic', 'full');
     expect(run.acts).toEqual(resolvedActs('classic', 'full'));
     expect(run.secretAtIndex).toBe(secretAtIndexFor('classic', 'full'));
-    expect(run.privateMoment).toBeNull();
+    expect(run.privateMoment.id).toBe('classic-saved-questions');
     expect(compileRun('late-night', 'quick').privateMoment).toBe('none');
     expect(Object.isFrozen(run)).toBe(true);
     expect(Object.isFrozen(run.questions)).toBe(true);
@@ -794,6 +794,67 @@ describe('compileRun (Phase 3, RunDefinition)', () => {
     expect(Object.isFrozen(run.acts)).toBe(true);
     expect(Object.isFrozen(run.actStarts)).toBe(true);
     expect(Object.isFrozen(run.timing)).toBe(true);
+  });
+
+  it('compiles the approved pack/route Private Moment matrix', () => {
+    const expected = {
+      classic: { quick: 'none', standard: 'none', full: 'classic-saved-questions' },
+      'first-date': {
+        quick: 'none', standard: 'first-date-curiosities', full: 'first-date-curiosities',
+      },
+      'date-night': {
+        quick: 'none', standard: 'date-night-appreciation', full: 'date-night-appreciation',
+      },
+      couples: { quick: 'none', standard: 'couples-listening', full: 'couples-listening' },
+      friends: {
+        quick: 'none', standard: 'friends-memory-celebration', full: 'friends-memory-celebration',
+      },
+      'old-friends': { quick: 'none', standard: 'old-friends-memory-lenses', full: 'none' },
+      deep: { standard: 'deep-listening', full: 'deep-listening' },
+      chaos: { quick: 'none', standard: 'chaos-private-sparks', full: 'chaos-private-sparks' },
+      'late-night': { quick: 'none', standard: 'none', full: 'none' },
+      'road-trip': { quick: 'none', standard: 'none', full: 'none' },
+      family: { quick: 'none', standard: 'none', full: 'none' },
+      colleagues: { quick: 'none', standard: 'none', full: 'none' },
+    };
+
+    Object.entries(expected).forEach(([packId, routes]) => {
+      Object.entries(routes).forEach(([routeId, momentId]) => {
+        const moment = privateMomentFor(packId, routeId);
+        expect(moment === 'none' ? moment : moment.id).toBe(momentId);
+      });
+    });
+  });
+
+  it('keeps enabled cards genuinely asymmetric and fully bilingual', () => {
+    Object.values(PACKS).forEach((pack) => {
+      if (!pack.privateMoment || pack.privateMoment === 'none') return;
+      const [cardA, cardB] = pack.privateMoment.cards;
+      expect(cardA.body.de).not.toBe(cardB.body.de);
+      expect(cardA.body.en).not.toBe(cardB.body.en);
+      [cardA, cardB].forEach((card) => {
+        expect(card.body.de.trim()).not.toBe('');
+        expect(card.body.en.trim()).not.toBe('');
+        expect(card.action.de.trim()).not.toBe('');
+        expect(card.action.en.trim()).not.toBe('');
+      });
+    });
+  });
+
+  it('resolves every question-based trigger and use point by stable ID', () => {
+    Object.values(PACKS).forEach((pack) => {
+      Object.keys(pack.routes).forEach((routeId) => {
+        const run = compileRun(pack.id, routeId);
+        if (run.privateMoment === 'none') return;
+        const ids = run.questions.map((question) => question.id);
+        if (run.privateMoment.trigger.kind === 'before-question') {
+          expect(ids).toContain(run.privateMoment.trigger.questionId);
+        }
+        if (run.privateMoment.use.kind === 'question') {
+          expect(ids).toContain(run.privateMoment.use.questionId);
+        }
+      });
+    });
   });
 
   it('distinguishes packs and routes', () => {
@@ -859,97 +920,6 @@ describe('starterFor', () => {
     for (let i = 0; i < 40; i += 1) {
       expect([0, 1]).toContain(starterFor(i, 0));
     }
-  });
-});
-
-describe('classifySecretAsked', () => {
-  // hasSecretQuestion omitted (undefined) in most of these on purpose --
-  // bugfix-report iteration 7 added it as a second argument, but every
-  // pre-existing call/save has none, and null there must classify exactly
-  // as before (default "has a question, not yet resolved" per person).
-  it('treats [null, null] (nothing answered yet) as neither/bothAsked false, no pending player', () => {
-    expect(classifySecretAsked([null, null])).toEqual({
-      neither: false,
-      bothAsked: false,
-      pendingPlayer: null,
-      noneHaveSecretQuestion: false,
-    });
-  });
-
-  it('flags neither when both said no (pendingPlayer is unused in this branch)', () => {
-    // pendingPlayer falls out of the same `a0 === false ? 0 : ...` expression
-    // used for the one-pending case, so it comes back as 0 here too -- every
-    // call site only reads it when `!neither`, so this is harmless, but the
-    // test pins the actual behaviour rather than an assumed one.
-    const result = classifySecretAsked([false, false]);
-    expect(result.neither).toBe(true);
-    expect(result.bothAsked).toBe(false);
-  });
-
-  it('flags bothAsked when both said yes', () => {
-    expect(classifySecretAsked([true, true])).toEqual({
-      neither: false,
-      bothAsked: true,
-      pendingPlayer: null,
-      noneHaveSecretQuestion: false,
-    });
-  });
-
-  it('identifies player 0 as pending when only they said no', () => {
-    expect(classifySecretAsked([false, true])).toEqual({
-      neither: false,
-      bothAsked: false,
-      pendingPlayer: 0,
-      noneHaveSecretQuestion: false,
-    });
-  });
-
-  it('identifies player 1 as pending when only they said no', () => {
-    expect(classifySecretAsked([true, false])).toEqual({
-      neither: false,
-      bothAsked: false,
-      pendingPlayer: 1,
-      noneHaveSecretQuestion: false,
-    });
-  });
-
-  // hasSecretQuestion (bugfix-report iteration 7, BF-08/FR-07): 'Heute
-  // keine' opts a person out of this accounting entirely, not just out of
-  // one screen.
-  describe('with hasSecretQuestion (BF-08 opt-out)', () => {
-    it('flags noneHaveSecretQuestion when both opted out, regardless of secretAsked', () => {
-      expect(classifySecretAsked([null, null], [false, false])).toEqual({
-        neither: false,
-        bothAsked: false,
-        pendingPlayer: null,
-        noneHaveSecretQuestion: true,
-      });
-    });
-
-    it('treats an opted-out person as resolved -- the other pending still surfaces', () => {
-      // Player 0 opted out; player 1 has a question that hasn't been asked.
-      expect(classifySecretAsked([null, false], [false, true])).toEqual({
-        neither: false,
-        bothAsked: false,
-        pendingPlayer: 1,
-        noneHaveSecretQuestion: false,
-      });
-    });
-
-    it('flags bothAsked when the only applicable person was asked and the other opted out', () => {
-      expect(classifySecretAsked([null, true], [false, true])).toEqual({
-        neither: false,
-        bothAsked: true,
-        pendingPlayer: null,
-        noneHaveSecretQuestion: false,
-      });
-    });
-
-    it('null (not yet decided) classifies the same as true (has one, unresolved)', () => {
-      expect(classifySecretAsked([false, false], [null, null])).toEqual(
-        classifySecretAsked([false, false], [true, true])
-      );
-    });
   });
 });
 

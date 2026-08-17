@@ -191,8 +191,6 @@ export default function CloserGame() {
       setPulseStage('actI');
     } else if (s.phase === 'break' && s.breakAct === 1) {
       setPulseStage('actII');
-    } else if (prev === 'secretPassBack' && s.phase === 'q') {
-      setPulseStage('secret');
     } else if (prev !== 'ending' && s.phase === 'ending' && s.endReason === 'completed') {
       setPulseStage('finale');
     }
@@ -259,6 +257,23 @@ export default function CloserGame() {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
+  // Never leave a private card exposed in an app-switcher snapshot. Returning
+  // to the app requires the named person to confirm the handoff again.
+  useEffect(() => {
+    if (visible) return;
+    const coverPhase = {
+      secret1: 'secretPass1',
+      secret2: 'secretPass2',
+      check1: 'checkPass1',
+      check2: 'checkPass2',
+      consentGateA: 'consentGatePassA',
+      consentGateB: 'consentGatePassB',
+      consentAct2A: 'consentAct2PassA',
+      consentAct2B: 'consentAct2PassB',
+    }[s.phase];
+    if (coverPhase) set({ phase: coverPhase });
+  }, [visible, s.phase, set]);
+
   const timerRunning =
     s.timerEnabled && s.phase === 'q' && visible && !menuOpen && !pulseStage;
 
@@ -324,6 +339,12 @@ export default function CloserGame() {
   const style = pack.actStyle[actIdx];
   const question = run.questions[s.qIndex]?.content || null;
   const isLast = s.qIndex === total - 1;
+  const privateSupplement = run.privateMoment !== 'none' &&
+    run.privateMoment.use.kind === 'question' &&
+    s.privateMomentStatus === 'armed' &&
+    run.questions[s.qIndex]?.id === run.privateMoment.use.questionId
+    ? run.privateMoment.use.supplement
+    : null;
 
   const nameOf = useCallback(
     (i) =>
@@ -352,8 +373,8 @@ export default function CloserGame() {
   }, []);
 
   /*
-   * Everything between questions routes through here. Act breaks, the secret
-   * question and the staged last question all interrupt on the way past.
+   * Everything between questions routes through here. Act breaks, explicit
+   * Private Moment triggers, and the staged last question can interrupt.
    */
   const advanceQuestion = useCallback(
     (eventType) => {
@@ -477,8 +498,8 @@ export default function CloserGame() {
   }, [justDeclined]);
 
   // Once a new question lands, move focus onto it for every
-  // transition into a question (a fresh skip/decline, an act break, a
-  // secret-question handoff, resuming), not just the flash case above.
+  // transition into a question (a fresh pass, an act break, a Private Moment
+  // return, or resume), not just the flash case above.
   useEffect(() => {
     if (s.phase === 'q' && step === 'ask' && questionHeadingRef.current) {
       questionHeadingRef.current.focus();
@@ -584,11 +605,10 @@ export default function CloserGame() {
 
   const A0 = pack.actStyle[0].accent;
 
-  // Only a person who actually formed a saved question gets the private
-  // "did they ask it?" check after "that's all 36" -- someone who chose
-  // "Heute keine" has nothing to ask about, so their checkPass/check screens
-  // are skipped entirely rather than asking a question that can't apply.
-  const privateMomentEnabled = run.routeId !== 'quick' && run.privateMoment !== 'none';
+  // Route compilation is the single authority for whether this run owns a
+  // Private Moment. Quick and explicit pack-level `none` decisions resolve
+  // to the same disabled value before the controller sees them.
+  const privateMomentEnabled = run.privateMoment !== 'none';
 
   const dispatchSetup = (event) => {
     const patch = transitionSetup(run, s, event);
@@ -735,6 +755,9 @@ export default function CloserGame() {
         onHandoff={() => dispatchConsent({ type: CONSENT_EVENTS.HANDOFF_CONFIRMED })}
         onConfirm={() => dispatchConsent({ type: CONSENT_EVENTS.CONFIRM_CONSENT })}
         onDecline={() => dispatchConsent({ type: CONSENT_EVENTS.DECLINE_CONSENT })}
+        onContinueAccepted={() => dispatchConsent({
+          type: CONSENT_EVENTS.CONTINUE_AFTER_CONSENT,
+        })}
       />,
       { accent: consentStyle.accent, glow: consentStyle.glow, menu: true }
     );
@@ -771,20 +794,27 @@ export default function CloserGame() {
     return frame(
       <CloserPrivateMomentView
         state={s}
+        moment={run.privateMoment}
+        lang={lang}
         accent={finalStyle.accent}
         nameOf={nameOf}
         t={t}
         tf={tf}
+        onStart={() => dispatchPrivateMoment({ type: PRIVATE_MOMENT_EVENTS.START })}
+        onSkipAll={() => dispatchPrivateMoment({ type: PRIVATE_MOMENT_EVENTS.SKIP_ALL })}
         onHandoff={() => dispatchPrivateMoment({
           type: PRIVATE_MOMENT_EVENTS.HANDOFF_CONFIRMED,
         })}
-        onSetQuestion={(hasQuestion) => dispatchPrivateMoment({
-          type: PRIVATE_MOMENT_EVENTS.SET_PRIVATE_QUESTION,
-          hasQuestion,
+        onSetCardChoice={(accepted) => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.SET_CARD_CHOICE,
+          accepted,
         })}
-        onSetAsked={(asked) => dispatchPrivateMoment({
-          type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_ASKED,
-          asked,
+        onSetQuestionStatus={(status) => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.SET_QUESTION_STATUS,
+          status,
+        })}
+        onCompleteUse={() => dispatchPrivateMoment({
+          type: PRIVATE_MOMENT_EVENTS.COMPLETE_USE,
         })}
       />,
       { accent: finalStyle.accent, glow: s.phase.startsWith('secret') ? finalStyle.glow : 0.03, menu: true }
@@ -807,6 +837,7 @@ export default function CloserGame() {
         beat={beat}
         revealSecond={revealSecond}
         privateMomentEnabled={privateMomentEnabled}
+        moment={run.privateMoment === 'none' ? null : run.privateMoment}
         nameOf={nameOf}
         t={t}
         tf={tf}
@@ -845,6 +876,7 @@ export default function CloserGame() {
       overtime={overtime}
       elapsedLabel={clockOf(elapsed)}
       progressPercent={pct}
+      privateSupplement={privateSupplement}
       flashRef={flashRef}
       questionHeadingRef={questionHeadingRef}
       nameOf={nameOf}

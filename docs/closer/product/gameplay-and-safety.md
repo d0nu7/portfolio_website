@@ -1,6 +1,6 @@
 # CLOSER – gameplay and safety contract
 
-**Updated:** 16 August 2026
+**Updated:** 17 August 2026
 **Audience:** product, editorial, design, engineering, and QA
 **Status:** authoritative product behavior; implementation status is tracked separately in [bugs.md](../reviews/bugs.md) and [feature-requests.md](../reviews/feature-requests.md)
 
@@ -20,7 +20,7 @@ Intervention should therefore decrease across the three acts. A milestone may br
 
 | Term | Meaning |
 |---|---|
-| Pack | The question domain: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, or Late Night. |
+| Pack | The question domain: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, or Colleagues. |
 | Route | The curated duration/length: Quick, Standard, or Full where supported. |
 | Style | Optional rules that change presentation or twists without changing the question bank. |
 | Twist | A sparse question-level variation such as answering together or without deliberation. |
@@ -47,7 +47,7 @@ Every setup screen needs a safe route back. The global menu must be reachable be
 
 Every route is a fixed editorial sequence. It is never a random sample.
 
-- **Quick:** 12 regular questions, four per act, with a self-contained beginning, middle, and ending. No saved-question handoff or extended Question 37 ceremony.
+- **Quick:** 12 regular questions, four per act, with a self-contained beginning, middle, and ending. No Private Moment or extended Question 37 ceremony. Late Night still requires its safety gates.
 - **Standard:** normally 24 regular questions, eight per act. It may include one short pack-appropriate private moment.
 - **Full:** 36 regular questions, 12 per act, with room for the complete finale.
 
@@ -74,7 +74,7 @@ Twists remain sparse and pack-appropriate:
 
 ## 6. Private moments and finales
 
-A device handoff is valuable only when the hidden information differs meaningfully between the two people. Repeating the same generic saved-question instruction in every pack is not sufficient.
+A device handoff is valuable only when the hidden information differs meaningfully between the two people. Repeating the same generic saved-question instruction in every pack is not sufficient. The approved route/trigger/use matrix and exact localized copy live in the [question catalog](../content/question-catalog.de-en.md#private-moments-fr-005).
 
 Private moments must be:
 
@@ -83,16 +83,44 @@ Private moments must be:
 - safe to decline without explanation;
 - non-manipulative and non-diagnostic;
 - explicit about whether the instruction should remain private;
-- absent from Quick unless a pack has a genuinely short secret spark.
+- absent from Quick;
+- introduced by a shared offer that can skip the moment for both people;
+- dismissible on either private card through **Heute nicht / Not today**, without showing that choice to the other person.
 
-Examples of valid directions include a private prediction that is later revealed, choosing a listening intention, selecting a shared memory category, or receiving one harmless surprise constraint. Do not use covert touch, sexual, public, humiliating, deceptive, or boundary-testing tasks.
+The person selected to open Q1 is role A; the other person is role B. That mapping remains stable for cards, use points, checks, and finales even when the named players are stored in the opposite array order.
+
+### Lifecycle and persistence
+
+1. At the route-specific trigger, show a shared explanation with equally understandable **show cards** and **skip for both** actions.
+2. Cover the screen before each named handoff. A background/app switch immediately replaces any visible private card or private check with its handoff cover.
+3. Show different A and B cards. No text field, microphone, transcription, or spoken-answer capture exists.
+4. A non-Classic card choice only advances the handoff; accept and decline produce identical durable state. The app retains only the collective lifecycle status needed to route the later use point.
+5. Classic Full may retain only a categorical per-person state: `none | pending | asked | discarded`. It never retains the question itself.
+6. Late Night’s individual readiness decisions exist only in memory until both people have decided. They are excluded from local storage. Reloading an incomplete gate restarts it from A, and the shared result never identifies who declined.
+7. Resume always covers direct private content. It must never reopen a saved private card or private check without another named handoff.
+8. Use or discard the moment only at its approved point. Early exit and natural completion replace any remaining private categorical state with discarded/consumed values; completed games are removed from storage.
+
+### Threat-model review
+
+| Threat | Required control |
+|---|---|
+| Pressure or relationship obligation | Shared skip, private decline, ordinary Pass, and End require no reason; copy disclaims promises, reciprocity, plans, reconciliation, and consent. |
+| Assumed attraction or consent | First Date and Date Night copy does not infer attraction or another date; Late Night answers are explicitly not consent to action. |
+| Covert observation, touch, sex, or boundary testing | No card asks someone to watch, touch, test, perform, or conceal an action. Late Night has no secret sexual/physical card. |
+| Humiliation, public performance, or deception | All tasks remain between two people and cannot require embarrassment, lying, guessing the other card, or public behavior. |
+| Diagnosis or manufactured disclosure | Listening prompts forbid interpretation/diagnosis and never demand deeper disclosure, explanation, repair, or resolution. |
+| Loyalty testing or conflict escalation | Appreciation/memory cards cannot demand agreement, matching memories, gratitude, exclusivity, forgiveness, or a “correct” account. |
+| Workplace/family power | Road Trip, Family, and Colleagues remain `privateMoment: 'none'`; reopening requires a separate safety decision. |
+| Shoulder surfing, app-switcher snapshots, or unsafe resume | Named covers precede private content; background and resume return to a cover; copy warns against screenshots and data entry. |
+
+Do not use covert touch, sexual, public, humiliating, deceptive, diagnostic, or boundary-testing tasks.
 
 Finales follow the route:
 
-- Quick ends directly after its final regular question.
+- Quick ends directly after its final regular question, except that Late Night shows its direct safety reminder first.
 - Standard uses a neutral **Finale** label and a short optional closer.
 - Full may use **Question 37** and any unresolved saved questions when the pack contract supports them.
-- Late Night does not use secret sexual or physical tasks and should not inherit the universal saved-question flow.
+- Late Night does not use secret sexual or physical tasks, does not inherit the saved-question flow, and does not enter generic Question 37.
 
 ## 7. Late Night (18+)
 
@@ -103,9 +131,11 @@ Late Night is explicit adult conversation content. Its visibility preference and
 3. The visibility preference is stored separately from game progress and can be hidden again.
 4. Selecting the pack still requires each person to confirm 18+ and voluntary participation separately before any question appears.
 5. Both people opt in again before Act II, where content becomes more explicit.
-6. Declining at any gate ends the path neutrally and truthfully; it is not presented as a completed game.
+6. Each decision remains private until both have answered. The app then shows only a collective accepted screen or ends the path neutrally; it never identifies who declined.
 7. The action to decline and the action to agree have equal visual prominence.
-8. Every question remains passable and ending remains available throughout.
+8. Reloading a partial gate restarts it for both people because individual decisions are never stored.
+9. Every question remains passable and ending remains available throughout.
+10. Every route ends with a direct reminder that answers create no expectation of action; Late Night never enters generic Question 37.
 
 An answer describes thoughts, feelings, or preferences. It never constitutes consent to an action. Consent outside the game must be specific, informed, voluntary, and withdrawable at any time.
 
@@ -113,7 +143,7 @@ Forbidden mechanics include `NO THINKING`, countdown pressure, `PREDICT`, proxy 
 
 ## 8. Milestone celebration
 
-The milestone animation should create a brief sense of reward at the start, act transitions, an earned private transition, and natural completion.
+The milestone animation should create a brief sense of reward at the start, act transitions, and natural completion. Private handoffs and consent decisions remain quiet and do not trigger a celebration.
 
 It must:
 

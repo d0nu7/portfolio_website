@@ -14,7 +14,6 @@ const STAGES = {
   start: { left: 60, right: 260, halo: 54 },
   actI: { left: 84, right: 236, halo: 68 },
   actII: { left: 110, right: 210, halo: 82 },
-  secret: { left: 138, right: 182, halo: 96 },
   finale: { left: 160, right: 160, halo: 112 },
 };
 

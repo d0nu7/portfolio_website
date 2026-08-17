@@ -10,9 +10,10 @@ Checkboxes reflect the repository state: `[x]` is complete or explicitly decided
 
 1. Continue gradual PLAYFUL testing and complete remaining physical-device checks when useful.
 2. Run moderated sessions for the new specialist packs and PLAYFUL rollout.
-3. Complete the dedicated Private Moments editorial task.
+3. Disposition the completed FR-018/019 research gates and triage the 37 FR-020 proposals atomically.
 4. Complete the separate Replacement Question Pool editorial task.
-5. Decide whether a separate subdomain is actually wanted.
+5. Validate the implemented Private Moments on physical devices and in moderated sessions.
+6. Decide whether a separate subdomain is actually wanted.
 
 ## Immediate release decisions
 
@@ -51,37 +52,37 @@ Done when: device, OS version, browser, result, and any defect are recorded for 
 
 For every pack, decide whether a private handoff genuinely improves the experience. A private screen should contain asymmetric information or a meaningful private intention; otherwise, omit it.
 
-Treat this as a dedicated editorial/product task. Do not combine it with implementation or the Replacement Question Pool task. Its output is an approved private-moment contract that can later be implemented on its own branch.
+This remained a dedicated editorial/product task, independent from PLAYFUL and the Replacement Question Pool task. RaDi approved the completed specification on 17 August 2026; implementation followed only after that approval.
 
-- [ ] Audit the current saved-question sequence and identify which parts should be retained, replaced, or removed.
-- [ ] Decide explicitly for every implemented pack: no private moment, optional private moment, or required consent/readiness handoff.
-- [ ] Choose eligible routes and one exact trigger point. Quick should normally have none.
-- [ ] Define genuinely asymmetric information or intention for each participating person; mirrored cards are not sufficient.
-- [ ] Specify the complete lifecycle: private display, device handoff, decline, storage state, reveal/use point, discard point, finale consequences, early exit, and resume behavior.
-- [ ] Write exact gender-neutral German and English copy for every card, handoff, decline, reminder, and finale branch.
-- [ ] Ensure no spoken answer or private free text is entered or stored.
-- [ ] Review for pressure, manipulation, assumed attraction, covert observation or touch, humiliation, diagnosis, loyalty testing, unwanted disclosure, and relationship obligation.
-- [ ] Keep Late Night free of secret sexual/physical tasks and keep Road Trip, Family, and Colleagues at `privateMoment: none` unless a separate safety decision reopens them.
-- [ ] Obtain explicit RaDi approval for the editorial matrix before implementation begins.
+- [x] Audit the current saved-question sequence and identify which parts should be retained, replaced, or removed.
+- [x] Decide explicitly for every implemented pack: no private moment, optional private moment, or required consent/readiness handoff.
+- [x] Choose eligible routes and one exact trigger point. Quick has none; DEEP has no Quick route.
+- [x] Define genuinely asymmetric information or intention for each participating person; mirrored cards are not used.
+- [x] Specify the complete lifecycle: private display, device handoff, decline, storage state, reveal/use point, discard point, finale consequences, early exit, and resume behavior.
+- [x] Write exact gender-neutral German and English copy for every card, handoff, decline, reminder, and finale branch.
+- [x] Ensure no spoken answer or private free text is entered or stored.
+- [x] Review for pressure, manipulation, assumed attraction, covert observation or touch, humiliation, diagnosis, loyalty testing, unwanted disclosure, and relationship obligation.
+- [x] Keep Late Night free of secret sexual/physical tasks and keep Road Trip, Family, and Colleagues at `privateMoment: none` unless a separate safety decision reopens them.
+- [x] Obtain explicit RaDi approval for the editorial matrix before implementation begins.
 
 Editorial worksheet:
 
 | Pack | Keep a private moment? | Eligible routes | Private information or intention | Reveal/use point | Safe decline copy | DE/EN approved |
 |---|---|---|---|---|---|---|
-| Classic |  |  |  |  |  |  |
-| First Date |  |  |  |  |  |  |
-| Date Night |  |  |  |  |  |  |
-| Couples |  |  |  |  |  |  |
-| Friends |  |  |  |  |  |  |
-| Old Friends |  |  |  |  |  |  |
-| Deep |  |  |  |  |  |  |
-| Chaos |  |  |  |  |  |  |
-| Late Night | Readiness/consent only |  |  |  |  |  |
-| Road Trip | No | None |  |  |  | Yes |
-| Family | No | None |  |  |  | Yes |
-| Colleagues | No | None |  |  |  | Yes |
+| Classic | Optional | Full | A: open follow-up; B: unheard perspective | after Q36, dynamic Question 37 | “Heute nicht” / “Not today”; shared skip | Yes |
+| First Date | Optional | Standard, Full | A: interest follow-up; B: everyday preference | two-turn finale | “Heute nicht” / “Not today”; shared skip | Yes |
+| Date Night | Optional | Standard, Full | A: non-body appreciation; B: possible future-date detail | two-turn finale | “Heute nicht” / “Not today”; shared skip | Yes |
+| Couples | Optional | Standard, Full | A: listening intention; B: positive quality | after Act II | “Heute nicht” / “Not today”; shared skip | Yes |
+| Friends | Optional | Standard, Full | A: shared memory; B: celebration | two-turn finale | “Heute nicht” / “Not today”; shared skip | Yes |
+| Old Friends | Optional | Standard only | A: concrete detail; B: feeling/meaning | immediately after private cards | “Heute nicht” / “Not today”; shared skip | Yes |
+| Deep | Optional | Standard, Full | A: reflect understanding; B: allow silence/space | after Act II | “Heute nicht” / “Not today”; shared skip | Yes |
+| Chaos | Optional | Standard, Full | A: problem constraint; B: naming constraint | supplement Q16, then discard | “Heute nicht” / “Not today”; shared skip | Yes |
+| Late Night | Required readiness/consent only | Quick, Standard, Full | two independent decisions; no secret task | entry and after Act I; collective result only | “Nein, heute nicht” / “No, not today” | Yes |
+| Road Trip | No | None | None | None | Not applicable | Yes |
+| Family | No | None | None | None | Not applicable | Yes |
+| Colleagues | No | None | None | None | Not applicable | Yes |
 
-Done when: every implemented pack has an explicit decision, every eligible moment has approved DE/EN copy plus a complete state/lifecycle contract, safety exclusions are documented, and implementation can proceed without inventing product behavior.
+Done: every implemented pack has an explicit decision, every eligible moment has approved DE/EN copy plus a complete state/lifecycle contract, safety exclusions are documented, and implementation did not invent product behavior. Physical-device and moderated-session validation remains separate release work.
 
 ### FR-006 – Curate replacement-question pools
 
@@ -164,9 +165,9 @@ sign-off list above.
 - **FR-012 / TTS:** shelved indefinitely. The voice branch is not planned for merge and is not a constraint or dependency for FR-011. Reopening it requires a new explicit decision.
 - **FR-015 / Students and FH Salzburg:** remains a separate content feature requiring research, bilingual editorial review, an FH naming/endorsement decision, and a local content owner before implementation.
 - **FR-017 / Adult library:** the collapsed 18+ disclosure is implemented. Every future adult pack still needs its own visibility, eligibility, participation, safety, and release decision.
-- **FR-018 / POWER & TRUST:** commission and approve a dedicated evidence review before questions or implementation. Confirm or replace the working title after editorial review.
-- **FR-019 / SLOW BURN:** commission and approve a dedicated evidence review and physical-interaction design. This is intentionally touch-forward, but each increase in intensity still needs an immediate bilateral choice.
-- **FR-020 / Cross-pack evidence audit:** schedule after the focused adult reviews; Classic wording remains immutable.
+- **FR-018 / POWER & TRUST:** evidence review complete with a conditional conversation-only go and recommended test name **POWER, BY CHOICE**. RaDi must accept/reject the concept and name, then commission the named specialist/legal/accessibility reviews before implementation.
+- **FR-019 / SLOW BURN:** evidence and interaction design complete; closed moderated prototype only, with public release still a no-go. RaDi must decide whether to fund the prerequisite specialist, ethics, privacy, accessibility, legal, and staged-pilot work.
+- **FR-020 / Cross-pack evidence audit:** complete with 37 atomic proposals. RaDi/editorial owners must disposition each proposal independently; Classic wording, translation, order, and route membership remain immutable.
 - **Pack/route/style terminology:** defer the persisted `modeId` rename to a separately approved save migration; FR-011 deliberately preserves it.
 
 ## Decision log
@@ -182,5 +183,7 @@ sign-off list above.
 | 2026-08-17 | Device check | Accept the initial Android phone smoke test | The first real-device check found no blocking issue; deeper platform/accessibility coverage can follow incrementally | RaDi |
 | 2026-08-17 | FR-009 | Do not add offline support or a service worker for now | Installability and fullscreen presentation are sufficient for the current product need | Complete |
 | 2026-08-17 | FR-005/006 | Split Private Moments and Replacement Question Pools into independent tasks | Both require substantial editorial decisions before safe implementation | Editorial tasks |
+| 2026-08-17 | FR-005 | Approve and implement the pack-specific Private Moment matrix | Asymmetric cards, explicit route triggers, ephemeral consent, private resume shields, and pack-specific finales now have a complete bilingual safety contract | Physical-device and moderated-session validation |
 | 2026-08-17 | FR-017 | Group every adult pack behind one collapsed 18+ disclosure and keep Late Night last | Explicit content stays discreet while its explanation remains adjacent and understandable | Complete for current library |
 | 2026-08-17 | FR-018/019 | Research POWER & TRUST and the touch-forward SLOW BURN as separate adult experiences | Their evidence, interaction, and participation requirements differ materially from Late Night | RaDi / editorial research |
+| 2026-08-17 | FR-018–020 | Complete the focused evidence programme without applying candidate catalog changes | The citation-audited report supports a conversation-only FR-018 prototype, restricts FR-019 to closed moderated research, and exposes 37 atomic cross-pack decisions | RaDi / named specialist and editorial owners |

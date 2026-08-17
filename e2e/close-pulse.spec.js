@@ -27,7 +27,7 @@ test.describe('CLOSER PULSE', () => {
     await expect(page.getByText('ABGESCHLOSSEN')).toBeVisible();
   });
 
-  test('fires once the secret-question handoff completes (stage "secret")', async ({ page }) => {
+  test('stays quiet when a Private Moment handoff completes', async ({ page }) => {
     await page.goto('/closer/');
     await page.evaluate(
       ({ key, value }) => window.localStorage.setItem(key, JSON.stringify(value)),
@@ -36,21 +36,26 @@ test.describe('CLOSER PULSE', () => {
         value: {
           ...BASE_STATE,
           phase: 'secretPassBack',
-          qIndex: 27,
+          qIndex: 26,
           pending: 27,
-          secretSeen: [true, true],
-          hasSecretQuestion: [true, true],
+          privateMomentStatus: 'in-progress',
+          privateQuestionState: ['pending', 'pending'],
         },
       }
     );
     await page.reload();
     await page.getByText('Spiel fortsetzen').click();
     await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.locator(`${PULSE}[data-stage="secret"]`)).toBeVisible();
+    await expect(page.locator(PULSE)).toHaveCount(0);
+    await expect(page.getByText('28', { exact: true })).toBeVisible();
   });
 
   test('fires after a naturally completed finale (stage "finale")', async ({ page }) => {
-    await seedAndResume(page, { phase: 'q37', secretAsked: [true, true] });
+    await seedAndResume(page, {
+      phase: 'q37',
+      privateMomentStatus: 'armed',
+      privateQuestionState: ['asked', 'asked'],
+    });
     await page.getByRole('button', { name: 'Fertig' }).click();
     const pulse = page.locator(`${PULSE}[data-stage="finale"]`);
     await expect(pulse).toBeVisible();
@@ -112,7 +117,7 @@ test.describe('CLOSER PULSE', () => {
     await expect(page.getByRole('dialog', { name: 'Menü' })).toBeVisible();
   });
 
-  test('does not count celebration time as active conversation time', async ({ page }) => {
+  test('starts active conversation time immediately after a quiet private handoff', async ({ page }) => {
     await page.goto('/closer/');
     await page.evaluate(
       ({ key, value }) => window.localStorage.setItem(key, JSON.stringify(value)),
@@ -121,12 +126,12 @@ test.describe('CLOSER PULSE', () => {
         value: {
           ...BASE_STATE,
           phase: 'secretPassBack',
-          qIndex: 27,
+          qIndex: 26,
           pending: 27,
           timerEnabled: true,
           actElapsedMs: 0,
-          secretSeen: [true, true],
-          hasSecretQuestion: [true, true],
+          privateMomentStatus: 'in-progress',
+          privateQuestionState: ['pending', 'pending'],
         },
       }
     );
@@ -135,13 +140,10 @@ test.describe('CLOSER PULSE', () => {
     await page.getByRole('button', { name: 'Weiter' }).click();
 
     const scene = page.getByTestId('closer-frame-content');
-    await expect(page.locator(`${PULSE}[data-stage="secret"]`)).toBeVisible();
+    await expect(page.locator(PULSE)).toHaveCount(0);
     await expect(scene.getByText('0:00', { exact: true })).toBeVisible();
     await page.waitForTimeout(1300);
-    await expect(scene.getByText('0:00', { exact: true })).toBeVisible();
-
-    await expect(page.locator(PULSE)).toHaveCount(0, { timeout: 1500 });
-    await expect(scene.getByText('0:01', { exact: true })).toBeVisible({ timeout: 2500 });
+    await expect(scene.getByText('0:01', { exact: true })).toBeVisible();
   });
 
   test('reduced motion shows a full-sized stable scene', async ({

@@ -62,6 +62,7 @@ export default function CloserQuestionView({
   overtime,
   elapsedLabel,
   progressPercent,
+  privateSupplement,
   flashRef,
   questionHeadingRef,
   nameOf,
@@ -208,6 +209,9 @@ export default function CloserQuestionView({
           <Question ref={questionHeadingRef} tabIndex={-1} style={{ outline: 'none' }}>
             {questionText}
           </Question>
+          {privateSupplement ? (
+            <Lede style={{ marginTop: '2.4rem' }}>{pick(privateSupplement, lang)}</Lede>
+          ) : null}
           {isLast && <Lede style={{ marginTop: '3.2rem' }}>{t('takeYourTime')}</Lede>}
           {question?.responseCard && (
             <ResponseCard $accent={style.accent}>

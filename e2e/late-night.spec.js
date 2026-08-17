@@ -1,5 +1,5 @@
 const { test, expect } = require('./fixtures');
-const { BASE_STATE, seedAndResume } = require('./helpers');
+const { BASE_STATE, seedAndResume, STORAGE_KEY } = require('./helpers');
 
 async function unlockLateNight(page, language = 'de') {
   await page.goto('/closer/');
@@ -8,9 +8,7 @@ async function unlockLateNight(page, language = 'de') {
   await page
     .getByRole('button', { name: language === 'de' ? 'Zusätzliche Inhalte' : 'Additional content' })
     .click();
-  await page
-    .getByText(language === 'de' ? 'Inhalte ab 18' : '18+ content', { exact: true })
-    .click();
+  await page.getByText(language === 'de' ? 'Inhalte ab 18' : '18+ content', { exact: true }).click();
   await page
     .getByRole('button', { name: language === 'de' ? 'LATE NIGHT anzeigen' : 'Show LATE NIGHT' })
     .click();
@@ -19,15 +17,13 @@ async function unlockLateNight(page, language = 'de') {
 }
 
 async function reachEntryConsent(page, language = 'de') {
-  const labels = language === 'de'
-    ? { start: 'Start', next: 'Weiter' }
-    : { start: 'Start', next: 'Continue' };
+  const next = language === 'de' ? 'Weiter' : 'Continue';
   await unlockLateNight(page, language);
-  await page.getByRole('button', { name: labels.start }).click();
-  await page.getByRole('button', { name: labels.next }).click();
+  await page.getByRole('button', { name: 'Start' }).click();
+  await page.getByRole('button', { name: next }).click();
   await page.getByRole('button', { name: /^LATE NIGHT/ }).click();
-  await page.getByRole('button', { name: labels.next }).click();
-  await page.getByRole('button', { name: labels.next }).click();
+  await page.getByRole('button', { name: next }).click();
+  await page.getByRole('button', { name: next }).click();
 }
 
 async function reachActTwoConsent(page) {
@@ -41,15 +37,21 @@ async function reachActTwoConsent(page) {
   await page.getByRole('button', { name: 'Weiter' }).click();
 }
 
-test.describe('LATE NIGHT consent and runtime', () => {
-  test('entry consent offers equally prominent choices and decline ends neutrally', async ({ page }) => {
-    await reachEntryConsent(page);
-    await page.getByRole('button', { name: 'Ich bin Person 1' }).click();
+function entryRoleButton(page, language = 'de') {
+  return page.getByRole('button', {
+    name: language === 'de' ? /^Ich bin Person [12]$/ : /^I'm Player [12]$/,
+  });
+}
 
-    const accept = page.getByRole('button', { name: 'Ich stimme zu' });
+test.describe('LATE NIGHT independent consent and readiness', () => {
+  test('entry choices have equal prominence and A’s choice remains hidden until B decides', async ({
+    page,
+  }) => {
+    await reachEntryConsent(page);
+    await entryRoleButton(page).click();
+
+    const accept = page.getByRole('button', { name: 'Ja, freiwillig' });
     const decline = page.getByRole('button', { name: 'Hier enden' });
-    await expect(accept).toBeVisible();
-    await expect(decline).toBeVisible();
     const [acceptStyle, declineStyle] = await Promise.all([
       accept.evaluate((node) => ({
         background: getComputedStyle(node).backgroundColor,
@@ -65,41 +67,71 @@ test.describe('LATE NIGHT consent and runtime', () => {
     expect(acceptStyle).toEqual(declineStyle);
 
     await decline.click();
+    await expect(page.getByText(/^GIB DAS HANDY AN PERSON [12]$/)).toBeVisible();
+    await expect(page.getByText('Alles gut.')).toHaveCount(0);
+    await entryRoleButton(page).click();
+    await expect(page.getByText(/Die erste Wahl wird dir nicht gezeigt/)).toBeVisible();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
     await expect(page.getByRole('heading', { name: 'Alles gut.' })).toBeVisible();
-    await expect(page.getByText('Ihr müsst nichts erklären.')).toBeVisible();
-    await expect(page.getByText('Ihr braucht das Spiel nicht mehr.')).toHaveCount(0);
+    await expect(page.getByText(/Niemand muss erklären, wer beendet hat/)).toBeVisible();
   });
 
-  test('both entry confirmations are required before any question appears', async ({ page }) => {
+  test('two entry yeses reveal only a collective result before the introduction', async ({ page }) => {
     await reachEntryConsent(page);
-    await page.getByRole('button', { name: 'Ich bin Person 1' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await expect(page.getByText('GIB DAS HANDY AN PERSON 2')).toBeVisible();
-    await expect(page.locator('text=/^\\d{2} \\/ \\d{2}$/')).toHaveCount(0);
+    await entryRoleButton(page).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+    await entryRoleButton(page).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
 
-    await page.getByRole('button', { name: 'Ich bin Person 2' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
+    await expect(page.getByText('BEIDE HABEN GEWÄHLT')).toBeVisible();
+    await expect(page.getByText(/nur Zustimmung zum Gespräch/)).toBeVisible();
+    await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByRole('button', { name: 'Los geht’s' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.getByText('01 / 24')).toBeVisible();
   });
 
-  test('the second person can decline entry just as neutrally', async ({ page }) => {
-    await reachEntryConsent(page);
-    await page.getByRole('button', { name: 'Ich bin Person 1' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await page.getByRole('button', { name: 'Ich bin Person 2' }).click();
-    await page.getByRole('button', { name: 'Hier enden' }).click();
-    await expect(page.getByRole('heading', { name: 'Alles gut.' })).toBeVisible();
+  test('English entry copy and collective decline are complete', async ({ page }) => {
+    await reachEntryConsent(page, 'en');
+    await entryRoleButton(page, 'en').click();
+    await expect(page.getByText('Decide only for yourself.', { exact: false })).toBeVisible();
+    await page.getByRole('button', { name: 'End here' }).click();
+    await entryRoleButton(page, 'en').click();
+    await page.getByRole('button', { name: 'Yes, voluntarily' }).click();
+    await expect(page.getByRole('heading', { name: 'All good.' })).toBeVisible();
+    await expect(page.getByText('Nobody has to explain who ended it or why.', { exact: false }))
+      .toBeVisible();
   });
 
-  test('English entry copy and neutral decline are complete', async ({ page }) => {
-    await reachEntryConsent(page, 'en');
-    await page.getByRole('button', { name: "I'm Player 1" }).click();
-    await expect(page.getByText('For adults aged 18 and over only.', { exact: false })).toBeVisible();
-    await page.getByRole('button', { name: 'End here' }).click();
-    await expect(page.getByRole('heading', { name: 'All good.' })).toBeVisible();
-    await expect(page.getByText('No explanation is needed.', { exact: false })).toBeVisible();
+  test('Act II also waits for both private decisions and exposes only the collective result', async ({
+    page,
+  }) => {
+    await reachActTwoConsent(page);
+    await page.getByRole('button', { name: 'Ich bin Alex' }).click();
+    await expect(page.getByText(/Berührung, Sex, Fantasien und Grenzen/)).toBeVisible();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+    await page.getByRole('button', { name: 'Ich bin Sam' }).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+
+    await expect(page.getByText('BEIDE HABEN GEWÄHLT')).toBeVisible();
+    await expect(page.getByText(/Jede einzelne Frage bleibt freiwillig/)).toBeVisible();
+    await page.getByRole('button', { name: 'Weiter' }).click();
+    await expect(page.getByText('AKT II', { exact: true })).toBeVisible();
+  });
+
+  test('a partial consent gate stores no decision and resumes from A', async ({ page }) => {
+    await reachEntryConsent(page);
+    const roleANumber = (await entryRoleButton(page).innerText()).match(/[12]/)[0];
+    await entryRoleButton(page).click();
+    await page.getByRole('button', { name: 'Ja, freiwillig' }).click();
+    const stored = await page.evaluate((key) => JSON.parse(window.localStorage.getItem(key)), STORAGE_KEY);
+    expect(stored).not.toHaveProperty('consentDecisions');
+
+    await page.reload();
+    await page.getByText('Spiel fortsetzen').click();
+    await expect(page.getByRole('button', {
+      name: new RegExp(`^Ich bin Person ${roleANumber}$`, 'i'),
+    })).toBeVisible();
   });
 
   test('a saved LATE NIGHT run resumes even while discovery is hidden', async ({ page }) => {
@@ -110,48 +142,37 @@ test.describe('LATE NIGHT consent and runtime', () => {
       qIndex: 2,
     });
     await expect(page.getByText('03 / 12')).toBeVisible();
-    await page.getByRole('button', { name: 'Menü' }).click();
-    await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
-    await page.getByText('Inhalte ab 18', { exact: true }).click();
-    await expect(page.getByText(/LATE NIGHT bleibt .* verborgen/)).toBeVisible();
   });
 
-  test('Act II content remains behind a renewed two-person opt-in', async ({ page }) => {
-    await reachActTwoConsent(page);
-    await expect(page.getByText('GIB DAS HANDY AN ALEX')).toBeVisible();
+  for (const [routeId, qIndex, pending, continueLabel] of [
+    ['quick', 11, 11, 'Ende'],
+    ['standard', 23, 23, 'Weiter'],
+    ['full', 35, 35, 'Weiter'],
+  ]) {
+    test(`${routeId} ends through the direct safety finale without Question 37`, async ({
+      page,
+    }) => {
+      await seedAndResume(page, {
+        packId: 'late-night',
+        routeId,
+        modeId: 'explicit',
+        phase: 'all36',
+        qIndex,
+        pending,
+      });
+      await page.waitForTimeout(1700);
+      await page.getByRole('button', { name: continueLabel }).click();
+      await expect(page.getByText(/Was ihr gesagt habt, ist Information/)).toBeVisible();
+      await expect(page.getByText('FRAGE 37')).toHaveCount(0);
+    });
+  }
 
-    await page.getByRole('button', { name: 'Ich bin Alex' }).click();
-    await expect(page.getByText('Ich möchte freiwillig mit expliziteren', { exact: false }))
-      .toBeVisible();
-    await page.getByRole('button', { name: 'Hier enden' }).click();
-    await expect(page.getByRole('heading', { name: 'Alles gut.' })).toBeVisible();
-  });
-
-  test('the second person can decline the renewed Act II opt-in', async ({ page }) => {
-    await reachActTwoConsent(page);
-    await page.getByRole('button', { name: 'Ich bin Alex' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await page.getByRole('button', { name: 'Ich bin Sam' }).click();
-    await page.getByRole('button', { name: 'Hier enden' }).click();
-    await expect(page.getByRole('heading', { name: 'Alles gut.' })).toBeVisible();
-  });
-
-  test('two renewed confirmations unlock only the Act II introduction', async ({ page }) => {
-    await reachActTwoConsent(page);
-    await page.getByRole('button', { name: 'Ich bin Alex' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await page.getByRole('button', { name: 'Ich bin Sam' }).click();
-    await page.getByRole('button', { name: 'Ich stimme zu' }).click();
-    await expect(page.getByText('AKT II', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Weiter' })).toBeVisible();
-  });
-
-  test('the renewed Act II opt-in is complete in English', async ({ page }) => {
+  test('English Act II gate can be resumed safely from A', async ({ page }) => {
     await page.goto('/closer/');
     await page.evaluate(
       ({ key, value }) => window.localStorage.setItem(key, JSON.stringify(value)),
       {
-        key: 'closer:v1',
+        key: STORAGE_KEY,
         value: {
           ...BASE_STATE,
           lang: 'en',
@@ -168,89 +189,23 @@ test.describe('LATE NIGHT consent and runtime', () => {
     await page.getByText('Continue game').click();
     await expect(page.getByText('PASS THE PHONE TO ALEX')).toBeVisible();
     await page.getByRole('button', { name: "I'm Alex" }).click();
-    await expect(page.getByText('I freely choose to continue with more explicit', { exact: false }))
-      .toBeVisible();
-    await page.getByRole('button', { name: 'I agree' }).click();
-    await page.getByRole('button', { name: "I'm Sam" }).click();
-    await page.getByRole('button', { name: 'I agree' }).click();
-    await expect(page.getByText('ACT II', { exact: true })).toBeVisible();
+    await expect(page.getByText('Do you freely want to continue', { exact: false })).toBeVisible();
   });
 
-  test('Standard route skips the universal secret handoff', async ({ page }) => {
+  test('consent role A follows the person selected to open Q1', async ({ page }) => {
     await seedAndResume(page, {
       packId: 'late-night',
       routeId: 'standard',
       modeId: 'explicit',
-      qIndex: 18,
+      phase: 'consentAct2PassA',
+      qIndex: 7,
+      pending: 8,
+      breakAct: 0,
+      starterOffset: 1,
+      hasStarted: true,
     });
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText('20', { exact: true })).toBeVisible();
-    await expect(page.getByText(/GIB DAS HANDY AN/)).toHaveCount(0);
-    await expect(page.getByText(/GEHEIME FRAGE/)).toHaveCount(0);
-  });
-
-  test('Full route also skips the universal secret handoff', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'late-night',
-      routeId: 'full',
-      modeId: 'explicit',
-      qIndex: 26,
-    });
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText('28', { exact: true })).toBeVisible();
-    await expect(page.getByText(/GIB DAS HANDY AN/)).toHaveCount(0);
-  });
-
-  test('the optional finale works without inventing a saved question', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'late-night',
-      routeId: 'standard',
-      modeId: 'explicit',
-      phase: 'all36',
-      qIndex: 23,
-      pending: 23,
-    });
-    await expect(page.getByText('Das waren alle 24.')).toBeVisible();
-    await page.waitForTimeout(1700);
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText('Trotzdem noch eine?')).toBeVisible();
-    await expect(page.getByText(/vorgemerkte Frage wartet/)).toHaveCount(0);
-    await page.getByRole('button', { name: 'Ja' }).click();
-    await expect(page.getByText('Was würde zukünftige Gespräche über Sex', { exact: false }))
-      .toBeVisible();
-  });
-
-  test('Quick ends directly without a saved-question or Question 37 ceremony', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'late-night',
-      routeId: 'quick',
-      modeId: 'explicit',
-      phase: 'all36',
-      qIndex: 11,
-      pending: 11,
-    });
-    await expect(page.getByText('Das waren alle 12.')).toBeVisible();
-    await page.waitForTimeout(1700);
-    await page.getByRole('button', { name: 'Ende' }).click();
-    await expect(page.locator('[data-testid="close-pulse"][data-stage="finale"]')).toBeVisible();
-    await expect(page.getByText('FRAGE 37')).toHaveCount(0);
-  });
-
-  test('Full route reaches the consent-safe Question 37 bonus', async ({ page }) => {
-    await seedAndResume(page, {
-      packId: 'late-night',
-      routeId: 'full',
-      modeId: 'explicit',
-      phase: 'all36',
-      qIndex: 35,
-      pending: 35,
-    });
-    await expect(page.getByText('Das waren alle 36.')).toBeVisible();
-    await page.waitForTimeout(1700);
-    await page.getByRole('button', { name: 'Weiter' }).click();
-    await page.getByRole('button', { name: 'Ja' }).click();
-    await expect(page.getByText('FRAGE 37')).toBeVisible();
-    await expect(page.getByText('Was würde zukünftige Gespräche über Sex', { exact: false }))
-      .toBeVisible();
+    await expect(page.getByText('GIB DAS HANDY AN SAM', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Ich bin Sam' }).click();
+    await expect(page.getByText(/Möchtest du für dich freiwillig/)).toBeVisible();
   });
 });

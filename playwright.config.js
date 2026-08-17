@@ -3,8 +3,8 @@ const { defineConfig, devices } = require('@playwright/test');
 
 /*
  * E2E coverage for CLOSER's critical branches (review 2026-08-15, P2 item):
- * countdown question-visibility, skip tokens, secret-question handoffs, all
- * four Question-37 combinations, and the timer. This tests the actual static
+ * countdown question visibility, free passing, Private Moment handoffs,
+ * Question 37 branches, consent gates, and the timer. This tests the actual static
  * export (see the webServer below) rather than the dev server, so it's
  * exercising exactly what ships.
  *

@@ -41,24 +41,27 @@ test.describe('DEEP standard route (24 questions, 8 per act)', () => {
       routeId: 'standard',
       modeId: 'still',
       qIndex: 23,
-      secretSeen: [true, true],
-      hasSecretQuestion: [true, true],
+      privateMomentStatus: 'consumed',
     });
     await page.getByRole('button', { name: 'Fertig' }).click();
     await expect(page.getByText('Das waren alle 24.')).toBeVisible();
   });
 
-  test('the secret question interrupts at this route\'s own position (index 18)', async ({
+  test('the listening-intention Private Moment is offered after Act I', async ({
     page,
   }) => {
     await seedAndResume(page, {
       packId: 'deep',
       routeId: 'standard',
       modeId: 'still',
-      qIndex: 17,
-      secretSeen: [false, false],
+      phase: 'break',
+      breakAct: 0,
+      pending: 8,
+      qIndex: 7,
+      privateMomentStatus: 'not-started',
     });
     await page.getByRole('button', { name: 'Weiter' }).click();
-    await expect(page.getByText(/GIB DAS HANDY AN ALEX/i)).toBeVisible();
+    await expect(page.getByText('KURZ PRIVAT')).toBeVisible();
+    await expect(page.getByText(/eine andere, freiwillige Karte/)).toBeVisible();
   });
 });

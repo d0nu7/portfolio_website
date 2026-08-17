@@ -53,29 +53,30 @@ Not verified from this environment: an actual browser console check for a CSP vi
 
 Replace the tiny pulse with a full, calm, pack-colored milestone scene that creates a brief sense of reward between acts while leaving conversation screens quiet.
 
-Trigger only on meaningful transitions: start, act completion, an earned private transition, and natural finale. Do not use points, streaks, confetti, disclosure ratings, or rewards after consent decline/early end.
+Trigger only on public shared transitions: start, act completion, and natural finale. Private handoffs and consent/readiness decisions stay quiet. Do not use points, streaks, confetti, disclosure ratings, or rewards after consent decline/early end.
 
 See the visual contract in [gameplay-and-safety.md](../product/gameplay-and-safety.md#8-milestone-celebration).
 
 ### FR-005 – Pack-specific private moments
 
-**Status:** Dedicated editorial task defined; implementation intentionally not started
+**Status:** Editorial specification approved by RaDi and implemented on 17 August 2026; automated validation complete, physical-device and moderated-session validation remains
 
 Replace the universal saved-question ritual with a small library of safe, pack-appropriate asymmetric moments.
 
-Editorial directions:
+Approved product matrix:
 
-| Pack | Suitable private direction |
-|---|---|
-| Classic | Preserve the original saved-question behavior only where the route justifies it. |
-| First Date | Choose one harmless curiosity to ask later; no prediction of consent or attraction. |
-| Date Night | Privately choose an appreciation or future-date detail to reveal. |
-| Couples | Select a listening intention or one positive quality to name. |
-| Friends | Choose a memory category or celebration to bring into the finale. |
-| Old Friends | Privately recall one detail, then compare memories without seeking a “correct” version. |
-| Deep | Choose whether listening, reflection, or space would feel most supportive. |
-| Chaos | Use a short secret spark or constraint for a co-created answer. |
-| Late Night | No secret sexual/physical tasks; readiness and consent checks only. |
+| Pack | Decision | Routes | Trigger | Use/discard point |
+|---|---|---|---|---|
+| Classic | Optional saved questions | Full | before Q28 | categorical check after Q36, then dynamic Question 37; discard at resolution/end |
+| First Date | Optional asymmetric curiosities | Standard, Full | after Act I | optional two-turn finale; discard at finale/end |
+| Date Night | Optional appreciation/future-date detail | Standard, Full | after Act I | optional two-turn finale; discard at finale/end |
+| Couples | Optional listening intention/quality | Standard, Full | after Act I | one shared use screen after Act II; discard immediately afterward |
+| Friends | Optional memory/celebration | Standard, Full | after Act II | optional two-turn finale; discard at finale/end |
+| Old Friends | Optional memory detail/meaning | Standard only | after Act I | immediate shared use screen; discard immediately afterward |
+| Deep | Optional reflection/silence intentions | Standard, Full | after Act I | shared close after Act II; discard immediately afterward |
+| Chaos | Optional surprise constraints | Standard, Full | immediately before Q16 | supplement Q16; discard when leaving Q16 |
+| Late Night | Required independent consent/readiness | all routes | entry and after Act I | collective accepted/declined result; direct safe finale after the route |
+| Road Trip / Family / Colleagues | None | all routes | — | — |
 
 Required task deliverables:
 
@@ -86,11 +87,13 @@ Required task deliverables:
 - exact DE/EN copy for display, handoff, decline, reveal/use, early exit, resume, and every affected finale branch;
 - a state lifecycle that stores only categorical navigation state, never an answer or private free text;
 - an explicit rule for when private information is used and irreversibly discarded;
-- RaDi editorial approval before a separate implementation branch begins.
+- RaDi editorial approval before implementation begins. Approval was recorded on 17 August 2026.
 
 Road Trip, Family, and Colleagues remain `privateMoment: none` for the current release. Late Night may use only independent readiness/consent checks, never secret sexual or physical tasks. Every card needs a safe decline path, route eligibility, and dedicated DE/EN wording.
 
-Acceptance: the approved matrix is sufficiently complete that engineering does not need to invent content, safety behavior, persistence rules, or finale semantics.
+Implementation preserves A/B roles from the person selected to open Q1. Non-Classic private card choices never persist as individual accept/decline values. Classic stores only `none | pending | asked | discarded`; Late Night consent decisions exist only in memory long enough to compute a collective result and are excluded from local storage. Private card screens resume behind a named handoff cover. Natural completion and every early end scrub private categorical state. Spoken answers and private free text never enter application state.
+
+Acceptance: the matrix, localized copy, lifecycle, threat review, route triggers, and finale semantics are implemented without borrowing from FR-006 or changing PLAYFUL eligibility. The exact bilingual catalog is in [question-catalog.de-en.md](../content/question-catalog.de-en.md#private-moments-fr-005), and the runtime/safety contract is in [gameplay-and-safety.md](../product/gameplay-and-safety.md#6-private-moments-and-finales).
 
 ### FR-006 – Curated replacement-question joker
 
@@ -503,18 +506,14 @@ its own participation, content, and release review.
 
 ### FR-018 – POWER & TRUST adult pack research
 
-**Status:** Proposed research and editorial task; no questions approved
+**Status:** Research delivered 17 August 2026; conditional conversation-only go, with no implementation or public-release approval
 
-Working title: **POWER & TRUST**. This is an original conversation pack about
+Working title: **POWER & TRUST**; the evidence review recommends testing **POWER, BY CHOICE**. This is an original conversation pack about
 consensual power exchange, dominance/submission preferences, negotiation,
 safewords, stopping, check-ins, and aftercare. It must not imitate, quote, or use
 the branding of *Fifty Shades of Grey*.
 
-Before drafting questions, run a dedicated literature review covering consensual
-BDSM and power-exchange communication, consent negotiation, stigma and minority
-stress, risk frameworks and their limitations, safewords/check-ins, aftercare,
-and indicators of coercion or unsafe power imbalance. Separate peer-reviewed
-findings from community practice and clinical or popular claims.
+The dedicated evidence review is complete in the [integrated FR-018–020 report](../research/fr-018-fr-020-deep-research.md) and [FR-018 memo](../research/fr-018-power-trust-evidence-memo.md). It separates peer-reviewed findings, community practice, professional guidance, editorial inference, and unresolved questions.
 
 Editorial contract:
 
@@ -527,14 +526,11 @@ Editorial contract:
   orientation, relationship, or wish to act.
 - Entry and escalation use independent opt-ins and a neutral direct ending.
 
-Done when: the literature map, claim limits, bilingual 36-question candidate
-bank, route/intensity proposal, safety matrix, and moderated pilot protocol have
-been reviewed separately. Implementation starts only after explicit RaDi
-approval.
+Research gate complete: the literature map, claim limits, bilingual 36-question candidate bank, route/intensity proposal, safety matrix, and moderated pilot protocol are delivered and citation-audited. Implementation remains blocked until RaDi accepts the concept/name and the named kink/sexual-health, trauma, accessibility, bilingual, privacy, and Austrian/EU legal reviews approve the applicable scope.
 
 ### FR-019 – SLOW BURN touch-forward adult experience
 
-**Status:** Proposed research, interaction-design, and editorial task; no steps approved
+**Status:** Research delivered 17 August 2026; conditional go for a closed moderated prototype only, public release no-go
 
 Working title: **SLOW BURN**. Unlike the conversation-only Late Night pack, this
 is deliberately a physical, touch-forward experience for two participating
@@ -543,19 +539,13 @@ more sensual or erotic touch, kissing, and body-specific preferences. It may be
 research-informed, but the product must not promise, score, or claim to cause
 arousal.
 
-The dedicated review must cover responsive and spontaneous desire, excitation
-and inhibition, sexual communication, sensate-focus principles and limitations,
-touch and ongoing consent, body image and trauma-informed practice,
-gender/orientation/body inclusion, and the evidential limits of tantra-related
-claims. Medical, therapeutic, spiritual, community, and commercial sources must
-not be treated as equivalent evidence.
+The dedicated review is complete in the [integrated FR-018–020 report](../research/fr-018-fr-020-deep-research.md) and [FR-019 memo](../research/fr-019-slow-burn-evidence-memo.md). It distinguishes clinical, empirical, community, public-health, spiritual, and commercial claims and defines a non-contiguous eligibility set plus exact-action gating.
 
 Interaction contract:
 
 - Both adults knowingly choose a touch-based mode and confirm that intention
   independently before it starts.
-- Each new category or increase in intensity uses a brief bilateral choice such
-  as **Yes / Adjust / Next**, without turning the flow into repeated legal copy.
+- Every physical start or restart and every materially changed action or condition uses a fresh exact bilateral **Yes + Yes** gate. **Adjust** and **Skip** remain equal-status choices; less, slower, more space, no touch, Pause, Stop, and End take effect immediately.
 - The experience may give concrete, tasteful touch or kissing invitations and
   may ask where or how touch feels good. It must also make “not there”, “not
   now”, “different”, Pause, and End equally immediate.
@@ -566,14 +556,11 @@ Interaction contract:
 - Answers, chosen body areas, adjustments, and consent states are transient and
   never persisted.
 
-Done when: the evidence review and non-claims, complete three-act interaction
-map, bilingual copy, consent-state model, accessibility review, and moderated
-pilot protocol are approved. Implementation starts only after explicit RaDi
-approval.
+Research gate complete: the evidence review and non-claims, complete three-act model, category boundary, exact-action state architecture, bilingual cards, accessibility requirements, data-minimisation rules, and staged pilot protocol are delivered. Consumer V1 is limited to categories 0–6; category 7/C06 is separately reviewed, over-clothing, moderated-prototype-only content. Implementation and any public release remain blocked by the report's named specialist, ethics, privacy, legal, accessibility, and adverse-event gates plus explicit RaDi approval.
 
 ### FR-020 – Cross-pack evidence and question audit
 
-**Status:** Proposed after the two focused adult-content reviews
+**Status:** Audit delivered 17 August 2026; 37 atomic proposals await individual disposition
 
 Repeat the evidence-review method across every research-informed pack without
 altering the immutable Classic questions. Recheck construct fit, intensity
@@ -582,3 +569,5 @@ duration assumptions, and whether newer publications materially change any
 editorial rationale. Preserve a dated source/claim map and file individual
 content changes as separately reviewable proposals rather than silently editing
 the authoritative catalog.
+
+The completed [integrated report](../research/fr-018-fr-020-deep-research.md) and [FR-020 audit memo](../research/fr-020-cross-pack-audit-memo.md) cover all 12 implemented packs plus the Students/FH Salzburg draft. Classic remains unchanged. Each proposed claim, wording, route, mechanic, response-card, or finale change has an exact ID, current/proposed DE/EN or metadata, rationale, evidence, downside, and approval gate. No proposal is approved merely because it appears in the audit.

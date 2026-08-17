@@ -21,6 +21,28 @@ const LATE_NIGHT_ACT_II_OPT_IN = {
   en: 'I freely choose to continue with more explicit conversation prompts. I may skip any question or end here.',
 };
 
+const LATE_NIGHT_ENTRY_CARDS = [
+  {
+    de: 'Entscheide nur für dich. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören. Deine Wahl wird zunächst niemandem angezeigt.',
+    en: 'Decide only for yourself. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time. Your choice will not initially be shown to anyone.',
+  },
+  {
+    de: 'Entscheide unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Bist du mindestens 18 Jahre alt und möchtest du freiwillig an einem ausdrücklich sexuellen Gespräch teilnehmen? Du kannst jede Frage überspringen und jederzeit aufhören.',
+    en: 'Decide independently. The first choice is not shown to you and does not obligate you. Are you at least 18 years old, and do you freely want to take part in an explicitly sexual conversation? You may pass any question and stop at any time.',
+  },
+];
+
+const LATE_NIGHT_ACT_II_CARDS = [
+  {
+    de: 'Möchtest du für dich freiwillig mit ausdrücklich sexuellen Fragen über Berührung, Sex, Fantasien und Grenzen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.',
+    en: 'Do you freely want to continue with explicitly sexual questions about touch, sex, fantasies, and boundaries? You may pass any question, change your mind, or end here. No answer is consent to an action.',
+  },
+  {
+    de: 'Entscheide erneut unabhängig. Die erste Wahl wird dir nicht gezeigt und verpflichtet dich zu nichts. Möchtest du freiwillig mit den ausdrücklich sexuellen Fragen fortfahren? Du kannst jede Frage überspringen, deine Meinung ändern oder hier enden. Keine Antwort ist Zustimmung zu einer Handlung.',
+    en: 'Decide independently again. The first choice is not shown to you and does not obligate you. Do you freely want to continue with the explicitly sexual questions? You may pass any question, change your mind, or end here. No answer is consent to an action.',
+  },
+];
+
 const LATE_NIGHT_ACTS = [
   {
     id: 'atmosphere',
@@ -334,9 +356,31 @@ export const LATE_NIGHT_PACK = {
   secretAtIndex: LATE_NIGHT_SECRET_AT_INDEX,
   routes: LATE_NIGHT_ROUTES,
   defaultRouteId: 'standard',
+  directFinale: {
+    de: 'Damit endet LATE NIGHT. Was ihr gesagt habt, ist Information – keine Zustimmung zu einer Handlung. Alles Weitere braucht außerhalb des Spiels eine konkrete, freiwillige und jederzeit widerrufbare Zustimmung.',
+    en: 'This is the end of LATE NIGHT. What you said is information—not consent to an action. Anything further requires specific, voluntary, and withdrawable consent outside the game.',
+  },
   // Both people confirm entry separately, then confirm again before Act II.
   consentGate: {
     notice: LATE_NIGHT_CONSENT_NOTICE,
     act2OptIn: LATE_NIGHT_ACT_II_OPT_IN,
+    entryCards: LATE_NIGHT_ENTRY_CARDS,
+    act2Cards: LATE_NIGHT_ACT_II_CARDS,
+    entryAccepted: {
+      de: 'Ihr habt beide unabhängig gewählt, LATE NIGHT zu starten. Das ist nur Zustimmung zum Gespräch, niemals zu einer Handlung.',
+      en: 'You both independently chose to start LATE NIGHT. This is consent only to the conversation, never to an action.',
+    },
+    act2Accepted: {
+      de: 'Ihr habt beide unabhängig gewählt, mit Akt II fortzufahren. Jede einzelne Frage bleibt freiwillig; keine Antwort ist Zustimmung zu einer Handlung.',
+      en: 'You both independently chose to continue to Act II. Every individual question remains optional; no answer is consent to an action.',
+    },
+    entryDeclined: {
+      de: 'Alles gut. LATE NIGHT startet nicht. Niemand muss erklären, wer beendet hat oder warum.',
+      en: 'All good. LATE NIGHT will not start. Nobody has to explain who ended it or why.',
+    },
+    act2Declined: {
+      de: 'Alles gut. LATE NIGHT endet hier, bevor die expliziteren Fragen beginnen. Niemand muss erklären, wer beendet hat oder warum.',
+      en: 'All good. LATE NIGHT ends here before the more explicit questions begin. Nobody has to explain who ended it or why.',
+    },
   },
 };

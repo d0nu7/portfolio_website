@@ -1,5 +1,6 @@
 import {
   SAVE_REJECT_REASONS,
+  STATE_VERSION,
   createInitialState,
   createRestartState,
   parseSaved,
@@ -14,12 +15,15 @@ import { CONTENT_VERSION, runFingerprintFor } from '../../../constants/closer';
  * separately checks the resulting fallback behavior.
  */
 const BASE = {
-  stateVersion: 1,
+  stateVersion: STATE_VERSION,
   contentVersion: CONTENT_VERSION,
   phase: 'q',
   qIndex: 5,
   pending: 5,
   hasStarted: true,
+  privateMomentStatus: 'not-started',
+  privateQuestionState: ['unseen', 'unseen'],
+  consentDecisions: [null, null],
 };
 
 describe('createInitialState', () => {
@@ -32,7 +36,7 @@ describe('createInitialState', () => {
     });
 
     expect(state).toEqual(expect.objectContaining({
-      stateVersion: 1,
+      stateVersion: STATE_VERSION,
       phase: 'start',
       lang: 'en',
       packId: 'first-date',
@@ -44,6 +48,9 @@ describe('createInitialState', () => {
       hasStarted: false,
       contentVersion: CONTENT_VERSION,
       runFingerprint: null,
+      privateMomentStatus: 'not-started',
+      privateQuestionState: ['unseen', 'unseen'],
+      consentDecisions: [null, null],
     }));
   });
 
@@ -103,8 +110,42 @@ describe('createInitialState', () => {
 describe('resumeSavedState', () => {
   it('restores the parsed state in the language selected on the resume screen', () => {
     const saved = { ...BASE, lang: 'de', packId: 'classic' };
-    expect(resumeSavedState(saved, 'en')).toEqual({ ...saved, lang: 'en' });
+    expect(resumeSavedState(saved, 'en')).toEqual({
+      ...saved,
+      lang: 'en',
+      consentDecisions: [null, null],
+    });
     expect(saved.lang).toBe('de');
+  });
+
+  it.each([
+    ['secret1', 'secretPass1'],
+    ['secret2', 'secretPass2'],
+    ['check1', 'checkPass1'],
+    ['check2', 'checkPass2'],
+  ])('covers private content when resuming %s', (phase, expectedPhase) => {
+    expect(resumeSavedState({ ...BASE, phase }, 'de').phase).toBe(expectedPhase);
+  });
+
+  it.each([
+    ['consentGateA', 'consentGatePassA'],
+    ['consentGateB', 'consentGatePassA'],
+    ['consentGatePassB', 'consentGatePassA'],
+    ['consentAct2A', 'consentAct2PassA'],
+    ['consentAct2B', 'consentAct2PassA'],
+    ['consentAct2PassB', 'consentAct2PassA'],
+  ])('restarts a partial two-person consent gate from A when resuming %s', (
+    phase,
+    expectedPhase
+  ) => {
+    expect(resumeSavedState({
+      ...BASE,
+      phase,
+      consentDecisions: ['yes', null],
+    }, 'de')).toEqual(expect.objectContaining({
+      phase: expectedPhase,
+      consentDecisions: [null, null],
+    }));
   });
 
   it('rejects a missing state and ignores an unsupported language', () => {
@@ -172,6 +213,19 @@ describe('parseSaved (discriminated save parser)', () => {
     expect(
       parseSaved(JSON.stringify({ ...BASE, phase: 'consentGateA', packId: 'classic' }))
     ).toEqual({ ok: false, reason: SAVE_REJECT_REASONS.CONSENT_PHASE_WITHOUT_GATE });
+  });
+
+  it('accepts a resumable Late Night entry gate without marking the run started', () => {
+    const result = parseSaved(JSON.stringify({
+      ...BASE,
+      packId: 'late-night',
+      routeId: 'standard',
+      modeId: 'explicit',
+      phase: 'consentGatePassB',
+      hasStarted: false,
+      consentDecisions: undefined,
+    }));
+    expect(result.ok).toBe(true);
   });
 
   it('rejects a stale runFingerprint with reason=CONTENT_DRIFT', () => {
