@@ -1,6 +1,15 @@
 const { test, expect } = require('./fixtures');
 const { STORAGE_KEY } = require('./helpers');
 
+async function enableFirstDate(page) {
+  await page.goto('/closer/');
+  await page.getByRole('button', { name: 'Menü' }).click();
+  await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+  await page.getByRole('button', { name: /^FIRST DATE/ }).click();
+  await page.getByRole('button', { name: 'Zurück' }).click();
+  await page.getByRole('button', { name: 'Schließen' }).click();
+}
+
 /*
  * FIRST DATE (iteration 8 catalog rollout, FR8-01/FR8-03) -- CLOSER's first
  * pack beyond CLASSIC, and the new pack-selection screen that makes choosing
@@ -13,7 +22,7 @@ test.describe('Pack selection (FR8-03)', () => {
   test('choosing FIRST DATE swaps routes, style and the first question away from CLASSIC', async ({
     page,
   }) => {
-    await page.goto('/closer/');
+    await enableFirstDate(page);
     await page.getByRole('button', { name: 'Start' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
 

@@ -1,76 +1,43 @@
-# CLOSER – refactoring roadmap
+# CLOSER – architecture and refactoring record
 
-**Updated:** 17 August 2026
-**Status:** Closed
-**Basis:** independent code review, the consolidated Claude refactoring analysis, product review, and current regression findings
-**Outcome:** correctness and maintainability improved incrementally without a high-risk rewrite or unrelated product changes
+**Updated:** 18 August 2026
+**Status:** FR-011 complete
 
-This is the completed FR-011 implementation record. Dated iteration reports were removed after their durable findings were folded into this document and the living review trackers.
+The refactoring is closed. This document records the architecture and maintenance rules that must survive future product work; completed phase-by-phase history lives in Git.
 
-## 1. Non-negotiable product decisions
-
-1. **Consent is free.** Either person may pass on any question without a token, penalty, or explanation.
-2. **A replacement-question joker is a different mechanic.** Add it only after pack- and act-appropriate replacement questions exist; never present it as the safety exit.
-3. **Choice screens require a genuine choice.** Automatically resolve a single option; treat zero options as a configuration error.
-4. **Private moments must be pack- and route-specific.** A private handoff is useful only when it reveals asymmetric information or assigns a genuinely private, safe task.
-5. **Quick must remain quick.** It should not inherit the long saved-question and Question 37 ceremony.
-6. **Timing has one numerical source.** Route estimate, act budget, timer, and overtime must derive from the same data.
-7. **Persistence is versioned and invariant-aware.** A save is valid only when its content version, run definition, and phase state agree.
-8. **Milestones celebrate shared time, not disclosure.** Animation must never reward intensity, speed, or consent.
-9. **Late Night discovery and participation are separate.** A discreet menu preference may reveal the pack; a shared introduction asks both adults to check directly with each other before starting.
-10. **TTS is not part of the active product scope.** The existing voice branch is not planned for merge and must not influence FR-011 architecture, tests, or release decisions. Reconsidering TTS requires a new explicit product decision.
-
-## 2. Current architecture
-
-Content is split from the public compatibility facade. `compileRun()` remains in
-that facade for stable imports, while pure navigation and persistence logic now
-live in dedicated engine modules.
+## Current architecture
 
 ```text
 src/closer/
   content/
+    packs/                    # one module per pack or specialist bundle
+    privateMoments.js         # pack-specific private content
     shared.js
-    packs/
-      classic.js
-      first-date.js
-      date-night.js
-      couples.js
-      friends.js
-      old-friends.js
-      deep.js
-      chaos.js
-      late-night.js
-      power-by-choice.js
-      slow-burn.js
-      specialist.js
-      specialist-question-data.js
     index.js
   engine/
-    transitions.js             # pure phase transitions and named effects
-    persistence.js             # initial state, save parsing, migration, validation
+    transitions.js            # pure persisted navigation
+    persistence.js            # canonical state, parsing, migration, validation
   infrastructure/
-    storage.js                 # guarded localStorage boundary and key ownership
+    storage.js                # guarded localStorage boundary
+
 src/components/Closer/
-  CloserGame.js                # browser effects and event orchestration
-  CloserStartView.js           # start, resume, and restart-confirmation presentation
-  CloserMenu.js                # global menu, preferences, and legal subviews
-  CloserSetupView.js           # pure player, pack, route, and style setup views
-  CloserConsentView.js         # shared private entry and Act II consent views
-  CloserActView.js             # intro, act entry, and act-break presentation
-  CloserPrivateMomentView.js   # private capture and post-run check handoffs
-  CloserFinaleView.js          # last question, Q37 branches, and ending beats
-  CloserQuestionView.js        # question, twist, countdown, pass, and stay presentation
-  CloserScreenFrame.js         # shared background, blocking, menu, and celebration layers
-src/constants/closer.js        # compatibility exports, resolution, and compileRun()
+  CloserGame.js               # browser effects and event orchestration
+  CloserStartView.js
+  CloserSetupView.js
+  CloserConsentView.js        # dormant generic capability; no current pack uses it
+  CloserActView.js
+  CloserPrivateMomentView.js
+  CloserQuestionView.js
+  CloserFinaleView.js
+  CloserMenu.js
+  CloserScreenFrame.js
+
+src/constants/closer.js       # compatibility exports and compileRun()
 ```
 
-`CloserGame.js` now owns browser lifecycle effects, screen-local timing, and event
-orchestration. Persisted navigation is handled by pure transition functions;
-phase presentation and the shared screen stack live in focused components.
+`compileRun()` is the runtime source for question order, act boundaries, timing, route-specific Private Moments, content revision, and fingerprint. Persisted navigation is handled by pure transitions. Focus, countdowns, animation, visibility, Wake Lock, and active timer effects remain intentionally browser-local.
 
-### Target run definition
-
-After pack, route, and style resolution, compile one immutable definition:
+## Stable run contract
 
 ```js
 {
@@ -79,9 +46,9 @@ After pack, route, and style resolution, compile one immutable definition:
   modeId,
   hasStyleChoice,
   requiresConsent,
-  questions: [{ id, actIndex, sourceIndex, content }],
-  actStarts: [0, 4, 8],
-  timing: { totalMinutes, actMinutes },
+  questions,
+  actStarts,
+  timing,
   secretAtIndex,
   privateMoment,
   contentRevision,
@@ -89,139 +56,57 @@ After pack, route, and style resolution, compile one immutable definition:
 }
 ```
 
-`compileRun()` is wired into the controller and save parser as the single
-runtime source for run structure. Every persisted navigation family is routed
-through characterized pure transitions. Screen-local countdown, focus,
-animation, visibility, Wake Lock, and timer effects remain intentionally in the
-controller.
+`modeId` is a legacy persisted name for style. Renaming it is a separate optional save migration, not routine cleanup.
 
-## 3. Work phases
+## Product invariants
 
-### Phase 0 – release correctness
+1. Pass is free, unlimited, immediate, and never a token.
+2. Replacement questions are a separate optional mechanic.
+3. Singleton setup choices are skipped in both directions.
+4. Quick routes omit long Private Moment and Question 37 ceremonies.
+5. Private Moments are pack/route-specific, asymmetric, optional, and store no answer text.
+6. Timing derives from route data; timers never advance the game.
+7. Saves require compatible versions, run identity, and characterized phase state.
+8. Milestones celebrate shared progress, never disclosure, speed, or consent.
+9. Adult discovery, entering a pack, and agreement to any real-world action are separate.
+10. SLOW BURN uses ordinary prompt state; body areas, adjustments, and agreement never enter app state.
+11. Classic wording, translation, order, and route membership remain immutable.
+12. TTS and offline support are outside the active architecture.
 
-Status: complete. Device-only release checks remain tracked in [bugs.md](../reviews/bugs.md).
+## Completed structural checks
 
-- [x] Remove heart-based skipping and keep one unconditional pass action.
-- [x] Skip singleton style selection.
-- [x] Show pack-specific intro copy.
-- [x] Route restart through a canonical initial-state factory.
-- [x] Compare content version during resume.
-- [x] Harden basic save validation.
-- [x] Remove the multi-step saved-question sequence from Quick.
-- [x] Distinguish natural completion from an early end before showing a reward.
-- [x] Add reusable dialog, handoff, and choice-list primitives.
-- [x] Verify the repaired menu/timer layout, celebration animation, dialog subview focus, and Late Night low-attention route in the local Chromium regression suite.
-- [x] Remove the six-second STAY interaction trap and provide an immediately available safe exit.
-- [x] Make covered milestone scenes inert and pause their active timer and ending timelines.
-- [x] Keep Pass available throughout twist lead-ins and countdowns.
-- [x] Keep the global Menu and legal views reachable throughout the ending.
+- Content is modular and catalog-fidelity tested with globally stable IDs.
+- Run fingerprints include every behavior-defining pack, route, and style choice.
+- Restart uses canonical state; incompatible saves fail safely.
+- Setup, questions, Pass, acts, Private Moments, finales, restart, and global settings have characterized pure transition coverage.
+- Browser storage has one guarded ownership boundary.
+- Active time is checkpointed and excludes hidden/dialog/celebration time.
+- Presentation is split into focused phase views behind one shared screen stack.
+- Adult packs reuse the low-attention controller instead of parallel interaction engines.
 
-Acceptance: lint, unit tests, static build, and complete Chromium E2E suite pass; each corrected path has a regression test.
+The detailed event contract remains in the [transition matrix](transition-matrix.md).
 
-### Phase 1 – content identity and fidelity
+## Maintenance rules
 
-Status: complete.
+- Change content in its pack module and synchronized bilingual catalog.
+- Bump content/preference/state versions when compatibility changes.
+- Add a transition only after characterizing valid origins, destination, state patch, and browser effects.
+- Keep rendering-time randomness out of run structure.
+- Keep localized copy out of engine logic.
+- Do not add persisted intimate answers, consent decisions, body preferences, or private free text.
+- Do not restore device-mediated adult confirmation rituals without a new product decision and real evidence.
+- Remove only demonstrably unused code and documentation.
+- Keep new documentation, source comments, tests, and commit messages in English.
+- Use Git history instead of retaining completed iteration narratives.
 
-- [x] Assign explicit stable IDs to every implemented German/English question.
-- [x] Enforce exact pack, act, ID, route, and wording fidelity against the bilingual catalog.
-- [x] Deduplicate response-card objects.
-- [x] Model route durations numerically.
-- [x] Add a versioned ordered run fingerprint.
-- [x] Include every behavior-defining selection, including style/mode identity, in the fingerprint (BUG-007).
+## Verification
 
-Acceptance: any drift between the catalog and source content fails the test suite.
+```text
+npm run content:generate
+npm run lint
+npm test -- --runInBand
+npm run test:e2e
+git diff --check
+```
 
-### Phase 2 – content modularization
-
-Status: complete.
-
-- [x] Split packs into one module each.
-- [x] Separate shared content and engine helpers.
-- [x] Preserve the public compatibility exports during migration.
-- [x] Keep Late Night content isolated in its own module.
-
-The modularization exists for reviewability and maintenance, not as a claimed performance optimization.
-
-### Phase 3 – run definition, transitions, and persistence
-
-Status: complete.
-
-**Execution freeze (16 August 2026):** routes, content, private moments,
-finales, consent, Pass, setup navigation, animation, legal copy, PWA behavior,
-and infrastructure remained frozen throughout FR-011. The refactoring freeze
-ended with the verified completion commit; any later product work starts as a
-separately approved scope.
-
-1. [x] Make `compileRun()` the runtime source for question order, act boundaries, timing, private-moment placement, and fingerprinting.
-2. [x] Define explicit events such as `START_RUN`, `ANSWER_DONE`, `PASS`, `END_ACT`, `CONFIRM_CONSENT`, `END_RUN`, and `RESUME`. The frozen event inventory and implemented families live in the [transition matrix](transition-matrix.md).
-3. [x] Move allowed navigation into pure transition functions. Setup/entry, consent, acts, question completion/pass, private moments, final-question reveal, Question 37, end-run, language, timer, and compiled destinations are characterized in `src/closer/engine/transitions.js`. Canonical state creation, restart, resume preparation, and save parsing live in `src/closer/engine/persistence.js`; guarded browser storage lives in `src/closer/infrastructure/storage.js`. Screen-local effects and Late Night discovery preferences intentionally remain in the controller.
-4. [x] Keep rendering declarative: phase selectors decide which screen is shown; focused screen components emit callbacks that the controller maps to explicit events. Start/resume, setup, consent, acts, private moments, the complete finale, questions/twists, global menu, and the shared screen shell are extracted.
-5. [x] Replace the broad persisted-state parser with genuinely phase-discriminated schemas and invariants (BUG-008 — scoped to two verified phase-family checks; see bugs.md for what was deliberately left out and why).
-6. [x] Persist the active timer segment on lifecycle boundaries so an abrupt process kill loses as little time as possible (BUG-009).
-7. [x] Keep non-run preferences in a separately versioned preference record.
-8. [x] Pause active time while the page is hidden and request Wake Lock again after visibility returns.
-
-The work was delivered in small, behavior-preserving slices. Consent and private handoffs received dedicated tests before their transitions moved.
-
-Acceptance:
-
-- A transition matrix covers every phase and event.
-- Structurally invalid saves and characterized impossible phase/run combinations are rejected before rendering.
-- Resume reconstructs the same immutable run or rejects the save safely.
-- Restart always produces the canonical state for the selected pack.
-
-## 4. Verification record
-
-The final automated gate passed:
-
-1. `npm run lint`
-2. complete unit, schema, transition, persistence, storage, and catalog suite
-3. production static export
-4. complete mobile Chromium E2E suite
-5. console/page-error guard, keyboard, focus, reduced-motion, contrast, and 320–430 px layout coverage
-
-Do not run E2E tests against an old `out/` directory. `npm run test:e2e` already creates a fresh build; `npm run test:e2e:run` is only appropriate after a verified current export.
-
-Physical Android/iOS, VoiceOver, TalkBack, and WebKit checks remain release
-validation, not unfinished FR-011 refactoring. They are tracked under BUG-010
-and the RaDi owner TODO.
-
-### Post-FR-011 extension – adult experience boundary
-
-Status: complete on 17 August 2026.
-
-- [x] Add two metadata-driven adult packs without changing Classic.
-- [x] Keep POWER, BY CHOICE on the ordinary compiled conversation path.
-- [x] Keep SLOW BURN on the ordinary compiled question path after device feedback showed that a separate controller created excessive phone interaction.
-- [x] Use one shared introduction; keep agreement, adjustment, Pause, and Stop in direct interpersonal communication.
-- [x] Store only ordinary route/question progress and add no action, body-area, adjustment, or agreement fields.
-- [x] Extend catalog fidelity, route, registry, persistence, and mobile interaction coverage.
-
-This is an intentional simplification, not unfinished reducer work. The dedicated `CloserTouchExperience` prototype was removed. SLOW BURN now reuses the same low-attention prompt controller as the rest of CLOSER, and embodied choices never enter application state.
-
-## 5. Follow-up outside FR-011
-
-- Product mechanics and editorial ideas remain in [feature requests](../reviews/feature-requests.md).
-- Device, legal, offline-PWA, and subdomain decisions remain in the [RaDi owner TODO](../product/radi-owner-todo.md).
-- TTS remains shelved indefinitely and requires a new explicit product decision.
-- Renaming persisted `modeId` is a separate save-migration project, not cleanup.
-
-## 6. Maintenance rules
-
-- Remove only demonstrably unused files, exports, comments, and duplicate documentation.
-- Do not modify or merge voice artifacts. TTS is outside the active product scope.
-- Do not rewrite published Git history merely to translate old commit messages.
-- New documentation, source comments, test descriptions, and commit messages are English. Localized product copy and the bilingual question catalog remain German/English by design.
-- Keep one living document per purpose. Git history preserves superseded iteration reports.
-- End each phase with a full relevant test run and `git diff --check`.
-
-## 7. Related documents
-
-- [CLOSER documentation index](../README.md)
-- [Current holistic review](../reviews/current-review.md)
-- [Bug tracker](../reviews/bugs.md)
-- [Feature requests](../reviews/feature-requests.md)
-- [Gameplay and safety contract](../product/gameplay-and-safety.md)
-- [Bilingual question catalog](../content/question-catalog.de-en.md)
-- [Question-design research](../content/question-design-research.md)
-- [Transition matrix](transition-matrix.md)
+Physical platforms and assistive technologies remain release validation under [BUG-010](../reviews/bugs.md#bug-010--physical-pwa-and-assistive-technology-coverage), not unfinished refactoring.

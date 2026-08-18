@@ -60,8 +60,8 @@ test.describe('Setup Back navigation', () => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Start' }).click();
 
-    await page.getByLabel('Person 1 – Name (optional)').fill('Robin');
-    await page.getByLabel('Person 2 – Name (optional)').fill('Toni');
+    await page.getByLabel('Person 1 – Name oder Spitzname (optional)').fill('Robin');
+    await page.getByLabel('Person 2 – Name oder Spitzname (optional)').fill('Toni');
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack
 
     await page.getByText('FRIENDS', { exact: true }).click();
@@ -71,8 +71,8 @@ test.describe('Setup Back navigation', () => {
     // Walk all the way back to Players.
     await page.getByRole('button', { name: 'Zurück' }).click(); // duration -> pack
     await page.getByRole('button', { name: 'Zurück' }).click(); // pack -> players
-    await expect(page.getByLabel('Person 1 – Name (optional)')).toHaveValue('Robin');
-    await expect(page.getByLabel('Person 2 – Name (optional)')).toHaveValue('Toni');
+    await expect(page.getByLabel('Person 1 – Name oder Spitzname (optional)')).toHaveValue('Robin');
+    await expect(page.getByLabel('Person 2 – Name oder Spitzname (optional)')).toHaveValue('Toni');
 
     // Forward again: the earlier pack and route are still marked selected.
     await page.getByRole('button', { name: 'Weiter' }).click(); // players -> pack

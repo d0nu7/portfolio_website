@@ -20,7 +20,7 @@ test('the complete setup flow reaches the first question without a mouse', async
   await page.getByRole('button', { name: 'Start' }).press('Enter');
 
   // PLAYERS: real labelled inputs that are reachable by keyboard.
-  await page.getByLabel('Person 1 – Name (optional)').focus();
+  await page.getByLabel('Person 1 – Name oder Spitzname (optional)').focus();
   await page.keyboard.type('Alex');
   await page.keyboard.press('Tab');
   await page.keyboard.type('Sam');

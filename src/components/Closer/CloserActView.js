@@ -55,7 +55,9 @@ export default function CloserActView({
           {!pack.consentGate && (
             <TextButton onClick={onBack}>{t('goBack')}</TextButton>
           )}
-          <Small style={{ textAlign: 'center' }}>{t('privacy')}</Small>
+          <Small style={{ textAlign: 'center' }}>
+            {pick(pack.introPrivacy || t('privacy'), lang)}
+          </Small>
         </Foot>
       </>
     );

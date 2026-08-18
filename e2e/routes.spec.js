@@ -1,6 +1,15 @@
 const { test, expect } = require('./fixtures');
 const { seedAndResume, STORAGE_KEY } = require('./helpers');
 
+async function enableFirstDate(page) {
+  await page.goto('/closer/');
+  await page.getByRole('button', { name: 'Menü' }).click();
+  await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
+  await page.getByRole('button', { name: /^FIRST DATE/ }).click();
+  await page.getByRole('button', { name: 'Zurück' }).click();
+  await page.getByRole('button', { name: 'Schließen' }).click();
+}
+
 /*
  * Iteration 7, Phase 2 (FR-01/FR-02): curated time routes replacing the
  * assumption that every playthrough is the full 36 questions. These pin
@@ -61,7 +70,7 @@ test.describe('Duration / route selection', () => {
   });
 
   test('a pack with one style skips the redundant mode screen', async ({ page }) => {
-    await page.goto('/closer/');
+    await enableFirstDate(page);
     await page.getByRole('button', { name: 'Start' }).click();
     await page.getByRole('button', { name: 'Weiter' }).click();
     await page.getByText('FIRST DATE', { exact: true }).click();

@@ -2,7 +2,7 @@
 
 **Updated:** 17 August 2026
 **Status:** Editorial source of truth for implemented packs
-**Scope:** 14 packs · 489 master questions or action cards · German and English · curated duration routes · pack-specific finales
+**Scope:** 16 packs · 537 master questions or action cards · German and English · curated duration routes · pack-specific finales
 
 ---
 
@@ -27,9 +27,9 @@
 | Standard | 24 questions, 8 per act | default for most packs |
 | Full | 36 questions, 12 per act | complete master bank |
 
-In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `Q/F` means Quick and Full; `S/F` means Standard and Full; and `F` means Full only. `COLLEAGUES` intentionally uses `Q/S`, `S`, and `Reserve`: Reserve questions belong to its editorial master bank but to no playable route. Selected IDs always retain their listed order.
+In tables with a **Route** column, `Q/S/F` means Quick, Standard, and Full; `Q/F` means Quick and Full; `S/F` means Standard and Full; and `F` means Full only. `COLLEAGUES`, `OFF SCRIPT`, and `YOUTH WORKSHOP` use `Q/S`, `S`, and `Reserve`: Reserve entries belong to the editorial master bank but to no playable route. Selected IDs always retain their listed order.
 
-`DEEP` intentionally has no Quick route. `COLLEAGUES` intentionally has no Full route until user sessions demonstrate a credible, non-intrusive use case. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts. The 36 Classic rows are immutable and protected by an automated content fingerprint.
+`DEEP` intentionally has no Quick route. `COLLEAGUES`, `OFF SCRIPT`, and `YOUTH WORKSHOP` intentionally have no Full route until user sessions demonstrate a credible use case and pacing. `CLASSIC Full` is the complete original CLOSER experience; shorter Classic routes must be described as curated extracts. The 36 Classic rows are immutable and protected by an automated content fingerprint.
 
 ### Private Moments (FR-005)
 
@@ -1240,3 +1240,111 @@ COLLEAGUES has no Full route, Question 37, or saved-question branch. Disable `PR
 **EN:** “The guide ends here. Your words and choices were not saved. What happens next is for you to decide without the phone.”
 
 SLOW BURN stores only the same route/progress state as an ordinary CLOSER run. It has no fields or controls for agreement, selected actions, adjustments, or body areas. Those remain in the conversation between the two people and are never entered into the app. The direct finale states accurately that words and choices were not saved; ordinary local route progress is deleted when the run completes.
+
+---
+
+## 16. OFF SCRIPT
+
+**Goal:** A cooperative, deliberately silly two-person activity pack using visible surroundings, pantomime, sound, and improvisation. It is unscored and requires no camera, microphone, location service, public performance, or physical contact.
+
+**Routes:** Quick 9 · Standard 18. Planning estimates: approximately 10–15 and 20–30 minutes. `Reserve` cards are editorial alternatives and are not part of a current route.
+
+### Act I – ENTDECKEN / NOTICE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S | Wählt etwas Sichtbares und gebt ihm den Titel eines viel zu dramatischen Films. | Choose something you can see and give it the title of an excessively dramatic movie. |
+| Q02 | S | Findet zwei Dinge oder Farben, die absolut nicht zusammenpassen. Erfindet ihr gemeinsames Abenteuer. | Find two things or colours that absolutely do not belong together. Invent their shared adventure. |
+| Q03 | Q/S | Wählt einen gewöhnlichen Gegenstand. Eine Person verkauft ihn als absurdes Luxusprodukt, die andere erfindet den Preis. | Choose an ordinary object. One person sells it as an absurd luxury product; the other invents the price. |
+| Q04 | S | Eine Person zeichnet die Form von etwas Sichtbarem mit dem Finger in die Luft. Die andere rät – ohne aufzustehen. | One person draws the shape of something visible in the air with a finger. The other guesses—without standing up. |
+| Q05 | S | Zeigt einander ein leicht übersehbares Detail und gebt ihm eine völlig unpassende Superkraft. | Show each other an easily missed detail and give it a completely unsuitable superpower. |
+| Q06 | Q/S | Wählt etwas Sichtbares und erfindet eine harmlose neue Verwendung dafür. Ihr müsst sie nicht ausprobieren. | Choose something visible and invent a harmless new use for it. You do not have to try it. |
+| Q07 | Reserve | Sucht drei sichtbare Farben aus und benennt den erfundenen Ort, an dem sie die Nationalfarben sind. | Pick three visible colours and name the imaginary place where they are the national colours. |
+| Q08 | Reserve | Beschreibt eine Oberfläche in eurer Nähe wie einen Wetterbericht – nur anschauen, nichts anfassen nötig. | Describe a nearby surface like a weather forecast—looking is enough; no touching required. |
+
+### Act II – SPIELEN / PERFORM
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q09 | Q/S | Stellt eine harmlose Alltagstätigkeit pantomimisch dar. Die andere Person rät. Eine Handbewegung reicht vollkommen. | Mime a harmless everyday activity. The other person guesses. A single hand movement is plenty. |
+| Q10 | S | Macht nacheinander ein Geräusch dafür, wie ein sichtbarer Gegenstand zum Leben erwacht. In ruhiger Umgebung: flüstern oder nur die Bewegung zeigen. | Take turns making a sound for a visible object coming alive. In a quiet setting, whisper or show only the movement. |
+| Q11 | Q/S | Nehmt eine Pose für einen erfundenen Beruf ein. Die andere Person gibt dem Beruf einen Namen. Sitzend ist perfekt. | Strike a pose for an imaginary job. The other person names the job. Seated is perfect. |
+| Q12 | S | Spielt jeweils drei Sekunden lang eine übertriebene Zeitlupenreaktion auf ein völlig gewöhnliches Ereignis. | Each perform a three-second exaggerated slow-motion reaction to a completely ordinary event. |
+| Q13 | Q/S | Stellt nur mit euren Händen ein Tier oder einen Gegenstand dar. Die andere Person rät. | Use only your hands to portray an animal or object. The other person guesses. |
+| Q14 | S | Eine Person erzählt eine absurde Ein-Satz-Regieanweisung. Die andere setzt sie nur so klein, leise und sicher um, wie es gerade passt; dann wechselt. | One person gives an absurd one-sentence stage direction. The other performs it only as small, quiet, and safe as the setting allows; then switch. |
+| Q15 | Reserve | Sagt dasselbe neutrale Wort in drei völlig verschiedenen Stimmungen. Die andere Person errät die Stimmungen. | Say the same neutral word in three completely different moods. The other person guesses the moods. |
+| Q16 | Reserve | Macht aus einer Handbewegung eine erfundene Kreatur. Die andere Person tauft sie und beschreibt ihre Spezialfähigkeit. | Turn a hand movement into an imaginary creature. The other person names it and describes its special ability. |
+
+### Act III – ERSCHAFFEN / CREATE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q17 | Q/S | Wählt jeweils ein sichtbares Ding oder eine Farbe. Verbindet beides zu einem Produkt und erfindet gemeinsam den Werbespruch. | Each choose one visible thing or colour. Combine them into a product and invent its slogan together. |
+| Q18 | S | Gebt drei sichtbaren Dingen Rollen in einer Mini-Szene. Erzählt gemeinsam, was passiert – ohne etwas zu bewegen. | Give three visible things roles in a tiny scene. Tell what happens together—without moving anything. |
+| Q19 | Q/S | Beginnt mit einem sichtbaren Detail eine Geschichte. Wechselt euch Satz für Satz ab, bis ihr vier Sätze habt. | Start a story from one visible detail. Alternate one sentence at a time until you have four sentences. |
+| Q20 | S | Erfindet eine kurze gemeinsame Bewegungsfolge aus drei Gesten. Kein Aufstehen und kein Körperkontakt nötig. | Invent a short shared sequence of three gestures. No standing or physical contact required. |
+| Q21 | Q/S | Macht einen Zehn-Sekunden-Trailer für diesen Ort: eine Person spricht die dramatische Stimme, die andere liefert Geräusch oder stumme Spezialeffekte. | Make a ten-second trailer for this place: one person provides the dramatic voice; the other adds a sound or silent special effect. |
+| Q22 | S | Schreibt mündlich ein viel zu bedeutungsvolles Museumsschild für einen gewöhnlichen Gegenstand in eurer Nähe. | Compose an excessively meaningful museum label out loud for an ordinary object nearby. |
+| Q23 | Reserve | Erfindet ein Mini-Spiel mit genau einer verrückten, aber sicheren Regel. Ihr müsst es nicht ausprobieren. | Invent a mini-game with exactly one strange but safe rule. You do not have to try it. |
+| Q24 | Reserve | Gebt eurer gemeinsamen Runde einen Titel und erfindet das vollkommen unnötige Motto dazu. | Give your shared round a title and invent its completely unnecessary motto. |
+
+### Direct finale
+
+- **DE:** „OFF SCRIPT endet hier. Welcher absurde Einfall verdient einen letzten Ehrenapplaus?“
+- **EN:** “OFF SCRIPT ends here. Which absurd idea deserves one final honorary round of applause?”
+
+Every activity supports the ordinary free Pass. Participants remain in their safe area and use only objects they own or may freely use. Cards never require blindfolding, throwing, climbing, breaking objects, unknown food, touching strangers, spending money, leaving the area, filming, posting, or contacting another person.
+
+---
+
+## 17. YOUTH WORKSHOP (14–17)
+
+**Goal:** A light peer icebreaker for voluntary paired conversation in school, youth-work, training, or facilitated workshop settings. It is not therapy, assessment, conflict intervention, or a source of facilitator data.
+
+**Routes:** Icebreaker 9 · Workshop 18. Planning estimates: approximately 8–12 and 15–25 minutes. `Reserve` questions are editorial alternatives and are not part of a current route.
+
+### Act I – ANKOMMEN / WARM UP
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S | Welche kleine Sache macht einen gewöhnlichen Tag für dich ein bisschen besser? | What small thing makes an ordinary day a little better for you? |
+| Q02 | Q/S | Wenn du für heute einen harmlosen Feiertag erfinden könntest: Was würde gefeiert? | If you could invent a harmless holiday for today, what would it celebrate? |
+| Q03 | S | Welche Pause lädt deinen Akku eher auf: Ruhe, Bewegung, Musik, Reden oder etwas anderes? | What kind of break tends to recharge you: quiet, movement, music, talking, or something else? |
+| Q04 | Q/S | Welches komplett nutzlose Talent wäre trotzdem lustig zu haben? | What completely useless talent would still be fun to have? |
+| Q05 | S | Welches Geräusch, Wort oder Emoji passt heute am besten zu deiner Stimmung? | What sound, word, or emoji best matches your mood today? |
+| Q06 | S | Welche Art von Aufgabe macht dir eher Spaß: etwas bauen, erklären, erfinden, ordnen oder präsentieren? | What kind of task do you tend to enjoy: building, explaining, inventing, organising, or presenting? |
+| Q07 | Reserve | Wenn dieser Raum einen geheimen Bonus-Level hätte: Wie würde er aussehen? | If this room had a secret bonus level, what would it look like? |
+| Q08 | Reserve | Was ist eine kleine Sache, auf die du dich diese Woche freust? | What is one small thing you are looking forward to this week? |
+
+### Act II – ZUSAMMENSPIEL / TEAM UP
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q09 | Q/S | Woran merkst du bei einer Gruppenaufgabe, dass deine Idee willkommen ist? | During a group task, what tells you that your idea is welcome? |
+| Q10 | S | Welche Rolle übernimmst du in einer Gruppe manchmal gern – zum Beispiel Ideen finden, zuhören, strukturieren oder Mut machen? | What role do you sometimes enjoy in a group—for example, finding ideas, listening, organising, or encouraging others? |
+| Q11 | S | Was hilft dir, eine noch unfertige Idee laut auszusprechen? | What helps you say an unfinished idea out loud? |
+| Q12 | Q/S | Erfindet gemeinsam eine Maschine, die ein kleines Alltagsproblem löst. Was kann sie? | Together, invent a machine that solves one small everyday problem. What can it do? |
+| Q13 | S | Welche Reaktion hilft dir, wenn du bei einer Aufgabe gerade nicht weiterweißt? | What kind of response helps when you are stuck on a task? |
+| Q14 | Reserve | Was macht eine Erklärung für dich leichter verständlich? | What makes an explanation easier for you to understand? |
+| Q15 | Q/S | Welche Stärke kannst du in eine Gruppe einbringen, ohne darin die beste Person sein zu müssen? | What strength can you bring to a group without needing to be the best at it? |
+| Q16 | Reserve | Wenn ihr zehn Minuten und unbegrenzte Bastelmaterialien hättet: Was würdet ihr gemeinsam erfinden? | If you had ten minutes and unlimited craft materials, what would you invent together? |
+
+### Act III – DABEI SEIN / BELONG
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q17 | Q/S | Was kann eine Gruppe tun, damit neue oder stille Personen leichter mitmachen können? | What can a group do to make it easier for new or quiet people to join in? |
+| Q18 | S | Welche einfache Gruppenregel macht Zusammenarbeit fairer oder entspannter? | What simple group rule makes working together fairer or more relaxed? |
+| Q19 | S | Wie kann jemand freundlich nachfragen, ohne eine Person zum Reden zu drängen? | How can someone check in kindly without pressuring a person to speak? |
+| Q20 | Q/S | Welche Art von Humor bringt Menschen zusammen, ohne jemanden zum Witz zu machen? | What kind of humour brings people together without turning anyone into the joke? |
+| Q21 | S | Was hilft, wenn zwei gute Ideen unterschiedlich sind und nicht beide sofort umgesetzt werden können? | What helps when two good ideas differ and cannot both be used right away? |
+| Q22 | Q/S | Welche kleine Geste kann einer Person zeigen: Du gehörst hier dazu? | What small gesture can show someone: you belong here? |
+| Q23 | Reserve | Was möchtest du in diesem Workshop gern einmal ausprobieren – ohne dass du es perfekt können musst? | What would you like to try once in this workshop without needing to do it perfectly? |
+| Q24 | Reserve | Welchen kleinen Beitrag könntest du heute zu einer angenehmen Gruppe leisten, wenn es für dich passt? | What small contribution could you make to a comfortable group today, if it feels right for you? |
+
+### Direct finale
+
+- **DE:** „Die Runde endet hier. Eure Antworten bleiben bei euch; für den Workshop müsst ihr nichts daraus berichten.“
+- **EN:** “The round ends here. Your answers stay with you; you do not have to report anything from them to the workshop.”
+
+This first release is only for peer pairings aged 14–17. It excludes romance, sex, bodies, substances, illegal behaviour, trauma, mental health, family conflict, money, grades, religion, politics, protected characteristics, bullying reports, and confidential school or care information. A facilitator must provide a neutral alternative when participation in the surrounding event is mandatory and must use established safeguarding channels for real concerns. CLOSER does not persist this pack as a resumable game.

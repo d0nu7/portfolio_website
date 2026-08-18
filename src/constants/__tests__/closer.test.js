@@ -168,6 +168,31 @@ describe('PACKS registry', () => {
     expect(LATE_NIGHT_PACK.consentGate).toBeUndefined();
   });
 
+  it('registers OFF SCRIPT and YOUTH WORKSHOP with short direct-finale routes', () => {
+    const offScript = PACKS['off-script'];
+    const youth = PACKS['youth-workshop'];
+
+    expect(offScript).toMatchObject({
+      libraryGroup: 'activities',
+      privateMoment: 'none',
+      defaultRouteId: 'quick',
+    });
+    expect(youth).toMatchObject({
+      libraryGroup: 'situations',
+      privateMoment: 'none',
+      persistRun: false,
+      defaultRouteId: 'quick',
+    });
+
+    [offScript, youth].forEach((pack) => {
+      expect(pack.acts.flatMap((act) => act.questions)).toHaveLength(24);
+      expect(compileRun(pack.id, 'quick').questions).toHaveLength(9);
+      expect(compileRun(pack.id, 'standard').questions).toHaveLength(18);
+      expect(compileRun(pack.id, 'quick').directFinale).toBeDefined();
+      expect(Object.values(pack.modes[0].twists).every((enabled) => !enabled)).toBe(true);
+    });
+  });
+
   it('every registered pack has the shape CloserGame.js relies on', () => {
     Object.values(PACKS).forEach((pack) => {
       expect(Array.isArray(pack.acts)).toBe(true);

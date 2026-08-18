@@ -1,6 +1,6 @@
 # CLOSER – gameplay and safety contract
 
-**Updated:** 17 August 2026
+**Updated:** 18 August 2026
 **Audience:** product, editorial, design, engineering, and QA
 **Status:** authoritative product behavior; implementation status is tracked separately in [bugs.md](../reviews/bugs.md) and [feature-requests.md](../reviews/feature-requests.md)
 
@@ -20,7 +20,7 @@ Intervention should therefore decrease across the three acts. A milestone may br
 
 | Term | Meaning |
 |---|---|
-| Pack | The content domain: Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, Power, by Choice, or Slow Burn. |
+| Pack | The content domain, including conversation, relationship, situation, cooperative activity, youth, and adult experiences. The registry and catalog define the complete current list. |
 | Route | The curated duration/length: Quick, Standard, or Full where supported. |
 | Style | Optional rules that change presentation or twists without changing the question bank. |
 | Twist | A sparse question-level variation such as answering together or without deliberation. |
@@ -47,8 +47,8 @@ Every setup screen needs a safe route back. The global menu must be reachable be
 
 Every route is a fixed editorial sequence. It is never a random sample.
 
-- **Quick:** normally 12 regular questions, four per act, with a self-contained beginning, middle, and ending. SLOW BURN is the explicit exception: nine invitations, three per act. No Quick route has a Private Moment or extended Question 37 ceremony. Adult packs state their participation contract once in the shared introduction.
-- **Standard:** normally 24 regular questions, eight per act. SLOW BURN uses 15 invitations, five per act. An eligible conversation pack may include one short pack-appropriate private moment.
+- **Quick:** normally 12 regular questions, four per act, with a self-contained beginning, middle, and ending. SLOW BURN, OFF SCRIPT, and YOUTH WORKSHOP use nine cards, three per act. No Quick route has a Private Moment or extended Question 37 ceremony. Adult packs state their participation contract once in the shared introduction.
+- **Standard:** normally 24 regular questions, eight per act. SLOW BURN uses 15 invitations; OFF SCRIPT and YOUTH WORKSHOP use 18 cards. An eligible conversation pack may include one short pack-appropriate private moment.
 - **Full:** 36 regular questions, 12 per act, with room for the complete finale.
 
 Pack-specific pilot ranges are defined in the [question catalog](../content/question-catalog.de-en.md). They are soft estimates, not targets. A timer never advances the game automatically, and worthwhile follow-up conversation takes priority over completing the route.
@@ -109,7 +109,7 @@ The person selected to open Q1 is role A; the other person is role B. That mappi
 | Humiliation, public performance, or deception | All tasks remain between two people and cannot require embarrassment, lying, guessing the other card, or public behavior. |
 | Diagnosis or manufactured disclosure | Listening prompts forbid interpretation/diagnosis and never demand deeper disclosure, explanation, repair, or resolution. |
 | Loyalty testing or conflict escalation | Appreciation/memory cards cannot demand agreement, matching memories, gratitude, exclusivity, forgiveness, or a “correct” account. |
-| Workplace/family power | Road Trip, Family, and Colleagues remain `privateMoment: 'none'`; reopening requires a separate safety decision. |
+| Context, power, and youth | Road Trip, Family, Colleagues, OFF SCRIPT, and YOUTH WORKSHOP remain `privateMoment: 'none'`; reopening requires a separate safety decision. |
 | Shoulder surfing, app-switcher snapshots, or unsafe resume | Named covers precede private content; background and resume return to a cover; copy warns against screenshots and data entry. |
 
 Do not use covert touch, sexual, public, humiliating, deceptive, diagnostic, or boundary-testing tasks.
@@ -180,6 +180,10 @@ CLOSER stores settings and progress locally to support resume and installed-PWA 
 - a distinction between deleting local app data and browser/device cache controls.
 
 Any future analytics, remote persistence, account system, speech processing, or TTS telemetry changes this privacy baseline and requires a new review before release.
+
+YOUTH WORKSHOP is deliberately non-resumable. Its names and run progress are not written as a saved game; ordinary pack-visibility preferences may remain. It uses peer pairings aged 14–17, nickname/initial guidance, unconditional Pass and End, and no facilitator-visible answers. Real safeguarding concerns belong in the institution's established reporting and support channels, not in the game. Facilitators must follow the separate [YOUTH WORKSHOP guide](youth-workshop-facilitator-guide.md).
+
+OFF SCRIPT uses only information that people can perceive themselves. It does not access a camera, microphone, location, recognition API, or environmental data. Activities must remain cooperative, unscored, adaptable to seated/quiet/limited-space use, and free of required contact, public performance, filming, posting, unsafe object use, or leaving the safe area.
 
 ## 10. PWA and system UI limits
 

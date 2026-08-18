@@ -37,6 +37,12 @@ export default function CloserMenu({
   const adultPacks = packs
     .filter((pack) => pack.contentGroup === 'adult')
     .sort((a, b) => Number(a.id === 'late-night') - Number(b.id === 'late-night'));
+  const libraryGroups = [
+    ['core', 'packGroupCore'],
+    ['relationships', 'packGroupRelationships'],
+    ['situations', 'packGroupSituations'],
+    ['activities', 'packGroupActivities'],
+  ];
 
   const renderPackToggle = (pack) => {
     const visible = preferences.visiblePackIds.includes(pack.id);
@@ -176,7 +182,23 @@ export default function CloserMenu({
             {step === 'additional' && (
               <>
                 <Small style={{ marginBottom: '1.4rem' }}>{t('packLibraryIntro')}</Small>
-                {ordinaryPacks.map(renderPackToggle)}
+                {libraryGroups.map(([groupId, labelKey]) => {
+                  const groupPacks = ordinaryPacks.filter((pack) =>
+                    (pack.libraryGroup || 'core') === groupId);
+                  if (!groupPacks.length) return null;
+                  return (
+                    <section key={groupId} aria-labelledby={`pack-group-${groupId}`}>
+                      <Small
+                        as="h3"
+                        id={`pack-group-${groupId}`}
+                        style={{ marginTop: '1.8rem', marginBottom: '0.4rem' }}
+                      >
+                        {t(labelKey)}
+                      </Small>
+                      {groupPacks.map(renderPackToggle)}
+                    </section>
+                  );
+                })}
                 {adultPacks.length ? (
                   <Disclosure $accent={accent}>
                     <summary>{t('adultContentGroup')}</summary>

@@ -65,7 +65,7 @@ export const LEGAL_TITLES = {
   privacy: { de: 'Datenschutz', en: 'Privacy' },
 };
 
-const LAST_UPDATED = { de: 'Stand: 17. August 2026', en: 'Last updated: 17 August 2026' };
+const LAST_UPDATED = { de: 'Stand: 18. August 2026', en: 'Last updated: 18 August 2026' };
 
 function Imprint({ lang, accent }) {
   const isGerman = lang !== 'en';
@@ -125,9 +125,10 @@ function Privacy({ lang, accent }) {
         <section>
           <h3>Was CLOSER lokal speichert</h3>
           <p>
-            CLOSER funktioniert ohne Konto. Auf diesem Gerät werden nur die von euch gewählten Namen,
-            Spieleinstellungen, Fortschritt und lokale Hinweiseinstellungen gespeichert. Das ermöglicht
-            das Fortsetzen eines Spiels und merkt sich ausgeblendete Hinweise.
+            CLOSER funktioniert ohne Konto. Bei den meisten Packs werden auf diesem Gerät nur die von euch
+            gewählten Namen, Spieleinstellungen, Fortschritt und lokale Hinweiseinstellungen gespeichert.
+            Das ermöglicht das Fortsetzen eines Spiels und merkt sich ausgeblendete Hinweise. YOUTH
+            WORKSHOP speichert Namen und Fortschritt ausdrücklich nicht als fortsetzbares Spiel.
           </p>
           <p>
             Eure Antworten werden weder eingegeben noch aufgezeichnet oder gespeichert. CLOSER verwendet
@@ -203,9 +204,10 @@ function Privacy({ lang, accent }) {
       <section>
         <h3>What CLOSER stores locally</h3>
         <p>
-          CLOSER works without an account. It only stores the names you choose, game settings, progress,
-          and local notice preferences on this device. This lets you resume a game and remembers dismissed
-          notices.
+          CLOSER works without an account. For most packs, it only stores the names you choose, game
+          settings, progress, and local notice preferences on this device. This lets you resume a game and
+          remembers dismissed notices. YOUTH WORKSHOP expressly does not save names or progress as a
+          resumable game.
         </p>
         <p>
           Your answers are not entered, recorded, or stored. CLOSER currently uses no analytics or

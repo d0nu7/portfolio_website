@@ -1,8 +1,8 @@
 # CLOSER – question-design research
 
-**Updated:** 17 August 2026
+**Updated:** 18 August 2026
 **Purpose:** Research-informed editorial guidance for CLOSER questions
-**Scope:** Classic, First Date, Date Night, Couples, Friends, Old Friends, Deep, Chaos, Late Night, Road Trip, Family, Colleagues, Power, by Choice, Slow Burn, and their available routes
+**Scope:** All shipped packs and routes, including OFF SCRIPT and YOUTH WORKSHOP (14–17)
 
 This document is a design synthesis, not a claim that the new CLOSER packs or individual prompts have been scientifically validated. The bilingual [question catalog](question-catalog.de-en.md) remains the editorial source of truth for shipped wording and routes. The focused FR-018–020 evidence programme, candidate banks, and cross-pack audit are indexed separately in [research](../research/README.md).
 
@@ -258,6 +258,20 @@ Required design constraints:
 
 Pilot ranges are Quick 15–25 minutes and Standard 30–50 minutes. If a serious safety, discrimination, harassment, legal, or employment concern emerges, the game ends; it must not imply that a prompt can investigate or resolve the issue.
 
+### 4.13 Off Script
+
+OFF SCRIPT translates shared novelty and co-creation into lightweight activities rather than deeper disclosure. The evidence supports shared novel activity as a plausible relationship mechanism, not these particular cards. The pack therefore stays cooperative and unscored, makes no closeness claim, and uses a short pilot length to avoid performance fatigue.
+
+Every card must work without sensors or captured environmental data and include a low-attention interpretation: seated, small, quiet, or hands-only. The participant—not the app—decides whether an object or setting is safe and available. Passing is the correct behavior when it is not.
+
+### 4.14 Youth Workshop (14–17)
+
+This first release deliberately selects one age band rather than presenting the same disclosure task to children and adults. UNESCO's safe-learning guidance emphasizes inclusive environments free from bullying, humiliation, exclusion, and unequal power. That supports light peer prompts, no social-knowledge tests, no embarrassment mechanics, and a facilitator boundary; it does not validate this question bank. [UNESCO (2026)](https://www.unesco.org/en/health-education/safe-learning-environments)
+
+The privacy baseline follows data-minimization and high-privacy-by-default principles: the pack asks for no age proof, records no answers, recommends nicknames or initials, and creates no resumable game. The UK ICO Children's Code is used as conservative design guidance rather than a claim about the exact Austrian legal classification of CLOSER. GDPR duties and Austrian/EU applicability still require qualified review if data processing or institutional deployment changes. [GDPR Article 5](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [ICO Children's Code](https://ico.org.uk/for-the-public/the-children-s-code-and-children-s-online-privacy/)
+
+The route excludes topics that can expose protected, evaluative, clinical, family, safeguarding, or confidential information in a shared-device workshop. A real concern must go to the institution's established safeguarding channel; a game must never become a disclosure or reporting substitute. Broad release requires educator, safeguarding, accessibility, bilingual, and moderated review with the target age group.
+
 ---
 
 ## 5. Editorial schema and review matrix
@@ -343,6 +357,8 @@ Marketing, onboarding, and engineering documentation must keep these limitations
 - ROAD TRIP has not been validated as safe while a vehicle is moving. Passenger control and a shorter route reduce device interaction; they do not eliminate distraction.
 - FAMILY is not family therapy, mediation, reconciliation, or evidence of healthy family functioning.
 - COLLEAGUES cannot create organizational psychological safety or neutralize power, retaliation, confidentiality, or employment risk.
+- OFF SCRIPT activities are editorial prototypes; shared-novelty findings do not validate a particular task or prove a social benefit.
+- YOUTH WORKSHOP is limited to peer pairings aged 14–17 and is not a safeguarding, assessment, participation, or conflict-resolution tool.
 - “Research-informed” or “based on findings about self-disclosure and active listening” is appropriate. “Scientifically proven” or “validated” is not.
 
 Before broad release, test every pack with varied pairs. Moderated sessions should rate situation fit, answerability, conversation quality, intensity, inclusive wording, passing frequency, and willingness to play again. Include varied ages, relationship types, sexual orientations, cultural backgrounds, and neurodivergent participants. Late Night additionally requires a dedicated safety, consent, and legal review. Road Trip needs parked and public-transport pilots first; any passenger-led moving-vehicle study requires a dedicated safety protocol and still cannot certify the game as safe. Family needs varied biological, adoptive, blended, infrequent-contact, and chosen-family pairs. Colleagues needs voluntary peer sessions across sectors and work arrangements, with Standard evaluated separately from Quick.
@@ -360,6 +376,8 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 5. Keep all person and role language gender-neutral and assumption-free.
 6. Keep the implemented Road Trip release parked/no-participating-driver only unless a separately validated safety design replaces that restriction.
 7. Keep Family non-prescriptive and Colleagues voluntary, peer-oriented, confidential, and free of assessment mechanics.
+8. Keep OFF SCRIPT cooperative, sensor-free, adaptable, and free of public or risky performance.
+9. Keep YOUTH WORKSHOP non-resumable, peer-only, non-evaluative, and within the approved topic exclusions.
 
 ### P1 – highest quality gain
 
@@ -380,6 +398,8 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 6. Validate the owner-approved conversation-only **POWER, BY CHOICE** implementation through the named specialist, bilingual, accessibility, privacy/legal, physical-device, and moderated-session gates. Do not infer validation from implementation.
 7. Validate the owner-approved SLOW BURN sequence through the memo's specialist, ethics, accessibility, privacy/legal, adverse-event, physical-device, and staged-session gates. The current consumer boundary permits explicitly named touch at the chest or breasts, buttocks, and inner thighs, while excluding genitals, anus, penetration, breath or neck play, restraint, impact, and surprise touch.
 8. Validate the implemented FR-020 set—37 original atomic changes plus three full-bank addenda—through bilingual paraphrase interviews, contextual specialist review, and moderated sessions. Keep Classic's 36 questions unchanged and preserve catalog/runtime/test synchronization for every later edit.
+9. Validate OFF SCRIPT across seated, quiet, public, low-mobility, and limited-space settings before adding a longer route.
+10. Validate YOUTH WORKSHOP with safeguarding, education, accessibility, bilingual, privacy, and moderated age-group review before broad institutional promotion.
 
 ---
 
@@ -435,6 +455,12 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 - [Milliken, Morrison & Hewlin (2003): Employee silence at work](https://doi.org/10.1111/1467-6486.00387)
 - [Grant & Gino (2010): Gratitude and prosocial behavior at work](https://pubmed.ncbi.nlm.nih.gov/20515249/)
 - [Kreiner (2006): Work–home boundary fit](https://doi.org/10.1002/job.386)
+
+### Youth, learning environments, and privacy
+
+- [UNESCO (2026): Safe learning environments](https://www.unesco.org/en/health-education/safe-learning-environments)
+- [European Union: General Data Protection Regulation, including Article 5 data minimization](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+- [ICO: Children's Code and children's online privacy](https://ico.org.uk/for-the-public/the-children-s-code-and-children-s-online-privacy/)
 
 ### Sexual communication and consent
 

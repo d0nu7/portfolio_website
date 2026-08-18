@@ -49,12 +49,12 @@ const COPY = {
   /* players -------------------------------------------------------------- */
   whosPlaying: { de: 'Wer spielt?', en: "Who's playing?" },
   // Symmetric, gender-neutral labels match the fallback player names.
-  yourName: { de: 'Person 1 – Name (optional)', en: 'Player 1 – name (optional)' },
-  theirName: { de: 'Person 2 – Name (optional)', en: 'Player 2 – name (optional)' },
+  yourName: { de: 'Person 1 – Name oder Spitzname (optional)', en: 'Player 1 – name or nickname (optional)' },
+  theirName: { de: 'Person 2 – Name oder Spitzname (optional)', en: 'Player 2 – name or nickname (optional)' },
   continue: { de: 'Weiter', en: 'Continue' },
   namesOptional: {
-    de: 'Namen könnt ihr auch leer lassen.',
-    en: 'You can leave the names empty.',
+    de: 'Namen könnt ihr auch leer lassen; auf gemeinsam genutzten Geräten reichen Spitznamen oder Initialen.',
+    en: 'You can leave names empty; nicknames or initials are enough on shared devices.',
   },
   playerOne: { de: 'Person 1', en: 'Player 1' },
   playerTwo: { de: 'Person 2', en: 'Player 2' },
@@ -288,6 +288,10 @@ const COPY = {
     de: 'Wähle, welche Gesprächsmodi in deiner Auswahl sichtbar sind. Mindestens ein Modus bleibt aktiv.',
     en: 'Choose which conversation packs appear in your selector. At least one pack stays active.',
   },
+  packGroupCore: { de: 'Gespräche', en: 'Conversations' },
+  packGroupRelationships: { de: 'Beziehungen', en: 'Relationships' },
+  packGroupSituations: { de: 'Situationen', en: 'Situations' },
+  packGroupActivities: { de: 'Aktivitäten', en: 'Activities' },
   powerByChoiceMenuIntro: {
     de: 'POWER, BY CHOICE ist ein explizites Gespräch für Erwachsene über freiwillig gewählte erotische Rollen, Grenzen und Fürsorge. Es enthält keine körperlichen Aufgaben; Antworten sind niemals Zustimmung zu einer Handlung.',
     en: 'POWER, BY CHOICE is an explicit adult conversation about chosen erotic roles, boundaries, and care. It contains no physical tasks; answers are never consent to an action.',

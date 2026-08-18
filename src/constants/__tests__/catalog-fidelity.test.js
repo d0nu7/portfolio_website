@@ -34,6 +34,8 @@ const HEADING_TO_PACK_ID = {
   'ROAD TRIP': 'road-trip',
   FAMILY: 'family',
   COLLEAGUES: 'colleagues',
+  'OFF SCRIPT': 'off-script',
+  'YOUTH WORKSHOP (14–17)': 'youth-workshop',
 };
 
 function parseCatalogQuestions(markdown) {
@@ -117,6 +119,8 @@ describe('catalog fidelity', () => {
     expect(routeCounts('road-trip')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
     expect(routeCounts('family')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
     expect(routeCounts('colleagues')).toEqual({ 'Q/S': 12, S: 12, Reserve: 12 });
+    expect(routeCounts('off-script')).toEqual({ 'Q/S': 9, S: 9, Reserve: 6 });
+    expect(routeCounts('youth-workshop')).toEqual({ 'Q/S': 9, S: 9, Reserve: 6 });
     expect(routeCounts('power-by-choice')).toEqual({ 'Q/S/F': 12, 'S/F': 12, F: 12 });
     expect(routeCounts('slow-burn')).toEqual({ 'Q/S/U': 9, 'S/U': 6, U: 6 });
 
@@ -139,6 +143,17 @@ describe('catalog fidelity', () => {
       expect(actRoutes.filter((route) => route === 'S')).toHaveLength(4);
       expect(actRoutes.filter((route) => route === 'Reserve')).toHaveLength(4);
     }
+
+    ['off-script', 'youth-workshop'].forEach((packId) => {
+      for (let act = 0; act < 3; act += 1) {
+        const actRoutes = catalog[packId]
+          .slice(act * 8, act * 8 + 8)
+          .map(({ route }) => route);
+        expect(actRoutes.filter((route) => route === 'Q/S')).toHaveLength(3);
+        expect(actRoutes.filter((route) => route === 'S')).toHaveLength(3);
+        expect(actRoutes.filter((route) => route === 'Reserve')).toHaveLength(2);
+      }
+    });
   });
 
   it('keeps every tabular route marker synchronized with compiled runtime membership', () => {

@@ -5,6 +5,7 @@ import {
   GAME_STORAGE_KEY,
   INSTALL_HINT_DISMISS_KEY,
   LEGACY_PREFERENCES_STORAGE_KEY,
+  LEGACY_PREFERENCES_STORAGE_KEY_V2,
   PREFERENCES_STORAGE_KEY,
   clearAllCloserData,
   clearSavedGame,
@@ -111,22 +112,65 @@ describe('CLOSER storage boundary', () => {
   it('normalizes, persists, and defaults preferences', () => {
     const storage = createStorage({
       [PREFERENCES_STORAGE_KEY]: JSON.stringify({
-        version: 2,
+        version: 3,
         visiblePackIds: ['classic', 'late-night', 'unknown'],
       }),
     });
     expect(loadPreferences(storage)).toEqual({
-      version: 2,
+      version: 3,
       visiblePackIds: ['classic', 'late-night'],
     });
 
     persistPreferences(storage, { visiblePackIds: ['family'] });
     expect(JSON.parse(storage.valueFor(PREFERENCES_STORAGE_KEY))).toEqual({
-      version: 2,
+      version: 3,
       visiblePackIds: ['family'],
     });
     expect(loadPreferences(createStorage({ [PREFERENCES_STORAGE_KEY]: '{broken' })))
       .toBe(DEFAULT_PREFERENCES);
+  });
+
+  it('uses the neutral five-pack set only when no preference exists', () => {
+    expect(loadPreferences(createStorage())).toEqual({
+      version: 3,
+      visiblePackIds: ['classic', 'friends', 'old-friends', 'deep', 'chaos'],
+    });
+  });
+
+  it('migrates version 2 preferences without replacing the selected packs', () => {
+    const storage = createStorage({
+      [LEGACY_PREFERENCES_STORAGE_KEY_V2]: JSON.stringify({
+        version: 2,
+        visiblePackIds: ['first-date', 'family'],
+      }),
+    });
+
+    expect(loadPreferences(storage)).toEqual({
+      version: 3,
+      visiblePackIds: ['first-date', 'family'],
+    });
+  });
+
+  it('never persists Youth Workshop as a resumable game', () => {
+    const storage = createStorage({ [GAME_STORAGE_KEY]: 'old-run' });
+    persistGameState(storage, resumableState({ packId: 'youth-workshop' }));
+    expect(storage.valueFor(GAME_STORAGE_KEY)).toBeUndefined();
+  });
+
+  it('removes an old Youth Workshop save instead of offering resume', () => {
+    const run = compileRun('youth-workshop', 'quick', 'peer');
+    const youthState = resumableState({
+      packId: run.packId,
+      routeId: run.routeId,
+      modeId: run.modeId,
+      runFingerprint: run.fingerprint,
+      qIndex: 2,
+      pending: 2,
+    });
+    const storage = createStorage({ [GAME_STORAGE_KEY]: JSON.stringify(youthState) });
+
+    expect(loadSavedGame(storage)).toBeNull();
+    expect(storage.valueFor(GAME_STORAGE_KEY)).toBeUndefined();
   });
 
   it('migrates the legacy Late Night preference without exposing new specialist packs', () => {
@@ -142,7 +186,7 @@ describe('CLOSER storage boundary', () => {
 
   it('never accepts an empty visible-pack list', () => {
     const storage = createStorage({
-      [PREFERENCES_STORAGE_KEY]: JSON.stringify({ version: 2, visiblePackIds: [] }),
+      [PREFERENCES_STORAGE_KEY]: JSON.stringify({ version: 3, visiblePackIds: [] }),
     });
     expect(loadPreferences(storage).visiblePackIds).toEqual(DEFAULT_PREFERENCES.visiblePackIds);
   });
@@ -152,6 +196,7 @@ describe('CLOSER storage boundary', () => {
       [GAME_STORAGE_KEY]: 'game',
       [PREFERENCES_STORAGE_KEY]: 'preferences',
       [LEGACY_PREFERENCES_STORAGE_KEY]: 'legacy-preferences',
+      [LEGACY_PREFERENCES_STORAGE_KEY_V2]: 'legacy-v2-preferences',
       [INSTALL_HINT_DISMISS_KEY]: 'hint',
       unrelated: 'keep',
     });
@@ -161,6 +206,7 @@ describe('CLOSER storage boundary', () => {
     clearAllCloserData(storage);
     expect(storage.valueFor(PREFERENCES_STORAGE_KEY)).toBeUndefined();
     expect(storage.valueFor(LEGACY_PREFERENCES_STORAGE_KEY)).toBeUndefined();
+    expect(storage.valueFor(LEGACY_PREFERENCES_STORAGE_KEY_V2)).toBeUndefined();
     expect(storage.valueFor(INSTALL_HINT_DISMISS_KEY)).toBeUndefined();
     expect(storage.valueFor('unrelated')).toBe('keep');
   });

@@ -1,126 +1,80 @@
-# CLOSER – transition matrix
+# CLOSER – persisted transition contract
 
-**Updated:** 17 August 2026
-**Scope:** persisted game phases and the events that may leave them
-**Product state:** FR-011 delivered; retained as the behavioral contract
+**Updated:** 18 August 2026
+**Status:** Implemented and characterized
 
-This matrix is the behavioral contract for the transition-core migration. A
-transition family moves only after its current behavior has characterization
-coverage. Screen-local presentation state such as a countdown tick, a menu
-subview, or an animation frame is not persisted and is listed only where it
-changes the next game event.
+This matrix covers persisted navigation. Countdown ticks, menu subviews, focus, animation frames, visibility, and Wake Lock are screen-local effects.
 
-Implementation status: setup/entry, the dormant generic consent family, act-entry/break, private-moment
-capture/resolution, final-question reveal, Question 37, end-run reasons, and
-compiled question destinations, question completion/pass, language, and timer changes are pure and characterized in
-`src/closer/engine/transitions.js`. Canonical state creation and discriminated
-save parsing are pure and characterized in `src/closer/engine/persistence.js`;
-the guarded browser-storage boundary is isolated in
-`src/closer/infrastructure/storage.js`. Canonical restart and resume-state
-preparation are pure; their screen-local effects remain in the controller. All
-phase presentation is isolated in focused view components that emit callbacks
-to this event layer.
+## Global and setup
 
-## Global events
-
-| Event | Valid from | Result |
+| From | Event | Destination / invariant |
 |---|---|---|
-| `RESTART` | Every rendered phase | Canonical fresh `start` state; retain allowed preferences only |
-| `END_RUN(userEnded)` | Any started run through Menu | `ending`, completed, scrub private categories/decisions, no completion reward |
-| `END_RUN(consentDeclined)` | Dormant generic consent family | Neutral `ending`, completed, scrub private categories/decisions, no completion reward |
-| `RESUME` | Valid persisted phase | Restore the compiled run; direct private content returns to its named cover |
-| `SET_LANGUAGE` | Every rendered phase | Pure `transitionGlobal()` patch; same phase and run, different supported language |
-| `SET_TIMER` | Every phase where Menu exposes it | Pure `transitionGlobal()` patch; same phase and run, updated timer preference |
+| any rendered phase | RESTART | canonical fresh start; retain permitted preferences only |
+| any started run | END_RUN(reason) | ending; scrub private categorical state; reward only natural completion |
+| valid saved phase | RESUME | reconstruct the same compiled run; private content resumes behind a named cover |
+| any phase | SET_LANGUAGE, SET_TIMER | same phase/run with supported global setting |
+| start | START_SETUP | players |
+| players | CONTINUE / BACK | pack / start; preserve selections |
+| pack | CONTINUE / BACK | duration / players |
+| duration | CONTINUE / BACK | mode or intro / pack; skip singleton style |
+| mode | CONTINUE / BACK | intro / duration |
+| intro | BEGIN_RUN / BACK | act / mirrored setup destination |
 
-## Setup and entry
-
-| Current phase | Event | Next phase | Required state/effect |
-|---|---|---|---|
-| `start` | `START_SETUP` | `players` | No resumable progress yet |
-| `players` | `CONTINUE` | `pack` | Persist names and one random starter offset |
-| `players` | `BACK` | `start` | Preserve setup selections |
-| `pack` | `CONTINUE` | `duration` | Selected pack owns default route and style |
-| `pack` | `BACK` | `players` | Preserve setup selections |
-| `duration` | `CONTINUE` | `mode` or `intro` | Skip singleton style; no current pack enters a device-mediated consent gate |
-| `duration` | `BACK` | `pack` | Preserve setup selections |
-| `mode` | `CONTINUE` | `intro` | Preserve selected style |
-| `mode` | `BACK` | `duration` | Preserve setup selections |
-| `consentGatePassA` | `HANDOFF_CONFIRMED` | `consentGateA` | Person A receives the phone |
-| `consentGateA` | yes or no | `consentGatePassB` | Hold A's choice in memory only; never persist it |
-| `consentGatePassB` | `HANDOFF_CONFIRMED` | `consentGateB` | Person B receives the phone |
-| `consentGateB` | yes or no | `consentGateAccepted` or `ending` | Evaluate only after both decisions; expose collective result, never who declined |
-| `consentGateAccepted` | `CONTINUE_AFTER_CONSENT` | `intro` | Both independently opted in; decisions already cleared |
-| `intro` | `BEGIN_RUN` | `act` | `pending=0`, `qIndex=0` |
-| `intro` | `BACK` | `mode` or `duration` | Mirror singleton-style skipping |
+The generic device-consent transition family remains characterized but dormant: no current pack sets requiresConsent.
 
 ## Acts and questions
 
-| Current phase | Event | Next phase | Required state/effect |
-|---|---|---|---|
-| `act` | `START_ACT` | `q` | Enter `pending`; first start records run fingerprint and `hasStarted=true` |
-| `q` | `ANSWER_DONE` | local deeper step or compiled destination | Deeper is screen-local; otherwise pure `transitionQuestion()` advances one route-relative index |
-| `q` | `PASS` | compiled destination after neutral flash | Pure `transitionQuestion()` uses the same destination as answer completion; no penalty |
-| compiled destination | ordinary index | `q` | Set `qIndex`; initialize question-local twist state |
-| compiled destination | act boundary | `break` | Set `breakAct`, `pending`; act-break feedback only |
-| compiled destination | configured before-question trigger | `secretOffer` | Enabled route, stable question ID, status `not-started` |
-| compiled destination | final question index | `lastIntro` | Set `pending`; final-question feedback only |
-| compiled destination | past final index | `all36` | Begin completion sequence |
-| `break` | `CONTINUE` | `secretOffer`, `privateUse`, or `act` | Apply configured after-act trigger/use; reset act time |
-| `consentAct2PassA` | `HANDOFF_CONFIRMED` | `consentAct2A` | Person A receives the phone |
-| `consentAct2A` | yes or no | `consentAct2PassB` | Hold A's choice in memory only; keep break context |
-| `consentAct2PassB` | `HANDOFF_CONFIRMED` | `consentAct2B` | Person B receives the phone |
-| `consentAct2B` | yes or no | `consentAct2Accepted` or `ending` | Evaluate only after both decisions; expose collective result only |
-| `consentAct2Accepted` | `CONTINUE_AFTER_CONSENT` | `act` | Clear decisions and reset act time |
-| `lastIntro` | `REVEAL_LAST` | `q` | Enter the stored `pending` index |
+| From | Event | Destination / invariant |
+|---|---|---|
+| act | START_ACT | q; first start records fingerprint and hasStarted |
+| q | ANSWER_DONE | local deeper step or compiled destination |
+| q | PASS | same compiled destination after neutral feedback; no penalty |
+| compiled ordinary index | advance | q at the next route-relative index |
+| compiled act boundary | advance | break with next act pending |
+| configured trigger | advance | secretOffer only when the compiled route enables it |
+| final question index | advance | lastIntro |
+| past final index | advance | all36 completion routing |
+| break | CONTINUE | configured Private Moment/use or next act; reset act time |
+| lastIntro | REVEAL_LAST | q at the stored final index |
 
-The consent rows above describe retained generic engine capability; no current pack sets `requiresConsent` or enters those phases. Setup/entry, consent, act-entry/break, private-moment capture/resolution,
-final-question reveal, Question 37, end-run reasons, and compiled question
-destinations are implemented in `src/closer/engine/transitions.js`. Canonical
-state creation and save validation are implemented in
-`src/closer/engine/persistence.js`, while browser storage is isolated in
-`src/closer/infrastructure/storage.js`. Restart and resume state decisions are
-also pure; their screen-local effects, global preference events, and the ending
-timeline remain outside the transition core.
+Question order, boundaries, triggers, and destinations come only from compileRun().
 
-## Private moment and finale
+## Private Moments
 
-| Current phase | Event | Next phase | Required state/effect |
-|---|---|---|---|
-| `secretOffer` | `START` | `secretPass1` | Begin optional handoff; set collective status `in-progress` |
-| `secretOffer` or either card/handoff | `SKIP_ALL` | triggered `q` or next `act` | Shared skip; Classic discards both categories |
-| `secretPass1` | `HANDOFF_CONFIRMED` | `secret1` | Person A reads privately |
-| `secret1` | `SET_CARD_CHOICE` | `secretPass2` | Non-Classic choices collapse to identical state; Classic records only `pending` or `none` |
-| `secretPass2` | `HANDOFF_CONFIRMED` | `secret2` | Person B reads privately |
-| `secret2` | `SET_CARD_CHOICE` | `secretPassBack` | Same storage rule as A; choices are never shown to the other person |
-| `secretPassBack` | `HANDOFF_CONFIRMED` | triggered `q`, next `act`, or `privateUse` | Set status `armed`; resume by configured use kind |
-| `privateUse` | `COMPLETE_USE` | `act` | Immediate/after-act use is consumed and discarded |
-| configured question use | leave the question | compiled destination | CHAOS becomes `consumed` when Q16 ends |
-| `all36` | `CONTINUE_AFTER_QUESTIONS` | first Classic check, `privateFinaleIntro`, `privateFinaleSkipped`, `directFinale`, `q37intro`, or `ending` | Route and pack metadata choose exactly one outcome; Quick has no Private Moment |
-| `checkPass1/2` | `HANDOFF_CONFIRMED` | `check1/2` | Applicable person reads privately |
-| `check1/2` | `SET_QUESTION_STATUS` | next role check or `checkPassBack` | Store only `asked`, `pending`, or `discarded`; follow stable A/B order |
-| `checkPassBack` | `HANDOFF_CONFIRMED` | `q37intro` | Return to shared phone state |
-| `q37intro` | `ACCEPT_FINALE` | `q37` or `q37a` | Classic uses pending categorical count; other packs use their ordinary closer |
-| `q37intro` | `END_RUN(userEnded)` | `ending` | Offered on optional-bonus branches |
-| `q37a` | `CONTINUE` | `q37b` | Preserve strict starter alternation |
-| `q37b` | `END_RUN(completed)` | `ending` | Completion reward allowed |
-| `q37` | `END_RUN(completed)` | `ending` | Completion reward allowed |
-| `privateFinaleIntro` | `ACCEPT_FINALE` | `privateFinaleA` | Start pack-specific optional finale |
-| `privateFinaleA` | `CONTINUE_SECOND_TURN` | `privateFinaleB` | Offer a fresh exit before B |
-| `privateFinaleB`, `privateFinaleSkipped`, or `directFinale` | `COMPLETE` | `ending` | Scrub private categories and complete |
-| `ending` | `ADVANCE_BEAT` | `ending` | Screen-local beat advances; persisted phase unchanged |
-| `ending` | `RESTART` | `start` | Canonical fresh state |
+| From | Event | Destination / invariant |
+|---|---|---|
+| secretOffer | START | named A handoff; collective state becomes in progress |
+| any capture step | SKIP_ALL | configured return; Classic categories become discarded |
+| A/B handoff | HANDOFF_CONFIRMED | corresponding private card |
+| private card | SET_CARD_CHOICE | next handoff; non-Classic stores no individual choice, Classic stores categorical state only |
+| return handoff | HANDOFF_CONFIRMED | configured question, act, or immediate use |
+| privateUse | COMPLETE_USE | next act; private state consumed and discarded |
+| configured question use | leave question | compiled destination; temporary private state discarded |
 
-## SLOW BURN interaction boundary
+Spoken answers and private free text never enter state. Natural completion, restart, and every early end scrub remaining private categories.
 
-SLOW BURN uses the ordinary setup, introduction, act, question, Pass, break, finale, and resume transitions. It deliberately adds no action, body-area, adjustment, or agreement phase/state. Its shared introduction tells the people to communicate those matters directly. Reintroducing device-mediated action choices would require a new product decision and explicit evidence that the extra phone interaction improves rather than disrupts the experience.
+## Finales
 
-## Migration rule
+| From | Event | Destination / invariant |
+|---|---|---|
+| all36 | CONTINUE_AFTER_QUESTIONS | exactly one compiled outcome: Classic check, pack-private finale, direct finale, ordinary Q37, or ending |
+| Classic check handoff | HANDOFF_CONFIRMED | private categorical check |
+| Classic check | SET_QUESTION_STATUS | next role or shared return; store only asked, pending, or discarded |
+| q37intro | accept / end | q37, q37a, or neutral ending |
+| q37a | continue | q37b with stable role order |
+| pack-private finale intro | accept / end | A turn or neutral ending |
+| pack-private A | continue | B turn with a fresh exit |
+| final private/direct/Q37 step | complete | ending; private state scrubbed |
+| ending | ADVANCE_BEAT | same persisted phase; presentation beat only |
 
-For each remaining family:
+Quick never enters a Private Moment or extended Question 37 ceremony. Adult packs use direct finales and no device-mediated participation gate.
 
-1. add characterization tests for every row and branch;
-2. implement a pure transition returning a state patch plus named effects;
-3. keep vibration, focus, timers, and animation outside the pure function;
-4. integrate only that family;
-5. run lint, all unit/catalog tests, a fresh static build, and the complete E2E suite;
-6. update this matrix and the refactoring roadmap in the same commit.
+## State ownership
+
+- Pure navigation: src/closer/engine/transitions.js
+- Canonical state, migration, and validation: src/closer/engine/persistence.js
+- Browser storage: src/closer/infrastructure/storage.js
+- Compiled run identity: src/constants/closer.js
+- Browser effects and event orchestration: src/components/Closer/CloserGame.js
+
+Any new persisted phase or event requires a characterized matrix row, compatibility decision, parser invariant, and focused resume/early-exit tests.

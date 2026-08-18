@@ -49,7 +49,8 @@ describe('CloserGame smoke test', () => {
 
     expect(await screen.findByText('Welches Pack?')).toBeInTheDocument();
     expect(screen.getByText('CLASSIC')).toBeInTheDocument();
-    expect(screen.getByText('FIRST DATE')).toBeInTheDocument();
+    expect(screen.getByText('FRIENDS')).toBeInTheDocument();
+    expect(screen.queryByText('FIRST DATE')).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Weiter' }));
 

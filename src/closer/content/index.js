@@ -72,6 +72,8 @@ import { LATE_NIGHT_PACK } from './packs/late-night';
 import { POWER_BY_CHOICE_PACK } from './packs/power-by-choice';
 import { SLOW_BURN_PACK } from './packs/slow-burn';
 import { ROAD_TRIP_PACK, FAMILY_PACK, COLLEAGUES_PACK } from './packs/specialist';
+import { OFF_SCRIPT_PACK } from './packs/off-script';
+import { YOUTH_WORKSHOP_PACK } from './packs/youth-workshop';
 import {
   CLASSIC_PRIVATE_MOMENT,
   FIRST_DATE_PRIVATE_MOMENT,
@@ -104,6 +106,7 @@ export const PACKS = {
     secretAtIndex: CLASSIC_SECRET_AT_INDEX,
     routes: CLASSIC_ROUTES,
     defaultRouteId: 'full',
+    libraryGroup: 'core',
   },
   'first-date': {
     id: 'first-date',
@@ -121,6 +124,7 @@ export const PACKS = {
     secretAtIndex: FIRST_DATE_SECRET_AT_INDEX,
     routes: FIRST_DATE_ROUTES,
     defaultRouteId: 'quick',
+    libraryGroup: 'relationships',
   },
   'date-night': {
     id: 'date-night',
@@ -138,6 +142,7 @@ export const PACKS = {
     secretAtIndex: DATE_NIGHT_SECRET_AT_INDEX,
     routes: DATE_NIGHT_ROUTES,
     defaultRouteId: 'standard',
+    libraryGroup: 'relationships',
   },
   couples: {
     id: 'couples',
@@ -155,6 +160,7 @@ export const PACKS = {
     secretAtIndex: COUPLES_SECRET_AT_INDEX,
     routes: COUPLES_ROUTES,
     defaultRouteId: 'quick',
+    libraryGroup: 'relationships',
   },
   friends: {
     id: 'friends',
@@ -172,6 +178,7 @@ export const PACKS = {
     secretAtIndex: FRIENDS_SECRET_AT_INDEX,
     routes: FRIENDS_ROUTES,
     defaultRouteId: 'standard',
+    libraryGroup: 'core',
   },
   'old-friends': {
     id: 'old-friends',
@@ -189,6 +196,7 @@ export const PACKS = {
     secretAtIndex: OLD_FRIENDS_SECRET_AT_INDEX,
     routes: OLD_FRIENDS_ROUTES,
     defaultRouteId: 'standard',
+    libraryGroup: 'core',
   },
   deep: {
     id: 'deep',
@@ -206,6 +214,7 @@ export const PACKS = {
     secretAtIndex: DEEP_SECRET_AT_INDEX,
     routes: DEEP_ROUTES,
     defaultRouteId: 'standard',
+    libraryGroup: 'core',
   },
   chaos: {
     id: 'chaos',
@@ -223,6 +232,7 @@ export const PACKS = {
     secretAtIndex: CHAOS_SECRET_AT_INDEX,
     routes: CHAOS_ROUTES,
     defaultRouteId: 'quick',
+    libraryGroup: 'core',
   },
   'power-by-choice': POWER_BY_CHOICE_PACK,
   'slow-burn': SLOW_BURN_PACK,
@@ -230,13 +240,12 @@ export const PACKS = {
   'road-trip': ROAD_TRIP_PACK,
   family: FAMILY_PACK,
   colleagues: COLLEAGUES_PACK,
+  'off-script': OFF_SCRIPT_PACK,
+  'youth-workshop': YOUTH_WORKSHOP_PACK,
 };
 
 export const DEFAULT_VISIBLE_PACK_IDS = Object.freeze([
   'classic',
-  'first-date',
-  'date-night',
-  'couples',
   'friends',
   'old-friends',
   'deep',
@@ -253,4 +262,10 @@ export function isPackVisible(preferences, packId) {
   return normalizeVisiblePackIds(preferences?.visiblePackIds).includes(packId);
 }
 
-export { LATE_NIGHT_PACK, POWER_BY_CHOICE_PACK, SLOW_BURN_PACK };
+export {
+  LATE_NIGHT_PACK,
+  POWER_BY_CHOICE_PACK,
+  SLOW_BURN_PACK,
+  OFF_SCRIPT_PACK,
+  YOUTH_WORKSHOP_PACK,
+};
