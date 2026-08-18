@@ -181,9 +181,9 @@ CLOSER stores settings and progress locally to support resume and installed-PWA 
 
 Any future analytics, remote persistence, account system, speech processing, or TTS telemetry changes this privacy baseline and requires a new review before release.
 
-YOUTH WORKSHOP is deliberately non-resumable. Its names and run progress are not written as a saved game; ordinary pack-visibility preferences may remain. It uses peer pairings aged 14–17, nickname/initial guidance, unconditional Pass and End, and no facilitator-visible answers. Real safeguarding concerns belong in the institution's established reporting and support channels, not in the game. Facilitators must follow the separate [YOUTH WORKSHOP guide](youth-workshop-facilitator-guide.md).
+YOUTH WORKSHOP is deliberately non-resumable. Its names and run progress are not written as a saved game; ordinary pack-visibility preferences may remain. It uses pairings aged 14–17 on comparable footing, no-name/nickname/initial guidance, unconditional Pass and End, and no facilitator-visible answers. CLOSER does not record answers but cannot guarantee secrecy from the partner who hears or sees them. Real safeguarding concerns belong in the institution's established reporting and support channels, not in the game. Facilitators must follow the separate [YOUTH WORKSHOP guide](youth-workshop-facilitator-guide.md).
 
-OFF SCRIPT uses only information that people can perceive themselves. It does not access a camera, microphone, location, recognition API, or environmental data. Activities must remain cooperative, unscored, adaptable to seated/quiet/limited-space use, and free of required contact, public performance, filming, posting, unsafe object use, or leaving the safe area.
+OFF SCRIPT uses only information that people can perceive themselves. It does not access a camera, microphone, location, recognition API, or environmental data. Participants choose a mutually perceivable and usable form for every activity; description always counts, and nothing requires speed, synchronization, or visual solving. Activities remain cooperative, unscored, adaptable to seated/quiet/limited-space use, and free of required contact, public performance, filming, posting, unsafe object use, or leaving the safe area.
 
 ## 10. PWA and system UI limits
 

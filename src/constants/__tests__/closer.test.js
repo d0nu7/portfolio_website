@@ -191,6 +191,28 @@ describe('PACKS registry', () => {
       expect(compileRun(pack.id, 'quick').directFinale).toBeDefined();
       expect(Object.values(pack.modes[0].twists).every((enabled) => !enabled)).toBe(true);
     });
+
+    expect(compileRun('off-script', 'standard').questions.map(({ id }) => id)).toEqual([
+      'off-script-q01', 'off-script-q02', 'off-script-q03', 'off-script-q04',
+      'off-script-q05', 'off-script-q06', 'off-script-q09', 'off-script-q10',
+      'off-script-q11', 'off-script-q12', 'off-script-q13', 'off-script-q14',
+      'off-script-q17', 'off-script-q18', 'off-script-q19', 'off-script-q20',
+      'off-script-q21', 'off-script-q24',
+    ]);
+    expect(offScript.positioning.en).toContain('Nothing has to be fast, simultaneous');
+    expect(offScript.directFinale.en).toContain('or simply finish the round here');
+
+    expect(compileRun('youth-workshop', 'quick').questions.map(({ id }) => id)).toEqual([
+      'youth-workshop-q01', 'youth-workshop-q02', 'youth-workshop-q04',
+      'youth-workshop-q09', 'youth-workshop-q12', 'youth-workshop-q14',
+      'youth-workshop-q17', 'youth-workshop-q20', 'youth-workshop-q22',
+    ]);
+    expect(compileRun('youth-workshop', 'standard').questions.map(({ id }) => id)).not.toContain(
+      'youth-workshop-q15'
+    );
+    expect(youth.positioning.en).toContain('cannot guarantee secrecy between people');
+    expect(youth.introPrivacy.en).toContain('Your answers are never typed in or recorded');
+    expect(youth.directFinale.en).toContain('the app does not record answers');
   });
 
   it('every registered pack has the shape CloserGame.js relies on', () => {

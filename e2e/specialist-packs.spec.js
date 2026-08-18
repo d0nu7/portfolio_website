@@ -80,7 +80,7 @@ test.describe('Specialist pack runtime', () => {
     await page.getByRole('button', { name: 'Fertig' }).click();
     await expect(page.getByText('Das waren alle 9.')).toBeVisible();
     await page.getByRole('button', { name: 'Ende' }).click();
-    await expect(page.getByText(/Welcher absurde Einfall/)).toBeVisible();
+    await expect(page.getByText(/irgendeinem absurden Einfall noch einen letzten Gruß/)).toBeVisible();
     await expect(page.getByText(/GIB DAS HANDY/i)).toHaveCount(0);
   });
 

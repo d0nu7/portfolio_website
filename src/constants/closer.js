@@ -225,7 +225,7 @@ export function questionIdFor(packId, questionIndex) {
  * invalidate active saves. Copy-only corrections keep their existing ID and
  * version. The resolved ID list lets the save parser detect content drift.
  */
-export const CONTENT_VERSION = 10;
+export const CONTENT_VERSION = 11;
 
 export function runQuestionIdsFor(packId, routeId = DEFAULT_ROUTE_ID) {
   const total = totalQuestions(packId, routeId);

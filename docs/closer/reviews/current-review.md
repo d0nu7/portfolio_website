@@ -18,8 +18,8 @@ The automated release gate passes. The remaining evidence gap is real-world use:
 | Core | Classic, Friends, Old Friends, Deep, Chaos | Broad conversation, friendship, depth, and playful absurdity | Observe duration, fatigue, and PLAYFUL pressure |
 | Relationships | First Date, Date Night, Couples | Pressure-aware romantic/relationship contexts | Validate positioning and partner-test risk |
 | Specialist | Road Trip, Family, Colleagues | Hidden contexts with conservative boundaries and no Private Moments | Test varied real settings and participants |
-| Activities | Off Script | Cooperative, unscored situational play with no sensors or assumed contact | Test physical, quiet, public, and limited-mobility settings |
-| Youth | Youth Workshop (14–17) | Hidden, non-resumable peer icebreaker with no facilitator-visible answers | Safeguarding, educator, bilingual, accessibility, and moderated review |
+| Activities | Off Script | Cooperative, unscored, multimodal situational play with no sensors, essential timing, synchronization, or assumed contact | Test physical, quiet, public, and varied-access settings |
+| Youth | Youth Workshop (14–17) | Hidden, non-resumable comparable-peer icebreaker with no answer recording and an explicit interpersonal secrecy limit | Safeguarding, educator, bilingual, accessibility, privacy, and moderated review |
 | Adult | Late Night, Power, by Choice, Slow Burn | Hidden explicit conversation/touch experiences with low-attention interaction | Complete named external and moderated reviews |
 
 Road Trip remains parked/no-participating-driver only. Colleagues is voluntary and intended for near-peers, not evaluation. Slow Burn excludes genitals, anus, penetration, breath/neck play, restraint, impact, and surprise touch. None of the experimental packs should be described as scientifically, legally, or clinically validated.

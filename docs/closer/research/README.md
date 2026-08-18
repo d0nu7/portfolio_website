@@ -9,6 +9,7 @@ This directory contains the focused evidence work for FR-018 through FR-020. Evi
 | [FR-018 to FR-020 deep research](fr-018-fr-020-deep-research.md) | Primary integrated report, decisions, evidence maps, product architecture, pack audit, references, and bilingual appendices |
 | [Final citation and safety QA](fr-018-fr-020-citation-qa.md) | Independent verification of citations, evidence transfer, structure, candidate counts, and safety consistency for the frozen primary report |
 | [Full question-bank audit](question-bank-full-audit-2026-08-17.md) | Exhaustive pre-FR-018/019 disposition of the then-implemented 432 questions, including three additional cross-pack consistency findings |
+| [OFF SCRIPT and YOUTH WORKSHOP question audit](off-script-youth-workshop-question-audit-2026-08-18.md) | Complete 48-card review of the two later packs, including exact bilingual candidates, route/finale decisions, youth privacy and safeguarding boundaries, and validation gates |
 
 ## Supporting workstream memos
 

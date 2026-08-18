@@ -19,9 +19,9 @@
 | FR-018 | POWER, BY CHOICE | A 36-question conversation-only adult pack ships without assigned roles or physical tasks. | Named external reviews before broad promotion |
 | FR-019 | SLOW BURN | A 21-card touch-forward adult guide ships in the ordinary low-attention prompt flow. | Named external reviews and moderated sessions |
 | FR-020 | Cross-pack evidence audit | All approved bilingual content changes are synchronized; Classic remains immutable. | External validation remains separate from implementation |
-| FR-021 | OFF SCRIPT | A bilingual 24-card cooperative activity bank ships with Quick/Standard routes, environmental alternatives, no sensors, no contact assumption, and no Private Moment. | Physical, quiet, public, and varied-access sessions |
+| FR-021 | OFF SCRIPT | A bilingual 24-card cooperative activity bank ships with Quick/Standard routes, a shared multimodal contract, no essential timing or synchronization, no sensors, no contact assumption, and no Private Moment. | Physical, quiet, public, and varied-access sessions |
 | FR-022 | Neutral first-run library | Fresh/reset preferences show Classic, Friends, Old Friends, Deep, and Chaos; the grouped library exposes all optional packs while version-2 choices migrate unchanged. | First-impression testing |
-| FR-023 | Youth Workshop (14–17) | A bilingual 24-question peer pack ships with Icebreaker/Workshop routes, no Private Moment or twists, and no resumable personal run. | Safeguarding, educator, bilingual, accessibility, and moderated review before broad promotion |
+| FR-023 | Youth Workshop (14–17) | A bilingual 24-question comparable-peer pack ships with Icebreaker/Workshop routes, honest peer-confidentiality limits, no answer recording, no Private Moment or twists, and no resumable personal run. | Safeguarding, educator, bilingual, accessibility, privacy, and moderated review before broad promotion |
 
 The exact Private Moment matrix and adult-pack boundaries live in the [gameplay and safety contract](../product/gameplay-and-safety.md). Exact questions and routes live in the [bilingual catalog](../content/question-catalog.de-en.md).
 
