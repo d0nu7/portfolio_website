@@ -5,7 +5,7 @@
 
 ## Assessment
 
-CLOSER is a coherent, testable shared-device two-person product. Sixteen bilingual packs ship with curated routes, exact catalog fidelity, free Pass, versioned saves, and a configurable library. Spoken answers and private free text never enter application state. The phone remains secondary during questions and activities.
+CLOSER is a coherent, testable shared-device two-person product. Eighteen bilingual packs ship with curated routes, exact catalog fidelity, free Pass, versioned saves, and a configurable library. Spoken answers and private free text never enter application state. The phone remains secondary during questions and activities.
 
 Classic stays immutable. Pressure mechanics are deterministic and limited to approved pack/question combinations. Private Moments are asymmetric, route-specific, and absent from Quick and excluded packs. Adult content is hidden by default, uses one shared introduction, and leaves ongoing communication between the people rather than adding repeated device rituals.
 
@@ -20,6 +20,7 @@ The automated release gate passes. The remaining evidence gap is real-world use:
 | Specialist | Road Trip, Family, Colleagues | Hidden contexts with conservative boundaries and no Private Moments | Test varied real settings and participants |
 | Activities | Off Script | Cooperative, unscored, multimodal situational play with no sensors, essential timing, synchronization, or assumed contact | Test physical, quiet, public, and varied-access settings |
 | Youth | Youth Workshop (14–17) | Hidden, non-resumable comparable-peer icebreaker with no answer recording and an explicit interpersonal secrecy limit | Safeguarding, educator, bilingual, accessibility, privacy, and moderated review |
+| Students | Students, FH Salzburg | Hidden adult-peer conversations; the FH edition is short, local, unofficial, and does not test campus knowledge | Bilingual/moderated sessions; institutional naming and local-owner review before FH promotion |
 | Adult | Late Night, Power, by Choice, Slow Burn | Hidden explicit conversation/touch experiences with low-attention interaction | Complete named external and moderated reviews |
 
 Road Trip remains parked/no-participating-driver only. Colleagues is voluntary and intended for near-peers, not evaluation. Slow Burn excludes genitals, anus, penetration, breath/neck play, restraint, impact, and surprise touch. None of the experimental packs should be described as scientifically, legally, or clinically validated.
@@ -28,7 +29,7 @@ Road Trip remains parked/no-participating-driver only. Colleagues is voluntary a
 
 1. Run safeguarding, educator, bilingual, accessibility, and moderated review for Youth Workshop before broad institutional promotion.
 2. Test OFF SCRIPT in physical, quiet, public, seated, and limited-mobility settings.
-3. Research and write Students/FH Salzburg (FR-015).
+3. Review and pilot Students/FH Salzburg with adult peers; obtain local naming approval before institutional promotion.
 4. Curate replacement-question pools before implementing FR-006.
 5. Continue safe pack-aware PLAYFUL pilots (FR-016).
 6. Run moderated timing/content sessions (FR-008) and complete BUG-010 device checks.

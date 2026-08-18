@@ -18,7 +18,7 @@ Living product documentation only. Git history preserves completed iteration det
 
 ## Current product
 
-- Sixteen bilingual packs and 537 catalog questions/action cards ship.
+- Eighteen bilingual packs and 585 catalog questions/action cards ship.
 - Classic is immutable and fingerprint-protected.
 - Pack visibility is configurable. Fresh installs show a neutral five-pack core; relationship, situation, activity, youth, and adult packs remain discoverable in the library.
 - Passing is free and unlimited. Routes, styles, Private Moments, and finales are pack-aware.

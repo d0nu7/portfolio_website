@@ -74,6 +74,7 @@ import { SLOW_BURN_PACK } from './packs/slow-burn';
 import { ROAD_TRIP_PACK, FAMILY_PACK, COLLEAGUES_PACK } from './packs/specialist';
 import { OFF_SCRIPT_PACK } from './packs/off-script';
 import { YOUTH_WORKSHOP_PACK } from './packs/youth-workshop';
+import { STUDENTS_PACK, FH_SALZBURG_PACK } from './packs/students';
 import {
   CLASSIC_PRIVATE_MOMENT,
   FIRST_DATE_PRIVATE_MOMENT,
@@ -242,6 +243,8 @@ export const PACKS = {
   colleagues: COLLEAGUES_PACK,
   'off-script': OFF_SCRIPT_PACK,
   'youth-workshop': YOUTH_WORKSHOP_PACK,
+  students: STUDENTS_PACK,
+  'fh-salzburg': FH_SALZBURG_PACK,
 };
 
 export const DEFAULT_VISIBLE_PACK_IDS = Object.freeze([
@@ -268,4 +271,6 @@ export {
   SLOW_BURN_PACK,
   OFF_SCRIPT_PACK,
   YOUTH_WORKSHOP_PACK,
+  STUDENTS_PACK,
+  FH_SALZBURG_PACK,
 };

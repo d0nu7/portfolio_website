@@ -215,6 +215,37 @@ describe('PACKS registry', () => {
     expect(youth.directFinale.en).toContain('the app does not record answers');
   });
 
+  it('registers STUDENTS and its compact unofficial FH Salzburg edition', () => {
+    const students = PACKS.students;
+    const fhSalzburg = PACKS['fh-salzburg'];
+
+    expect(students).toMatchObject({
+      libraryGroup: 'situations',
+      discoverability: 'menu-unlock',
+      privateMoment: 'none',
+      defaultRouteId: 'quick',
+    });
+    expect(students.acts.flatMap((act) => act.questions)).toHaveLength(36);
+    expect(compileRun('students', 'quick').questions).toHaveLength(12);
+    expect(compileRun('students', 'standard').questions).toHaveLength(24);
+
+    expect(fhSalzburg).toMatchObject({
+      libraryGroup: 'situations',
+      discoverability: 'menu-unlock',
+      privateMoment: 'none',
+      defaultRouteId: 'quick',
+    });
+    expect(fhSalzburg.acts.flatMap((act) => act.questions)).toHaveLength(12);
+    expect(Object.keys(fhSalzburg.routes)).toEqual(['quick']);
+    expect(compileRun('fh-salzburg', 'quick').questions).toHaveLength(12);
+    expect(fhSalzburg.positioning.en).toContain('neither published nor endorsed');
+
+    [students, fhSalzburg].forEach((pack) => {
+      expect(compileRun(pack.id, 'quick').directFinale).toBeDefined();
+      expect(Object.values(pack.modes[0].twists).every((enabled) => !enabled)).toBe(true);
+    });
+  });
+
   it('every registered pack has the shape CloserGame.js relies on', () => {
     Object.values(PACKS).forEach((pack) => {
       expect(Array.isArray(pack.acts)).toBe(true);

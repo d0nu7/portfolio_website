@@ -20,7 +20,7 @@ test.describe('Configurable pack library', () => {
     await expect(page.getByRole('button', { name: /^ROAD TRIP/ })).toHaveCount(0);
   });
 
-  test('the grouped library exposes activity and youth packs independently', async ({ page }) => {
+  test('the grouped library exposes activity, youth, and student packs independently', async ({ page }) => {
     await page.goto('/closer/');
     await page.getByRole('button', { name: 'Menü' }).click();
     await page.getByRole('button', { name: 'Zusätzliche Inhalte' }).click();
@@ -29,6 +29,8 @@ test.describe('Configurable pack library', () => {
     await expect(page.getByRole('heading', { name: 'Situationen' })).toBeVisible();
     await page.getByRole('button', { name: /^OFF SCRIPT/ }).click();
     await page.getByRole('button', { name: /^YOUTH WORKSHOP/ }).click();
+    await page.getByRole('button', { name: /^STUDENTS/ }).click();
+    await page.getByRole('button', { name: /^FH SALZBURG/ }).click();
     await page.getByRole('button', { name: 'Zurück' }).click();
     await page.getByRole('button', { name: 'Schließen' }).click();
 
@@ -36,6 +38,8 @@ test.describe('Configurable pack library', () => {
     await page.getByRole('button', { name: 'Weiter' }).click();
     await expect(page.getByRole('button', { name: /^OFF SCRIPT/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /^YOUTH WORKSHOP/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^STUDENTS/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^FH SALZBURG/ })).toBeVisible();
   });
 
   test('the final visible pack cannot be hidden', async ({ page }) => {
@@ -105,6 +109,21 @@ test.describe('Specialist pack runtime', () => {
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Spiel fortsetzen' })).toHaveCount(0);
   });
+
+  for (const packId of ['students', 'fh-salzburg']) {
+    test(`${packId} Quick completes through its direct finale`, async ({ page }) => {
+      await seedAndResume(page, {
+        packId,
+        routeId: 'quick',
+        modeId: 'peer',
+        qIndex: 11,
+      });
+      await page.getByRole('button', { name: 'Fertig' }).click();
+      await expect(page.getByText('Das waren alle 12.')).toBeVisible();
+      await page.getByRole('button', { name: 'Ende' }).click();
+      await expect(page.getByText(/GIB DAS HANDY/i)).toHaveCount(0);
+    });
+  }
 });
 
 test.describe('Pack-aware PLAYFUL', () => {

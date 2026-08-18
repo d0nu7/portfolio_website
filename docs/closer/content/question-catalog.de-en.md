@@ -2,16 +2,16 @@
 
 **Updated:** 18 August 2026
 **Status:** Editorial source of truth for implemented packs
-**Scope:** 16 packs · 537 master questions or action cards · German and English · curated duration routes · pack-specific finales
+**Scope:** 18 packs · 585 master questions or action cards · German and English · curated duration routes · pack-specific finales
 
 ---
 
 ## 1. Authoritative interpretation
 
-- A **pack/mode** determines *what* is asked. Nine packs are currently implemented: `classic`, `first-date`, `date-night`, `couples`, `friends`, `old-friends`, `deep`, `chaos`, and `late-night`.
-- `road-trip`, `family`, and `colleagues` are implemented specialist packs. They start hidden in the configurable pack library until a user enables them.
+- A **pack/mode** determines *what* is asked. Eighteen bilingual packs are currently implemented.
+- Relationship, specialist, activity, youth, student, local FH Salzburg, and adult packs start hidden in the configurable pack library until a user enables them.
 - A **style** only determines *how* the game is played, for example `CALM` or `PLAYFUL`. Styles do not own duplicate question lists.
-- Every pack has a master bank of **3 acts with 12 questions each**.
+- Every pack has three acts. Long-form banks usually contain 12 prompts per act; deliberately shorter activity, youth, FH Salzburg, and guided-experience packs use the exact act sizes documented in their sections.
 - A stable implementation ID combines the pack and table ID, for example `first-date-q01`, `friends-q24`, or `late-night-q36`.
 - `quick`, `standard`, and `full` are **fixed curated routes**. Questions are never selected randomly from the master bank.
 - Unless stated otherwise, both people answer the same question; the starting person alternates between questions.
@@ -1348,3 +1348,111 @@ Every activity supports the ordinary free Pass. Participants remain in their saf
 - **EN:** “The round ends here. You do not have to report anything from it to the workshop. Share only what your partner may hear or see; the app does not record answers.”
 
 This first release is only for peer pairings aged 14–17 on comparable footing; neither participant may assess, supervise, or make decisions about the other. It excludes romance, sex, bodies, substances, illegal behaviour, trauma, mental health, family conflict, money, grades, religion, politics, protected characteristics, bullying reports, and confidential school or care information. A facilitator must provide a neutral alternative when participation in the surrounding event is mandatory and must use established safeguarding channels for real concerns. CLOSER does not record answers or persist this pack as a resumable game. A partner can still hear, see, remember, or repeat what is shared; the app does not promise secrecy between people.
+
+---
+
+## 18. STUDENTS
+
+**Goal:** A peer conversation for voluntarily participating adult students on comparable footing. It explores everyday study life, collaboration, strengths, support preferences, and belonging without grades, ranking, or assessment.
+
+**Routes:** Quick 12 · Standard 24. Planning estimates: approximately 15 and 30 minutes. `Reserve` questions are editorial alternatives and are not part of a current route.
+
+### Act I – ANKOMMEN / ARRIVE
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q01 | Q/S | Welche kleine Sache macht einen gewöhnlichen Studientag für dich besser? | What small thing makes an ordinary study day better for you? |
+| Q02 | S | Was hilft dir, in den Lernmodus zu kommen? | What helps you shift into study mode? |
+| Q03 | Reserve | Welche Art von Ort hilft dir beim Denken – und warum? | What kind of place helps you think, and why? |
+| Q04 | Q/S | Welche Pause lädt dich eher auf: Ruhe, Bewegung, Essen, Reden oder etwas anderes? | What kind of break tends to recharge you: quiet, movement, food, talking, or something else? |
+| Q05 | S | Welche harmlose Studiengewohnheit ist typisch für dich? | What harmless study habit is typical of you? |
+| Q06 | Reserve | Was hast du über deinen eigenen Rhythmus erst im Studium gelernt? | What did you only learn about your own rhythm after starting higher education? |
+| Q07 | Q/S | Welches Thema außerhalb deines Fachs macht dich gerade neugierig? | What topic outside your field are you curious about right now? |
+| Q08 | S | Wie nimmst du neue Informationen am liebsten auf? | How do you most enjoy taking in new information? |
+| Q09 | Reserve | Welche unscheinbare Fähigkeit macht den Studienalltag leichter? | What underrated skill makes student life easier? |
+| Q10 | Q/S | Wie lernst du neue Mitstudierende am liebsten ohne großen Druck kennen? | How do you most enjoy getting to know new fellow students without much pressure? |
+| Q11 | S | Was macht eine neue Umgebung für dich schneller vertraut? | What helps a new environment feel familiar sooner? |
+| Q12 | Reserve | Welche kleine Entdeckung aus deinem Studienalltag würdest du gern weiterempfehlen? | What small discovery from student life would you like to recommend? |
+
+### Act II – ZUSAMMEN LERNEN / LEARN TOGETHER
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q13 | Q/S | Welche Rolle übernimmst du in einem lockeren Team manchmal gern? | What role do you sometimes enjoy in a low-pressure team? |
+| Q14 | S | Welche Reaktion hilft dir, eine unfertige Idee weiterzudenken? | What kind of response helps you develop an unfinished idea? |
+| Q15 | Reserve | Wie startet ihr eine gemeinsame Aufgabe so, dass alle gut hineinkommen? | How can a shared task begin so everyone can find a way into it? |
+| Q16 | Q/S | Was macht es dir leichter, eine Frage zu stellen? | What makes it easier for you to ask a question? |
+| Q17 | S | Wie kommunizierst du bei gemeinsamer Arbeit am liebsten? | How do you prefer to communicate when working with others? |
+| Q18 | Reserve | Woran merkst du, dass ein Treffen wirklich hilfreich war? | How can you tell that a meeting was genuinely useful? |
+| Q19 | Q/S | Wie zeigst du freundlich, dass du gerade Fokus oder Raum brauchst? | How do you kindly signal that you need focus or space? |
+| Q20 | S | Wie erhältst du Feedback am liebsten, wenn etwas noch nicht fertig ist? | How do you prefer to receive feedback when something is still unfinished? |
+| Q21 | Reserve | Wie kann jemand helfen, wenn du feststeckst, ohne dir die Aufgabe abzunehmen? | How can someone help when you are stuck without taking over the task? |
+| Q22 | Q/S | Was lässt einen Beitrag in einer Gruppe willkommen wirken? | What makes a contribution feel welcome in a group? |
+| Q23 | S | Wie können Entscheidungen in einem Studierendenteam fair aufgeteilt werden? | How can decisions be shared fairly in a student team? |
+| Q24 | Reserve | Welche hilfreiche Lektion über Zusammenarbeit hast du bisher gelernt? | What useful lesson about collaboration have you learned so far? |
+
+### Act III – DEIN WEG / YOUR PATH
+
+| ID | Route | Deutsch | English |
+|---|---|---|---|
+| Q25 | Q/S | Welche Stärke möchtest du in deinem Studium öfter einsetzen? | What strength would you like to use more often in your studies? |
+| Q26 | S | Welche neue Fähigkeit würdest du gern erkunden, ohne sie sofort beherrschen zu müssen? | What new skill would you like to explore without needing to master it right away? |
+| Q27 | Reserve | Was bedeutet Zugehörigkeit in einem Studienumfeld für dich persönlich? | What does belonging in a study environment mean to you personally? |
+| Q28 | Q/S | Welche Art von Unterstützung durch Mitstudierende ist für dich wirklich hilfreich? | What kind of support from fellow students is genuinely useful to you? |
+| Q29 | S | Welche Form von Wertschätzung fühlt sich für dich angenehm an? | What form of appreciation feels comfortable to you? |
+| Q30 | Reserve | Was kann eine Gruppe tun, damit neue oder ruhigere Personen leichter Platz finden? | What can a group do to make room for people who are new or quieter? |
+| Q31 | Q/S | Welchem Projekt oder Thema würdest du im Studium gern einmal begegnen? | What project or topic would you like to encounter during your studies? |
+| Q32 | S | Welche Grenze möchtest du in besonders vollen Phasen besser schützen? | What boundary would you like to protect better during especially busy periods? |
+| Q33 | Reserve | Wie hat das Studium deinen Blick auf etwas verändert? | How has higher education changed the way you see something? |
+| Q34 | Q/S | Welche kleine Hoffnung hast du für deinen aktuellen Studienabschnitt? | What small hope do you have for your current stage of study? |
+| Q35 | S | Was würde eine gute Studiengemeinschaft für Menschen leichter machen? | What would a good student community make easier for people? |
+| Q36 | Reserve | Woran möchtest du dich später erinnern, wenn du an diese Studienphase zurückdenkst? | What would you like to remember when you look back on this stage of your studies? |
+
+### Direct finale
+
+- **DE:** „Die Runde endet hier. Vielleicht versteht ihr jetzt eine kleine Vorliebe, Stärke oder Art der Unterstützung besser – daraus entsteht keine Verpflichtung.“
+- **EN:** “The round ends here. You may now understand one small preference, strength, or kind of support better—without creating any obligation.”
+
+This pack is not designed for lecturer–student, assessor–assessed, supervisor–supervisee, admissions, scholarship, or otherwise dependent pairings. Research on transitions and social belonging informed its themes; neither the pack nor its individual prompts have been scientifically validated.
+
+---
+
+## 19. FH SALZBURG
+
+**Goal:** A short, unofficial local edition for new adult students in the Creative Technologies Department at Campus Urstein. It uses campus and interdisciplinary-project flavour without testing institutional knowledge or replacing official information.
+
+**Route:** Campus Start 12. Planning estimate: approximately 15 minutes.
+
+### Act I – URSTEIN / URSTEIN
+
+| ID | Deutsch | English |
+|---|---|---|
+| Q01 | Was ist dir am Campus Urstein als Erstes aufgefallen? | What was the first thing you noticed about Campus Urstein? |
+| Q02 | Welchen Ort würdest du bei einer winzigen, persönlichen Campusführung zeigen? | What place would you include in a tiny personal campus tour? |
+| Q03 | Wenn die Ankunft mit der S3 einen Soundtrack hätte: Wie würde er klingen? | If arriving on the S3 had a soundtrack, what would it sound like? |
+| Q04 | Welche kleine Campus-Nebenquest würdest du neuen Studierenden geben? | What small campus side quest would you give a new student? |
+
+### Act II – CREATIVE TECHNOLOGIES / CREATIVE TECHNOLOGIES
+
+| ID | Deutsch | English |
+|---|---|---|
+| Q05 | Welche Mischung aus Code, Design, Film, Audio, Games oder Interaktion würdest du gern einmal in einem Projekt sehen? | What mix of code, design, film, audio, games, or interaction would you like to see in a project? |
+| Q06 | Welche Projektrolle würdest du gern einmal ausprobieren, ohne sie schon perfekt können zu müssen? | What project role would you like to try without needing to be good at it already? |
+| Q07 | Was macht es leichter, eine unfertige kreative Arbeit herzuzeigen? | What makes it easier to show unfinished creative work? |
+| Q08 | Was würde dich eher anziehen: Game Jam, Screening, Gastvortrag, Ausstellung oder etwas ganz anderes? | What would draw you in more: a game jam, screening, guest talk, exhibition, or something else entirely? |
+
+### Act III – DEIN PLATZ / YOUR PLACE
+
+| ID | Deutsch | English |
+|---|---|---|
+| Q09 | Welchen harmlosen Tipp für einen angenehmen Tag in Urstein würdest du gern mit jemandem tauschen? | What harmless tip for a pleasant day at Urstein would you like to exchange with someone? |
+| Q10 | Welche Art von Kontakt hilft dir, dich in einer neuen Studienumgebung zu orientieren? | What kind of contact helps you find your bearings in a new study environment? |
+| Q11 | Welche kleine Idee könnte neuen Menschen im Department das Ankommen erleichtern? | What small idea could make it easier for new people to settle into the department? |
+| Q12 | Was würde dafür sorgen, dass sich dein Start in Urstein nach deinem eigenen anfühlt? | What would make your start at Urstein feel like your own? |
+
+### Direct finale
+
+- **DE:** „Das war eure inoffizielle Urstein-Runde. Nehmt mit, was hilfreich oder lustig war – mehr müsst ihr daraus nicht machen.“
+- **EN:** “That was your unofficial Urstein round. Keep whatever felt useful or fun—you do not need to make anything more of it.”
+
+This edition is independently created and is neither published nor endorsed by Salzburg University of Applied Sciences. Stable local flavour was checked against the institution’s public Creative Technologies and Werkschau pages on 18 August 2026. Operational rules and services from the user-provided beginner guide were deliberately excluded because they can change and belong in official channels.

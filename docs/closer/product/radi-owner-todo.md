@@ -8,7 +8,7 @@
 1. Arrange the safeguarding, educator, bilingual, accessibility, privacy, and target-age reviews for Youth Workshop before institutional promotion.
 2. Run OFF SCRIPT sessions across physical, quiet, public, seated, and limited-mobility settings.
 3. Test the neutral first impression with people who have not seen CLOSER.
-4. Choose whether Students/FH Salzburg is the next content effort.
+4. Review Students/FH Salzburg with adult peers and appoint a local FH content owner.
 5. Curate replacement-question pools if FR-006 remains desirable.
 6. Complete physical-device checks and decide whether a separate subdomain is worthwhile.
 
@@ -16,8 +16,8 @@
 
 ### New content
 
-- [ ] **FR-015 Students:** approve target users, route lengths, and research/editorial work.
-- [ ] **FH Salzburg:** choose overlay, setup option, or event route; appoint a local content owner and obtain naming/branding permission.
+- [ ] **FR-015 Students:** run bilingual and moderated adult-peer sessions; review pacing and question fit before broad promotion.
+- [ ] **FH Salzburg:** appoint a local content owner, verify local references on a defined cadence, and obtain permission before institutional promotion or any use implying endorsement.
 - [ ] **FR-021 OFF SCRIPT:** run physical/accessibility sessions before adding a longer route or broad promotion.
 - [ ] **FR-022 neutral first run:** test whether first-time viewers understand CLOSER as a broad two-person experience rather than a pickup product.
 - [ ] **FR-023 Youth Workshop:** commission youth/education, safeguarding, bilingual, accessibility, privacy, and moderated target-age review before broad institutional promotion.

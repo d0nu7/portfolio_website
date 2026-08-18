@@ -378,6 +378,8 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 7. Keep Family non-prescriptive and Colleagues voluntary, peer-oriented, confidential, and free of assessment mechanics.
 8. Keep OFF SCRIPT cooperative, sensor-free, adaptable, and free of public or risky performance.
 9. Keep YOUTH WORKSHOP non-resumable, peer-only, non-evaluative, and within the approved topic exclusions.
+10. Keep STUDENTS limited to voluntary adult peers on comparable footing; discuss working preferences and belonging without turning the round into assessment or advice.
+11. Keep the FH Salzburg edition unofficial, locally reviewable, and free of operational rules or campus-knowledge tests that may become stale.
 
 ### P1 – highest quality gain
 
@@ -461,6 +463,15 @@ Before broad release, test every pack with varied pairs. Moderated sessions shou
 - [UNESCO (2026): Safe learning environments](https://www.unesco.org/en/health-education/safe-learning-environments)
 - [European Union: General Data Protection Regulation, including Article 5 data minimization](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
 - [ICO: Children's Code and children's online privacy](https://ico.org.uk/for-the-public/the-children-s-code-and-children-s-online-privacy/)
+
+### Higher-education transitions and belonging
+
+- [Walton & Cohen (2011): A brief social-belonging intervention improves academic and health outcomes of minority students](https://doi.org/10.1126/science.1198364)
+- [Yeager et al. (2016): Teaching a lay theory before college narrows achievement gaps at scale](https://doi.org/10.1073/pnas.1524360113)
+- [FH Salzburg: Creative Technologies at Campus Urstein](https://www.fh-salzburg.ac.at/en/study/ct)
+- [FH Salzburg: Creative Technologies Werkschau 2026](https://www.fh-salzburg.ac.at/en/about-fh-salzburg/news-and-events/events/2026/06/werkschau-creative-technologies)
+
+The first two studies concern targeted transition and belonging interventions in specific US higher-education contexts. They support treating early uncertainty as common and changeable and foregrounding social connection; they do not validate CLOSER, the STUDENTS pack, the FH Salzburg edition, or any individual prompt. The local edition uses only stable, low-stakes context confirmed on official public FH Salzburg pages. A user-provided beginner guide informed the editorial scan, but changeable operational rules and service details were excluded from questions.
 
 ### Sexual communication and consent
 

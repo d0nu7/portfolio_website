@@ -22,6 +22,7 @@
 | FR-021 | OFF SCRIPT | A bilingual 24-card cooperative activity bank ships with Quick/Standard routes, a shared multimodal contract, no essential timing or synchronization, no sensors, no contact assumption, and no Private Moment. | Physical, quiet, public, and varied-access sessions |
 | FR-022 | Neutral first-run library | Fresh/reset preferences show Classic, Friends, Old Friends, Deep, and Chaos; the grouped library exposes all optional packs while version-2 choices migrate unchanged. | First-impression testing |
 | FR-023 | Youth Workshop (14–17) | A bilingual 24-question comparable-peer pack ships with Icebreaker/Workshop routes, honest peer-confidentiality limits, no answer recording, no Private Moment or twists, and no resumable personal run. | Safeguarding, educator, bilingual, accessibility, privacy, and moderated review before broad promotion |
+| FR-015 | Students and FH Salzburg | STUDENTS ships as a 36-question adult-peer bank with Quick/Standard routes; an independently created 12-question FH Salzburg edition provides optional local Urstein flavour without testing institutional knowledge. Neither uses Private Moments or twists. | Bilingual/moderated sessions; local content-owner review and naming approval before institutional promotion |
 
 The exact Private Moment matrix and adult-pack boundaries live in the [gameplay and safety contract](../product/gameplay-and-safety.md). Exact questions and routes live in the [bilingual catalog](../content/question-catalog.de-en.md).
 
@@ -74,18 +75,6 @@ A separate Vercel project can isolate deployments, PWA identity, and release cad
 - redirect or explain `/closer/` intentionally;
 - accept that `localStorage` progress and installed-PWA identity cannot migrate across origins;
 - verify DNS, Vercel access, and rollback behavior.
-
-### FR-015 – Students pack and FH Salzburg variant
-
-**Status:** Planned; research, bilingual editorial content, and institutional decisions pending
-
-Build a general pack for two voluntarily participating adult peers in higher education. Suggested arc: everyday student life → learning, collaboration, and belonging → strengths, support preferences, and a self-directed future. Research should decide whether Quick 12 and Standard 24 are sufficient.
-
-Exclude grades, ranking, finances, health details, protected characteristics, named conflicts, misconduct, and confidential study/work/client information. Do not use lecturer–student, assessor–assessed, supervisor–supervisee, admissions, scholarship, or other dependent pairings.
-
-Treat FH Salzburg as a small versioned overlay or curated route, not a duplicate 36-question bank. It requires a local content owner, review cadence, and explicit permission for institutional name/branding. No answer may be recorded, reported, or used for an academic or employment decision.
-
-Before implementation, decide whether the local layer is a separate pack, setup option, or event route. Keep it hidden outside an intentionally selected FH context.
 
 ### FR-016 – Pack-aware PLAYFUL expansion
 
