@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/add-source-comment.mjs",
     "start": "node scripts/serve-static.js out 3000",
     "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
