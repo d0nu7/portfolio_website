@@ -27,7 +27,7 @@ display: flex;
 flex-flow: row ;
  justify-content: start;
  margin-bottom:auto;
-  background: #212D45;
+  background: var(--c-surface-2);
   border-radius: 12px;
   height: 180px;
   padding: 24px;

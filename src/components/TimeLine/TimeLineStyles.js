@@ -1,9 +1,11 @@
 
 import styled from 'styled-components'
 
+import { titleFill } from '../../styles/GlobalComponents'
+
 export const CarouselContainer = styled.ul`
   max-width: 1040px;
-  background: #0F1624;
+  background: var(--c-bg);
   padding: 0rem;
   list-style:none;
   display: flex;
@@ -38,7 +40,7 @@ export const CarouselMobileScrollNode = styled.div`
 `
 
 export const CarouselItem = styled.div`
-  background: #0F1624;
+  background: var(--c-bg);
   border-radius: 3px;
   max-width: 196px;
 
@@ -49,7 +51,7 @@ export const CarouselItem = styled.div`
   @media ${props => props.theme.breakpoints.sm} {
     margin-left: 32px;
     min-width: 120px;
-    background: #0E131F;
+    background: var(--c-bg-deep);
     padding: 4px;
     align-content: start;
     scroll-snap-align: start;
@@ -69,9 +71,7 @@ export const CarouselItemTitle = styled.h4`
   letter-spacing: 0.02em;
   display: flex;
   /* This gradient is different due to the size of the Title container, it must transition sooner to be visible on the text */
-  background: linear-gradient(121.57deg, #FFFFFF 10%, rgba(255, 255, 255, 0.66) 30.15%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  ${(props) => titleFill(props.theme.palette.timelineTitleGradient)}
   margin-bottom: 8px;
 
   @media ${props => props.theme.breakpoints.md} {

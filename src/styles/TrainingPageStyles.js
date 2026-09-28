@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
 export const Page = styled.div`
-  --radi-navy: #0f1624;
-  --radi-panel: #182232;
-  --radi-cyan: #13adc7;
-  --radi-orange: #f46737;
-  --radi-violet: #945dd6;
-  --radi-cream: #fffaf1;
+  /* Colours come from the site palette (src/themes/palette.js). */
+  --radi-navy: var(--c-bg);
+  --radi-panel: var(--c-surface);
+  --radi-cyan: var(--c-accent);
+  --radi-cream: var(--c-light-panel);
   color: #f5f7fa;
 `;
 
@@ -57,10 +56,7 @@ export const Hero = styled.section`
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 34px;
   padding: clamp(48px, 8vw, 92px);
-  background:
-    radial-gradient(circle at 88% 14%, rgba(148,93,214,.34), transparent 29%),
-    radial-gradient(circle at 75% 90%, rgba(19,173,199,.19), transparent 31%),
-    linear-gradient(145deg, #182232, #0f1624 65%);
+  background: var(--fill-training-hero);
   box-shadow: 0 28px 90px rgba(0,0,0,.24);
 
   &::after {
@@ -70,7 +66,7 @@ export const Hero = styled.section`
     height: 360px;
     right: -170px;
     bottom: -230px;
-    border: 65px solid rgba(244,103,55,.19);
+    border: 65px solid var(--fill-training-hero-ring);
     border-radius: 50%;
   }
 
@@ -82,7 +78,7 @@ export const Hero = styled.section`
 
 export const Eyebrow = styled.p`
   margin: 0 0 17px;
-  color: #8bdbe8;
+  color: var(--c-accent-soft);
   font-size: 12px;
   line-height: 1.3;
   letter-spacing: .14em;
@@ -133,12 +129,12 @@ const ActionBase = styled.a`
   transition: transform .18s ease, background .18s ease;
 
   &:hover { transform: translateY(-2px); }
-  &:focus-visible { outline: 3px solid rgba(19,173,199,.55); outline-offset: 3px; }
+  &:focus-visible { outline: 3px solid color-mix(in srgb, var(--c-accent) 55%, transparent); outline-offset: 3px; }
 `;
 
 export const PrimaryAction = styled(ActionBase)`
-  color: #fff;
-  background: linear-gradient(120deg, var(--radi-orange), var(--radi-violet));
+  color: var(--fill-training-primary-text);
+  background: var(--fill-training-primary);
 `;
 
 export const SecondaryAction = styled(ActionBase)`
@@ -219,11 +215,11 @@ export const PriceCard = styled.article`
   min-height: 380px;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${({ featured }) => featured ? "rgba(19,173,199,.55)" : "rgba(255,255,255,.1)"};
+  border: 1px solid ${({ featured }) => featured ? "color-mix(in srgb, var(--c-accent) 55%, transparent)" : "rgba(255,255,255,.1)"};
   border-radius: 22px;
   padding: 25px;
-  background: ${({ featured }) => featured ? "linear-gradient(155deg, rgba(19,173,199,.16), rgba(148,93,214,.1)), #182232" : "rgba(255,255,255,.035)"};
-  box-shadow: ${({ featured }) => featured ? "0 20px 50px rgba(19,173,199,.11)" : "none"};
+  background: ${({ featured }) => featured ? "var(--fill-featured-card)" : "rgba(255,255,255,.035)"};
+  box-shadow: ${({ featured }) => featured ? "0 20px 50px color-mix(in srgb, var(--c-accent) 11%, transparent)" : "none"};
 
   h3 { margin: 0; color: white; font-size: 22px; }
   > p { min-height: 68px; margin: 13px 0 0; color: rgba(255,255,255,.5); font-size: 14px; line-height: 1.55; }
@@ -240,8 +236,8 @@ export const Recommended = styled.span`
   border: 4px solid var(--radi-navy);
   border-radius: 999px;
   padding: 6px 9px;
-  color: #08232a;
-  background: #8bdbe8;
+  color: var(--c-accent-ink);
+  background: var(--c-accent-soft);
   font-size: 9px;
   font-weight: 800;
   letter-spacing: .07em;
@@ -292,7 +288,7 @@ export const ModuleCard = styled.article`
   border: 1px solid rgba(255,255,255,.09);
   border-radius: 20px;
   padding: 25px;
-  background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.018));
+  background: var(--fill-module-card);
 
   > span { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: white; background: ${({ accent }) => accent}; font-size: 11px; font-weight: 800; }
   h3 { margin: 18px 0 9px; color: white; font-size: 19px; line-height: 1.2; }
@@ -309,10 +305,7 @@ export const ActPanel = styled.div`
   border-radius: 28px;
   padding: clamp(28px, 6vw, 60px);
   color: var(--radi-navy);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(148,93,214,.15), transparent 36%),
-    radial-gradient(circle at 0% 100%, rgba(19,173,199,.1), transparent 34%),
-    var(--radi-cream);
+  background: var(--fill-act-panel);
   box-shadow: 0 28px 80px rgba(0,0,0,.14);
 
   &::after {
@@ -322,7 +315,7 @@ export const ActPanel = styled.div`
     height: 210px;
     right: -125px;
     bottom: -135px;
-    border: 38px solid rgba(244,103,55,.08);
+    border: 38px solid var(--fill-act-panel-ring);
     border-radius: 50%;
   }
 
@@ -338,7 +331,7 @@ export const ActPanel = styled.div`
   > div:first-child > p:first-child {
     grid-column: 1 / -1;
     margin: 0 0 3px;
-    color: #24788a;
+    color: var(--c-light-accent);
   }
 
   h2 { max-width: 690px; margin: 0; font-size: clamp(34px, 4.6vw, 52px); line-height: 1.04; letter-spacing: -.05em; }
@@ -382,7 +375,7 @@ export const LegalNote = styled.p`
   line-height: 1.5 !important;
   color: #7c8793 !important;
 
-  a { color: #4f4a9c; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+  a { color: var(--c-light-link); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
 `;
 
 export const ProcessGrid = styled.ol`
@@ -393,7 +386,7 @@ export const ProcessGrid = styled.ol`
   padding: 0;
 
   li { min-height: 190px; border-top: 1px solid rgba(255,255,255,.16); padding: 20px 6px 0; }
-  span { color: var(--radi-orange); font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+  span { color: var(--fill-process-number); font-size: 11px; font-weight: 800; letter-spacing: .1em; }
   h3 { margin: 15px 0 8px; color: white; font-size: 18px; }
   p { margin: 0; color: rgba(255,255,255,.47); font-size: 13px; line-height: 1.55; }
 
@@ -417,7 +410,7 @@ export const FinalCta = styled.section`
   border-radius: 28px;
   padding: clamp(34px, 7vw, 68px);
   text-align: center;
-  background: linear-gradient(120deg, rgba(244,103,55,.92), rgba(148,93,214,.9));
+  background: var(--fill-final-cta);
 
   h2 { max-width: 760px; margin: 0 auto; color: white; font-size: clamp(34px, 5vw, 52px); line-height: 1.05; letter-spacing: -.045em; }
   p { max-width: 650px; margin: 18px auto 28px; color: rgba(255,255,255,.78); font-size: 16px; line-height: 1.6; }

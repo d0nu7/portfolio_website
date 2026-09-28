@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import { normalize } from 'styled-normalize';
 
 import { BURGER } from '../components/Nav/navMetrics';
+import { cssVariables } from '../themes/palette';
 
 const GlobalStyles = createGlobalStyle`
   ${normalize};
@@ -10,6 +11,9 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+  :root {
+    ${cssVariables()}
   }
   html {
     font-size: 62.5%;

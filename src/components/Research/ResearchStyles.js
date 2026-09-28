@@ -52,6 +52,6 @@ export const TableCell = styled.div`
 `;
 
 export const DoiLink = styled.span`
-  color: #5165ff;
+  color: var(--c-link);
 
 `;

@@ -134,7 +134,7 @@ export const SocialIcons = styled.a`
   padding: 8px;
 
   &:hover {
-    background-color: #212d45;
+    background-color: var(--c-surface-2);
     transform: scale(1.2);
     cursor: pointer;
   }

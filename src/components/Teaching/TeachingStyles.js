@@ -38,7 +38,7 @@ export const TitleContent = styled.div`
 export const HeaderThree = styled.h3`
   font-weight: 500;
   letter-spacing: 2px;
-  color: #9cc9e3;
+  color: var(--c-label);
   padding: .5rem 0;
   font-size: ${(props) => props.title ? '4rem' : '3rem'};
 `;
@@ -48,7 +48,7 @@ export const Hr = styled.hr`
   height: 3px;
   margin: 20px auto;
   border: 0;
-  background: #d0bb57;
+  background: var(--c-rule);
 `;
 
 export const ClassTitle = styled.div`
