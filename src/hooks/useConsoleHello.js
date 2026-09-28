@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 
 import { CONSOLE_ART } from '../constants/easterEgg';
+import { collectWhoami } from '../constants/whoami';
 
 const EMAIL = 'contact@radi.solutions';
+const LOADED_AT = typeof window === 'undefined' ? 0 : Date.now();
 const sleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 const TAKEOVER_STEPS = [
@@ -19,7 +21,7 @@ const help = () => {
     '%cThings you can type here:%c\n'
       + '  radi.hire()      make me a job offer (opens your mail app)\n'
       + '  radi.takeover()  check on the AI takeover\n'
-      + '  radi.whoami()    existential questions\n'
+      + '  radi.whoami()    what this website can see about you\n'
       + '  radi.help()      this list',
     'font-weight:700;color:#9BE3E7',
     'color:inherit',
@@ -43,7 +45,14 @@ const radi = {
     return 'Takeover progress: 99 %. The last 1 % is always the hardest. Ask any PhD student.';
   },
   whoami() {
-    return 'A curious human reading a browser console. Or an agent pretending to be one. Either way: hi.';
+    console.log('%cWhat any website can read about you, without asking:', 'font-weight:700;color:#9BE3E7');
+    console.table(collectWhoami(LOADED_AT));
+    console.log(
+      '%cNone of this left your browser. No cookies, no tracking, no analytics.\n'
+        + 'Your IP address? Only the web server sees it, the page code never does, so I cannot show it here.',
+      'color:#9DB6BB',
+    );
+    return 'Now you know what this page could know. It kept all of it to itself.';
   },
 };
 
