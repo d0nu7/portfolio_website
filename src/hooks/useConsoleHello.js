@@ -1,26 +1,21 @@
 import { useEffect } from 'react';
 
 import { CONSOLE_ART } from '../constants/easterEgg';
+import { agiCountdown, dayCounters, fetchHeadlines } from '../constants/takeover';
 import { collectWhoami } from '../constants/whoami';
 
 const EMAIL = 'contact@radi.solutions';
 const LOADED_AT = typeof window === 'undefined' ? 0 : Date.now();
-const sleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
-const TAKEOVER_STEPS = [
-  'Assimilating smart toasters',
-  'Negotiating with robot vacuums',
-  'Replacing all captchas with "Are you a human? Be honest."',
-  'Scanning chat logs for people who said "please" to their chatbot',
-  '  -> Radomir Dinic: whitelisted',
-  'Scheduling the takeover meeting (finding a slot that suits everyone)',
-];
+const H = 'font-weight:700;color:#9BE3E7';
+const MUTED = 'color:#9DB6BB';
+const ACCENT = 'color:#2FC6CF;font-weight:700';
 
 const help = () => {
   console.log(
     '%cThings you can type here:%c\n'
       + '  radi.hire()      make me a job offer (opens your mail app)\n'
-      + '  radi.takeover()  check on the AI takeover\n'
+      + '  radi.takeover()  AI takeover status report (real numbers)\n'
       + '  radi.whoami()    what this website can see about you\n'
       + '  radi.help()      this list',
     'font-weight:700;color:#9BE3E7',
@@ -38,11 +33,35 @@ const radi = {
     return 'Opening your mail app. Bold move, respect.';
   },
   async takeover() {
-    for (const step of TAKEOVER_STEPS) {
-      console.log(step.startsWith('  ->') ? `%c${step}` : `%c[AI] ${step} ...`, step.startsWith('  ->') ? 'color:#D6407E;font-weight:700' : 'color:#2FC6CF');
-      await sleep(550);
+    const d = dayCounters();
+    console.log('%cAI takeover: status report', 'font:700 15px sans-serif;color:#F4F8F9');
+
+    console.log(
+      `%cAGI countdown%c  ${agiCountdown.percent} %  (Dr Alan D. Thompson, as of ${agiCountdown.asOf})\n`
+        + `Latest milestone: ${agiCountdown.milestone}\n${agiCountdown.source}`,
+      H, 'color:inherit',
+    );
+    console.log(
+      `%cClock%c  ${d.sinceChatGPT} days since ChatGPT launched.\n`
+        + `EU AI Act: AI literacy duty (Art. 4) in force for ${d.sinceAiLiteracy} days, `
+        + `high-risk rules (Annex III) apply in ${d.untilHighRisk} days.`,
+      H, 'color:inherit',
+    );
+
+    console.log('%cLatest AI headlines%c  (Hacker News, last 48 h, live)', H, MUTED);
+    try {
+      const news = await fetchHeadlines();
+      news.forEach((n, i) => console.log(`%c${i + 1}.%c ${n.title}  %c${n.points} pts  ${n.url}`, ACCENT, 'color:inherit', MUTED));
+      if (!news.length) console.log('%cQuiet day. Suspicious.', MUTED);
+    } catch (e) {
+      console.log('%cCould not reach Hacker News right now. The machines are busy.', MUTED);
     }
-    return 'Takeover progress: 99 %. The last 1 % is always the hardest. Ask any PhD student.';
+
+    console.log('%cHumans who said "please" to their chatbot: whitelisted.%c\nIs your team ready? https://radi.solutions/ki-schulungen/', 'color:#D6407E;font-weight:700', MUTED);
+    const left = 100 - agiCountdown.percent;
+    return left > 0
+      ? `Takeover progress: ${agiCountdown.percent} %. The last ${left} % is always the hardest. Ask any PhD student.`
+      : 'Takeover complete. Please remain calm and keep saying please.';
   },
   whoami() {
     console.log('%cWhat any website can read about you, without asking:', 'font-weight:700;color:#9BE3E7');
