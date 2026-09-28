@@ -6,12 +6,19 @@ import { FaResearchgate } from "react-icons/fa";
 
 import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer, SpanItem } from './FooterStyles';
 
-const Footer = () => {
+const labels = {
+  en: { legal: 'Legal notice', email: 'Email', services: 'Services', training: 'AI trainings' },
+  de: { legal: 'Impressum', email: 'E-Mail', services: 'Angebot', training: 'KI-Schulungen' },
+};
+
+const Footer = ({ lang = 'en' }) => {
+  const t = labels[lang] || labels.en;
+
   return (
     <FooterWrapper>
       <LinkList>
         <LinkColumn>
-          <LinkTitle>Impressum</LinkTitle>
+          <LinkTitle>{t.legal}</LinkTitle>
           <SpanItem>
             Radomir Dinic BSc MSc <br/>
             Pingitzzerkai 6a/6<br/>
@@ -20,15 +27,15 @@ const Footer = () => {
           </SpanItem>
         </LinkColumn>    
         <LinkColumn>
-          <LinkTitle>Email</LinkTitle>
+          <LinkTitle>{t.email}</LinkTitle>
           <LinkItem href="mailto:contact@radi.solutions">
             contact@radi.solutions
           </LinkItem>
         </LinkColumn>
         <LinkColumn>
-          <LinkTitle>Angebot</LinkTitle>
+          <LinkTitle>{t.services}</LinkTitle>
           <LinkItem href="/ki-schulungen/">
-            KI-Schulungen
+            {t.training}
           </LinkItem>
         </LinkColumn>
       </LinkList>

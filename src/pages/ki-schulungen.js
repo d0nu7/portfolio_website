@@ -266,7 +266,7 @@ export default function KiSchulungen() {
   const contactHref = `mailto:contact@radi.solutions?subject=${encodeURIComponent(mailSubject[language])}`;
 
   return (
-    <Layout>
+    <Layout lang={language}>
       <Seo
         title={`${t.title} | radi.solutions`}
         description={t.description}

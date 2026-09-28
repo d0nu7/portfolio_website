@@ -14,7 +14,7 @@ import {
 import SvgRadiFace from "../../CustomIcons/RadiFace";
 import Nav from "../Nav/Nav";
 
-const Header = () => (
+const Header = ({ lang = 'en' }) => (
   <>
     <Head>
       {/* Page-specific metadata lives in each page's <Seo />. */}
@@ -64,7 +64,7 @@ const Header = () => (
           <FaResearchgate size="3rem" />
         </SocialIcons>
       </Div3>
-      <Nav />
+      <Nav lang={lang} />
     </Container>
   </>
 );

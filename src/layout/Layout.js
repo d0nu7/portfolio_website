@@ -5,14 +5,16 @@ import Header from '../components/Header/Header'
 import useReveal from '../hooks/useReveal'
 import { Container } from './LayoutStyles'
 
-export const Layout = ({children}) => {
+// `lang` localises the shared chrome (menu, footer). The homepage is English;
+// /ki-schulungen passes its current DE/EN choice.
+export const Layout = ({children, lang = 'en'}) => {
   useReveal()
 
   return (
     <Container>
-     <Header/>
+     <Header lang={lang}/>
      <main>{children}</main> 
-     <Footer/>
+     <Footer lang={lang}/>
     </Container>
   )
 }
