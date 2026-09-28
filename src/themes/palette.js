@@ -4,9 +4,9 @@
 // To try another palette, point ACTIVE at a different file in ./palettes.
 // Components never hard-code brand colours; they read the CSS custom
 // properties generated below (var(--c-accent), var(--fill-cta-front), ...).
-import legacy from './palettes/legacy';
+import petrolSignature from './palettes/petrolSignature';
 
-export const ACTIVE = legacy;
+export const ACTIVE = petrolSignature;
 
 const kebab = (key) => key.replace(/([a-z])([A-Z0-9])/g, '$1-$2').toLowerCase();
 
