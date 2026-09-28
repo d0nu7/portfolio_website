@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-const BackgroundAnimation = () => (
-  <div>
+const BackgroundAnimation = () => {
+  const svgRef = useRef(null);
+
+  // The SMIL motion paths ignore CSS, so honour reduced-motion here.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      svgRef.current?.pauseAnimations?.();
+    }
+  }, []);
+
+  return (
+  <div aria-hidden="true">
     <svg
+      ref={svgRef}
       className="BgAnimation__svg"
       viewBox="0 0 602 602"
       fill="none"
@@ -361,5 +372,6 @@ const BackgroundAnimation = () => (
     </svg>
   </div>
 );
+};
 
 export default BackgroundAnimation;

@@ -10,12 +10,12 @@ import { BiVideoRecording } from "react-icons/bi";
 import {
   Section,
   SectionDivider,
-  SectionText,
   SectionTitle,
 } from "../../styles/GlobalComponents";
 import {
   List,
   ListContainer,
+  ListIcon,
   ListItem,
   ListParagraph,
   ListTitle,
@@ -25,19 +25,15 @@ const Skills = () => (
   <Section id="tech">
     <SectionDivider divider />
     <SectionTitle>Skills</SectionTitle>
-    {/* <SectionText>
-      I've worked with a range a technologies.
-      From Game Development to Data Analysis. 
-    </SectionText> */}
     <List>
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <GiVrHeadset size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>Mixed Reality</ListTitle>
           <ListParagraph>
-            Augumented Reality <br />
+            Augmented Reality <br />
             Virtual Reality <br />
             Tracking Techniques 
             ...
@@ -46,9 +42,9 @@ const Skills = () => (
       </ListItem>
 
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <GiGamepad size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>Game</ListTitle>
           <ListParagraph>
@@ -61,9 +57,9 @@ const Skills = () => (
       </ListItem>
 
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <GiWireframeGlobe size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>Web</ListTitle>
           <ListParagraph>
@@ -75,9 +71,9 @@ const Skills = () => (
       </ListItem>
 
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <GiLevelThree size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>Prototyping</ListTitle>
           <ListParagraph>
@@ -89,9 +85,9 @@ const Skills = () => (
       </ListItem>
 
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <GiSmartphone size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>Mobile</ListTitle>
           <ListParagraph>
@@ -102,9 +98,9 @@ const Skills = () => (
       </ListItem>
 
       <ListItem>
-        <picture>
+        <ListIcon aria-hidden="true">
           <BiVideoRecording size="4rem" />
-        </picture>
+        </ListIcon>
         <ListContainer>
           <ListTitle>AV</ListTitle>
           <ListParagraph>

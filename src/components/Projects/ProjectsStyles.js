@@ -1,113 +1,85 @@
 import styled from 'styled-components';
 
-export const Img = styled.img`
-  width:100%;
-  height:100%;
-  object-fit: cover;
-  overflow: hidden;
-`
+import { cardHover, cardSurface } from '../../styles/GlobalComponents';
 
-export const GridContainer = styled.section`
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-padding: 3rem;
-place-items: center;
-align-items: start;
-column-gap: 2rem;
-row-gap: 3rem;
-@media ${(props) => props.theme.breakpoints.sm} {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  padding-bottom: 0;
-}
+export const GridContainer = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 24px 0 40px;
 
-`
-export const BlogCard = styled.div`
-  border-radius: 10px;
-  box-shadow: 3px 3px 20px rgba(80, 78, 78, 0.5);
-  text-align: center;
-  width: 400px;
   @media ${(props) => props.theme.breakpoints.sm} {
-    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 `;
-export const TitleContent = styled.div`
-  text-align: center;
-  z-index: 20;
-  width: 100%;
 
+export const CardLink = styled.a`
+  ${cardSurface}
+  ${cardHover}
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  color: inherit;
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--c-accent) 60%, transparent);
+    outline-offset: 3px;
+  }
 `;
 
+export const ImgFrame = styled.div`
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--c-surface-2);
+`;
+
+export const Img = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+
+  ${CardLink}:hover & { transform: scale(1.04); }
+`;
+
+export const CardBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px 24px 24px;
+`;
 
 export const HeaderThree = styled.h3`
-  font-weight: 500;
-  letter-spacing: 2px;
-  color: var(--c-label);
-  padding: .5rem 0;
-  font-size: ${(props) => props.isTitle ? '3rem' : '2rem'};
+  margin-bottom: 10px;
+  color: var(--c-text-strong);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: .01em;
 `;
-
-export const Hr = styled.hr`
-  width: 50px;
-  height: 3px;
-  margin: 20px auto;
-  border: 0;
-  background: var(--c-rule);
-`;
-
-export const Intro = styled.div`
-  width: 170px;
-  margin: 0 auto;
-  color: #dce3e7;
-  font-family: 'Droid Serif', serif;
-  font-size: 13px;
-  font-style: italic;
-  line-height: 18px;
-`;
-
 
 export const CardInfo = styled.p`
-  width: 100%;
-  padding: 0 50px;
-  color: #e4e6e7;
-  font-style: 2rem;
-  line-height: 24px;
-  text-align:left;
-  @media ${(props) => props.theme.breakpoints.sm} {
-    padding:.3rem
-  
-}
-`;
-
-
-export const UtilityList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
-  margin: 2.5rem 0;
-`;
-
-export const ExternalLinks = styled.a`
-color:var(--c-chip-text);
-font-size: 1.6rem;
-padding:1rem 1.5rem;
-background: var(--c-chip-bg);
-border-radius: 15px;
-transition: 0.5s;
-&:hover{
-  background: var(--c-chip-bg-hover);
-
-}
+  color: rgba(255, 255, 255, .68);
+  font-size: 15px;
+  line-height: 1.6;
 `;
 
 export const TagList = styled.ul`
-display: flex;
-justify-content: space-around;
-padding: 2rem;
-`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 18px;
+`;
+
 export const Tag = styled.li`
-color: var(--c-tag-text);
-font-size: 1.5rem;
-`
+  padding: 5px 11px;
+  border-radius: 999px;
+  color: var(--c-label);
+  background: var(--c-chip-bg);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .03em;
+`;

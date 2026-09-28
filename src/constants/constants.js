@@ -2,7 +2,7 @@ export const projects = [
   {
     title: "Yokaisho",
     description:
-      "YoKaisho is the combination of a modern day tablet app and a tra- ditional board game. While designing the game it was important to our team that we would create a game which has the typical cozy and collaborative features of a board game as well as the great possibilities and actions of a video game. Inspired by Japan's myths and culture YoKaisho features a very unique style and gameplay. It was created using Unity and Vuforia.",
+      "YoKaisho is the combination of a modern-day tablet app and a traditional board game. While designing the game it was important to our team that we would create a game which has the typical cozy and collaborative features of a board game as well as the great possibilities and actions of a video game. Inspired by Japan's myths and culture YoKaisho features a very unique style and gameplay. It was created using Unity and Vuforia.",
     image: "/images/yoka.webp",
     tags: [ "Board Game", "AR", "Android"],
     source: "https://portfolio.fh-salzburg.ac.at/projects/2014-yokaisho",
@@ -19,7 +19,7 @@ export const projects = [
   },
   {
     title: "EatAR",
-    description: "The accurate assessment of nutrition information is a challenging task, but crucial for people with certain diseases, such as diabetes. This app for mobile devices with a depth sensor assists the users in portion estimation using augumented reality technologies. This Project was part of my master thesis.",
+    description: "The accurate assessment of nutrition information is a challenging task, but crucial for people with certain diseases, such as diabetes. This app for mobile devices with a depth sensor assists the users in portion estimation using augmented reality technologies. This project was part of my master thesis.",
     image: "/images/eat_ar.webp",
     tags: [ "Tango", "Android"],
     source: "https://realities.mediacube.at/eat-ar/",
@@ -35,7 +35,7 @@ export const projects = [
   },
   {
     title: "Ecomedicine VR",
-    description: "This exergame, which was developed as part of a joint research project between the Paracelsus Medical University and the salzburg university of applied sciences, tries to reproduce the positive effects of the Krimml Waterfall on the respiratory tract using virtual reality technology.",
+    description: "This exergame, which was developed as part of a joint research project between the Paracelsus Medical University and the Salzburg University of Applied Sciences, tries to reproduce the positive effects of the Krimml Waterfall on the respiratory tract using virtual reality technology.",
     image: "/images/ecovr.webp",
     tags: [ "VR", "Photogrammetry"],
     source: "https://www.digitalsalzburg.at/vr-atemcoach/",
@@ -191,7 +191,7 @@ export const TeachingExperience = [
     category: "Bachelor Classes",
     events: [
       {
-        title: "Introduction programming",
+        title: "Introduction to programming",
         ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
       },
       {
@@ -232,7 +232,7 @@ export const TeachingExperience = [
         ref: "#teaching",
       },
       {
-        title: "Game-development with Unity",
+        title: "Game development with Unity",
         ref: "#teaching",
       },
       {
@@ -244,7 +244,7 @@ export const TeachingExperience = [
         ref: "#teaching",
       },
       {
-        title: "Music ❤️ Code - SonicPI",
+        title: "Music & Code with Sonic Pi",
         ref: "#teaching",
       },
     ],

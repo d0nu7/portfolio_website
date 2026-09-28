@@ -168,7 +168,7 @@ export const TrustRow = styled.div`
   }
 `;
 
-export const Section = styled.section`
+export const Section = styled.section.attrs({ 'data-reveal': '' })`
   padding: clamp(76px, 10vw, 120px) 0 0;
 `;
 
@@ -403,7 +403,7 @@ export const FaqList = styled.div`
   p { max-width: 850px; margin: -2px 0 18px; color: rgba(255,255,255,.52); font-size: 13px; line-height: 1.65; }
 `;
 
-export const FinalCta = styled.section`
+export const FinalCta = styled.section.attrs({ 'data-reveal': '' })`
   position: relative;
   overflow: hidden;
   margin: clamp(80px, 11vw, 130px) 0 0;

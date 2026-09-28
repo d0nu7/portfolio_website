@@ -1,67 +1,35 @@
 import React from "react";
-
-import {
-  Section,
-  SectionDivider,
-  SectionTitle,
-} from "../../styles/GlobalComponents";
-import { Box, Boxes, BoxNum, BoxText } from "./AcomplishmentsStyles";
-
-import { RiMedalLine } from "react-icons/ri";
 import { GiGamepad } from "react-icons/gi";
 import { HiAcademicCap } from "react-icons/hi";
+import { RiMedalLine } from "react-icons/ri";
 
-const iconStyles = { marginTop: "auto"};
-const iconSize = "8rem";
+import { Section, SectionDivider, SectionTitle } from "../../styles/GlobalComponents";
+import { Box, Boxes, BoxIcon, BoxNum, BoxText } from "./AcomplishmentsStyles";
+
+const achievements = [
+  { title: "Austrian CG Award 2015", lines: ["Best Game", "Project Yokaisho"], Icon: GiGamepad },
+  { title: "Austrian CG Award 2016", lines: ["Best Game, Best Student Project", "Project NIVA"], Icon: GiGamepad },
+  { title: "Order for Disaster Relief", lines: ["State of Salzburg"], Icon: RiMedalLine },
+  { title: "Science Award 2017", lines: ["AK Salzburg"], Icon: HiAcademicCap },
+];
 
 const Acomplishments = () => (
-  
-  <Section  id="acomplishments">
-        <SectionDivider divider />
-
+  <Section id="acomplishments">
+    <SectionDivider divider />
     <SectionTitle>Achievements</SectionTitle>
     <Boxes>
-      <Box>
-        <div>
-          <BoxNum>Austrian CG Award 2015</BoxNum>
-          <BoxText>
-            Best Game
-            <br />
-            Project Yokaisho
-          </BoxText>
-        </div>
-        <GiGamepad size={iconSize} style={iconStyles} />
-      </Box>
-
-      <Box>
-        <div>
-          <BoxNum>Austrian CG Award 2016</BoxNum>
-          <BoxText>
-            Best Game, Best Student Project
-            <br />
-            Projekt NIVA
-          </BoxText>
-        </div>
-        <GiGamepad size={iconSize}  style={iconStyles} />
-      </Box>
-
-      <Box>
-        <div>
-          <BoxNum>Order for Disaster Relief</BoxNum>
-          <BoxText>State of Salzburg</BoxText>
-        </div>
-        <RiMedalLine size={iconSize}  style={iconStyles} />
-      </Box>
-
-      <Box>
-        <div>
-          <BoxNum>Science Award 2017</BoxNum>
-          <BoxText>AK Salzburg</BoxText>
-        </div>
-        <HiAcademicCap size={iconSize}  style={iconStyles} />
-      </Box>
+      {achievements.map(({ title, lines, Icon }) => (
+        <Box key={title}>
+          <div>
+            <BoxNum>{title}</BoxNum>
+            <BoxText>
+              {lines.map((line) => <span key={line}>{line}</span>)}
+            </BoxText>
+          </div>
+          <BoxIcon aria-hidden="true"><Icon /></BoxIcon>
+        </Box>
+      ))}
     </Boxes>
-    <SectionDivider />
   </Section>
 );
 

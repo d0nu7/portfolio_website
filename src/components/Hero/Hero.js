@@ -1,28 +1,26 @@
 import React from 'react';
 
-import { Section, SectionText, SectionTitle } from '../../styles/GlobalComponents';
-import Button from '../../styles/GlobalComponents/Button';
+import { ButtonLink, ButtonRow, Eyebrow, Section, SectionText, SectionTitle } from '../../styles/GlobalComponents';
 import { LeftSection } from './HeroStyles';
 
-const Hero = (props) => (
-  <>
-    <Section row nopadding>
-      <LeftSection>
-        <SectionTitle main center>
-          Multimedia<br/>
-          Developer
-        </SectionTitle>
-        <SectionText>
-          I am a passionate developer and lecturer with a research background. Check out my site to find out more about me and my projects or contact me for a custom offer.
-        </SectionText>
-        <Button onClick={
-          (e) => {
-            window.location = "mailto:contact@radi.solutions";
-            e.preventDefault();
-          }}>Contact Me</Button>
-      </LeftSection>
-    </Section>
-  </>
+const Hero = () => (
+  <Section row nopadding $noreveal>
+    <LeftSection>
+      <Eyebrow>Radomir Dinic · Salzburg</Eyebrow>
+      <SectionTitle as="h1" main>
+        Games, Mixed Reality &amp;&nbsp;AI.
+      </SectionTitle>
+      <SectionText>
+        Senior Lecturer at FH Salzburg with a background in applied research.
+        I build interactive prototypes and run hands-on AI trainings for teams,
+        from students to leadership.
+      </SectionText>
+      <ButtonRow>
+        <ButtonLink href="mailto:contact@radi.solutions">Get in touch</ButtonLink>
+        <ButtonLink href="/ki-schulungen/" variant="secondary">AI trainings for teams</ButtonLink>
+      </ButtonRow>
+    </LeftSection>
+  </Section>
 );
 
 export default Hero;

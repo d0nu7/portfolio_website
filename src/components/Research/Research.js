@@ -1,46 +1,26 @@
 import React from "react";
-import Link from "next/link";
 
-import {
-  Section,
-  SectionDivider,
-  SectionTitle,
-} from "../../styles/GlobalComponents";
-
-import {
-  ResearchTitle,
-  ResearchAuthors,
-  ResearchYear,
-  Table,
-  TableCell,
-  TableRow,
-  DoiLink,
-} from "./ResearchStyles";
-
+import { Section, SectionDivider, SectionTitle } from "../../styles/GlobalComponents";
 import { Publications } from "../../constants/constants";
+import { PubLink, PubList, ResearchAuthors, ResearchTitle, ResearchYear } from "./ResearchStyles";
 
 const Research = () => (
   <Section id="research">
-    <SectionDivider />
-    <SectionTitle main>Publications</SectionTitle>
-
-    <Table>
-      {Publications.map((p, i) => {
-        return (
-          <Link key={i} href={p.doi}>
-            <TableRow>
-              <TableCell>
-                <ResearchYear>{p.year}</ResearchYear>
-              </TableCell>
-              <TableCell>
-                <ResearchTitle>{p.title}</ResearchTitle>
-                <ResearchAuthors>{p.authors}</ResearchAuthors>
-              </TableCell>
-            </TableRow>
-          </Link>
-        );
-      })}
-    </Table>
+    <SectionDivider divider />
+    <SectionTitle>Publications</SectionTitle>
+    <PubList>
+      {Publications.map((p) => (
+        <li key={p.doi}>
+          <PubLink href={p.doi} target="_blank" rel="noopener noreferrer">
+            <ResearchYear>{p.year}</ResearchYear>
+            <span>
+              <ResearchTitle>{p.title}</ResearchTitle>
+              <ResearchAuthors>{p.authors}</ResearchAuthors>
+            </span>
+          </PubLink>
+        </li>
+      ))}
+    </PubList>
   </Section>
 );
 

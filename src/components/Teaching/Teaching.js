@@ -1,55 +1,30 @@
 import React from "react";
 
-import {
-  BlogCard,
-  CardInfo,
-  ExternalLinks,
-  GridContainer,
-  HeaderThree,
-  Hr,
-  Tag,
-  TagList,
-  TitleContent,
-  UtilityList,
-  Img,
-  TeachingCard,
-  ClassLink,
-  ClassTitle,
-} from "./TeachingStyles";
-import {
-  Section,
-  SectionDivider,
-  SectionTitle,
-} from "../../styles/GlobalComponents";
+import { Section, SectionDivider, SectionTitle } from "../../styles/GlobalComponents";
 import { TeachingExperience } from "../../constants/constants";
-import styled from "styled-components";
+import { CardList, CardTitle, ClassLink, GridContainer, TeachingCard } from "./TeachingStyles";
 
 const Teaching = () => (
-  <Section nopadding id="teaching">
-    <SectionDivider />
-    <SectionTitle main>Teaching</SectionTitle>
+  <Section id="teaching">
+    <SectionDivider divider />
+    <SectionTitle>Teaching</SectionTitle>
     <GridContainer>
-      {TeachingExperience.map((e, i) => {
-        return (
-          <TeachingCard key={i}>
-            <TitleContent>
-              <HeaderThree isTitle>{e.category}</HeaderThree>
-              <Hr />
-            </TitleContent>
-            <ul>
-              {e.events.map((ev, ei) => {
-                return (
-                  <li key={ei}>
-                    <ClassLink href={ev.ref} >
-                      <ClassTitle> {ev.title}</ClassTitle>
-                    </ClassLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </TeachingCard>
-        );
-      })}
+      {TeachingExperience.map((group) => (
+        <TeachingCard key={group.category}>
+          <CardTitle>{group.category}</CardTitle>
+          <CardList>
+            {group.events.map((event) => (
+              <li key={event.title}>
+                {event.ref ? (
+                  <ClassLink href={event.ref} target="_blank" rel="noopener noreferrer">{event.title}</ClassLink>
+                ) : (
+                  event.title
+                )}
+              </li>
+            ))}
+          </CardList>
+        </TeachingCard>
+      ))}
     </GridContainer>
   </Section>
 );

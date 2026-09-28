@@ -1,57 +1,56 @@
 import styled from "styled-components";
 
-export const ResearchAuthors = styled.div`
-  padding-left: 1rem;
-  color: grey;
-  font-size: 1rem;
-  @media ${(props) => props.theme.breakpoints.sm} {
-    line-height: 15px;
-    padding-top: 1rem;
-  }
+export const PubList = styled.ol`
+  margin: 16px 0 40px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
 `;
 
-export const ResearchTitle = styled.div`
-  padding-left: 1rem;
-  margin-bottom: -1rem;
-
-  @media ${(props) => props.theme.breakpoints.sm} {
-    line-height: 20px;
-  }
-`;
-export const ResearchYear = styled.div``;
-export const ResearchHeaderYear = styled.div``;
-export const ResearchHeaderTitle = styled.div``;
-
-export const Table = styled.div`
-display: block;
-`;
-
-export const TableRow = styled.div`
+export const PubLink = styled.a`
   display: grid;
-  grid-template-columns: 4rem auto;
-  place-items: left;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .78);
+  transition: background-color .2s ease, color .2s ease;
 
-  cursor: pointer;
-
-  font-size: 1.5rem;
-  line-height: 32px;
-  color: rgba(255, 255, 255, 0.75);
-  transition: 0.4s ease;
   &:hover {
-    color: #fff;
-    opacity: 1;
-    cursor: pointer;
+    color: var(--c-text-strong);
+    background-color: rgba(255, 255, 255, .03);
   }
 
   @media ${(props) => props.theme.breakpoints.sm} {
-    padding: 0.5rem;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px 4px;
   }
 `;
 
-export const TableCell = styled.div`
+export const ResearchYear = styled.span`
+  color: var(--c-accent);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
 `;
 
-export const DoiLink = styled.span`
-  color: var(--c-link);
+export const ResearchTitle = styled.span`
+  display: block;
+  font-size: 16px;
+  line-height: 1.5;
 
+  @media ${(props) => props.theme.breakpoints.sm} {
+    font-size: 14px;
+  }
+`;
+
+export const ResearchAuthors = styled.span`
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, .5);
+  font-size: 13px;
+  line-height: 1.5;
+
+  @media ${(props) => props.theme.breakpoints.sm} {
+    font-size: 12px;
+  }
 `;

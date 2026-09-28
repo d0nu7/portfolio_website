@@ -1,78 +1,61 @@
 import styled from 'styled-components';
 
+import { cardSurface } from '../../styles/GlobalComponents';
 
-export const GridContainer = styled.section`
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-padding: 3rem;
-place-items: center;
-column-gap: 3rem;
-row-gap: 6rem;
-@media ${(props) => props.theme.breakpoints.sm} {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  padding-bottom: 0;
-}
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin: 24px 0 40px;
 
-`
-export const TeachingCard = styled.div`
-
-  border-radius: 10px;
-  //box-shadow: 3px 3px 20px rgba(80, 78, 78, 0.5);
-  width: 450px;
-  @media ${(props) => props.theme.breakpoints.sm} {
-    width: 100%;
+  @media ${(props) => props.theme.breakpoints.md} {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 `;
-export const TitleContent = styled.div`
-  text-align: center;
-  z-index: 20;
-  width: 100%;
 
+export const TeachingCard = styled.div`
+  ${cardSurface}
+  padding: 26px 26px 22px;
 `;
 
-
-export const HeaderThree = styled.h3`
-  font-weight: 500;
-  letter-spacing: 2px;
+export const CardTitle = styled.h3`
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
   color: var(--c-label);
-  padding: .5rem 0;
-  font-size: ${(props) => props.title ? '4rem' : '3rem'};
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .02em;
 `;
 
-export const Hr = styled.hr`
-  width: 50px;
-  height: 3px;
-  margin: 20px auto;
-  border: 0;
-  background: var(--c-rule);
-`;
+export const CardList = styled.ul`
+  display: grid;
+  gap: 10px;
 
-export const ClassTitle = styled.div`
-text-align: center;
-font-size:  2rem;
-@media ${(props) => props.theme.breakpoints.sm} {
-  font-size:1.5rem
-}
+  li {
+    position: relative;
+    padding-left: 16px;
+    color: rgba(255, 255, 255, .75);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  li::before {
+    content: "";
+    position: absolute;
+    top: .6em;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-accent);
+  }
 `;
 
 export const ClassLink = styled.a`
-color: rgba(255, 255, 255, 0.75);
-transition: 0.4s ease;
-&:hover {
-  color: #fff;
-  opacity: 1;
-  cursor: pointer;
-}
-@media ${(props) => props.theme.breakpoints.sm} {
-  padding: 0.5rem;
-}
+  color: inherit;
+  transition: color .2s ease;
 
+  &:hover { color: var(--c-text-strong); }
 `;
-
-
-
-

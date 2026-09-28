@@ -60,12 +60,12 @@ export const ListContainer = styled.div`
   }
 `
 
-export const ListTitle = styled.h4`
+export const ListTitle = styled.h3`
   font-weight: 700;
   font-size: 28px;
   line-height: 32px;
   letter-spacing: 0.02em;
-  color: #FFFFFF;
+  color: var(--c-text-strong);
   margin-bottom: 8px;
 
 @media ${props => props.theme.breakpoints.md}{
@@ -113,21 +113,13 @@ export const ListItem = styled.li`
 }
 `
 
-export const ListIcon = styled.img`
-  display: block;
-  width: 48px;
-  height: 48px;
-  margin-bottom: 10px;
-  
-  @media ${props => props.theme.breakpoints.md}{
-    width: 40px;
-    height: 40px;
-    margin-bottom: 8px;
-  }
+export const ListIcon = styled.span`
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  color: var(--c-accent);
 
   @media ${props => props.theme.breakpoints.sm}{
-    width: 32px;
-    height: 32px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 `

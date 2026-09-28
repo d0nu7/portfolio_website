@@ -1,140 +1,70 @@
 import styled from "styled-components"
 
-export const Boxes = styled.div`
-  width: 100%;
+import { cardSurface } from "../../styles/GlobalComponents"
+
+export const Boxes = styled.ul`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
   margin: 24px 0 40px;
 
-  @media ${props => props.theme.breakpoints.md}{
-    gap: 16px;
-    margin: 20px 0 32px;
-    grid-template-columns: repeat(auto-fit, minmax(2, 1fr));
-  }
-
-  @media ${props => props.theme.breakpoints.sm}{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 1fr);
-    gap: 10px;
-    max-width: 500px;
-    margin: 24px auto;
+  @media ${props => props.theme.breakpoints.sm} {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 `
 
-export const Box = styled.div`
-display: flex;
-flex-flow: row ;
- justify-content: start;
- margin-bottom:auto;
-  background: var(--c-surface-2);
-  border-radius: 12px;
-  height: 180px;
+export const Box = styled.li`
+  ${cardSurface}
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  min-height: 150px;
   padding: 24px;
-  @media ${props => props.theme.breakpoints.lg} {
-    height: 190px;
-    padding: 16px;
-
-  }
-
-  @media ${props => props.theme.breakpoints.md} {
-    height: 155px;
-    padding: 16px;
-  }
 
   @media ${props => props.theme.breakpoints.sm} {
-    height: 210px;
-    padding: 10px;
-    flex-flow: column ;
-    align-items: center; 
-    justify-content: center;
+    min-height: 0;
+    padding: 20px;
+    align-items: center;
   }
 `
 
-
-export const BoxNum = styled.h5`
-  font-style: normal;
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 40px;
-  letter-spacing: 0.01em;
-  color: #FFFFFF;
+export const BoxNum = styled.h3`
   margin-bottom: 8px;
+  color: var(--c-text-strong);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
 
   @media ${props => props.theme.breakpoints.md} {
-    font-size: 28px;
-    line-height: 32px;
+    font-size: 22px;
   }
   @media ${props => props.theme.breakpoints.sm} {
-    font-size: 24px;
-    line-height: 26px;
-}
+    font-size: 19px;
+  }
 `
 
 export const BoxText = styled.p`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, .68);
+  font-size: 15px;
+  line-height: 1.5;
 
-  @media ${props => props.theme.breakpoints.md}{
-    font-size: 16px;
-    line-height: 20px;
-  };
+  span { display: block; }
 
   @media ${props => props.theme.breakpoints.sm} {
-    font-size: 10px;
-    line-height: 14px;
+    font-size: 14px;
   }
 `
 
-export const Join = styled.div`
-  display: flex;
-  max-width: 1040px;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 80px;
+export const BoxIcon = styled.span`
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--c-accent);
 
-  @media ${props => props.theme.breakpoints.md}{
-    display: flex;
-    justify-content: center;
-    padding-bottom: 64px;
-  }
+  svg { width: 56px; height: 56px; }
 
-  @media ${props => props.theme.breakpoints.sm}{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 32px;
-  }
-`
-
-export const JoinText = styled.h5`
-  display: flex;
-  font-size: 24px;
-  line-height: 40px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.5);
-
-@media ${props => props.theme.breakpoints.md}{
-  line-height: 32px;
-  font-size: 20px;
-};
-
-@media ${props => props.theme.breakpoints.sm}{
-  font-size: 16px;
-  line-height: 24px;
-  margin: 0 0 16px;
-}
-`
-
-export const IconContainer = styled.div`
-  display: flex;
-
-  @media ${props => props.theme.breakpoints.sm}{
-    width: 160px;
-    justify-content: space-between;
+  @media ${props => props.theme.breakpoints.sm} {
+    svg { width: 40px; height: 40px; }
   }
 `

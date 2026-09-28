@@ -60,7 +60,7 @@ const Home = () => {
         imageAlt="Radomir Dinic: Games, Mixed Reality & AI"
         jsonLd={jsonLd}
       />
-      <Section grid>
+      <Section grid $noreveal>
         <Hero />
         <BgAnimation />
       </Section>

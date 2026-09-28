@@ -1,38 +1,30 @@
 import React from 'react';
 
-import { BlogCard, CardInfo, ExternalLinks, GridContainer, HeaderThree, Hr, Tag, TagList, TitleContent, UtilityList, Img } from './ProjectsStyles';
 import { Section, SectionDivider, SectionTitle } from '../../styles/GlobalComponents';
 import { projects } from '../../constants/constants';
+import { CardBody, CardInfo, CardLink, GridContainer, HeaderThree, Img, ImgFrame, Tag, TagList } from './ProjectsStyles';
 
 const Projects = () => (
-  <Section noPadding id="projects">
-    <SectionTitle main>Projects</SectionTitle>
+  <Section id="projects">
+    <SectionDivider divider />
+    <SectionTitle>Projects</SectionTitle>
     <GridContainer>
-      {projects.map((p, i) => {
-        return (
-          <a href={p.source}  key={i}>
-          <BlogCard >
-          <Img src={p.image} />
-            <TitleContent>
-              <HeaderThree isTitle>{p.title}</HeaderThree>
-              <Hr />
-            </TitleContent>
-            <CardInfo className="card-info">{p.description}</CardInfo>
-            <div>
-              <TagList>
-                {p.tags.map((t, i) => {
-                  return <Tag key={i}>{t}</Tag>;
-                })}
+      {projects.map((p) => (
+        <li key={p.id}>
+          <CardLink href={p.source} target="_blank" rel="noopener noreferrer">
+            <ImgFrame>
+              <Img src={p.image} alt={p.imageAlt || `${p.title} project screenshot`} width="400" height="225" loading="lazy" decoding="async" />
+            </ImgFrame>
+            <CardBody>
+              <HeaderThree>{p.title}</HeaderThree>
+              <CardInfo>{p.description}</CardInfo>
+              <TagList aria-label="Tags">
+                {p.tags.map((t) => <Tag key={t}>{t}</Tag>)}
               </TagList>
-            </div>
-            {/* <UtilityList>
-              {<ExternalLinks href={p.visit}>Code</ExternalLinks> }
-              <ExternalLinks href={p.source}>Visit</ExternalLinks>
-            </UtilityList> */}
-          </BlogCard>
-          </a>
-        );
-      })}
+            </CardBody>
+          </CardLink>
+        </li>
+      ))}
     </GridContainer>
   </Section>
 );
