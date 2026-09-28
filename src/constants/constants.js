@@ -161,101 +161,49 @@ export const Publications = [
   },
 ];
 
+// Curated from the FH Salzburg course wiki (2017 to WS 2026). Current and
+// recurring courses only; the wiki has the full semester-by-semester list.
 export const TeachingExperience = [
   {
-    category: "Master Classes",
+    category: "Games",
     events: [
-      {
-        title: "Rapid Prototyping",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
-      },
-      {
-        title: "Master's Project: Development & Presentation",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
-      },
-      {
-        title: "Master's Project: Substantiation",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
-      },
-      {
-        title: "Master's Project: Realization",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
-      },
-      {
-        title: "Master's Project: Release & Presentation",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/master-multimediatechnology/curriculum",
-      },
+      { title: "Game Development 1 & 2" },
+      { title: "Game Development Fundamentals" },
+      { title: "Game Production Environments (Unity 6)" },
+      { title: "Artificial Intelligence for Games" },
+      { title: "Applied Programming Skills for Games" },
+      { title: "Game projects in bachelor and master" },
     ],
   },
   {
-    category: "Bachelor Classes",
+    category: "AI, Vision & Research",
     events: [
-      {
-        title: "Introduction to programming",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
-      {
-        title: "Algorithms and data structures (Lab)",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
-      {
-        title: "Computer graphics 1 (Lab)",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
-      {
-        title: "Multimedia project (all)",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
-      {
-        title: "Basics Game Development",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },      
-      {
-        title: "Game Development 1 (co-teacher)",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
-      {
-        title: "Computer Networks",
-        ref: "https://www.fh-salzburg.ac.at/en/study/ct/multimediatechnology-bachelor/curriculum",
-      },
+      { title: "AI Literacy" },
+      { title: "Computer Vision" },
+      { title: "Rapid Prototyping (master)" },
+      { title: "Bachelor thesis: topic finding & research design" },
+      { title: "Seminar in computer science" },
     ],
   },
   {
-    category: "Workshops",
+    category: "Workshops & AI trainings",
     events: [
-      {
-        title: "Coding for kids",
-        ref: "#teaching",
-      },
-      {
-        title: "Agile workflows",
-        ref: "#teaching",
-      },
-      {
-        title: "Game development with Unity",
-        ref: "#teaching",
-      },
-      {
-        title: "Mixed Reality (VR/AR)",
-        ref: "#teaching",
-      },
-      {
-        title: "AI Content Creation",
-        ref: "#teaching",
-      },
-      {
-        title: "Music & Code with Sonic Pi",
-        ref: "#teaching",
-      },
+      { title: "Salzburg Administration Academy (SVAK), State of Salzburg" },
+      { title: "Municipalities in Salzburg" },
+      { title: "Companies and teams, in-house or online", ref: "/ki-schulungen/" },
+      { title: "Game development with Unity" },
+      { title: "Mixed reality (VR/AR)" },
+      { title: "Coding for kids" },
     ],
   },
 ];
 
 export const TimeLineData = [
-  { year: 2002, text: "Salesperson and Consultant" },
-  { year: 2014, text: "BSc Degree MMT" },
-  { year: 2017, text: "MSc Degree MMT" },
-  { year: 2017, text: "Junior Lecturer and Researcher" },
-  { year: 2021, text: "Freelancer and Lecturer" },
+  { year: 2002, text: "Sales and consulting" },
+  { year: 2014, text: "BSc MultiMediaTechnology" },
+  { year: 2017, text: "MSc, then research & teaching at MMT" },
+  { year: 2020, text: "Ludwig Boltzmann Institute for Digital Health" },
+  { year: 2021, text: "Back at FH Salzburg as lecturer" },
+  { year: "Today", text: "Senior Lecturer & AI trainer" },
 ];
 

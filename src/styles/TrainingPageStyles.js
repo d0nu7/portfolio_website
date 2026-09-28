@@ -168,6 +168,16 @@ export const TrustRow = styled.div`
   }
 `;
 
+export const References = styled.p`
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 22px 0 0;
+  color: rgba(255,255,255,.55);
+  font-size: 13px;
+  line-height: 1.5;
+`;
+
 export const Section = styled.section.attrs({ 'data-reveal': '' })`
   padding: clamp(76px, 10vw, 120px) 0 0;
 `;

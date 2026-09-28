@@ -1,115 +1,32 @@
 import React from "react";
-import {
-  GiSmartphone,
-  GiVrHeadset,
-  GiGamepad,
-  GiLevelThree,
-  GiWireframeGlobe,
-} from "react-icons/gi";
-import { BiVideoRecording } from "react-icons/bi";
-import {
-  Section,
-  SectionDivider,
-  SectionTitle,
-} from "../../styles/GlobalComponents";
-import {
-  List,
-  ListContainer,
-  ListIcon,
-  ListItem,
-  ListParagraph,
-  ListTitle,
-} from "./SkillsStyles";
+import { GiArtificialIntelligence, GiGamepad, GiLevelThree, GiSmartphone, GiTeacher, GiVrHeadset } from "react-icons/gi";
+
+import { Section, SectionDivider, SectionTitle } from "../../styles/GlobalComponents";
+import { List, ListContainer, ListIcon, ListItem, ListParagraph, ListTitle } from "./SkillsStyles";
+
+const focus = [
+  { Icon: GiGamepad, title: "Games", text: "Game development and design from prototype to release. Unity 6, C#, AI for games." },
+  { Icon: GiVrHeadset, title: "Mixed Reality", text: "AR and VR applications, tracking and photogrammetry, often for health and research." },
+  { Icon: GiArtificialIntelligence, title: "Computer Vision & AI", text: "Making machines see and reason, from classic vision pipelines to generative AI." },
+  { Icon: GiTeacher, title: "AI Trainings", text: "Hands-on AI literacy for teams, public administration and leadership, EU AI Act included." },
+  { Icon: GiLevelThree, title: "Rapid Prototyping", text: "From idea to something you can test: 3D printing, electronics, CAD." },
+  { Icon: GiSmartphone, title: "Web & Mobile", text: "Apps and tools for research projects: React, Next.js, .NET, Android." },
+];
 
 const Skills = () => (
   <Section id="tech">
     <SectionDivider divider />
-    <SectionTitle>Skills</SectionTitle>
+    <SectionTitle>Focus</SectionTitle>
     <List>
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <GiVrHeadset size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>Mixed Reality</ListTitle>
-          <ListParagraph>
-            Augmented Reality <br />
-            Virtual Reality <br />
-            Tracking Techniques 
-            ...
-          </ListParagraph>
-        </ListContainer>
-      </ListItem>
-
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <GiGamepad size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>Game</ListTitle>
-          <ListParagraph>
-            Unity <br />
-            OGRE <br />
-            PyGame 
-            ...
-          </ListParagraph>
-        </ListContainer>
-      </ListItem>
-
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <GiWireframeGlobe size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>Web</ListTitle>
-          <ListParagraph>
-            .NET 5 <br />
-            React.js <br />
-            Databases 
-            ...
-          </ListParagraph>        </ListContainer>
-      </ListItem>
-
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <GiLevelThree size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>Prototyping</ListTitle>
-          <ListParagraph>
-            3D-Printing <br />
-            Electronics <br />
-            CAD 
-            ...
-          </ListParagraph>        </ListContainer>
-      </ListItem>
-
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <GiSmartphone size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>Mobile</ListTitle>
-          <ListParagraph>
-            Android <br />
-            .NET 5 MAUI 
-            ...
-          </ListParagraph>        </ListContainer>
-      </ListItem>
-
-      <ListItem>
-        <ListIcon aria-hidden="true">
-          <BiVideoRecording size="4rem" />
-        </ListIcon>
-        <ListContainer>
-          <ListTitle>AV</ListTitle>
-          <ListParagraph>
-            Photogrammetry <br />
-            Streaming <br />
-            Recording 
-            ...
-          </ListParagraph>        </ListContainer>
-      </ListItem>
+      {focus.map(({ Icon, title, text }) => (
+        <ListItem key={title}>
+          <ListIcon aria-hidden="true"><Icon size="4rem" /></ListIcon>
+          <ListContainer>
+            <ListTitle>{title}</ListTitle>
+            <ListParagraph>{text}</ListParagraph>
+          </ListContainer>
+        </ListItem>
+      ))}
     </List>
   </Section>
 );

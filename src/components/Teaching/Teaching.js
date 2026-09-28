@@ -16,7 +16,12 @@ const Teaching = () => (
             {group.events.map((event) => (
               <li key={event.title}>
                 {event.ref ? (
-                  <ClassLink href={event.ref} target="_blank" rel="noopener noreferrer">{event.title}</ClassLink>
+                  <ClassLink
+                    href={event.ref}
+                    {...(event.ref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {event.title}
+                  </ClassLink>
                 ) : (
                   event.title
                 )}

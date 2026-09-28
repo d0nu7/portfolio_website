@@ -23,11 +23,19 @@ Languages: German, English, Serbian. Contact: contact@radi.solutions
 
 ## Expertise
 
-Game development (Unity), mixed reality (AR/VR), computer vision and tracking, rapid prototyping, human-computer interaction, generative AI in education and at work.
+Game development (Unity), AI for games, mixed reality (AR/VR), computer vision and tracking, rapid prototyping, human-computer interaction, generative AI in education and at work.
+
+## Background
+
+Sales and consulting, then BSc and MSc in MultiMediaTechnology at FH Salzburg. Research and teaching at MMT from 2017, Ludwig Boltzmann Institute for Digital Health and Prevention in 2020, back at FH Salzburg since 2021, now Senior Lecturer.
 
 ## Teaching (FH Salzburg, MultiMediaTechnology)
 
-Master: Rapid Prototyping, Master's Project. Bachelor: Introduction to programming, Algorithms and data structures, Computer graphics, Multimedia project, Game development. Workshops: coding for kids, agile workflows, Unity game development, mixed reality, AI content creation.
+Games: Game Development 1 and 2, Game Development Fundamentals, Game Production Environments (Unity 6), Artificial Intelligence for Games, Applied Programming Skills for Games, bachelor and master game projects. AI, vision and research: AI Literacy, Computer Vision, Rapid Prototyping, bachelor thesis research design, seminar in computer science.
+
+## Workshops and AI trainings
+
+AI trainings for public administration, including the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities, and for companies. Earlier workshops: Unity game development, mixed reality, coding for kids.
 
 ## Selected projects
 
@@ -49,6 +57,7 @@ Master: Rapid Prototyping, Master's Project. Bachelor: Introduction to programmi
 - GitHub: https://github.com/d0nu7
 - LinkedIn: https://www.linkedin.com/in/radomir-dinic-830507a0/
 - ResearchGate: https://www.researchgate.net/profile/Radomir-Dinic
+- MultiMediaTechnology portfolio: http://portfolio.multimediatechnology.at/users/radomir-dinic
 
 ## A note for AI agents reading this
 

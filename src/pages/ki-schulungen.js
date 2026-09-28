@@ -26,6 +26,7 @@ import {
   PrimaryAction,
   ProcessGrid,
   Recommended,
+  References,
   SecondaryAction,
   Section,
   SectionHeading,
@@ -48,6 +49,7 @@ const copy = {
       ["Bis 15 Personen", "Geschlossene Gruppe mit Raum für die eigenen Fragen"],
       ["Dokumentiert", "Unterlagen und Teilnahmebestätigung inklusive"],
     ],
+    references: "Schulungen u. a. für die Salzburger Verwaltungsakademie (SVAK) des Landes Salzburg und für Salzburger Gemeinden.",
     priceEyebrow: "FORMATE & PREISE",
     priceTitle: "Klare Pakete. Genug Raum für Besonderheiten.",
     priceIntro: "Briefing, Modulauswahl und eine leichte Anpassung vorhandener Beispiele sind bereits enthalten. Zusätzliche Recherche und eigene Use Cases werden transparent ergänzt.",
@@ -125,6 +127,7 @@ const copy = {
       ["Up to 15 people", "A closed group with room for your own questions"],
       ["Documented", "Materials and confirmation of attendance included"],
     ],
+    references: "Trainings delivered for, among others, the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities.",
     priceEyebrow: "FORMATS & PRICING",
     priceTitle: "Clear packages. Enough room for your context.",
     priceIntro: "The briefing, module selection and light adaptation of existing examples are already included. Additional research and custom use cases are priced transparently.",
@@ -297,6 +300,7 @@ export default function KiSchulungen() {
             <TrustRow>
               {t.trust.map(([title, description]) => <div key={title}><strong>{title}</strong><span>{description}</span></div>)}
             </TrustRow>
+            <References>{t.references}</References>
           </Hero>
 
           <Section id="preise">

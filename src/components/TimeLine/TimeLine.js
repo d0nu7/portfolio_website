@@ -45,13 +45,22 @@ const Timeline = () => {
 
   return (
     <Section id="about">
-          <SectionDivider divider />
-
+      <SectionDivider divider />
       <SectionTitle>About Me</SectionTitle>
       <SectionText>
-      I started my professional career as a salesman, project manager, and consultant for construction glass. Later I studied media informatics at the Salzburg University of Applied Sciences at the department of MultiMediaTechnology. <br/>  <br/> 
-      During my bachelor’s degree, I focused on computer vision, mixed reality, and game development. In my master’s studies, topics like data visualization, project management, and data science came into focus.<br/> <br/>
-      After my studies, my academic career started in teaching and research. In addition to my work as a lecturer, I am currently also working as a freelancer. Thanks to a strong network of collaborators, I can implement complex projects from academic and industrial areas.
+        I started out in sales and consulting, then studied MultiMediaTechnology
+        at FH Salzburg (BSc, MSc) with a focus on computer vision, mixed reality
+        and game development.
+        <br /><br />
+        From 2017 I worked in research and teaching at MMT, spent 2020 at the
+        Ludwig Boltzmann Institute for Digital Health and Prevention, and returned
+        to FH Salzburg in 2021. Today I teach games, computer vision and AI there
+        as a Senior Lecturer.
+        <br /><br />
+        Alongside teaching, I run AI trainings for public administration, such as
+        the Salzburg Administration Academy (SVAK) and Salzburg municipalities, and
+        for companies. Together with a network of collaborators I also take on
+        selected development projects.
       </SectionText>
       <CarouselContainer ref={carouselRef} onScroll={handleScroll}>
         <>
