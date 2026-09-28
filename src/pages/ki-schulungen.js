@@ -1,5 +1,6 @@
-import Head from "next/head";
 import { useEffect, useState } from "react";
+import Seo from "../components/Seo/Seo";
+import { SITE_URL, personJsonLd } from "../constants/site";
 import { Layout } from "../layout/Layout";
 import {
   ActChecklist,
@@ -190,6 +191,53 @@ const copy = {
   },
 };
 
+const PAGE_URL = `${SITE_URL}/ki-schulungen/`;
+const priceValue = (price) => price.replace(/[^0-9]/g, "");
+
+// Structured data is always built from the German copy: that is what the
+// static HTML ships with and what the canonical URL represents.
+const jsonLd = [
+  personJsonLd(),
+  {
+    "@type": "Service",
+    "@id": `${PAGE_URL}#service`,
+    name: copy.de.title,
+    description: copy.de.description,
+    url: PAGE_URL,
+    serviceType: "KI-Schulung",
+    inLanguage: ["de", "en"],
+    provider: { "@id": `${SITE_URL}/#person` },
+    areaServed: [
+      { "@type": "State", name: "Salzburg" },
+      { "@type": "Country", name: "Österreich" },
+      { "@type": "Country", name: "Deutschland" },
+    ],
+    availableChannel: { "@type": "ServiceChannel", serviceUrl: PAGE_URL, availableLanguage: ["de", "en"] },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: copy.de.priceEyebrow,
+      itemListElement: copy.de.packages.map((item) => ({
+        "@type": "Offer",
+        name: item.name,
+        description: `${item.description} ${item.features.join(", ")}.`,
+        price: priceValue(item.price),
+        priceCurrency: "EUR",
+        url: `${PAGE_URL}#preise`,
+      })),
+    },
+  },
+  {
+    "@type": "FAQPage",
+    "@id": `${PAGE_URL}#faq`,
+    inLanguage: "de",
+    mainEntity: copy.de.faq.map(([question, answer]) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
+  },
+];
+
 const mailSubject = {
   de: "Anfrage KI-Schulung",
   en: "AI training enquiry",
@@ -219,16 +267,15 @@ export default function KiSchulungen() {
 
   return (
     <Layout>
-      <Head>
-        <title>{t.title} | radi.solutions</title>
-        <meta key="description" name="description" content={t.description} />
-        <meta key="keywords" name="keywords" content="KI Schulung, generative KI, AI Act, KI Kompetenz, Inhouse Workshop, Salzburg, ChatGPT Training" />
-        <link key="canonical" rel="canonical" href="https://radi.solutions/ki-schulungen/" />
-        <meta key="og-title" property="og:title" content={`${t.title} | radi.solutions`} />
-        <meta key="og-description" property="og:description" content={t.description} />
-        <meta key="og-url" property="og:url" content="https://radi.solutions/ki-schulungen/" />
-        <meta key="og-type" property="og:type" content="website" />
-      </Head>
+      <Seo
+        title={`${t.title} | radi.solutions`}
+        description={t.description}
+        path="/ki-schulungen/"
+        image="/og/ki-schulungen.png"
+        imageAlt={t.title}
+        locale={language === "de" ? "de_AT" : "en_GB"}
+        jsonLd={jsonLd}
+      />
 
       <Page>
         <Shell>

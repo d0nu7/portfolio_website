@@ -17,37 +17,12 @@ import Nav from "../Nav/Nav";
 const Header = () => (
   <>
     <Head>
+      {/* Page-specific metadata lives in each page's <Seo />. */}
       <meta charSet="utf-8" />
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1,
-      shrink-to-fit=no"
-      />
-      <title>Radomir Dinic</title>
-      <meta
-        key="description"
-        name="description"
-        content="Portfolio of a Freelance MultiMedia Developer"
-      />
-      <meta
-        key="keywords"
-        name="keywords"
-        content="Portfolio, Freelancer, Unity, Salzburg, MultiMediaTechnology, Software, Programming, Development, Virtual Reality, Augmented Reality, Medical Product, Radomir Dinic"
-      />
-
-      <meta
-        key="og-title"
-        property="og:title"
-        content="Radomir Dinic | MultiMedia Developer"
-      />
-      <meta
-        key="og-description"
-        property="og:description"
-        content="Portfolio of a Freelance MultiMedia Developer"
-      />
-      {/* <meta property="og:url" content="https://example.com" /> */}
-      <meta key="og-type" property="og:type" content="website" />
-      <link key="canonical" rel="canonical" href="https://radi.solutions" />
+      <meta key="viewport" name="viewport" content="width=device-width, initial-scale=1" />
+      <link key="icon" rel="icon" href="/favicon.ico" sizes="any" />
+      <link key="icon-svg" rel="icon" href="/icon.svg" type="image/svg+xml" />
+      <link key="apple-touch-icon" rel="apple-touch-icon" href="/apple-touch-icon.png" />
     </Head>
 
     <Container id="header">

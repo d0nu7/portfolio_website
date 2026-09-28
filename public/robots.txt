@@ -1,3 +1,5 @@
 User-agent: *
 Disallow:
+
+# Summary for LLM-based assistants and AI search: https://radi.solutions/llms.txt
 Sitemap: https://radi.solutions/sitemap.xml

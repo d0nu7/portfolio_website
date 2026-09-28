@@ -1,0 +1,51 @@
+# radi.solutions
+
+> Personal site of Radomir Dinic (RaDi), BSc MSc, Senior Lecturer for Game & Mixed Reality at the Salzburg University of Applied Sciences (FH Salzburg), based in Hallein near Salzburg, Austria. He builds interactive prototypes (games, AR/VR, computer vision), does applied research, and runs hands-on AI literacy trainings for companies and public organisations.
+
+Languages: German, English, Serbian. Contact: contact@radi.solutions
+
+## Pages
+
+- [Portfolio (English)](https://radi.solutions/): background, skills, teaching, awards, projects and publications.
+- [KI-Schulungen / AI trainings (German, English)](https://radi.solutions/ki-schulungen/): in-house and online trainings on generative AI and AI literacy under Article 4 of the EU AI Act, with fixed prices.
+
+## AI trainings (KI-Schulungen)
+
+- Formats for closed groups of up to 15 people, in person or online:
+  - KI-Impuls (AI briefing): up to 2 hours, EUR 790
+  - Halbtags-Workshop (half-day workshop): up to 4 hours, EUR 1,290
+  - Ganztags-Workshop (full-day workshop): up to 8 hours, EUR 1,990, most popular
+  - Zwei-Tages-Intensiv (two-day intensive): up to 16 hours, EUR 3,490
+- Add-ons: industry package (+EUR 390), organisation's own use cases (+EUR 790), new topic research (EUR 125/hour, capped in advance).
+- Prices are indicative; no VAT is charged (Austrian small business exemption). A binding quote follows a short briefing.
+- Modules: foundations and orientation; prompting and workflows; research and quality; media and creativity; law, privacy and the EU AI Act; strategy and implementation.
+- Participants receive a personalised confirmation of attendance that supports documenting AI literacy measures under Art. 4 EU AI Act. This is not a certification.
+
+## Expertise
+
+Game development (Unity), mixed reality (AR/VR), computer vision and tracking, rapid prototyping, human-computer interaction, generative AI in education and at work.
+
+## Teaching (FH Salzburg, MultiMediaTechnology)
+
+Master: Rapid Prototyping, Master's Project. Bachelor: Introduction to programming, Algorithms and data structures, Computer graphics, Multimedia project, Game development. Workshops: coding for kids, agile workflows, Unity game development, mixed reality, AI content creation.
+
+## Selected projects
+
+- Yokaisho: tablet AR board game (Unity, Vuforia). Austrian CG Award 2015, Best Game.
+- NIVA: exploration art game. Austrian CG Award 2016, Best Game and Best Student Project.
+- EatAR: AR portion estimation with depth-sensing phones (master thesis).
+- SmartSignCapture: smartphone capture of sign language for 3D avatars (netidee research project).
+- Ecomedicine VR: VR breathing exergame with Paracelsus Medical University.
+
+## Selected publications
+
+- AirRes Mask: A Precise and Robust Virtual Reality Breathing Interface Utilizing Breathing Resistance as Output Modality. CHI 2022. https://doi.org/10.1145/3491102.3502090
+- EatAR tango: portion estimation on mobile devices with a depth sensor. MobileHCI 2017. https://doi.org/10.1145/3098279.3125434
+- Training of carbohydrate estimation for people with diabetes using mobile augmented reality. Journal of Diabetes Science and Technology, 2015. https://doi.org/10.1177/1932296815578880
+- Full list: https://radi.solutions/#research
+
+## Profiles
+
+- GitHub: https://github.com/d0nu7
+- LinkedIn: https://www.linkedin.com/in/radomir-dinic-830507a0/
+- ResearchGate: https://www.researchgate.net/profile/Radomir-Dinic
