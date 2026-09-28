@@ -12,6 +12,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  // Next 16's dev-only static-route indicator crashes on the pages router
+  // with output: 'export' ("[HMR] Invalid message: isrManifest" in the
+  // console on every page). Dev-only; production builds are unaffected.
+  devIndicators: false,
 };
 
 module.exports = nextConfig;

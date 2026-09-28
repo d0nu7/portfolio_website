@@ -27,16 +27,14 @@ const Header = ({ lang = 'en' }) => (
 
     <Container id="header">
       <Div1>
-        <Link href="/" passHref legacyBehavior>
-          <LogoLink>
-            <SvgRadiFace />
-            <LogoText>
-              <b>Ra</b>domir
-              <br />
-              <b>Di</b>nic
-            </LogoText>
-          </LogoLink>
-        </Link>
+        <LogoLink as={Link} href="/">
+          <SvgRadiFace />
+          <LogoText>
+            <b>Ra</b>domir
+            <br />
+            <b>Di</b>nic
+          </LogoText>
+        </LogoLink>
       </Div1>
       <Div3>
         <SocialIcons
