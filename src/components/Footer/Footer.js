@@ -2,17 +2,14 @@ import React from 'react';
 import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
 
 import { SocialIcons } from '../Header/HeaderStyles';
+import useHomeCopy from '../../i18n/useHomeCopy';
 import { FaResearchgate } from "react-icons/fa";
 
 import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer, SpanItem } from './FooterStyles';
 
-const labels = {
-  en: { legal: 'Legal notice', email: 'Email', services: 'Services', training: 'AI trainings' },
-  de: { legal: 'Impressum', email: 'E-Mail', services: 'Angebot', training: 'KI-Schulungen' },
-};
-
-const Footer = ({ lang = 'en' }) => {
-  const t = labels[lang] || labels.en;
+const Footer = () => {
+  const { t: copy } = useHomeCopy();
+  const t = copy.footer;
 
   return (
     <FooterWrapper>

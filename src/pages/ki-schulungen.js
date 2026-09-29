@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import Seo from "../components/Seo/Seo";
 import { SITE_URL, personJsonLd } from "../constants/site";
+import { useLanguage } from "../i18n/LanguageContext";
 import { Layout } from "../layout/Layout";
 import {
   ActChecklist,
@@ -13,8 +13,6 @@ import {
   Hero,
   HeroCopy,
   HeroTitle,
-  LanguageBar,
-  LanguageSwitch,
   LegalNote,
   ModuleCard,
   ModuleGrid,
@@ -127,7 +125,7 @@ const copy = {
       ["Up to 15 people", "A closed group with room for your own questions"],
       ["Documented", "Materials and confirmation of attendance included"],
     ],
-    references: "Trainings delivered for, among others, the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities.",
+    references: "Clients include the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities.",
     priceEyebrow: "FORMATS & PRICING",
     priceTitle: "Clear packages. Enough room for your context.",
     priceIntro: "The briefing, module selection and light adaptation of existing examples are already included. Additional research and custom use cases are priced transparently.",
@@ -247,29 +245,14 @@ const mailSubject = {
 };
 
 export default function KiSchulungen() {
-  const [language, setLanguage] = useState("de");
+  // Shared DE/EN language (header switch); this page renders German by default.
+  const { lang: language } = useLanguage();
   const t = copy[language];
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem("radi-language");
-    const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
-    const initial = saved === "de" || saved === "en" ? saved : browserLanguage.toLowerCase().startsWith("de") ? "de" : "en";
-    setLanguage(initial);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = language === "de" ? "de" : "en";
-  }, [language]);
-
-  const changeLanguage = (nextLanguage) => {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("radi-language", nextLanguage);
-  };
 
   const contactHref = `mailto:contact@radi.solutions?subject=${encodeURIComponent(mailSubject[language])}`;
 
   return (
-    <Layout lang={language}>
+    <Layout>
       <Seo
         title={`${t.title} | radi.solutions`}
         description={t.description}
@@ -282,12 +265,6 @@ export default function KiSchulungen() {
 
       <Page>
         <Shell>
-          <LanguageBar>
-            <LanguageSwitch aria-label="Language selection">
-              <button type="button" aria-pressed={language === "de"} onClick={() => changeLanguage("de")}>DE</button>
-              <button type="button" aria-pressed={language === "en"} onClick={() => changeLanguage("en")}>EN</button>
-            </LanguageSwitch>
-          </LanguageBar>
 
           <Hero>
             <Eyebrow>{t.eyebrow}</Eyebrow>
@@ -362,3 +339,5 @@ export default function KiSchulungen() {
     </Layout>
   );
 }
+
+KiSchulungen.defaultLang = "de";

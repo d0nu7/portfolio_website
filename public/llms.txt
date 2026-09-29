@@ -6,7 +6,7 @@ Languages: German, English, Serbian. Contact: contact@radi.solutions
 
 ## Pages
 
-- [Portfolio (English)](https://radi.solutions/): background, skills, teaching, awards, projects and publications.
+- [Portfolio (English and German)](https://radi.solutions/): what he does, current focus, selected work, talks and media, awards, publications and background.
 - [KI-Schulungen / AI trainings (German, English)](https://radi.solutions/ki-schulungen/): in-house and online trainings on generative AI and AI literacy under Article 4 of the EU AI Act, with fixed prices.
 
 ## AI trainings (KI-Schulungen)
@@ -45,7 +45,7 @@ Generative AI and AI literacy (teaching, workshops, workflows, responsible use);
 
 - 2026, Salzburger Nachrichten: quoted on AI doomsday scenarios.
 - 2026, WIFI Salzburg: talk on AI in apprenticeship training.
-- 2026, Salzburg Leadership: workshop on AI and vibe prompting for leaders.
+- 2026, Salzburg Administration Academy (SVAK), Kompetenzwerkstatt: workshop "KI: Vibe Prompting fuer den Fuehrungsalltag" for leaders.
 - 2025-26, Salzburg Administration Academy (SVAK): AI trainings for public administration.
 - 2025, Salzburger Nachrichten: interview on school and AI ("Kritisches Denken bleibt unerlaesslich").
 - 2024, St. Virgil Salzburg, AI conference: talk "Kuenstliche Intelligenz heute".
@@ -57,7 +57,7 @@ Generative AI and AI literacy (teaching, workshops, workflows, responsible use);
 - Science Award 2017, AK Salzburg.
 - Austrian CG Award 2016, Best Game and Best Student Project (NIVA).
 - Austrian CG Award 2015, Best Game (Yokaisho).
-- Order for Disaster Relief, State of Salzburg.
+- Medal for Disaster Relief (Katastrophenhilfe-Medaille), State of Salzburg.
 
 ## Selected projects
 

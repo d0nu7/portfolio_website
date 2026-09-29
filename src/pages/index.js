@@ -10,11 +10,21 @@ import WhatIDo from '../components/WhatIDo/WhatIDo';
 import Seo from '../components/Seo/Seo';
 import { Publications } from '../constants/constants';
 import { SITE_URL, personJsonLd } from '../constants/site';
+import { useLanguage } from '../i18n/LanguageContext';
 import { Layout } from '../layout/Layout';
 import { Section } from '../styles/GlobalComponents';
 
-const TITLE = 'Radomir Dinic · Games, AI & Interactive Systems | Salzburg';
-const DESCRIPTION = 'Senior Lecturer at FH Salzburg, developer and AI trainer. Teaching game development, computer vision and AI, building interactive prototypes and making generative AI understandable for teams and administrations.';
+const META = {
+  en: {
+    title: 'Radomir Dinic · Games, AI & Interactive Systems | Salzburg',
+    description: 'Senior Lecturer at FH Salzburg, developer and AI trainer. Teaching game development, computer vision and AI, building interactive prototypes and making generative AI understandable for teams and public administration.',
+  },
+  de: {
+    title: 'Radomir Dinic · Games, KI & interaktive Systeme | Salzburg',
+    description: 'Senior Lecturer an der FH Salzburg, Entwickler und KI-Trainer. Lehre in Game Development, Computer Vision und KI, interaktive Prototypen und KI-Schulungen für Teams und Verwaltung.',
+  },
+};
+const TITLE = META.en.title;
 
 const jsonLd = [
   {
@@ -39,7 +49,7 @@ const jsonLd = [
       'Honorable Mention for Best Paper, ACM CHI 2022 (AirRes Mask)',
       'Austrian CG Award 2015, Best Game (Yokaisho)',
       'Austrian CG Award 2016, Best Game and Best Student Project (NIVA)',
-      'Order for Disaster Relief, State of Salzburg',
+      'Medal for Disaster Relief (Katastrophenhilfe-Medaille), State of Salzburg',
       'Science Award 2017, AK Salzburg',
     ],
     subjectOf: Publications.map((p) => ({
@@ -52,14 +62,17 @@ const jsonLd = [
 ];
 
 const Home = () => {
+  const { lang } = useLanguage();
+  const meta = META[lang] || META.en;
   return (
     <Layout>
       <Seo
-        title={TITLE}
-        description={DESCRIPTION}
+        title={meta.title}
+        description={meta.description}
+        locale={lang === 'de' ? 'de_AT' : 'en_GB'}
         path="/"
         image="/og/home.png"
-        imageAlt="Radomir Dinic: Games, AI & interactive systems"
+        imageAlt={meta.title}
         jsonLd={jsonLd}
       />
       <Section grid $noreveal>

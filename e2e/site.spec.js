@@ -21,7 +21,7 @@ test.describe('homepage', () => {
     for (const id of ['about', 'projects']) {
       await expect(page.locator(`#${id}`)).toBeAttached();
     }
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
+    await expect(page.locator('html')).toHaveAttribute('lang', /^en/);
     expect(problems).toEqual([]);
   });
 
@@ -76,5 +76,33 @@ test.describe('/closer (moving notice)', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'de');
     expect(problems).toEqual([]);
+  });
+});
+
+test.describe('language', () => {
+  test.describe('German browser', () => {
+    test.use({ locale: 'de-AT' });
+
+    test('homepage switches to German and the choice carries over', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('h1')).toHaveText('Games, KI & interaktive Systeme.');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+      await page.getByRole('button', { name: 'EN', exact: true }).click();
+      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
+      await page.goto('/ki-schulungen/');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Understand AI/);
+    });
+  });
+
+  test.describe('neither German nor English', () => {
+    test.use({ locale: 'fr-FR' });
+
+    test('falls back to English on both pages', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
+      await page.goto('/ki-schulungen/');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    });
   });
 });

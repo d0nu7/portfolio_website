@@ -55,6 +55,21 @@ export const RowMeta = styled.span`
   @media ${(props) => props.theme.breakpoints.sm} { font-size: 12px; }
 `;
 
+// Small type label ("TALK", "MEDIA", ...) in front of the organisation.
+export const RowType = styled.span`
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: var(--c-accent-soft);
+  background: var(--c-chip-bg);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+`;
+
 export const SubTitle = styled.h3`
   margin-top: 8px;
   color: var(--c-label);

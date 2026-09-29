@@ -18,37 +18,6 @@ export const Shell = styled.div`
   }
 `;
 
-export const LanguageBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 0 0;
-`;
-
-export const LanguageSwitch = styled.div`
-  display: inline-flex;
-  padding: 4px;
-  border: 1px solid rgba(255,255,255,.13);
-  border-radius: 999px;
-  background: rgba(255,255,255,.04);
-
-  button {
-    min-width: 43px;
-    border: 0;
-    border-radius: 999px;
-    padding: 7px 10px;
-    color: rgba(255,255,255,.56);
-    background: transparent;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  button[aria-pressed="true"] {
-    color: var(--radi-navy);
-    background: #fff;
-  }
-`;
-
 export const Hero = styled.section`
   position: relative;
   overflow: hidden;

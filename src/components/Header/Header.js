@@ -13,8 +13,12 @@ import {
 } from "./HeaderStyles";
 import SvgRadiFace from "../../CustomIcons/RadiFace";
 import Nav from "../Nav/Nav";
+import LanguageSwitch from "../LanguageSwitch/LanguageSwitch";
+import useHomeCopy from "../../i18n/useHomeCopy";
 
-const Header = ({ lang = 'en' }) => (
+const Header = () => {
+  const { t } = useHomeCopy();
+  return (
   <>
     <Head>
       {/* Page-specific metadata lives in each page's <Seo />. */}
@@ -37,6 +41,7 @@ const Header = ({ lang = 'en' }) => (
         </LogoLink>
       </Div1>
       <Div3>
+        <LanguageSwitch />
         <SocialIcons
           href="https://github.com/d0nu7"
           target="_blank"
@@ -62,9 +67,10 @@ const Header = ({ lang = 'en' }) => (
           <FaResearchgate size="3rem" />
         </SocialIcons>
       </Div3>
-      <Nav lang={lang} />
+      <Nav labels={t.nav} />
     </Container>
   </>
-);
+  );
+};
 
 export default Header;

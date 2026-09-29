@@ -6,17 +6,16 @@ import useConsoleHello from '../hooks/useConsoleHello'
 import useReveal from '../hooks/useReveal'
 import { Container } from './LayoutStyles'
 
-// `lang` localises the shared chrome (menu, footer). The homepage is English;
-// /ki-schulungen passes its current DE/EN choice.
-export const Layout = ({children, lang = 'en'}) => {
+// Menu, footer and language switch read the language from LanguageContext.
+export const Layout = ({children}) => {
   useReveal()
   useConsoleHello()
 
   return (
     <Container>
-     <Header lang={lang}/>
+     <Header/>
      <main>{children}</main> 
-     <Footer lang={lang}/>
+     <Footer/>
     </Container>
   )
 }

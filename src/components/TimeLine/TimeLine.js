@@ -3,10 +3,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CarouselButton, CarouselButtonDot, CarouselButtons, CarouselContainer, CarouselItem, CarouselItemImg, CarouselItemText, CarouselItemTitle, CarouselMobileScrollNode } from './TimeLineStyles';
 import { Section, SectionDivider, SectionText, SectionTitle } from '../../styles/GlobalComponents';
 import { TimeLineData } from '../../constants/constants';
+import { tr } from '../../i18n/LanguageContext';
+import useHomeCopy from '../../i18n/useHomeCopy';
 
 const TOTAL_CAROUSEL_COUNT = TimeLineData.length;
 
 const Timeline = () => {
+  const { lang, t } = useHomeCopy();
   const [activeItem, setActiveItem] = useState(0);
   const carouselRef = useRef();
 
@@ -46,23 +49,14 @@ const Timeline = () => {
   return (
     <Section id="about">
       <SectionDivider divider />
-      <SectionTitle>About Me</SectionTitle>
+      <SectionTitle>{t.about.title}</SectionTitle>
       <SectionText>
-        I like technology most when it becomes tangible.
-        <br /><br />
-        I teach game development, computer vision and AI at Salzburg University of
-        Applied Sciences, build interactive prototypes and help organisations
-        understand what generative AI can actually do for them.
-        <br /><br />
-        My background runs from sales and consulting through computer vision and
-        mixed reality research to games, software development and AI education.
-        Much of my early research focused on digital health, combining computer
-        vision, mixed reality and interactive systems with applications in
-        medicine, nutrition and behavioural research.
-        <br /><br />
-        That mix shapes how I work: technically curious, hands-on, and usually more
-        interested in building and testing something than in talking about it in
-        the abstract. (Says the person who gives talks. I know.)
+        {t.about.paragraphs.map((para, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <><br /><br /></>}
+            {para}
+          </React.Fragment>
+        ))}
       </SectionText>
       <CarouselContainer ref={carouselRef} onScroll={handleScroll}>
         <>
@@ -76,7 +70,7 @@ const Timeline = () => {
                 active={activeItem}
                 onClick={(e) => handleClick(e, index)}>
                 <CarouselItemTitle>
-                  {`${item.year}`}
+                  {tr(item.year, lang)}
                   <CarouselItemImg
                     width="208"
                     height="6"
@@ -108,7 +102,7 @@ const Timeline = () => {
                     </defs>
                   </CarouselItemImg>
                 </CarouselItemTitle>
-                <CarouselItemText>{item.text}</CarouselItemText>
+                <CarouselItemText>{tr(item.text, lang)}</CarouselItemText>
               </CarouselItem>
             </CarouselMobileScrollNode>
           ))}

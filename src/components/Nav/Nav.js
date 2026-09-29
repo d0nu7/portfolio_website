@@ -82,6 +82,8 @@ class Nav extends React.Component {
     this.setState({ menuOpen: false });
   }
   render() {
+    // Localised labels come from Header (i18n/home.js `nav`).
+    const l = this.props.labels;
     return (
       <Menu right styles={styles}
         noOverlay
@@ -91,14 +93,14 @@ class Nav extends React.Component {
         onStateChange={(state) => this.handleStateChange(state)}
       >
           <StyledAnchor key="0" href="/" onClick={() => this.closeMenu()}><span><b>Radomir Dinic</b></span></StyledAnchor>
-          <StyledAnchor key="1" href="/#work" onClick={() => this.closeMenu()}><span>What I do</span></StyledAnchor>
-          <StyledAnchor key="2" href="/#now" onClick={() => this.closeMenu()}><span>Now</span></StyledAnchor>
-          <StyledAnchor key="3" href="/#projects" onClick={() => this.closeMenu()}><span>Selected work</span></StyledAnchor>
-          <StyledAnchor key="4" href="/#talks" onClick={() => this.closeMenu()}><span>Talks & Media</span></StyledAnchor>
-          <StyledAnchor key="5" href="/#recognition" onClick={() => this.closeMenu()}><span>Awards & Publications</span></StyledAnchor>
-          <StyledAnchor key="6" href="/#about" onClick={() => this.closeMenu()}><span>About</span></StyledAnchor>
-          <StyledAnchor key="8" href="/#contact" onClick={() => this.closeMenu()}><span>Contact</span></StyledAnchor>
-          <StyledAnchor key="7" href="/ki-schulungen/" onClick={() => this.closeMenu()}><span>{this.props.lang === 'de' ? 'KI-Schulungen' : 'AI trainings'}</span></StyledAnchor>
+          <StyledAnchor key="work" href="/#work" onClick={() => this.closeMenu()}><span>{l.work}</span></StyledAnchor>
+          <StyledAnchor key="now" href="/#now" onClick={() => this.closeMenu()}><span>{l.now}</span></StyledAnchor>
+          <StyledAnchor key="projects" href="/#projects" onClick={() => this.closeMenu()}><span>{l.projects}</span></StyledAnchor>
+          <StyledAnchor key="talks" href="/#talks" onClick={() => this.closeMenu()}><span>{l.talks}</span></StyledAnchor>
+          <StyledAnchor key="recognition" href="/#recognition" onClick={() => this.closeMenu()}><span>{l.recognition}</span></StyledAnchor>
+          <StyledAnchor key="about" href="/#about" onClick={() => this.closeMenu()}><span>{l.about}</span></StyledAnchor>
+          <StyledAnchor key="contact" href="/#contact" onClick={() => this.closeMenu()}><span>{l.contact}</span></StyledAnchor>
+          <StyledAnchor key="training" href="/ki-schulungen/" onClick={() => this.closeMenu()}><span>{l.training}</span></StyledAnchor>
       </Menu>
     );
   }

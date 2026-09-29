@@ -1,43 +1,58 @@
+// Localised fields are { en, de }; see i18n/LanguageContext `tr`.
+// Project texts follow: what it is, what was built, why it mattered.
 export const projects = [
   {
     title: "Yokaisho",
-    description:
-      "YoKaisho is the combination of a modern-day tablet app and a traditional board game. While designing the game it was important to our team that we would create a game which has the typical cozy and collaborative features of a board game as well as the great possibilities and actions of a video game. Inspired by Japan's myths and culture YoKaisho features a very unique style and gameplay. It was created using Unity and Vuforia.",
+    description: {
+      en: "A board game with a tablet as its second layer: the physical board stays on the table while Unity and Vuforia AR bring Japanese y\u014dkai myths to life on screen. Student team project at FH Salzburg, winner of the Austrian CG Award 2015 for Best Game.",
+      de: "Ein Brettspiel mit dem Tablet als zweiter Ebene: Das Spielbrett bleibt am Tisch, Unity und Vuforia AR erwecken japanische Y\u014dkai-Mythen am Bildschirm zum Leben. Studentisches Teamprojekt an der FH Salzburg, ausgezeichnet mit dem Austrian CG Award 2015 f\u00fcr das beste Spiel.",
+    },
     image: "/images/yoka.webp",
-    tags: [ "Board Game", "AR", "Android"],
+    tags: [{ en: "Board game", de: "Brettspiel" }, "AR", "Android"],
     source: "https://portfolio.fh-salzburg.ac.at/projects/2014-yokaisho",
     id: 0,
   },
   {
     title: "NIVA",
-    description:
-      "NIVA is a pacifistic exploration art game. The player slips into the role of a mighty forest god to restore the harmony in a mesmerizing forest and relieve it of a mysterious infestation. NIVA's scenic art style, relaxing music and simple but intriguing game mechanics invite to explore the forest and have a rest from the stressful everyday life.",
+    description: {
+      en: "A calm, non-violent exploration game: as a forest god, the player frees an enchanted forest from a mysterious infestation. Master's project at FH Salzburg, winner of the Austrian CG Awards 2016 for Best Game and Best Student Project.",
+      de: "Ein ruhiges, gewaltfreies Exploration-Game: Als Waldgott befreit man einen verzauberten Wald von einem r\u00e4tselhaften Befall. Masterprojekt an der FH Salzburg, ausgezeichnet mit den Austrian CG Awards 2016 f\u00fcr das beste Spiel und das beste Studierendenprojekt.",
+    },
     image: "/images/niva.webp",
-    tags: [ "Master-Project", "Game"],
+    tags: [{ en: "Master's project", de: "Masterprojekt" }, "Game"],
     source: "https://www.nivagame.com/",
     id: 1,
   },
   {
     title: "EatAR",
-    description: "The accurate assessment of nutrition information is a challenging task, but crucial for people with certain diseases, such as diabetes. This app for mobile devices with a depth sensor assists the users in portion estimation using augmented reality technologies. This project was part of my master thesis.",
+    description: {
+      en: "Mobile AR research prototype for estimating food portions for people with diabetes. Developed as part of my master's thesis using depth sensing and computer vision, and published at ISMAR and MobileHCI.",
+      de: "Mobiler AR-Forschungsprototyp, der Menschen mit Diabetes beim Sch\u00e4tzen von Essensportionen hilft. Entstanden im Rahmen meiner Masterarbeit mit Depth Sensing und Computer Vision, publiziert bei ISMAR und MobileHCI.",
+    },
     image: "/images/eat_ar.webp",
-    tags: [ "Tango", "Android"],
+    tags: ["Tango", "Android"],
     source: "https://realities.mediacube.at/eat-ar/",
     id: 2,
   },
   {
     title: "SmartSignCapture",
-    description: "The NetIdee-sponsored research project “SmartSignCapture” relies on the transfer of signs to 3D avatars. Hand and arm movements are entered in detail using the personal smartphone and used as input for animating an online 3D avatar. Additional components of the sign, such as the Facial expressions can be adjusted. Sign language is finding its way onto the internet.",
+    description: {
+      en: "Research project funded by netidee: sign language is captured with an ordinary smartphone and replayed by a 3D avatar on the web, with adjustable facial expressions. The aim was to make publishing content in sign language online much easier.",
+      de: "Von netidee gef\u00f6rdertes Forschungsprojekt: Geb\u00e4rden werden mit einem normalen Smartphone erfasst und von einem 3D-Avatar im Web wiedergegeben, inklusive anpassbarer Mimik. Ziel war, Inhalte in Geb\u00e4rdensprache viel einfacher online ver\u00f6ffentlichen zu k\u00f6nnen.",
+    },
     image: "/images/smartsigncapture.webp",
-    tags: [ "Android", "Web"],
+    tags: ["Android", "Web"],
     source: "https://multimediatechnology.at/smartsigncapture/",
     id: 3,
   },
   {
     title: "Ecomedicine VR",
-    description: "This exergame, which was developed as part of a joint research project between the Paracelsus Medical University and the Salzburg University of Applied Sciences, tries to reproduce the positive effects of the Krimml Waterfall on the respiratory tract using virtual reality technology.",
+    description: {
+      en: "VR breathing exergame from a joint research project of Paracelsus Medical University and FH Salzburg. It recreates the Krimml Waterfalls with photogrammetry and aims to bring their positive effects on the airways into a VR training.",
+      de: "VR-Atem-Exergame aus einem gemeinsamen Forschungsprojekt der Paracelsus Medizinischen Privatuniversit\u00e4t und der FH Salzburg. Es bildet die Krimmler Wasserf\u00e4lle per Photogrammetrie nach und soll deren positive Wirkung auf die Atemwege in ein VR-Training holen.",
+    },
     image: "/images/ecovr.webp",
-    tags: [ "VR", "Photogrammetry"],
+    tags: ["VR", { en: "Photogrammetry", de: "Photogrammetrie" }],
     source: "https://www.digitalsalzburg.at/vr-atemcoach/",
     id: 4,
   },
@@ -165,74 +180,158 @@ export const Publications = [
 export const services = [
   {
     id: "teaching",
-    title: "Teaching & Research",
-    text: "Senior Lecturer at FH Salzburg. I teach how games, vision systems and AI actually work, with a research background in mixed reality, HCI and digital health.",
+    title: { en: "Teaching & Research", de: "Lehre & Forschung" },
+    text: {
+      en: "Senior Lecturer at FH Salzburg. I teach how games, vision systems and AI actually work, with a research background in mixed reality, HCI and digital health.",
+      de: "Senior Lecturer an der FH Salzburg. Ich unterrichte, wie Games, Vision-Systeme und KI tats\u00e4chlich funktionieren, mit Research-Hintergrund in Mixed Reality, HCI und Digital Health.",
+    },
     items: [
       "Game Development, Game Production Environments (Unity 6)",
       "Artificial Intelligence for Games",
       "Computer Vision",
       "AI Literacy",
-      "Rapid Prototyping, bachelor and master projects",
+      { en: "Rapid Prototyping, bachelor's and master's projects", de: "Rapid Prototyping, Bachelor- und Masterprojekte" },
     ],
   },
   {
     id: "training",
-    title: "AI Training",
-    text: "Hands-on trainings on generative AI for teams, public administration and leadership. Sober, practical, EU AI Act included.",
+    title: { en: "AI Training", de: "KI-Schulungen" },
+    text: {
+      en: "Hands-on AI training for teams, public administration and leadership. Clear, practical, EU AI Act included.",
+      de: "Praxisnahe KI-Schulungen f\u00fcr Teams, \u00f6ffentliche Verwaltung und F\u00fchrungskr\u00e4fte. Klar, praktisch, inklusive EU AI Act.",
+    },
     items: [
-      "Salzburg Administration Academy (SVAK)",
-      "Salzburg municipalities",
-      "Companies and leadership teams",
-      "Talks for schools, adult education and alumni",
+      { en: "Salzburg Administration Academy (SVAK)", de: "Salzburger Verwaltungsakademie (SVAK)" },
+      { en: "Salzburg municipalities", de: "Salzburger Gemeinden" },
+      { en: "Companies and leadership teams", de: "Unternehmen und F\u00fchrungsteams" },
+      { en: "Talks for schools, adult education and alumni", de: "Vortr\u00e4ge f\u00fcr Schulen, Erwachsenenbildung und Alumni" },
     ],
-    link: { href: "/ki-schulungen/", label: "Formats & prices" },
+    link: { href: "/ki-schulungen/", label: { en: "Formats & prices", de: "Formate & Preise" } },
   },
   {
     id: "development",
-    title: "Development",
-    text: "Interactive prototypes and tools, from game mechanics to computer vision pipelines, built with a small network of collaborators.",
+    title: { en: "Development", de: "Entwicklung" },
+    text: {
+      en: "Interactive prototypes and tools, from game mechanics to computer vision pipelines, built with a small network of collaborators.",
+      de: "Interaktive Prototypen und Tools, von Game-Mechaniken bis zu Computer-Vision-Pipelines, gebaut mit einem kleinen Netzwerk an Kolleg:innen.",
+    },
     items: [
-      "Games and interactive installations",
-      "AR / VR applications",
-      "Computer vision and AI tools",
-      "Research prototypes",
+      { en: "Games and interactive installations", de: "Games und interaktive Installationen" },
+      { en: "AR / VR applications", de: "AR-/VR-Anwendungen" },
+      { en: "Computer vision and AI tools", de: "Computer-Vision- und KI-Tools" },
+      { en: "Research prototypes", de: "Forschungsprototypen" },
     ],
   },
 ];
 
 // "Now": what currently takes up the brain space.
 export const nowTopics = [
-  { title: "Generative AI & AI Literacy", text: "Teaching, workshops, workflows and responsible use, for students as much as for administrations." },
-  { title: "AI for Games", text: "Agents, behaviour, generative systems and a lot of experimentation." },
-  { title: "Computer Vision", text: "From classic OpenCV pipelines to modern vision models." },
-  { title: "Teaching & Prototyping", text: "Turning emerging technology into something students and teams can actually try." },
+  {
+    title: { en: "Generative AI & AI Literacy", de: "Generative KI & AI Literacy" },
+    text: {
+      en: "Teaching, workshops, workflows and responsible use, for students and public-sector teams alike.",
+      de: "Lehre, Workshops, Workflows und verantwortungsvoller Einsatz, f\u00fcr Studierende genauso wie f\u00fcr Teams in der Verwaltung.",
+    },
+  },
+  {
+    title: "AI for Games",
+    text: {
+      en: "Agents, behaviour, generative systems and a lot of experimentation.",
+      de: "Agents, Verhalten, generative Systeme und viel Experimentieren.",
+    },
+  },
+  {
+    title: "Computer Vision",
+    text: {
+      en: "From classic OpenCV pipelines to modern vision models.",
+      de: "Von klassischen OpenCV-Pipelines bis zu modernen Vision-Modellen.",
+    },
+  },
+  {
+    title: { en: "Teaching & Prototyping", de: "Lehre & Prototyping" },
+    text: {
+      en: "Turning emerging technology into something students and teams can actually try.",
+      de: "Neue Technologie so aufbereiten, dass Studierende und Teams sie wirklich ausprobieren k\u00f6nnen.",
+    },
+  },
 ];
 
-// "Talks, Workshops & Media". Newest first. `href` only where a public page exists.
+// Labels for the talk types, shown as small tags.
+export const talkTypes = {
+  talk: { en: "Talk", de: "Vortrag" },
+  workshop: { en: "Workshop", de: "Workshop" },
+  training: { en: "Training", de: "Schulung" },
+  interview: { en: "Interview", de: "Interview" },
+  media: { en: "Media", de: "Medien" },
+};
+
+// "Talks, Workshops & Media". Newest first; within a year talks and
+// workshops before media. `href` only where a public page exists.
 export const talks = [
-  { year: "2026", org: "Salzburger Nachrichten", title: "Quoted on AI doomsday scenarios: \u201cDiese Horrorgeschichten bringen den Firmen Geld\u201d", href: "https://www.sn.at/salzburg/chronik/diese-horrorgeschichten-bringen-den-firmen-geld-salzburger-experten-ueber-die-ki-weltuntergangsszenarien-art-674177" },
-  { year: "2026", org: "WIFI Salzburg", title: "Talk: KI in der Lehrlingsausbildung" },
-  { year: "2026", org: "Salzburg Leadership", title: "Workshop: AI and vibe prompting for leaders" },
-  { year: "2025\u201326", org: "Salzburger Verwaltungsakademie (SVAK)", title: "AI trainings for public administration", href: "https://www.svak.at/user/11358" },
-  { year: "2025", org: "Salzburger Nachrichten", title: "Interview: Schule und KI, \u201cKritisches Denken bleibt unerl\u00e4sslich\u201d", href: "https://www.sn.at/leben/karriere/schule-ki-kritisches-denken-180698800" },
-  { year: "2024", org: "St. Virgil Salzburg, KI-Fachtagung", title: "Talk: K\u00fcnstliche Intelligenz heute. Anwendungen, Prognosen und die Grenzen der Vorhersage", href: "https://www.ots.at/presseaussendung/OTS_20240610_OTS0050/kuenstliche-intelligenz-gemischte-bilanz-ueber-chancen-und-gefahren-bild" },
-  { year: "2024", org: "FH Salzburg Alumni & Career", title: "Talk: Von Sprachassistenten zu Denkfabriken", href: "https://www.fh-salzburg.ac.at/fhs/aktuelles/veranstaltungen/2024/04/alumni-career-vortrag-ki-online" },
+  { year: "2026", type: "talk", org: "WIFI Salzburg", title: "KI in der Lehrlingsausbildung" },
+  {
+    year: "2026",
+    type: "workshop",
+    org: { en: "Salzburg Administration Academy (SVAK), Kompetenzwerkstatt", de: "Salzburger Verwaltungsakademie (SVAK), Kompetenzwerkstatt" },
+    title: { en: "AI: vibe prompting for everyday leadership", de: "KI: Vibe Prompting f\u00fcr den F\u00fchrungsalltag" },
+    href: "https://online.flippingbook.com/view/685043442/",
+  },
+  {
+    year: "2026",
+    type: "media",
+    org: "Salzburger Nachrichten",
+    title: {
+      en: "Quoted on AI doomsday scenarios: \u201cDiese Horrorgeschichten bringen den Firmen Geld\u201d",
+      de: "Zitiert zu KI-Weltuntergangsszenarien: \u201eDiese Horrorgeschichten bringen den Firmen Geld\u201c",
+    },
+    href: "https://www.sn.at/salzburg/chronik/diese-horrorgeschichten-bringen-den-firmen-geld-salzburger-experten-ueber-die-ki-weltuntergangsszenarien-art-674177",
+  },
+  {
+    year: "2025\u201326",
+    type: "training",
+    org: { en: "Salzburg Administration Academy (SVAK)", de: "Salzburger Verwaltungsakademie (SVAK)" },
+    title: { en: "AI training for public administration", de: "KI-Schulungen f\u00fcr die \u00f6ffentliche Verwaltung" },
+    href: "https://www.svak.at/user/11358",
+  },
+  {
+    year: "2025",
+    type: "interview",
+    org: "Salzburger Nachrichten",
+    title: {
+      en: "Schule und KI: \u201cKritisches Denken bleibt unerl\u00e4sslich\u201d",
+      de: "Schule und KI: \u201eKritisches Denken bleibt unerl\u00e4sslich\u201c",
+    },
+    href: "https://www.sn.at/leben/karriere/schule-ki-kritisches-denken-180698800",
+  },
+  {
+    year: "2024",
+    type: "talk",
+    org: { en: "St. Virgil Salzburg, AI conference", de: "St. Virgil Salzburg, KI-Fachtagung" },
+    title: "K\u00fcnstliche Intelligenz heute. Anwendungen, Prognosen und die Grenzen der Vorhersage",
+    href: "https://www.ots.at/presseaussendung/OTS_20240610_OTS0050/kuenstliche-intelligenz-gemischte-bilanz-ueber-chancen-und-gefahren-bild",
+  },
+  {
+    year: "2024",
+    type: "talk",
+    org: "FH Salzburg Alumni & Career",
+    title: "Von Sprachassistenten zu Denkfabriken",
+    href: "https://www.fh-salzburg.ac.at/fhs/aktuelles/veranstaltungen/2024/04/alumni-career-vortrag-ki-online",
+  },
 ];
 
 export const awards = [
   { year: "2022", title: "Honorable Mention for Best Paper", org: "ACM CHI 2022, AirRes Mask", href: "https://doi.org/10.1145/3491102.3502090" },
-  { year: "2017", title: "Science Award", org: "AK Salzburg" },
-  { year: "2016", title: "Austrian CG Award: Best Game & Best Student Project", org: "NIVA" },
-  { year: "2015", title: "Austrian CG Award: Best Game", org: "Yokaisho" },
-  { title: "Order for Disaster Relief", org: "State of Salzburg" },
+  { year: "2017", title: { en: "Science Award", de: "Wissenschaftspreis" }, org: "AK Salzburg" },
+  { year: "2016", title: { en: "Austrian CG Award: Best Game & Best Student Project", de: "Austrian CG Award: Bestes Spiel & Bestes Studierendenprojekt" }, org: "NIVA" },
+  { year: "2015", title: { en: "Austrian CG Award: Best Game", de: "Austrian CG Award: Bestes Spiel" }, org: "Yokaisho" },
+  { title: { en: "Medal for Disaster Relief", de: "Katastrophenhilfe-Medaille" }, org: { en: "State of Salzburg", de: "Land Salzburg" } },
 ];
 
 export const TimeLineData = [
-  { year: 2002, text: "Sales and consulting" },
+  { year: 2002, text: { en: "Sales and consulting", de: "Sales und Beratung" } },
   { year: 2014, text: "BSc MultiMediaTechnology" },
-  { year: 2017, text: "MSc, then research & teaching at MMT" },
-  { year: 2020, text: "Ludwig Boltzmann Institute for Digital Health" },
-  { year: 2021, text: "Back at FH Salzburg as lecturer" },
-  { year: "Today", text: "Senior Lecturer & AI trainer" },
+  { year: 2017, text: { en: "MSc, then research & teaching at MMT", de: "MSc, dann Forschung & Lehre am MMT" } },
+  { year: 2020, text: { en: "Ludwig Boltzmann Institute for Digital Health", de: "Ludwig Boltzmann Institut f\u00fcr Digital Health" } },
+  { year: 2021, text: { en: "Back at FH Salzburg as lecturer", de: "Zur\u00fcck an der FH Salzburg als Lecturer" } },
+  { year: { en: "Today", de: "Heute" }, text: { en: "Senior Lecturer & AI trainer", de: "Senior Lecturer & KI-Trainer" } },
 ];
-
