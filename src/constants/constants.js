@@ -161,41 +161,70 @@ export const Publications = [
   },
 ];
 
-// Curated from the FH Salzburg course wiki (2017 to WS 2026). Current and
-// recurring courses only; the wiki has the full semester-by-semester list.
-export const TeachingExperience = [
+// "What I do": the three things people come to this site for.
+export const services = [
   {
-    category: "Games",
-    events: [
-      { title: "Game Development 1 & 2" },
-      { title: "Game Development Fundamentals" },
-      { title: "Game Production Environments (Unity 6)" },
-      { title: "Artificial Intelligence for Games" },
-      { title: "Applied Programming Skills for Games" },
-      { title: "Game projects in bachelor and master" },
+    id: "teaching",
+    title: "Teaching & Research",
+    text: "Senior Lecturer at FH Salzburg. I teach how games, vision systems and AI actually work, with a research background in mixed reality and HCI.",
+    items: [
+      "Game Development, Game Production Environments (Unity 6)",
+      "Artificial Intelligence for Games",
+      "Computer Vision",
+      "AI Literacy",
+      "Rapid Prototyping, bachelor and master projects",
     ],
   },
   {
-    category: "AI, Vision & Research",
-    events: [
-      { title: "AI Literacy" },
-      { title: "Computer Vision" },
-      { title: "Rapid Prototyping (master)" },
-      { title: "Bachelor thesis: topic finding & research design" },
-      { title: "Seminar in computer science" },
+    id: "training",
+    title: "AI Training",
+    text: "Hands-on trainings on generative AI for teams, public administration and leadership. Sober, practical, EU AI Act included.",
+    items: [
+      "Salzburg Administration Academy (SVAK)",
+      "Salzburg municipalities",
+      "Companies and leadership teams",
+      "Talks for schools, adult education and alumni",
     ],
+    link: { href: "/ki-schulungen/", label: "Formats & prices" },
   },
   {
-    category: "Workshops & AI trainings",
-    events: [
-      { title: "Salzburg Administration Academy (SVAK), State of Salzburg" },
-      { title: "Municipalities in Salzburg" },
-      { title: "Companies and teams, in-house or online", ref: "/ki-schulungen/" },
-      { title: "Game development with Unity" },
-      { title: "Mixed reality (VR/AR)" },
-      { title: "Coding for kids" },
+    id: "development",
+    title: "Development",
+    text: "Interactive prototypes and tools, from game mechanics to computer vision pipelines, built with a small network of collaborators.",
+    items: [
+      "Games and interactive installations",
+      "AR / VR applications",
+      "Computer vision and AI tools",
+      "Research prototypes",
     ],
   },
+];
+
+// "Now": what currently takes up the brain space.
+export const nowTopics = [
+  { title: "Generative AI & AI Literacy", text: "Teaching, workshops, workflows and responsible use, for students as much as for administrations." },
+  { title: "AI for Games", text: "Agents, behaviour, generative systems and a lot of experimentation." },
+  { title: "Computer Vision", text: "From classic OpenCV pipelines to modern vision models." },
+  { title: "Teaching & Prototyping", text: "Turning emerging technology into something students and teams can actually try." },
+];
+
+// "Talks, Workshops & Media". Newest first. `href` only where a public page exists.
+export const talks = [
+  { year: "2026", org: "Salzburger Nachrichten", title: "Quoted on AI doomsday scenarios: \u201cDiese Horrorgeschichten bringen den Firmen Geld\u201d", href: "https://www.sn.at/salzburg/chronik/diese-horrorgeschichten-bringen-den-firmen-geld-salzburger-experten-ueber-die-ki-weltuntergangsszenarien-art-674177" },
+  { year: "2026", org: "WIFI Salzburg", title: "Talk: KI in der Lehrlingsausbildung" },
+  { year: "2026", org: "Salzburg Leadership", title: "Workshop: AI and vibe prompting for leaders" },
+  { year: "2025\u201326", org: "Salzburger Verwaltungsakademie (SVAK)", title: "AI trainings for public administration", href: "https://www.svak.at/user/11358" },
+  { year: "2025", org: "Salzburger Nachrichten", title: "Interview: Schule und KI, \u201cKritisches Denken bleibt unerl\u00e4sslich\u201d", href: "https://www.sn.at/leben/karriere/schule-ki-kritisches-denken-180698800" },
+  { year: "2024", org: "St. Virgil Salzburg, KI-Fachtagung", title: "Talk: K\u00fcnstliche Intelligenz heute. Anwendungen, Prognosen und die Grenzen der Vorhersage", href: "https://www.ots.at/presseaussendung/OTS_20240610_OTS0050/kuenstliche-intelligenz-gemischte-bilanz-ueber-chancen-und-gefahren-bild" },
+  { year: "2024", org: "FH Salzburg Alumni & Career", title: "Talk: Von Sprachassistenten zu Denkfabriken", href: "https://www.fh-salzburg.ac.at/fhs/aktuelles/veranstaltungen/2024/04/alumni-career-vortrag-ki-online" },
+];
+
+export const awards = [
+  { year: "2022", title: "Honorable Mention for Best Paper", org: "ACM CHI 2022, AirRes Mask", href: "https://doi.org/10.1145/3491102.3502090" },
+  { year: "2017", title: "Science Award", org: "AK Salzburg" },
+  { year: "2016", title: "Austrian CG Award: Best Game & Best Student Project", org: "NIVA" },
+  { year: "2015", title: "Austrian CG Award: Best Game", org: "Yokaisho" },
+  { title: "Order for Disaster Relief", org: "State of Salzburg" },
 ];
 
 export const TimeLineData = [

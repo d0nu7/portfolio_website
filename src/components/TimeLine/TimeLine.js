@@ -48,19 +48,17 @@ const Timeline = () => {
       <SectionDivider divider />
       <SectionTitle>About Me</SectionTitle>
       <SectionText>
-        I started out in sales and consulting, then studied MultiMediaTechnology
-        at FH Salzburg (BSc, MSc) with a focus on computer vision, mixed reality
-        and game development.
+        I like technology most when it becomes tangible.
         <br /><br />
-        From 2017 I worked in research and teaching at MMT, spent 2020 at the
-        Ludwig Boltzmann Institute for Digital Health and Prevention, and returned
-        to FH Salzburg in 2021. Today I teach games, computer vision and AI there
-        as a Senior Lecturer.
+        I teach game development, computer vision and AI at Salzburg University of
+        Applied Sciences, build interactive prototypes and help organisations
+        understand what generative AI can actually do for them.
         <br /><br />
-        Alongside teaching, I run AI trainings for public administration, such as
-        the Salzburg Administration Academy (SVAK) and Salzburg municipalities, and
-        for companies. Together with a network of collaborators I also take on
-        selected development projects.
+        My background runs from sales and consulting through computer vision and
+        mixed reality research to games, software development and AI education. That
+        mix shapes how I work: technically curious, hands-on, and usually more
+        interested in building and testing something than in talking about it in
+        the abstract. (Says the person who gives talks. I know.)
       </SectionText>
       <CarouselContainer ref={carouselRef} onScroll={handleScroll}>
         <>

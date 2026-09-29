@@ -7,7 +7,7 @@ import { CardBody, CardInfo, CardLink, GridContainer, HeaderThree, Img, ImgFrame
 const Projects = () => (
   <Section id="projects">
     <SectionDivider divider />
-    <SectionTitle>Projects</SectionTitle>
+    <SectionTitle>Selected work</SectionTitle>
     <GridContainer>
       {projects.map((p) => (
         <li key={p.id}>

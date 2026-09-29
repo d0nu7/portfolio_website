@@ -1,19 +1,20 @@
-import Acomplishments from '../components/Acomplishments/Acomplishments';
 import BgAnimation from '../components/BackgrooundAnimation/BackgroundAnimation';
+import Contact from '../components/Contact/Contact';
 import Hero from '../components/Hero/Hero';
+import Now from '../components/Now/Now';
 import Projects from '../components/Projects/Projects';
-import Teaching from '../components/Teaching/Teaching';
-import Research from '../components/Research/Research';
-import Skills from '../components/Skills/Skills';
+import Recognition from '../components/Recognition/Recognition';
+import Talks from '../components/Talks/Talks';
 import Timeline from '../components/TimeLine/TimeLine';
+import WhatIDo from '../components/WhatIDo/WhatIDo';
 import Seo from '../components/Seo/Seo';
 import { Publications } from '../constants/constants';
 import { SITE_URL, personJsonLd } from '../constants/site';
 import { Layout } from '../layout/Layout';
 import { Section } from '../styles/GlobalComponents';
 
-const TITLE = 'Radomir Dinic · Games, Mixed Reality & AI | Salzburg';
-const DESCRIPTION = 'Senior Lecturer for Game & Mixed Reality at FH Salzburg. Interactive prototypes, applied research and hands-on AI trainings for teams in Salzburg and online.';
+const TITLE = 'Radomir Dinic · AI, Games & Interactive Technology | Salzburg';
+const DESCRIPTION = 'Senior Lecturer at FH Salzburg, developer and AI trainer. Teaching game development, computer vision and AI, building interactive prototypes and making generative AI understandable for teams and administrations.';
 
 const jsonLd = [
   {
@@ -35,6 +36,7 @@ const jsonLd = [
   {
     ...personJsonLd(),
     award: [
+      'Honorable Mention for Best Paper, ACM CHI 2022 (AirRes Mask)',
       'Austrian CG Award 2015, Best Game (Yokaisho)',
       'Austrian CG Award 2016, Best Game and Best Student Project (NIVA)',
       'Order for Disaster Relief, State of Salzburg',
@@ -57,7 +59,7 @@ const Home = () => {
         description={DESCRIPTION}
         path="/"
         image="/og/home.png"
-        imageAlt="Radomir Dinic: Games, Mixed Reality & AI"
+        imageAlt="Radomir Dinic: AI, games & interactive technology"
         jsonLd={jsonLd}
       />
       <Section grid $noreveal>
@@ -65,12 +67,13 @@ const Home = () => {
         <BgAnimation />
       </Section>
       
+      <WhatIDo />
+      <Now />
+      <Projects />
+      <Talks />
+      <Recognition />
       <Timeline />
-      <Skills />
-      <Teaching />
-      <Acomplishments />
-      <Projects /> 
-       <Research />
+      <Contact />
     </Layout>
   );
 };
