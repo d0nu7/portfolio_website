@@ -2,15 +2,9 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 /*
- * E2E coverage for CLOSER's critical branches (review 2026-08-15, P2 item):
- * countdown question visibility, free passing, Private Moment handoffs,
- * Question 37 branches, consent gates, and the timer. This tests the actual static
- * export (see the webServer below) rather than the dev server, so it's
- * exercising exactly what ships.
- *
- * Tests jump into mid-game phases via localStorage (see e2e/helpers.js)
- * rather than playing through from the start screen every time -- this is
- * the same resume mechanism the app itself uses, not a test-only backdoor.
+ * Smoke coverage for the portfolio and /ki-schulungen, run against the
+ * actual static export (see webServer below), so it exercises what ships.
+ * CLOSER's suite moved with the game to github.com/d0nu7/Closer.
  */
 
 const PORT = 4174;
@@ -37,6 +31,10 @@ module.exports = defineConfig({
   },
   projects: [
     {
+      name: 'desktop-chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
       name: 'mobile-chromium',
       use: { ...devices['Pixel 7'] },
     },
@@ -47,7 +45,7 @@ module.exports = defineConfig({
     // on startup that can hang indefinitely in network-restricted
     // environments, which this sidesteps entirely.
     command: `node scripts/serve-static.js out ${PORT}`,
-    url: `http://localhost:${PORT}/closer/`,
+    url: `http://localhost:${PORT}/`,
     reuseExistingServer: !process.env.CI,
     timeout: 30 * 1000,
   },

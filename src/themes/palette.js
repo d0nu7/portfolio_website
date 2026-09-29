@@ -1,5 +1,4 @@
 // Single source of truth for the site's colours (homepage + /ki-schulungen).
-// CLOSER keeps its own art direction and does not read from here.
 //
 // To try another palette, point ACTIVE at a different file in ./palettes.
 // Components never hard-code brand colours; they read the CSS custom

@@ -1,5 +1,5 @@
 // Post-build step: puts the source-code easter egg (an HTML comment) at the
-// top of every exported page except CLOSER, which has its own identity.
+// top of every exported page.
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -30,7 +30,7 @@ const SOURCE_COMMENT = `
 `;
 
 const OUT = path.resolve('out');
-const SKIP = new Set(['closer', '_next']);
+const SKIP = new Set(['_next']);
 const MARKER = '<!--radi-easter-egg-->';
 
 const walk = async (dir) => {

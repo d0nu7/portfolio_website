@@ -17,7 +17,7 @@ const eslintConfig = [
       // rules well beyond what this upgrade set out to do. Both rules
       // below flag long-standing, deliberate, already-reviewed patterns
       // (setState from a mount effect reading localStorage/browser APIs,
-      // in CloserGame.js/CloserInstallHint.js/ki-schulungen.js) -- fixing
+      // in ki-schulungen.js) -- fixing
       // them would mean non-trivial rewrites of tested game-state effects
       // as a side effect of a dependency bump, which is exactly the kind
       // of scope creep this upgrade was meant to avoid. Left as a

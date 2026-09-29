@@ -1,4 +1,21 @@
 {
+  "redirects": [
+    {
+      "source": "/closer",
+      "destination": "https://closer.radi.solutions/",
+      "permanent": true
+    },
+    {
+      "source": "/closer/:path*",
+      "destination": "https://closer.radi.solutions/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/closer.webmanifest",
+      "destination": "https://closer.radi.solutions/manifest.webmanifest",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

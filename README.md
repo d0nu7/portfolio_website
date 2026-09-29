@@ -1,16 +1,14 @@
 # radi.solutions portfolio
 
-Personal portfolio for Radomir Dinic, a focused AI-training landing page, and the unlisted CLOSER conversation game.
+Personal portfolio for Radomir Dinic and a focused AI-training landing page.
 
 ## Routes
 
 - `/` – portfolio
 - `/ki-schulungen/` – modular AI training, pricing, and Article 4 EU AI Act information
-- `/closer/` – mobile-first, two-person conversation game
+- `/closer/` – permanent redirect to [closer.radi.solutions](https://closer.radi.solutions/); the game now lives in its own repo, [d0nu7/Closer](https://github.com/d0nu7/Closer)
 
-The training page defaults to German, detects non-German browser languages on first visit, and offers a persistent DE/EN switch. CLOSER also supports German and English, stores game progress locally for resume, and never asks users to enter their answers.
-
-CLOSER product, content, review, and engineering documentation starts at [docs/closer/README.md](docs/closer/README.md).
+The training page defaults to German, detects non-German browser languages on first visit, and offers a persistent DE/EN switch.
 
 ## Local development
 
@@ -56,7 +54,5 @@ npm run test:e2e
 ## Repository conventions
 
 - Documentation, source comments, test descriptions, and new commit messages are English.
-- Localized interface and question content remains German/English.
-- The question catalog is the editorial source of truth; automated fidelity tests prevent silent content drift.
-- Specialist CLOSER question modules are regenerated from that catalog with `npm run content:generate`.
-- TTS is shelved indefinitely; the existing voice branch is not planned for merge and its artifacts are outside the active CLOSER scope.
+- Localized interface content (/ki-schulungen) remains German/English.
+- Colours come from `src/themes/palette.js`; components use the generated CSS variables, never hard-coded brand colours.
