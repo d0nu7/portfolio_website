@@ -35,6 +35,7 @@ const home = {
     nav: {
       work: 'What I do', now: 'Now', projects: 'Selected work', talks: 'Talks & Media',
       recognition: 'Awards & Publications', about: 'About', contact: 'Contact', training: 'AI training',
+      menu: 'Menu', close: 'Close menu', skip: 'Skip to content',
     },
     footer: { legal: 'Legal notice', email: 'Email', services: 'Services', training: 'AI training' },
   },
@@ -71,6 +72,7 @@ const home = {
     nav: {
       work: 'Was ich mache', now: 'Aktuell', projects: 'Ausgewählte Projekte', talks: 'Talks & Medien',
       recognition: 'Auszeichnungen & Publikationen', about: 'Über mich', contact: 'Kontakt', training: 'KI-Schulungen',
+      menu: 'Menü', close: 'Menü schließen', skip: 'Zum Inhalt springen',
     },
     footer: { legal: 'Impressum', email: 'E-Mail', services: 'Angebot', training: 'KI-Schulungen' },
   },

@@ -1,4 +1,4 @@
-import BgAnimation from '../components/BackgrooundAnimation/BackgroundAnimation';
+import BgAnimation from '../components/BackgroundAnimation/BackgroundAnimation';
 import Contact from '../components/Contact/Contact';
 import Hero from '../components/Hero/Hero';
 import Now from '../components/Now/Now';

@@ -87,9 +87,9 @@ export const LogoText = styled.span`
 
 /*
  * `margin-left: auto` rather than `justify-content: space-between` on the
- * container: react-burger-menu renders a zero-width wrapper div as a third
- * child of the header, which would otherwise be treated as the last item and
- * leave the icons stranded in the middle.
+ * container: the fixed-position menu button and panel are also rendered as
+ * children of the header, and would otherwise be treated as the last items
+ * and leave the icons stranded in the middle.
  */
 export const Div3 = styled.div`
   display: flex;

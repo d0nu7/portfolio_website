@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import { normalize } from 'styled-normalize';
 
-import { BURGER } from '../components/Nav/navMetrics';
 import { cssVariables } from '../themes/palette';
 
 const GlobalStyles = createGlobalStyle`
@@ -55,37 +54,6 @@ const GlobalStyles = createGlobalStyle`
   }
   li{
     list-style: none;
-  }
-
-  /* Burger button geometry.
-     This lives in CSS rather than in the inline style object react-burger-menu
-     takes, because inline styles cannot carry media queries -- and the button
-     has to shrink and move in on small screens so it stops colliding with the
-     social icons. The header reserves matching space via burgerReserve(). */
-  .bm-burger-button {
-    position: fixed;
-    width: ${BURGER.base.width}px;
-    height: ${BURGER.base.height}px;
-    right: ${BURGER.base.right}px;
-    top: ${BURGER.base.top}px;
-  }
-
-  @media ${props => props.theme.breakpoints.sm} {
-    .bm-burger-button {
-      width: ${BURGER.sm.width}px;
-      height: ${BURGER.sm.height}px;
-      right: ${BURGER.sm.right}px;
-      top: ${BURGER.sm.top}px;
-    }
-  }
-
-  @media ${props => props.theme.breakpoints.xs} {
-    .bm-burger-button {
-      width: ${BURGER.xs.width}px;
-      height: ${BURGER.xs.height}px;
-      right: ${BURGER.xs.right}px;
-      top: ${BURGER.xs.top}px;
-    }
   }
 `;
 

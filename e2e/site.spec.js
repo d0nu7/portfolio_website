@@ -106,3 +106,30 @@ test.describe('language', () => {
     });
   });
 });
+
+test.describe('menu', () => {
+  test('opens, closes with Escape and returns focus', async ({ page }) => {
+    await page.goto('/');
+    const toggle = page.getByRole('button', { name: 'Menu', exact: true });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('navigation', { name: 'Menu' })).toBeHidden();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const nav = page.getByRole('navigation', { name: 'Menu' });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'AI training' })).toHaveAttribute('href', '/ki-schulungen/');
+
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toBeFocused();
+  });
+
+  test('a menu link closes the panel and jumps to the section', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Menu', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Menu' }).getByRole('link', { name: 'Selected work' }).click();
+    await expect(page).toHaveURL(/#projects$/);
+    await expect(page.getByRole('button', { name: 'Menu', exact: true })).toHaveAttribute('aria-expanded', 'false');
+  });
+});

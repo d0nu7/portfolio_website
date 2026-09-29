@@ -2,7 +2,7 @@ import palette from './palette';
 
 const defaultTheme = {
   palette,
-  // Temp fonts
+  // Fonts (self-hosted via @fontsource, see styles/fonts.css)
   fonts: {
     title: "Space Grotesk, sans-serif",
     main: "Space Grotesk, sans-serif"
@@ -11,9 +11,6 @@ const defaultTheme = {
   colors: {
     primary1: palette.colors.text,
     background1: palette.colors.bg,
-    accent1: "hsl(34.9,98.6%,72.9%)",
-    button: "hsl(205.1,100%,36.1%)",
-    background2: "hsl(232.7,27.3%,23.7%)",
   },
   // Breakpoints for responsive design.
   // Declare them in descending order (xl -> xs) inside a component so the

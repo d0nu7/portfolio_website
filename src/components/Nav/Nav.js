@@ -1,109 +1,84 @@
-import { slide as Menu } from "react-burger-menu";
-import styled from "styled-components";
-import React from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 
-const StyledAnchor = styled.a`
-  padding: 1rem 1rem;
-  display: block;
-  width: 100%;
-  align-items: center;
-  position: relative;
-  font-weight: 900;
-  font-size: 1em;
-  border: 0;
-  cursor: pointer;
-  text-decoration: none;
-  color: #b8b7ad;
-  &:hover {
-    color: #fff;
-    opacity: 1;
-    cursor: pointer;
-    transition: 0.4s ease;
-  }
-`;
+import { Backdrop, BurgerButton, Close, Panel, PanelLink, PanelList } from './NavStyles';
 
-// Position and size of the burger button are set in CSS (src/styles/globals.js)
-// so they can respond to breakpoints -- inline styles cannot carry media
-// queries. Everything below is purely cosmetic.
-const styles = {
-  bmBurgerBars: {
-    background: 'rgba(255, 255, 255, 0.75)'
-  },
-  bmBurgerBarsHover: {
-    background: '#fff',
-  },
-  bmCrossButton: {
-    height: '24px',
-    width: '24px'
-  },
-  bmCross: {
-    background: '#bdc3c7'
-  },
-  bmMenuWrap: {
-    position: 'fixed',
-    // Without an explicit top the panel starts at its static position inside
-    // the header, so it sat ~36px down and ran the same amount off the bottom.
-    top: 0,
-    height: '100%'
-  },
-  bmMenu: {
-    background: 'var(--c-surface-2)',
-    padding: '2.5em 1.5em 0',
-    fontSize: '1.15em'
-  },
-  bmMorphShape: {
-    fill: '#373a47'
-  },
-  bmItemList: {
-    color: '#b8b7ad',
-    padding: '0.8em'
-  },
-  bmItem: {
-    display: 'inline-block'
-  },
-  bmOverlay: {
-    background: 'rgba(0, 0, 0, 0.3)'
-  }
-}
+const LINKS = [
+  ['/', 'home'],
+  ['/#work', 'work'],
+  ['/#now', 'now'],
+  ['/#projects', 'projects'],
+  ['/#talks', 'talks'],
+  ['/#recognition', 'recognition'],
+  ['/#about', 'about'],
+  ['/#contact', 'contact'],
+  ['/ki-schulungen/', 'training'],
+];
 
-class Nav extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuOpen: false,
-    };
-  }
+/*
+ * Slide-in site menu. Replaces react-burger-menu, which bundled Snap.svg
+ * (~150 KB of JavaScript) for an animation this menu never used.
+ *
+ * Accessible by construction: a real <button> with aria-expanded, the panel
+ * is a labelled <nav>, Escape and the backdrop close it, focus moves into the
+ * panel on open and back to the button on close, and the panel is `inert`
+ * while hidden so it cannot be tabbed into. Button geometry lives in
+ * navMetrics.js (the header reserves matching space).
+ */
+const Nav = ({ labels }) => {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef(null);
+  const panelRef = useRef(null);
+  const wasOpen = useRef(false);
+  const panelId = useId();
 
-  handleStateChange(state) {
-    this.setState({ menuOpen: state.isOpen });
-  }
+  const close = useCallback(() => setOpen(false), []);
 
-  closeMenu() {
-    this.setState({ menuOpen: false });
-  }
-  render() {
-    // Localised labels come from Header (i18n/home.js `nav`).
-    const l = this.props.labels;
-    return (
-      <Menu right styles={styles}
-        noOverlay
-        // A fixed 280px panel leaves almost nothing visible on a 320px screen.
-        width="min(280px, 85vw)"
-        isOpen={this.state.menuOpen}
-        onStateChange={(state) => this.handleStateChange(state)}
+  // `inert` keeps the hidden panel out of the tab order and the a11y tree.
+  // Set imperatively: React 18 / styled-components 5 don't forward it.
+  useEffect(() => {
+    if (panelRef.current) panelRef.current.inert = !open;
+  }, [open]);
+
+  useEffect(() => {
+    if (open) {
+      panelRef.current?.querySelector('a, button')?.focus();
+    } else if (wasOpen.current) {
+      buttonRef.current?.focus();
+    }
+    wasOpen.current = open;
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, close]);
+
+  return (
+    <>
+      <BurgerButton
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-label={labels.menu}
+        onClick={() => setOpen((v) => !v)}
       >
-          <StyledAnchor key="0" href="/" onClick={() => this.closeMenu()}><span><b>Radomir Dinic</b></span></StyledAnchor>
-          <StyledAnchor key="work" href="/#work" onClick={() => this.closeMenu()}><span>{l.work}</span></StyledAnchor>
-          <StyledAnchor key="now" href="/#now" onClick={() => this.closeMenu()}><span>{l.now}</span></StyledAnchor>
-          <StyledAnchor key="projects" href="/#projects" onClick={() => this.closeMenu()}><span>{l.projects}</span></StyledAnchor>
-          <StyledAnchor key="talks" href="/#talks" onClick={() => this.closeMenu()}><span>{l.talks}</span></StyledAnchor>
-          <StyledAnchor key="recognition" href="/#recognition" onClick={() => this.closeMenu()}><span>{l.recognition}</span></StyledAnchor>
-          <StyledAnchor key="about" href="/#about" onClick={() => this.closeMenu()}><span>{l.about}</span></StyledAnchor>
-          <StyledAnchor key="contact" href="/#contact" onClick={() => this.closeMenu()}><span>{l.contact}</span></StyledAnchor>
-          <StyledAnchor key="training" href="/ki-schulungen/" onClick={() => this.closeMenu()}><span>{l.training}</span></StyledAnchor>
-      </Menu>
-    );
-  }
-}
+        <span /><span /><span />
+      </BurgerButton>
+      <Backdrop $open={open} onClick={close} aria-hidden="true" />
+      <Panel id={panelId} ref={panelRef} $open={open} aria-label={labels.menu}>
+        <Close type="button" onClick={close} aria-label={labels.close}>&times;</Close>
+        <PanelList>
+          {LINKS.map(([href, key]) => (
+            <li key={key}>
+              <PanelLink href={href} onClick={close} $strong={key === 'home'}>
+                {key === 'home' ? 'Radomir Dinic' : labels[key]}
+              </PanelLink>
+            </li>
+          ))}
+        </PanelList>
+      </Panel>
+    </>
+  );
+};
 
 export default Nav;

@@ -116,6 +116,8 @@ const Timeline = () => {
               index={index}
               active={activeItem}
               onClick={(e) => handleClick(e, index)}
+              aria-label={String(tr(item.year, lang))}
+              aria-current={activeItem === index ? 'true' : undefined}
               type="button">
               <CarouselButtonDot active={activeItem} />
             </CarouselButton>

@@ -129,7 +129,7 @@ export const TrustRow = styled.div`
   }
 
   strong { display: block; color: white; font-size: 16px; }
-  span { display: block; margin-top: 5px; color: rgba(255,255,255,.43); font-size: 12px; line-height: 1.4; }
+  span { display: block; margin-top: 5px; color: rgba(255,255,255,.6); font-size: 12px; line-height: 1.4; }
 
   @media ${(props) => props.theme.breakpoints.sm} {
     grid-template-columns: 1fr;
@@ -201,7 +201,7 @@ export const PriceCard = styled.article`
   box-shadow: ${({ featured }) => featured ? "0 20px 50px color-mix(in srgb, var(--c-accent) 11%, transparent)" : "none"};
 
   h3 { margin: 0; color: white; font-size: 22px; }
-  > p { min-height: 68px; margin: 13px 0 0; color: rgba(255,255,255,.5); font-size: 14px; line-height: 1.55; }
+  > p { min-height: 68px; margin: 13px 0 0; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.55; }
   ul { display: grid; gap: 10px; margin: 23px 0; padding: 0; }
   li { position: relative; padding-left: 18px; color: rgba(255,255,255,.7); font-size: 13px; line-height: 1.4; }
   li::before { content: ""; position: absolute; top: .47em; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--radi-cyan); }
@@ -228,14 +228,14 @@ export const Price = styled.div`
   padding-top: 20px;
   border-top: 1px solid rgba(255,255,255,.1);
 
-  span { display: block; color: rgba(255,255,255,.4); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+  span { display: block; color: rgba(255,255,255,.6); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
   strong { display: block; margin-top: 5px; color: white; font-size: 32px; letter-spacing: -.04em; }
-  small { display: block; margin-top: 3px; color: rgba(255,255,255,.38); font-size: 10px; }
+  small { display: block; margin-top: 3px; color: rgba(255,255,255,.6); font-size: 10px; }
 `;
 
 export const PricingNote = styled.p`
   margin: 18px 3px 0;
-  color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.6);
   font-size: 12px;
   line-height: 1.55;
 `;
@@ -248,7 +248,7 @@ export const AddOnGrid = styled.div`
 
   div { border-radius: 15px; padding: 16px 18px; background: rgba(255,255,255,.045); }
   strong { display: block; color: white; font-size: 14px; }
-  span { display: block; margin-top: 5px; color: rgba(255,255,255,.45); font-size: 12px; line-height: 1.45; }
+  span { display: block; margin-top: 5px; color: rgba(255,255,255,.6); font-size: 12px; line-height: 1.45; }
 
   @media ${(props) => props.theme.breakpoints.md} { grid-template-columns: 1fr; }
 `;
@@ -271,7 +271,7 @@ export const ModuleCard = styled.article`
 
   > span { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: white; background: ${({ accent }) => accent}; font-size: 11px; font-weight: 800; }
   h3 { margin: 18px 0 9px; color: white; font-size: 19px; line-height: 1.2; }
-  p { margin: 0; color: rgba(255,255,255,.48); font-size: 13px; line-height: 1.55; }
+  p { margin: 0; color: rgba(255,255,255,.62); font-size: 13px; line-height: 1.55; }
 `;
 
 export const ActPanel = styled.div`
@@ -367,7 +367,7 @@ export const ProcessGrid = styled.ol`
   li { min-height: 190px; border-top: 1px solid rgba(255,255,255,.16); padding: 20px 6px 0; }
   span { color: var(--fill-process-number); font-size: 11px; font-weight: 800; letter-spacing: .1em; }
   h3 { margin: 15px 0 8px; color: white; font-size: 18px; }
-  p { margin: 0; color: rgba(255,255,255,.47); font-size: 13px; line-height: 1.55; }
+  p { margin: 0; color: rgba(255,255,255,.62); font-size: 13px; line-height: 1.55; }
 
   @media ${(props) => props.theme.breakpoints.md} { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   @media ${(props) => props.theme.breakpoints.sm} { grid-template-columns: 1fr; }
@@ -399,7 +399,7 @@ export const FinalCta = styled.section.attrs({ 'data-reveal': '' })`
 export const Transparency = styled.p`
   max-width: 820px;
   margin: 25px auto 0;
-  color: rgba(255,255,255,.31);
+  color: rgba(255,255,255,.55);
   font-size: 10px;
   line-height: 1.55;
   text-align: center;

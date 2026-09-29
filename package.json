@@ -10,7 +10,6 @@
     "prebuild": "node scripts/fetch-agi-countdown.mjs",
     "build": "next build && node scripts/add-source-comment.mjs",
     "start": "node scripts/serve-static.js out 3000",
-    "svgr": "svgr -d  src/CustomIcons public/CustomIcons",
     "test": "jest",
     "test:e2e": "npm run build && playwright test",
     "test:e2e:run": "playwright test",
@@ -22,7 +21,6 @@
     "eslint-config-next": "^16.3.1",
     "next": "^16.3.1",
     "react": "^18.2.0",
-    "react-burger-menu": "^3.0.8",
     "react-dom": "^18.2.0",
     "react-icons": "^4.2.0",
     "styled-components": "^5.3.1",
@@ -30,7 +28,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@svgr/cli": "^6.5.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
     "eslint": "^9.39.5",

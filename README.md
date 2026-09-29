@@ -56,3 +56,5 @@ npm run test:e2e
 - Documentation, source comments, test descriptions, and new commit messages are English.
 - Localized interface content (/ki-schulungen) remains German/English.
 - Colours come from `src/themes/palette.js`; components use the generated CSS variables, never hard-coded brand colours.
+- Everything user-facing is bilingual. `src/i18n/LanguageContext.js` picks the language (saved choice, then browser language, then English); homepage strings live in `src/i18n/home.js`, localised data fields in `src/constants/constants.js` use `{ en, de }`, and `/ki-schulungen` keeps its own `copy` object. The homepage German uses "du", `/ki-schulungen` uses "Sie".
+- The site menu (`src/components/Nav`) is a small in-house component; don't reintroduce react-burger-menu, it bundled ~150 KB of Snap.svg.

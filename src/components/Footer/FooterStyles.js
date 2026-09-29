@@ -139,7 +139,7 @@ export const SocialContainer = styled.div`
 `
 
 
-export const LinkList = styled.ul`
+export const LinkList = styled.div`
 	border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: grid;
 	grid-template-columns: repeat(3, minmax(85px, 220px));
@@ -171,13 +171,13 @@ export const LinkColumn = styled.div`
 	max-width: 220px;
 	width: 100%;
 `
-export const LinkTitle = styled.h4`
+export const LinkTitle = styled.p`
 	font-style: normal;
 	font-weight: 600;
 	font-size: 12px;
 	line-height: 24px;
 	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.62);
 	margin-bottom: 16px;
 
 	@media ${props => props.theme.breakpoints.sm} {
