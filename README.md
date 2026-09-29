@@ -6,7 +6,7 @@ Personal portfolio for Radomir Dinic and a focused AI-training landing page.
 
 - `/` – portfolio
 - `/ki-schulungen/` – modular AI training, pricing, and Article 4 EU AI Act information
-- `/closer/` – permanent redirect to [closer.radi.solutions](https://closer.radi.solutions/); the game now lives in its own repo, [d0nu7/Closer](https://github.com/d0nu7/Closer)
+- `/closer/` – moving notice pointing to [closer.radi.solutions](https://closer.radi.solutions/); the game now lives in its own repo, [d0nu7/Closer](https://github.com/d0nu7/Closer)
 
 The training page defaults to German, detects non-German browser languages on first visit, and offers a persistent DE/EN switch.
 

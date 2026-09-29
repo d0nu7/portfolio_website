@@ -29,9 +29,10 @@ export default class MyDocument extends Document {
   }
   render() {
     const page = this.props.__NEXT_DATA__?.page;
-    // /ki-schulungen ships German HTML (its DE/EN switch updates <html lang>
-    // on the client); everything else is English.
-    const language = page === '/ki-schulungen' ? 'de' : 'en-GB';
+    // /ki-schulungen and the CLOSER moving notice ship German HTML (the
+    // training page's DE/EN switch updates <html lang> on the client);
+    // everything else is English.
+    const language = page === '/ki-schulungen' || page === '/closer' ? 'de' : 'en-GB';
     return (
       <Html lang={language}>
          <Head />

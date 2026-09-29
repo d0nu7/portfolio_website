@@ -66,3 +66,15 @@ test.describe('/ki-schulungen', () => {
     await expect(page.getByText('Legal notice')).toBeVisible();
   });
 });
+
+test.describe('/closer (moving notice)', () => {
+  test('points to the new address, is not indexed and has a clean console', async ({ page }) => {
+    const problems = watchConsole(page);
+    await page.goto('/closer/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('CLOSER ist umgezogen.');
+    await expect(page.getByRole('link', { name: 'Zu CLOSER' })).toHaveAttribute('href', 'https://closer.radi.solutions/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+    expect(problems).toEqual([]);
+  });
+});
