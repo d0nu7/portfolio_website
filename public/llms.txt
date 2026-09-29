@@ -1,6 +1,6 @@
 # radi.solutions
 
-> Personal site of Radomir Dinic (RaDi), BSc MSc: AI, games and interactive technology. Senior Lecturer for Game & Mixed Reality at the Salzburg University of Applied Sciences (FH Salzburg), developer and AI trainer, based in Hallein near Salzburg, Austria. He teaches game development, computer vision and AI, builds interactive prototypes and helps organisations understand what generative AI can actually do for them.
+> Personal site of Radomir Dinic (RaDi), BSc MSc: games, AI and interactive systems. Senior Lecturer for Game & Mixed Reality at the Salzburg University of Applied Sciences (FH Salzburg), developer and AI trainer, based in Hallein near Salzburg, Austria. He teaches game development, computer vision and AI, builds interactive prototypes and helps organisations understand what generative AI can actually do for them.
 
 Languages: German, English, Serbian. Contact: contact@radi.solutions
 
@@ -27,7 +27,7 @@ Game development (Unity), AI for games, mixed reality (AR/VR), computer vision a
 
 ## Background
 
-Sales and consulting, then BSc and MSc in MultiMediaTechnology at FH Salzburg. Research and teaching at MMT from 2017, Ludwig Boltzmann Institute for Digital Health and Prevention in 2020, back at FH Salzburg since 2021, now Senior Lecturer.
+Sales and consulting, then BSc and MSc in MultiMediaTechnology at FH Salzburg. Research and teaching at MMT from 2017, much of it in digital health (augmented reality for diabetes and nutrition, VR health applications, behavioural research, the Ecomedicine VR project with Paracelsus Medical University), Ludwig Boltzmann Institute for Digital Health and Prevention in 2020, back at FH Salzburg since 2021, now Senior Lecturer.
 
 ## Teaching (FH Salzburg, MultiMediaTechnology)
 

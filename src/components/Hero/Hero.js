@@ -8,7 +8,7 @@ const Hero = () => (
     <LeftSection>
       <Eyebrow>Radomir Dinic · Salzburg</Eyebrow>
       <SectionTitle as="h1" main>
-        AI, games &amp; interactive technology.
+        Games, AI &amp; interactive systems.
       </SectionTitle>
       <Tagline>Teaching it. Building it. Making it understandable.</Tagline>
       <SectionText>

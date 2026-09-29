@@ -55,8 +55,12 @@ const Timeline = () => {
         understand what generative AI can actually do for them.
         <br /><br />
         My background runs from sales and consulting through computer vision and
-        mixed reality research to games, software development and AI education. That
-        mix shapes how I work: technically curious, hands-on, and usually more
+        mixed reality research to games, software development and AI education.
+        Much of my early research focused on digital health, combining computer
+        vision, mixed reality and interactive systems with applications in
+        medicine, nutrition and behavioural research.
+        <br /><br />
+        That mix shapes how I work: technically curious, hands-on, and usually more
         interested in building and testing something than in talking about it in
         the abstract. (Says the person who gives talks. I know.)
       </SectionText>

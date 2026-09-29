@@ -13,7 +13,7 @@ import { SITE_URL, personJsonLd } from '../constants/site';
 import { Layout } from '../layout/Layout';
 import { Section } from '../styles/GlobalComponents';
 
-const TITLE = 'Radomir Dinic · AI, Games & Interactive Technology | Salzburg';
+const TITLE = 'Radomir Dinic · Games, AI & Interactive Systems | Salzburg';
 const DESCRIPTION = 'Senior Lecturer at FH Salzburg, developer and AI trainer. Teaching game development, computer vision and AI, building interactive prototypes and making generative AI understandable for teams and administrations.';
 
 const jsonLd = [
@@ -59,7 +59,7 @@ const Home = () => {
         description={DESCRIPTION}
         path="/"
         image="/og/home.png"
-        imageAlt="Radomir Dinic: AI, games & interactive technology"
+        imageAlt="Radomir Dinic: Games, AI & interactive systems"
         jsonLd={jsonLd}
       />
       <Section grid $noreveal>

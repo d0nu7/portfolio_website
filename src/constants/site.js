@@ -36,6 +36,7 @@ export const PERSON = {
     'EU AI Act Article 4',
     'Rapid prototyping',
     'Human-computer interaction',
+    'Digital health',
   ],
   languages: ['de', 'en', 'sr'],
 };

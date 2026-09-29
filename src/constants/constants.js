@@ -166,7 +166,7 @@ export const services = [
   {
     id: "teaching",
     title: "Teaching & Research",
-    text: "Senior Lecturer at FH Salzburg. I teach how games, vision systems and AI actually work, with a research background in mixed reality and HCI.",
+    text: "Senior Lecturer at FH Salzburg. I teach how games, vision systems and AI actually work, with a research background in mixed reality, HCI and digital health.",
     items: [
       "Game Development, Game Production Environments (Unity 6)",
       "Artificial Intelligence for Games",
