@@ -1,4 +1,4 @@
-// Single source of truth for the site's colours (homepage + /ki-schulungen).
+// Single source of truth for the site's colours (homepage + training page).
 //
 // To try another palette, point ACTIVE at a different file in ./palettes.
 // Components never hard-code brand colours; they read the CSS custom

@@ -1,11 +1,12 @@
 import React from 'react';
 
+import { ROUTES } from '../../i18n/routes';
 import useHomeCopy from '../../i18n/useHomeCopy';
 import { ButtonLink, ButtonRow, Eyebrow, Section, SectionText, SectionTitle } from '../../styles/GlobalComponents';
 import { LeftSection, Tagline } from './HeroStyles';
 
 const Hero = () => {
-  const { t } = useHomeCopy();
+  const { lang, t } = useHomeCopy();
   return (
     <Section row nopadding $noreveal>
       <LeftSection>
@@ -15,7 +16,7 @@ const Hero = () => {
         <SectionText>{t.hero.text}</SectionText>
         <ButtonRow>
           <ButtonLink href="mailto:contact@radi.solutions">{t.hero.contact}</ButtonLink>
-          <ButtonLink href="/ki-schulungen/" variant="secondary">{t.hero.training}</ButtonLink>
+          <ButtonLink href={ROUTES.training[lang]} variant="secondary">{t.hero.training}</ButtonLink>
         </ButtonRow>
       </LeftSection>
     </Section>

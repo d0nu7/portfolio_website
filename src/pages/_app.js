@@ -5,9 +5,8 @@ import Theme from '../styles/theme';
 export default function App({ Component, pageProps }) {
   return (
     <Theme>
-      {/* Pages can set `Page.defaultLang` for their static HTML (default: en)
-          and `Page.fixedLang` to skip browser-language detection. */}
-      <LanguageProvider defaultLang={Component.defaultLang || 'en'} fixed={Boolean(Component.fixedLang)}>
+      {/* Each page declares its language and route (see src/i18n/routes.js). */}
+      <LanguageProvider lang={Component.lang || 'en'} route={Component.route || null}>
         <Component {...pageProps} />
       </LanguageProvider>
     </Theme>

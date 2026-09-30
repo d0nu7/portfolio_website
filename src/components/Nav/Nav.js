@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 
+import { useLanguage } from '../../i18n/LanguageContext';
+import { homeAnchor, ROUTES } from '../../i18n/routes';
 import { Backdrop, BurgerButton, Close, Panel, PanelLink, PanelList } from './NavStyles';
 
-const LINKS = [
-  ['/', 'home'],
-  ['/#work', 'work'],
-  ['/#now', 'now'],
-  ['/#projects', 'projects'],
-  ['/#talks', 'talks'],
-  ['/#recognition', 'recognition'],
-  ['/#about', 'about'],
-  ['/#contact', 'contact'],
-  ['/ki-schulungen/', 'training'],
+const SECTIONS = ['work', 'now', 'projects', 'talks', 'recognition', 'about', 'contact'];
+
+const linksFor = (lang) => [
+  [ROUTES.home[lang], 'home'],
+  ...SECTIONS.map((id) => [homeAnchor(lang, id), id]),
+  [ROUTES.training[lang], 'training'],
 ];
 
 /*
@@ -25,6 +23,7 @@ const LINKS = [
  * navMetrics.js (the header reserves matching space).
  */
 const Nav = ({ labels }) => {
+  const { lang } = useLanguage();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const panelRef = useRef(null);
@@ -68,7 +67,7 @@ const Nav = ({ labels }) => {
       <Panel id={panelId} ref={panelRef} $open={open} aria-label={labels.menu}>
         <Close type="button" onClick={close} aria-label={labels.close}>&times;</Close>
         <PanelList>
-          {LINKS.map(([href, key]) => (
+          {linksFor(lang).map(([href, key]) => (
             <li key={key}>
               <PanelLink href={href} onClick={close} $strong={key === 'home'}>
                 {key === 'home' ? 'Radomir Dinic' : labels[key]}

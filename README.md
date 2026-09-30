@@ -4,11 +4,16 @@ Personal portfolio for Radomir Dinic and a focused AI-training landing page.
 
 ## Routes
 
-- `/` – portfolio
-- `/ki-schulungen/` – modular AI training, pricing, and Article 4 EU AI Act information
-- `/closer/` – moving notice pointing to [closer.radi.solutions](https://closer.radi.solutions/); the game now lives in its own repo, [d0nu7/Closer](https://github.com/d0nu7/Closer)
+Every page exists in English and German, each at its own URL:
 
-The training page defaults to German, detects non-German browser languages on first visit, and offers a persistent DE/EN switch.
+| Page | English | German |
+| --- | --- | --- |
+| Portfolio | `/` | `/de/` |
+| AI training / KI-Schulungen | `/ai-training/` | `/de/ki-schulungen/` |
+
+- `/ki-schulungen/` (old URL) permanently redirects to `/de/ki-schulungen/` (vercel.json).
+- `/closer/` is a German-first moving notice pointing to [closer.radi.solutions](https://closer.radi.solutions/); the game lives in [d0nu7/Closer](https://github.com/d0nu7/Closer).
+- First-time visitors are sent to their browser language (German or English, English as fallback) by a tiny inline script before render; a saved DE/EN choice wins, and crawlers are never redirected. Pages link each other with hreflang.
 
 ## Local development
 
@@ -54,7 +59,6 @@ npm run test:e2e
 ## Repository conventions
 
 - Documentation, source comments, test descriptions, and new commit messages are English.
-- Localized interface content (/ki-schulungen) remains German/English.
 - Colours come from `src/themes/palette.js`; components use the generated CSS variables, never hard-coded brand colours.
-- Everything user-facing is bilingual. `src/i18n/LanguageContext.js` picks the language (saved choice, then browser language, then English); homepage strings live in `src/i18n/home.js`, localised data fields in `src/constants/constants.js` use `{ en, de }`, and `/ki-schulungen` keeps its own `copy` object. The homepage German uses "du", `/ki-schulungen` uses "Sie".
+- Everything user-facing is bilingual. Routes and language pairs are defined once in `src/i18n/routes.js`; page files in `src/pages` only set `lang` and `route` and render a view from `src/views`. Homepage strings live in `src/i18n/home.js`, localised data fields in `src/constants/constants.js` use `{ en, de }`, and the training page keeps its own `copy` object. The homepage German uses "du", the training page uses "Sie".
 - The site menu (`src/components/Nav`) is a small in-house component; don't reintroduce react-burger-menu, it bundled ~150 KB of Snap.svg.

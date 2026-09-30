@@ -6,12 +6,12 @@ Languages: German, English, Serbian. Contact: contact@radi.solutions
 
 ## Pages
 
-- [Portfolio (English and German)](https://radi.solutions/): what he does, current focus, selected work, talks and media, awards, publications and background.
-- [KI-Schulungen / AI trainings (German, English)](https://radi.solutions/ki-schulungen/): in-house and online trainings on generative AI and AI literacy under Article 4 of the EU AI Act, with fixed prices.
+- [Portfolio (English)](https://radi.solutions/), [German](https://radi.solutions/de/): what he does, current focus, selected work, talks and media, awards, publications and background.
+- [AI training (English)](https://radi.solutions/ai-training/), [KI-Schulungen (German)](https://radi.solutions/de/ki-schulungen/): in-house and online training on generative AI and AI literacy under Article 4 of the EU AI Act, across Austria and online, with fixed prices.
 
 ## AI trainings (KI-Schulungen)
 
-- Formats for closed groups of up to 15 people, in person or online:
+- Formats for closed groups of up to 15 people, in person across Austria or online:
   - KI-Impuls (AI briefing): up to 2 hours, EUR 790
   - Halbtags-Workshop (half-day workshop): up to 4 hours, EUR 1,290
   - Ganztags-Workshop (full-day workshop): up to 8 hours, EUR 1,990, most popular

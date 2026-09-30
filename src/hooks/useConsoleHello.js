@@ -57,7 +57,7 @@ const radi = {
       console.log('%cCould not reach Hacker News right now. The machines are busy.', MUTED);
     }
 
-    console.log('%cHumans who said "please" to their chatbot: whitelisted.%c\nIs your team ready? https://radi.solutions/ki-schulungen/', 'color:#D6407E;font-weight:700', MUTED);
+    console.log('%cHumans who said "please" to their chatbot: whitelisted.%c\nIs your team ready? https://radi.solutions/ai-training/', 'color:#D6407E;font-weight:700', MUTED);
     const left = 100 - agiCountdown.percent;
     return left > 0
       ? `Takeover progress: ${agiCountdown.percent} %. The last ${left} % is always the hardest. Ask any PhD student.`

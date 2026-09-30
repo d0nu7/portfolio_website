@@ -1,5 +1,11 @@
 const { test, expect } = require('@playwright/test');
 
+// A normal desktop Chrome UA for the redirect tests. Note that Playwright's
+// device presets already send non-headless UAs, so the first-visit redirect
+// is live in every test: pages are visited with a browser locale that
+// matches their language unless a test is about the redirect itself.
+const HUMAN_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36';
+
 // Collects console errors/warnings and uncaught exceptions for a page.
 const watchConsole = (page) => {
   const problems = [];
@@ -13,57 +19,103 @@ const jsonLdTypes = async (page) => {
   return JSON.parse(raw)['@graph'].map((node) => node['@type']);
 };
 
-test.describe('homepage', () => {
-  test('renders one h1, the main sections and a clean console', async ({ page }) => {
-    const problems = watchConsole(page);
-    await page.goto('/');
-    await expect(page.locator('h1')).toHaveCount(1);
-    for (const id of ['about', 'projects']) {
-      await expect(page.locator(`#${id}`)).toBeAttached();
-    }
-    await expect(page.locator('html')).toHaveAttribute('lang', /^en/);
-    expect(problems).toEqual([]);
+const hreflang = (page, lang) => page.locator(`link[rel="alternate"][hreflang="${lang}"]`);
+
+const PAGES = [
+  { path: '/', lang: 'en', h1: 'Games, AI & interactive systems.', other: '/de/', types: ['WebSite', 'Person'] },
+  { path: '/de/', lang: 'de', h1: 'Games, KI & interaktive Systeme.', other: '/', types: ['WebSite', 'Person'] },
+  { path: '/ai-training/', lang: 'en', h1: /Understand AI/, other: '/de/ki-schulungen/', types: ['Service', 'FAQPage'] },
+  { path: '/de/ki-schulungen/', lang: 'de', h1: /KI verstehen/, other: '/ai-training/', types: ['Service', 'FAQPage'] },
+];
+
+for (const p of PAGES) {
+  test.describe(p.path, () => {
+    test.use({ locale: p.lang === 'de' ? 'de-AT' : 'en-US' });
+
+    test('renders its language with one h1, SEO tags and a clean console', async ({ page }) => {
+      const problems = watchConsole(page);
+      await page.goto(p.path);
+      await expect(page.locator('html')).toHaveAttribute('lang', p.lang);
+      await expect(page.locator('h1')).toHaveCount(1);
+      await expect(page.locator('h1')).toHaveText(p.h1);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://radi.solutions${p.path}`);
+      const [en, de] = p.lang === 'en' ? [p.path, p.other] : [p.other, p.path];
+      await expect(hreflang(page, 'en')).toHaveAttribute('href', `https://radi.solutions${en}`);
+      await expect(hreflang(page, 'de')).toHaveAttribute('href', `https://radi.solutions${de}`);
+      await expect(hreflang(page, 'x-default')).toHaveAttribute('href', `https://radi.solutions${en}`);
+      expect(await jsonLdTypes(page)).toEqual(expect.arrayContaining(p.types));
+      expect(problems).toEqual([]);
+    });
+
+    test('the language switch links to the other version', async ({ page }) => {
+      await page.goto(p.path);
+      const target = p.lang === 'en' ? 'DE' : 'EN';
+      await expect(page.getByRole('link', { name: target, exact: true })).toHaveAttribute('href', p.other);
+    });
+  });
+}
+
+test('English footer labels', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Legal notice')).toBeVisible();
+});
+
+test.describe('German pages', () => {
+  test.use({ locale: 'de-AT' });
+
+  test('German footer labels', async ({ page }) => {
+    await page.goto('/de/ki-schulungen/');
+    await expect(page.getByText('Impressum')).toBeVisible();
   });
 
-  test('ships SEO metadata and structured data', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://radi.solutions/');
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/og\/home\.png$/);
-    expect(await jsonLdTypes(page)).toEqual(expect.arrayContaining(['WebSite', 'Person']));
-  });
-
-  test('uses English labels in the shared footer', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.getByText('Legal notice')).toBeVisible();
-    await expect(page.getByText('Impressum')).toHaveCount(0);
-  });
-
-  test('exposes the console easter egg', async ({ page }) => {
-    await page.goto('/');
-    const commands = await page.evaluate(() => Object.keys(window.radi || {}));
-    expect(commands).toEqual(expect.arrayContaining(['help', 'hire', 'takeover', 'whoami']));
+  test('fine print is excluded from search snippets', async ({ page }) => {
+    await page.goto('/de/ki-schulungen/');
+    await expect(page.locator('[data-nosnippet]')).toHaveCount(3);
   });
 });
 
-test.describe('/ki-schulungen', () => {
-  // The page picks German or English from the browser language on first visit.
-  test.use({ locale: 'de-AT' });
+test('exposes the console easter egg', async ({ page }) => {
+  await page.goto('/');
+  const commands = await page.evaluate(() => Object.keys(window.radi || {}));
+  expect(commands).toEqual(expect.arrayContaining(['help', 'hire', 'takeover', 'whoami']));
+});
 
-  test('starts in German with a clean console and Service/FAQ data', async ({ page }) => {
-    const problems = watchConsole(page);
-    await page.goto('/ki-schulungen/');
-    await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.locator('html')).toHaveAttribute('lang', 'de');
-    await expect(page.getByText('Impressum')).toBeVisible();
-    expect(await jsonLdTypes(page)).toEqual(expect.arrayContaining(['Service', 'FAQPage']));
-    expect(problems).toEqual([]);
+test.describe('first-visit language redirect', () => {
+  test.describe('German browser', () => {
+    test.use({ locale: 'de-AT', userAgent: HUMAN_UA });
+
+    test('is sent from the English page to the German one', async ({ page }) => {
+      await page.goto('/ai-training/');
+      await expect(page).toHaveURL(/\/de\/ki-schulungen\/$/);
+    });
+
+    test('a saved English choice wins and sticks across pages', async ({ page }) => {
+      await page.goto('/de/');
+      await page.getByRole('link', { name: 'EN', exact: true }).click();
+      await expect(page).toHaveURL(/\/$/);
+      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
+      await page.goto('/de/ki-schulungen/');
+      await expect(page).toHaveURL(/\/ai-training\/$/);
+    });
   });
 
-  test('the DE/EN switch translates page and footer', async ({ page }) => {
-    await page.goto('/ki-schulungen/');
-    await page.getByRole('button', { name: 'EN', exact: true }).click();
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByText('Legal notice')).toBeVisible();
+  test.describe('other browser languages', () => {
+    test.use({ locale: 'fr-FR', userAgent: HUMAN_UA });
+
+    test('fall back to English', async ({ page }) => {
+      await page.goto('/de/');
+      await expect(page).toHaveURL(/\/$/);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    });
+  });
+
+  test.describe('crawlers', () => {
+    test.use({ locale: 'en-US', userAgent: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' });
+
+    test('are never redirected', async ({ page }) => {
+      await page.goto('/de/ki-schulungen/');
+      await expect(page).toHaveURL(/\/de\/ki-schulungen\/$/);
+    });
   });
 });
 
@@ -79,34 +131,6 @@ test.describe('/closer (moving notice)', () => {
   });
 });
 
-test.describe('language', () => {
-  test.describe('German browser', () => {
-    test.use({ locale: 'de-AT' });
-
-    test('homepage switches to German and the choice carries over', async ({ page }) => {
-      await page.goto('/');
-      await expect(page.locator('h1')).toHaveText('Games, KI & interaktive Systeme.');
-      await expect(page.locator('html')).toHaveAttribute('lang', 'de');
-      await page.getByRole('button', { name: 'EN', exact: true }).click();
-      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
-      await page.goto('/ki-schulungen/');
-      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Understand AI/);
-    });
-  });
-
-  test.describe('neither German nor English', () => {
-    test.use({ locale: 'fr-FR' });
-
-    test('falls back to English on both pages', async ({ page }) => {
-      await page.goto('/');
-      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
-      await page.goto('/ki-schulungen/');
-      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    });
-  });
-});
-
 test.describe('menu', () => {
   test('opens, closes with Escape and returns focus', async ({ page }) => {
     await page.goto('/');
@@ -118,18 +142,24 @@ test.describe('menu', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     const nav = page.getByRole('navigation', { name: 'Menu' });
     await expect(nav).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'AI training' })).toHaveAttribute('href', '/ki-schulungen/');
+    await expect(nav.getByRole('link', { name: 'AI training' })).toHaveAttribute('href', '/ai-training/');
 
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toBeFocused();
   });
+});
 
-  test('a menu link closes the panel and jumps to the section', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('button', { name: 'Menu', exact: true }).click();
-    await page.getByRole('navigation', { name: 'Menu' }).getByRole('link', { name: 'Selected work' }).click();
-    await expect(page).toHaveURL(/#projects$/);
-    await expect(page.getByRole('button', { name: 'Menu', exact: true })).toHaveAttribute('aria-expanded', 'false');
+test.describe('German menu', () => {
+  test.use({ locale: 'de-AT' });
+
+  test('German menu links stay on the German pages', async ({ page }) => {
+    await page.goto('/de/');
+    await page.getByRole('button', { name: 'Menü', exact: true }).click();
+    const nav = page.getByRole('navigation', { name: 'Menü' });
+    await expect(nav.getByRole('link', { name: 'KI-Schulungen' })).toHaveAttribute('href', '/de/ki-schulungen/');
+    await nav.getByRole('link', { name: 'Ausgewählte Projekte' }).click();
+    await expect(page).toHaveURL(/\/de\/#projects$/);
+    await expect(page.getByRole('button', { name: 'Menü', exact: true })).toHaveAttribute('aria-expanded', 'false');
   });
 });

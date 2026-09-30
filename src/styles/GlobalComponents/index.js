@@ -139,7 +139,7 @@ export const ButtonRow = styled.div`
  * The site's one button. `primary` uses the palette's CTA fill (the
  * cyan-to-magenta signature in Petrol Signature) and cross-fades to the
  * hover fill; `secondary` is an outline. Same size, radius and motion as the
- * buttons on /ki-schulungen.
+ * buttons on the training page.
  */
 export const ButtonLink = styled.a`
   position: relative;

@@ -1,6 +1,9 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
+import { languageRedirectScript } from '../i18n/languageRedirect'
+import { PAGE_TO_ROUTE, ROUTES } from '../i18n/routes'
+
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet()
@@ -29,13 +32,20 @@ export default class MyDocument extends Document {
   }
   render() {
     const page = this.props.__NEXT_DATA__?.page;
-    // /ki-schulungen and the CLOSER moving notice ship German HTML (the
-    // training page's DE/EN switch updates <html lang> on the client);
-    // everything else is English.
-    const language = page === '/ki-schulungen' || page === '/closer' ? 'de' : 'en-GB';
+    const entry = PAGE_TO_ROUTE[page];
+    // German pages live under /de/; the CLOSER moving notice is German-first.
+    const language = entry ? (entry.lang === 'de' ? 'de' : 'en') : page === '/closer' ? 'de' : 'en';
     return (
       <Html lang={language}>
-         <Head />
+        <Head>
+          {entry && (
+            <script
+              // Sends first-time visitors to their language before anything
+              // renders; see src/i18n/languageRedirect.js.
+              dangerouslySetInnerHTML={{ __html: languageRedirectScript(entry.lang, ROUTES[entry.route]) }}
+            />
+          )}
+        </Head>
         <body>
           <Main />
           <NextScript />

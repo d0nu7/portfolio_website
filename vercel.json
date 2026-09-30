@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/ki-schulungen",
+      "destination": "/de/ki-schulungen/",
+      "permanent": true
+    },
+    {
+      "source": "/ki-schulungen/",
+      "destination": "/de/ki-schulungen/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

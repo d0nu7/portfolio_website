@@ -123,7 +123,6 @@ const Closer = () => (
   </>
 );
 
-Closer.defaultLang = 'de';
-Closer.fixedLang = true;
+Closer.lang = 'de';
 
 export default Closer;

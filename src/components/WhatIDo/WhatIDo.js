@@ -20,7 +20,7 @@ const WhatIDo = () => {
             <CardList>
               {s.items.map((item) => <li key={tr(item, "en")}>{tr(item, lang)}</li>)}
             </CardList>
-            {s.link && <CardLink href={s.link.href}>{tr(s.link.label, lang)} &rarr;</CardLink>}
+            {s.link && <CardLink href={tr(s.link.href, lang)}>{tr(s.link.label, lang)} &rarr;</CardLink>}
           </Card>
         ))}
       </Grid>

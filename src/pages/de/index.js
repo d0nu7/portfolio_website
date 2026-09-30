@@ -1,7 +1,7 @@
-import HomePage from '../views/HomePage';
+import HomePage from '../../views/HomePage';
 
 const Page = () => <HomePage />;
-Page.lang = 'en';
+Page.lang = 'de';
 Page.route = 'home';
 
 export default Page;

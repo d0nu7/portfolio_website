@@ -3,12 +3,13 @@ import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
 
 import { SocialIcons } from '../Header/HeaderStyles';
 import useHomeCopy from '../../i18n/useHomeCopy';
+import { ROUTES } from '../../i18n/routes';
 import { FaResearchgate } from "react-icons/fa";
 
 import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer, SpanItem } from './FooterStyles';
 
 const Footer = () => {
-  const { t: copy } = useHomeCopy();
+  const { lang, t: copy } = useHomeCopy();
   const t = copy.footer;
 
   return (
@@ -31,7 +32,7 @@ const Footer = () => {
         </LinkColumn>
         <LinkColumn>
           <LinkTitle>{t.services}</LinkTitle>
-          <LinkItem href="/ki-schulungen/">
+          <LinkItem href={ROUTES.training[lang]}>
             {t.training}
           </LinkItem>
         </LinkColumn>

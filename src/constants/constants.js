@@ -206,7 +206,7 @@ export const services = [
       { en: "Companies and leadership teams", de: "Unternehmen und F\u00fchrungsteams" },
       { en: "Talks for schools, adult education and alumni", de: "Vortr\u00e4ge f\u00fcr Schulen, Erwachsenenbildung und Alumni" },
     ],
-    link: { href: "/ki-schulungen/", label: { en: "Formats & prices", de: "Formate & Preise" } },
+    link: { href: { en: "/ai-training/", de: "/de/ki-schulungen/" }, label: { en: "Formats & prices", de: "Formate & Preise" } },
   },
   {
     id: "development",

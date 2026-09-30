@@ -12,7 +12,10 @@ const Group = styled.div`
   border-radius: 999px;
   background: rgba(255, 255, 255, .04);
 
-  button {
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 38px;
     min-height: 30px;
     border: 0;
@@ -27,32 +30,42 @@ const Group = styled.div`
     transition: color .2s ease, background-color .2s ease;
   }
 
-  button:hover { color: #fff; }
+  a:hover { color: #fff; }
 
-  button[aria-pressed="true"] {
+  a[aria-current="true"] {
     color: var(--c-ink);
     background: var(--c-text-strong);
   }
 
-  button:focus-visible {
+  a:focus-visible {
     outline: 2px solid var(--c-accent);
     outline-offset: 2px;
   }
 
   @media ${(props) => props.theme.breakpoints.xs} {
     margin-right: 4px;
-    button { min-width: 32px; padding: 0 6px; font-size: 11px; }
+    a { min-width: 32px; padding: 0 6px; font-size: 11px; }
   }
 `;
 
+// Real links to the same page in the other language (crawlable, and they
+// work without JavaScript); clicking also remembers the choice.
 const LanguageSwitch = () => {
-  const { lang, setLang } = useLanguage();
+  const { lang, alternate, remember } = useLanguage();
+  if (!alternate('en') || !alternate('de')) return null;
   return (
     <Group role="group" aria-label={lang === 'de' ? 'Sprache' : 'Language'}>
       {LANGUAGES.slice().reverse().map((l) => (
-        <button key={l} type="button" lang={l} aria-pressed={lang === l} onClick={() => setLang(l)}>
+        <a
+          key={l}
+          href={alternate(l)}
+          hrefLang={l}
+          lang={l}
+          aria-current={lang === l ? 'true' : undefined}
+          onClick={() => remember(l)}
+        >
           {l.toUpperCase()}
-        </button>
+        </a>
       ))}
     </Group>
   );

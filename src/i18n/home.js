@@ -1,6 +1,6 @@
 // UI strings for the homepage and the shared chrome. Data (projects, talks,
 // ...) lives in constants/constants.js with the same { en, de } shape.
-// German addresses visitors with "du"; /ki-schulungen keeps "Sie".
+// German addresses visitors with "du"; the training page keeps "Sie".
 const home = {
   en: {
     hero: {

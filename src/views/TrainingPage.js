@@ -1,6 +1,7 @@
 import Seo from "../components/Seo/Seo";
 import { SITE_URL, personJsonLd } from "../constants/site";
 import { useLanguage } from "../i18n/LanguageContext";
+import { ROUTES } from "../i18n/routes";
 import { Layout } from "../layout/Layout";
 import {
   ActChecklist,
@@ -36,7 +37,7 @@ import {
 const copy = {
   de: {
     title: "KI-Schulungen für Unternehmen und öffentliche Organisationen",
-    description: "KI-Schulungen in Salzburg und online für Unternehmen, Verwaltung und Führungskräfte: praxisnah, sicher und mit KI-Kompetenz nach Art. 4 EU AI Act. Fixpreise.",
+    description: "KI-Schulungen für Unternehmen, Verwaltung und Führungskräfte, inhouse in ganz Österreich oder online: praxisnah, sicher, KI-Kompetenz nach Art. 4 EU AI Act.",
     eyebrow: "KI-SCHULUNGEN · SALZBURG · INHOUSE & ONLINE",
     heroTitle: "KI verstehen. Sicher anwenden. Arbeit erleichtern.",
     heroCopy: "Praxisnahe Schulungen für Teams, die generative KI nicht nur ausprobieren, sondern reflektiert, transparent und produktiv in ihren Arbeitsalltag integrieren möchten.",
@@ -114,7 +115,7 @@ const copy = {
   },
   en: {
     title: "AI training for companies and public organisations",
-    description: "AI training in Salzburg and online for companies, public administration and leaders: practical, responsible generative AI and AI literacy under the EU AI Act.",
+    description: "AI training for companies, public administration and leaders, in-house across Austria or online: practical, responsible generative AI and EU AI Act literacy.",
     eyebrow: "AI TRAINING · SALZBURG · IN-HOUSE & ONLINE",
     heroTitle: "Understand AI. Use it responsibly. Make work easier.",
     heroCopy: "Practical training for teams that want to move beyond experimentation and integrate generative AI into daily work in a productive, transparent and responsible way.",
@@ -192,60 +193,62 @@ const copy = {
   },
 };
 
-const PAGE_URL = `${SITE_URL}/ki-schulungen/`;
 const priceValue = (price) => price.replace(/[^0-9]/g, "");
 
-// Structured data is always built from the German copy: that is what the
-// static HTML ships with and what the canonical URL represents.
-const jsonLd = [
-  personJsonLd(),
-  {
-    "@type": "Service",
-    "@id": `${PAGE_URL}#service`,
-    name: copy.de.title,
-    description: copy.de.description,
-    url: PAGE_URL,
-    serviceType: "KI-Schulung",
-    inLanguage: ["de", "en"],
-    provider: { "@id": `${SITE_URL}/#person` },
-    areaServed: [
-      { "@type": "State", name: "Salzburg" },
-      { "@type": "Country", name: "Österreich" },
-      { "@type": "Country", name: "Deutschland" },
-    ],
-    availableChannel: { "@type": "ServiceChannel", serviceUrl: PAGE_URL, availableLanguage: ["de", "en"] },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: copy.de.priceEyebrow,
-      itemListElement: copy.de.packages.map((item) => ({
-        "@type": "Offer",
-        name: item.name,
-        description: `${item.description} ${item.features.join(", ")}.`,
-        price: priceValue(item.price),
-        priceCurrency: "EUR",
-        url: `${PAGE_URL}#preise`,
+// Structured data in the page's own language, with that language's URL.
+const buildJsonLd = (lang) => {
+  const c = copy[lang];
+  const pageUrl = `${SITE_URL}${ROUTES.training[lang]}`;
+  return [
+    personJsonLd(),
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: c.title,
+      description: c.description,
+      url: pageUrl,
+      serviceType: lang === "de" ? "KI-Schulung" : "AI training",
+      inLanguage: lang,
+      provider: { "@id": `${SITE_URL}/#person` },
+      areaServed: [
+        { "@type": "Country", name: lang === "de" ? "Österreich" : "Austria" },
+        { "@type": "Country", name: lang === "de" ? "Deutschland" : "Germany" },
+        { "@type": "Place", name: "Online" },
+      ],
+      availableChannel: { "@type": "ServiceChannel", serviceUrl: pageUrl, availableLanguage: ["de", "en"] },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: c.priceEyebrow,
+        itemListElement: c.packages.map((item) => ({
+          "@type": "Offer",
+          name: item.name,
+          description: `${item.description} ${item.features.join(", ")}.`,
+          price: priceValue(item.price),
+          priceCurrency: "EUR",
+          url: `${pageUrl}#preise`,
+        })),
+      },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      inLanguage: lang,
+      mainEntity: c.faq.map(([question, answer]) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: { "@type": "Answer", text: answer },
       })),
     },
-  },
-  {
-    "@type": "FAQPage",
-    "@id": `${PAGE_URL}#faq`,
-    inLanguage: "de",
-    mainEntity: copy.de.faq.map(([question, answer]) => ({
-      "@type": "Question",
-      name: question,
-      acceptedAnswer: { "@type": "Answer", text: answer },
-    })),
-  },
-];
+  ];
+};
 
 const mailSubject = {
   de: "Anfrage KI-Schulung",
   en: "AI training enquiry",
 };
 
-export default function KiSchulungen() {
-  // Shared DE/EN language (header switch); this page renders German by default.
+// Rendered by pages/de/ki-schulungen.js (DE) and pages/ai-training.js (EN).
+export default function TrainingPage() {
   const { lang: language } = useLanguage();
   const t = copy[language];
 
@@ -256,11 +259,11 @@ export default function KiSchulungen() {
       <Seo
         title={`${t.title} | radi.solutions`}
         description={t.description}
-        path="/ki-schulungen/"
-        image="/og/ki-schulungen.png"
+        path={ROUTES.training[language]}
+        image={language === "de" ? "/og/ki-schulungen.png" : "/og/ai-training.png"}
         imageAlt={t.title}
         locale={language === "de" ? "de_AT" : "en_GB"}
-        jsonLd={jsonLd}
+        jsonLd={buildJsonLd(language)}
       />
 
       <Page>
@@ -340,5 +343,3 @@ export default function KiSchulungen() {
     </Layout>
   );
 }
-
-KiSchulungen.defaultLang = "de";

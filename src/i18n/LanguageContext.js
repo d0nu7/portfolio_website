@@ -1,61 +1,35 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
+
+import { LANGUAGE_STORAGE_KEY } from './languageRedirect';
+import { pathFor } from './routes';
 
 /*
- * Site-wide DE/EN language.
- *
- * Order of precedence on the client: the visitor's saved choice
- * (localStorage "radi-language", shared with /ki-schulungen since 2026-08),
- * then the browser's preferred languages, then English.
- *
- * The static HTML is rendered in each page's `defaultLang` (English for the
- * homepage, German for /ki-schulungen) and switches after hydration.
+ * The language is part of the URL (see routes.js): each page is rendered in
+ * exactly one language, so there is nothing to detect after hydration.
+ * Switching navigates to the same page in the other language and remembers
+ * the choice, which the early redirect in _document respects on the next
+ * visit.
  */
 export const LANGUAGES = ['en', 'de'];
-const STORAGE_KEY = 'radi-language';
 
-const LanguageContext = createContext({ lang: 'en', setLang: () => {} });
+const LanguageContext = createContext({ lang: 'en', route: null, alternate: () => null, remember: () => {} });
 
-const readSaved = () => {
-  try {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    return LANGUAGES.includes(saved) ? saved : null;
-  } catch (e) {
-    return null;
-  }
-};
+export const LanguageProvider = ({ lang = 'en', route = null, children }) => {
+  const alternate = useCallback((to) => pathFor(route, to), [route]);
 
-export const detectLanguage = (languages) => {
-  const hit = (languages || [])
-    .map((l) => String(l).toLowerCase().slice(0, 2))
-    .find((l) => LANGUAGES.includes(l));
-  return hit || 'en';
-};
-
-// `fixed` pins a page to one language (e.g. the German-first CLOSER notice).
-export const LanguageProvider = ({ defaultLang = 'en', fixed = false, children }) => {
-  const [lang, setLangState] = useState(defaultLang);
-
-  useEffect(() => {
-    if (fixed) return;
-    const browser = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
-    setLangState(readSaved() || detectLanguage(browser));
-  }, [fixed]);
-
-  useEffect(() => {
-    document.documentElement.lang = lang === 'de' ? 'de' : 'en';
-  }, [lang]);
-
-  const setLang = useCallback((next) => {
-    if (!LANGUAGES.includes(next)) return;
-    setLangState(next);
+  const remember = useCallback((choice) => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, choice);
     } catch (e) {
       // Private mode or blocked storage: the choice just won't persist.
     }
   }, []);
 
-  return <LanguageContext.Provider value={{ lang, setLang }}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ lang, route, alternate, remember }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 };
 
 export const useLanguage = () => useContext(LanguageContext);
