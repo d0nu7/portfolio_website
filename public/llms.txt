@@ -44,7 +44,7 @@ Generative AI and AI literacy (teaching, workshops, workflows, responsible use);
 ## Talks, workshops and media (selection)
 
 - 2026, Salzburger Nachrichten: quoted on AI doomsday scenarios.
-- 2026, WIFI Salzburg, Ausbilder:innen-Network (about 200 apprenticeship trainers): talk on AI in apprenticeship training. https://www.wifisalzburg.at/blog/detail/82-ausbilderinnen-network-2026-zweihundert-teilnehmerinnen-diskutierten-die-zukunft-der-lehre
+- 2026, WIFI Salzburg, Ausbilder:innen-Network (about 200 apprenticeship trainers): talk "Wie KI die Zukunft des Lernens verändert" (how AI is changing the future of learning). https://www.wifisalzburg.at/blog/detail/82-ausbilderinnen-network-2026-zweihundert-teilnehmerinnen-diskutierten-die-zukunft-der-lehre
 - 2026, Salzburg Administration Academy (SVAK), Kompetenzwerkstatt: workshop "KI: Vibe Prompting fuer den Fuehrungsalltag" for leaders.
 - 2025-26, Salzburg Administration Academy (SVAK): AI trainings for public administration.
 - 2025, Salzburger Nachrichten: interview on school and AI ("Kritisches Denken bleibt unerlaesslich").

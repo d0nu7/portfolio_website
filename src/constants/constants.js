@@ -271,8 +271,8 @@ export const talks = [
   {
     year: "2026",
     type: "talk",
-    org: { en: "WIFI Salzburg, trainers' network (Ausbilder:innen-Network)", de: "WIFI Salzburg, Ausbilder:innen-Network" },
-    title: "KI in der Lehrlingsausbildung",
+    org: { en: "WIFI Salzburg, Ausbilder:innen-Network 2026 (about 200 apprenticeship trainers)", de: "WIFI Salzburg, Ausbilder:innen-Network 2026 (rund 200 Lehrlingsausbilder:innen)" },
+    title: { en: "How AI is changing the future of learning", de: "Wie KI die Zukunft des Lernens verändert" },
     href: "https://www.wifisalzburg.at/blog/detail/82-ausbilderinnen-network-2026-zweihundert-teilnehmerinnen-diskutierten-die-zukunft-der-lehre",
   },
   {
