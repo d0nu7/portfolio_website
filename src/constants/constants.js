@@ -268,7 +268,13 @@ export const talkTypes = {
 // "Talks, Workshops & Media". Newest first; within a year talks and
 // workshops before media. `href` only where a public page exists.
 export const talks = [
-  { year: "2026", type: "talk", org: "WIFI Salzburg", title: "KI in der Lehrlingsausbildung" },
+  {
+    year: "2026",
+    type: "talk",
+    org: { en: "WIFI Salzburg, trainers' network (Ausbilder:innen-Network)", de: "WIFI Salzburg, Ausbilder:innen-Network" },
+    title: "KI in der Lehrlingsausbildung",
+    href: "https://www.wifisalzburg.at/blog/detail/82-ausbilderinnen-network-2026-zweihundert-teilnehmerinnen-diskutierten-die-zukunft-der-lehre",
+  },
   {
     year: "2026",
     type: "workshop",
