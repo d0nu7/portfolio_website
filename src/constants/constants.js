@@ -203,7 +203,7 @@ export const services = [
     items: [
       { en: "Salzburg Administration Academy (SVAK)", de: "Salzburger Verwaltungsakademie (SVAK)" },
       { en: "Salzburg municipalities", de: "Salzburger Gemeinden" },
-      { en: "Companies and leadership teams", de: "Unternehmen und F\u00fchrungsteams" },
+      { en: "Companies such as Raiffeisen Bank International and UNTHA", de: "Unternehmen wie Raiffeisen Bank International und UNTHA" },
       { en: "Talks for schools, adult education and alumni", de: "Vortr\u00e4ge f\u00fcr Schulen, Erwachsenenbildung und Alumni" },
     ],
     link: { href: { en: "/ai-training/", de: "/de/ki-schulungen/" }, label: { en: "Formats & prices", de: "Formate & Preise" } },

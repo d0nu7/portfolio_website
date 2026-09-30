@@ -35,7 +35,7 @@ Games: Game Development 1 and 2, Game Development Fundamentals, Game Production 
 
 ## Workshops and AI trainings
 
-AI trainings for public administration, including the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities, and for companies. Earlier workshops: Unity game development, mixed reality, coding for kids.
+AI trainings for public administration, including the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities, and for companies: a talk for Raiffeisen Bank International (RBI) and consulting for the HR development team of UNTHA shredding technology (Kuchl). Earlier workshops: Unity game development, mixed reality, coding for kids.
 
 ## Current focus
 
