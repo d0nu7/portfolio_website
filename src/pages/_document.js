@@ -1,8 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-import { languageRedirectScript } from '../i18n/languageRedirect'
-import { PAGE_TO_ROUTE, ROUTES } from '../i18n/routes'
+import { PAGE_TO_ROUTE } from '../i18n/routes'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -37,15 +36,7 @@ export default class MyDocument extends Document {
     const language = entry ? (entry.lang === 'de' ? 'de' : 'en') : page === '/closer' ? 'de' : 'en';
     return (
       <Html lang={language}>
-        <Head>
-          {entry && (
-            <script
-              // Sends first-time visitors to their language before anything
-              // renders; see src/i18n/languageRedirect.js.
-              dangerouslySetInnerHTML={{ __html: languageRedirectScript(entry.lang, ROUTES[entry.route]) }}
-            />
-          )}
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

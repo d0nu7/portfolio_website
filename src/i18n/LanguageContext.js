@@ -1,14 +1,13 @@
 import React, { createContext, useCallback, useContext } from 'react';
 
-import { LANGUAGE_STORAGE_KEY } from './languageRedirect';
+import { LANGUAGE_STORAGE_KEY } from './languagePreference';
 import { pathFor } from './routes';
 
 /*
  * The language is part of the URL (see routes.js): each page is rendered in
  * exactly one language, so there is nothing to detect after hydration.
  * Switching navigates to the same page in the other language and remembers
- * the choice, which the early redirect in _document respects on the next
- * visit.
+ * the choice, so the language hint (components/LanguageHint) stays quiet.
  */
 export const LANGUAGES = ['en', 'de'];
 

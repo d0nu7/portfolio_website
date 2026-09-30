@@ -14,7 +14,7 @@ import { BURGER, burgerReserve } from '../Nav/navMetrics';
  * can no longer drift apart, and the logo and icons scale down on narrow
  * screens instead of fighting over the leftover width.
  */
-export const Container = styled.div`
+export const Container = styled.header`
   display: flex;
   align-items: center;
   padding: 2rem 1rem 1rem;

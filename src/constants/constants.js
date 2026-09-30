@@ -9,7 +9,7 @@ export const projects = [
     },
     image: "/images/yoka.webp",
     tags: [{ en: "Board game", de: "Brettspiel" }, "AR", "Android"],
-    source: "https://portfolio.fh-salzburg.ac.at/projects/2014-yokaisho",
+    source: "https://realities.fh-salzburg.ac.at/projects/yokaisho",
     id: 0,
   },
   {
@@ -31,7 +31,7 @@ export const projects = [
     },
     image: "/images/eat_ar.webp",
     tags: ["Tango", "Android"],
-    source: "https://realities.mediacube.at/eat-ar/",
+    source: "https://realities.fh-salzburg.ac.at/projects/eat-ar-tango",
     id: 2,
   },
   {
@@ -42,7 +42,7 @@ export const projects = [
     },
     image: "/images/smartsigncapture.webp",
     tags: ["Android", "Web"],
-    source: "https://multimediatechnology.at/smartsigncapture/",
+    source: "https://realities.fh-salzburg.ac.at/projects/smart-sign-capture",
     id: 3,
   },
   {
@@ -53,7 +53,7 @@ export const projects = [
     },
     image: "/images/ecovr.webp",
     tags: ["VR", { en: "Photogrammetry", de: "Photogrammetrie" }],
-    source: "https://www.digitalsalzburg.at/vr-atemcoach/",
+    source: "https://realities.fh-salzburg.ac.at/projects/ecomedicine-vr",
     id: 4,
   },
 ];

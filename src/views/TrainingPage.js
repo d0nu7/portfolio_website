@@ -30,13 +30,14 @@ import {
   Section,
   SectionHeading,
   Shell,
+  TrainerLink,
   Transparency,
   TrustRow,
 } from "../styles/TrainingPageStyles";
 
 const copy = {
   de: {
-    title: "KI-Schulungen für Unternehmen und öffentliche Organisationen",
+    title: "KI-Schulungen für Unternehmen und Verwaltung",
     description: "KI-Schulungen für Unternehmen, Verwaltung und Führungskräfte, inhouse in ganz Österreich oder online: praxisnah, sicher, KI-Kompetenz nach Art. 4 EU AI Act.",
     eyebrow: "KI-SCHULUNGEN · SALZBURG · INHOUSE & ONLINE",
     heroTitle: "KI verstehen. Sicher anwenden. Arbeit erleichtern.",
@@ -45,7 +46,7 @@ const copy = {
     packagesLink: "Pakete ansehen",
     trust: [
       ["Modular aufgebaut", "Vom kompakten Impuls bis zum zweitägigen Intensivformat"],
-      ["Bis 15 Personen", "Geschlossene Gruppe mit Raum für die eigenen Fragen"],
+      ["Bis 30 Personen", "Geschlossene Gruppe mit Raum für die eigenen Fragen"],
       ["Dokumentiert", "Unterlagen und Teilnahmebestätigung inklusive"],
     ],
     references: "Schulungen u. a. für die Salzburger Verwaltungsakademie (SVAK) des Landes Salzburg und für Salzburger Gemeinden.",
@@ -53,9 +54,9 @@ const copy = {
     priceTitle: "Klare Pakete. Genug Raum für Besonderheiten.",
     priceIntro: "Briefing, Modulauswahl und eine leichte Anpassung vorhandener Beispiele sind bereits enthalten. Zusätzliche Recherche und eigene Use Cases werden transparent ergänzt.",
     recommended: "Beliebtestes Format",
-    from: "Fixpreis",
-    net: "umsatzsteuerfrei · bis 15 Personen",
-    pricingNote: "Alle Preise sind Orientierungswerte für geschlossene Gruppen. Gemäß § 6 Abs. 1 Z 27 UStG wird aufgrund der Kleinunternehmerregelung keine Umsatzsteuer berechnet. Raum, besondere Reisekosten und Nächtigung sind nicht enthalten. Ein verbindliches Angebot folgt nach einem kurzen Briefing.",
+    from: "Orientierungswert",
+    net: "umsatzsteuerfrei · bis 30 Personen",
+    pricingNote: "Alle Preise sind Orientierungswerte für geschlossene Gruppen bis 30 Personen. Den genauen Preis erhalten Sie nach einem kurzen Briefing. Gemäß § 6 Abs. 1 Z 27 UStG wird aufgrund der Kleinunternehmerregelung keine Umsatzsteuer berechnet. Raum, besondere Reisekosten und Nächtigung sind nicht enthalten.",
     packages: [
       { name: "KI-Impuls", price: "790 €", description: "Kompakter Einstieg für Teams und Entscheider:innen.", features: ["bis 2 Stunden", "Grundlagen und Einordnung", "Live-Demos und Fragerunde"] },
       { name: "Halbtags-Workshop", price: "1.290 €", description: "Praxisnaher Einstieg mit ersten eigenen Aufgaben.", features: ["bis 4 Stunden", "Prompting und Qualität", "Übungen und Teilnahmebestätigung"] },
@@ -98,6 +99,15 @@ const copy = {
       ["03", "Schulung", "Verständliche Inputs, Live-Demos, Übungen und ehrliche Diskussion."],
       ["04", "Nachweis", "Unterlagen, Teilnahmebestätigung und optionaler Review-Termin."],
     ],
+    trainerEyebrow: "IHR TRAINER",
+    trainerTitle: "Radomir Dinic",
+    trainerIntro: "Senior Lecturer für Game & Mixed Reality an der FH Salzburg. Er verbindet technisches Verständnis von KI mit Didaktik aus dem Hochschulalltag und erklärt verständlich, was generative KI kann und wo ihre Grenzen liegen.",
+    trainerFacts: [
+      ["Lehre an der FH Salzburg", "AI Literacy, Computer Vision, KI in Games und Game Development"],
+      ["Forschung & Entwicklung", "Interaktive Systeme, Augmented und Virtual Reality, Digital Health. Publikationen u. a. bei ACM CHI, ISMAR und MobileHCI."],
+      ["Vorträge & Medien", "Vorträge und Workshops zu KI, Beiträge u. a. in den Salzburger Nachrichten"],
+    ],
+    trainerLink: "Mehr über Radomir Dinic",
     faqEyebrow: "HÄUFIGE FRAGEN",
     faqTitle: "Was vor der Buchung oft wichtig ist.",
     faqIntro: "Die wichtigsten Antworten in kompakter Form. Alles Weitere lässt sich in einem kurzen Gespräch klären.",
@@ -109,12 +119,12 @@ const copy = {
       ["Findet die Schulung auch online statt?", "Ja. Impuls, Halbtag und Ganztag sind online oder in Präsenz möglich. Für längere Praxisformate ist Präsenz oft didaktisch stärker."],
     ],
     ctaTitle: "Welche KI-Kompetenz braucht Ihr Team wirklich?",
-    ctaCopy: "In einem kurzen Vorgespräch klären wir Zielgruppe, Format und gewünschte Individualisierung. Danach erhalten Sie einen nachvollziehbaren Fixpreis.",
+    ctaCopy: "In einem kurzen Vorgespräch klären wir Zielgruppe, Format und gewünschte Individualisierung. Danach erhalten Sie ein verbindliches Angebot mit genauem Preis.",
     ctaButton: "Gespräch anfragen",
     transparency: "Transparenzhinweis: Konzeption und Text dieser Seite wurden mit generativer KI unterstützt und von Radomir Dinic fachlich, didaktisch und redaktionell geprüft und freigegeben.",
   },
   en: {
-    title: "AI training for companies and public organisations",
+    title: "AI training for companies and the public sector",
     description: "AI training for companies, public administration and leaders, in-house across Austria or online: practical, responsible generative AI and EU AI Act literacy.",
     eyebrow: "AI TRAINING · SALZBURG · IN-HOUSE & ONLINE",
     heroTitle: "Understand AI. Use it responsibly. Make work easier.",
@@ -123,7 +133,7 @@ const copy = {
     packagesLink: "View packages",
     trust: [
       ["Modular format", "From a focused impulse session to a two-day intensive"],
-      ["Up to 15 people", "A closed group with room for your own questions"],
+      ["Up to 30 people", "A closed group with room for your own questions"],
       ["Documented", "Materials and confirmation of attendance included"],
     ],
     references: "Clients include the Salzburg Administration Academy (SVAK) of the State of Salzburg and Salzburg municipalities.",
@@ -131,9 +141,9 @@ const copy = {
     priceTitle: "Clear packages. Enough room for your context.",
     priceIntro: "The briefing, module selection and light adaptation of existing examples are already included. Additional research and custom use cases are priced transparently.",
     recommended: "Most popular",
-    from: "Fixed price",
-    net: "VAT-exempt · up to 15 people",
-    pricingNote: "All prices are indicative for closed groups. No Austrian VAT is charged under the small-business exemption in Section 6(1)(27) UStG 1994. Venue, exceptional travel expenses and accommodation are not included. A binding quote follows a short briefing.",
+    from: "Guide price",
+    net: "VAT-exempt · up to 30 people",
+    pricingNote: "All prices are guide prices for closed groups of up to 30 people. The exact price follows a short briefing. No Austrian VAT is charged under the small-business exemption in Section 6(1)(27) UStG 1994. Venue, exceptional travel expenses and accommodation are not included.",
     packages: [
       { name: "AI impulse", price: "€790", description: "A focused introduction for teams and decision-makers.", features: ["up to 2 hours", "foundations and context", "live demos and Q&A"] },
       { name: "Half-day workshop", price: "€1,290", description: "A practical introduction using first real tasks.", features: ["up to 4 hours", "prompting and quality", "exercises and attendance confirmation"] },
@@ -176,6 +186,15 @@ const copy = {
       ["03", "Training", "Clear input, live demos, exercises and honest discussion."],
       ["04", "Documentation", "Materials, attendance confirmation and an optional review session."],
     ],
+    trainerEyebrow: "YOUR TRAINER",
+    trainerTitle: "Radomir Dinic",
+    trainerIntro: "Senior Lecturer for Game & Mixed Reality at FH Salzburg. He combines a technical understanding of AI with teaching experience from university and explains clearly what generative AI can do and where its limits are.",
+    trainerFacts: [
+      ["Teaching at FH Salzburg", "AI literacy, computer vision, AI for games and game development"],
+      ["Research & development", "Interactive systems, augmented and virtual reality, digital health. Publications at ACM CHI, ISMAR and MobileHCI, among others."],
+      ["Talks & media", "Talks and workshops on AI, features in Salzburger Nachrichten and other media"],
+    ],
+    trainerLink: "More about Radomir Dinic",
     faqEyebrow: "FREQUENTLY ASKED QUESTIONS",
     faqTitle: "What often matters before booking.",
     faqIntro: "The key answers in a compact format. Everything else can be clarified in a short conversation.",
@@ -187,7 +206,7 @@ const copy = {
       ["Is online training available?", "Yes. Impulse, half-day and full-day formats can be delivered online or in person. In-person delivery is often stronger for extended practical formats."],
     ],
     ctaTitle: "What AI literacy does your team actually need?",
-    ctaCopy: "A short initial call clarifies the audience, format and desired level of customisation. You then receive a transparent fixed-price quote.",
+    ctaCopy: "A short initial call clarifies the audience, format and desired level of customisation. You then receive a binding quote with the exact price.",
     ctaButton: "Request a call",
     transparency: "Transparency notice: The concept and copy for this page were supported by generative AI and professionally, didactically and editorially reviewed and approved by Radomir Dinic.",
   },
@@ -208,7 +227,6 @@ const buildJsonLd = (lang) => {
       description: c.description,
       url: pageUrl,
       serviceType: lang === "de" ? "KI-Schulung" : "AI training",
-      inLanguage: lang,
       provider: { "@id": `${SITE_URL}/#person` },
       areaServed: [
         { "@type": "Country", name: lang === "de" ? "Österreich" : "Austria" },
@@ -223,8 +241,14 @@ const buildJsonLd = (lang) => {
           "@type": "Offer",
           name: item.name,
           description: `${item.description} ${item.features.join(", ")}.`,
-          price: priceValue(item.price),
-          priceCurrency: "EUR",
+          // Guide prices: the exact price follows the briefing.
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: priceValue(item.price),
+            priceCurrency: "EUR",
+            valueAddedTaxIncluded: false,
+            description: c.from,
+          },
           url: `${pageUrl}#preise`,
         })),
       },
@@ -257,7 +281,7 @@ export default function TrainingPage() {
   return (
     <Layout>
       <Seo
-        title={`${t.title} | radi.solutions`}
+        title={`${t.title} | Radomir Dinic`}
         description={t.description}
         path={ROUTES.training[language]}
         image={language === "de" ? "/og/ki-schulungen.png" : "/og/ai-training.png"}
@@ -323,6 +347,13 @@ export default function TrainingPage() {
             <Eyebrow>{t.processEyebrow}</Eyebrow>
             <SectionHeading><h2>{t.processTitle}</h2><p>{t.processIntro}</p></SectionHeading>
             <ProcessGrid>{t.process.map(([number, title, description]) => <li key={number}><span>{number}</span><h3>{title}</h3><p>{description}</p></li>)}</ProcessGrid>
+          </Section>
+
+          <Section id="trainer">
+            <Eyebrow>{t.trainerEyebrow}</Eyebrow>
+            <SectionHeading><h2>{t.trainerTitle}</h2><p>{t.trainerIntro}</p></SectionHeading>
+            <AddOnGrid>{t.trainerFacts.map(([title, description]) => <div key={title}><strong>{title}</strong><span>{description}</span></div>)}</AddOnGrid>
+            <TrainerLink href={ROUTES.home[language]}>{t.trainerLink} →</TrainerLink>
           </Section>
 
           <Section id="faq">

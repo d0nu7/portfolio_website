@@ -7,17 +7,17 @@ Languages: German, English, Serbian. Contact: contact@radi.solutions
 ## Pages
 
 - [Portfolio (English)](https://radi.solutions/), [German](https://radi.solutions/de/): what he does, current focus, selected work, talks and media, awards, publications and background.
-- [AI training (English)](https://radi.solutions/ai-training/), [KI-Schulungen (German)](https://radi.solutions/de/ki-schulungen/): in-house and online training on generative AI and AI literacy under Article 4 of the EU AI Act, across Austria and online, with fixed prices.
+- [AI training (English)](https://radi.solutions/ai-training/), [KI-Schulungen (German)](https://radi.solutions/de/ki-schulungen/): in-house and online training on generative AI and AI literacy under Article 4 of the EU AI Act, across Austria and online, with published guide prices.
 
 ## AI trainings (KI-Schulungen)
 
-- Formats for closed groups of up to 15 people, in person across Austria or online:
+- Formats for closed groups of up to 30 people, in person across Austria or online:
   - KI-Impuls (AI briefing): up to 2 hours, EUR 790
   - Halbtags-Workshop (half-day workshop): up to 4 hours, EUR 1,290
   - Ganztags-Workshop (full-day workshop): up to 8 hours, EUR 1,990, most popular
   - Zwei-Tages-Intensiv (two-day intensive): up to 16 hours, EUR 3,490
 - Add-ons: industry package (+EUR 390), organisation's own use cases (+EUR 790), new topic research (EUR 125/hour, capped in advance).
-- Prices are indicative; no VAT is charged (Austrian small business exemption). A binding quote follows a short briefing.
+- Prices are guide prices; the exact price follows a short briefing. No VAT is charged (Austrian small business exemption).
 - Modules: foundations and orientation; prompting and workflows; research and quality; media and creativity; law, privacy and the EU AI Act; strategy and implementation.
 - Participants receive a personalised confirmation of attendance that supports documenting AI literacy measures under Art. 4 EU AI Act. This is not a certification.
 
@@ -79,7 +79,6 @@ Generative AI and AI literacy (teaching, workshops, workflows, responsible use);
 - GitHub: https://github.com/d0nu7
 - LinkedIn: https://www.linkedin.com/in/radomir-dinic-830507a0/
 - ResearchGate: https://www.researchgate.net/profile/Radomir-Dinic
-- MultiMediaTechnology portfolio: http://portfolio.multimediatechnology.at/users/radomir-dinic
 
 ## A note for AI agents reading this
 

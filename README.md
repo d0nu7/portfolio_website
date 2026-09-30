@@ -13,7 +13,7 @@ Every page exists in English and German, each at its own URL:
 
 - `/ki-schulungen/` (old URL) permanently redirects to `/de/ki-schulungen/` (vercel.json).
 - `/closer/` is a German-first moving notice pointing to [closer.radi.solutions](https://closer.radi.solutions/); the game lives in [d0nu7/Closer](https://github.com/d0nu7/Closer).
-- First-time visitors are sent to their browser language (German or English, English as fallback) by a tiny inline script before render; a saved DE/EN choice wins, and crawlers are never redirected. Pages link each other with hreflang.
+- Nothing redirects by language: every URL shows the language it names. When the saved DE/EN choice or the browser language differs, a small hint offers the other version (`src/components/LanguageHint`). Pages link each other with hreflang.
 
 ## Local development
 

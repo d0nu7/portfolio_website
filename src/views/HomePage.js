@@ -18,11 +18,11 @@ import { Section } from '../styles/GlobalComponents';
 const META = {
   en: {
     title: 'Radomir Dinic · Games, AI & Interactive Systems | Salzburg',
-    description: 'Senior Lecturer at FH Salzburg, developer and AI trainer. Teaching game development, computer vision and AI, building interactive prototypes and making generative AI understandable for teams and public administration.',
+    description: 'Senior Lecturer at FH Salzburg, developer and AI trainer. Games, computer vision and AI, interactive prototypes and generative AI training for teams.',
   },
   de: {
     title: 'Radomir Dinic · Games, KI & interaktive Systeme | Salzburg',
-    description: 'Senior Lecturer an der FH Salzburg, Entwickler und KI-Trainer. Lehre in Game Development, Computer Vision und KI, interaktive Prototypen und KI-Schulungen für Teams und Verwaltung.',
+    description: 'Senior Lecturer an der FH Salzburg, Entwickler und KI-Trainer: Lehre in Games, Computer Vision und KI, interaktive Prototypen, KI-Schulungen für Teams.',
   },
 };
 const buildJsonLd = (lang) => {
@@ -53,13 +53,16 @@ const buildJsonLd = (lang) => {
         'Medal for Disaster Relief (Katastrophenhilfe-Medaille), State of Salzburg',
         'Science Award 2017, AK Salzburg',
       ],
-      subjectOf: Publications.map((p) => ({
-        '@type': 'ScholarlyArticle',
-        headline: p.title.replace(/\.$/, ''),
-        datePublished: String(p.year),
-        sameAs: p.doi,
-      })),
     },
+    // Co-authored papers point to the person as author (subjectOf would mean
+    // works *about* him).
+    ...Publications.map((p) => ({
+      '@type': 'ScholarlyArticle',
+      headline: p.title.replace(/\.$/, ''),
+      datePublished: String(p.year),
+      url: p.doi,
+      author: { '@id': `${SITE_URL}/#person` },
+    })),
   ];
 };
 

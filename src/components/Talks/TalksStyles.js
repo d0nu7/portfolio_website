@@ -48,11 +48,9 @@ export const RowTitle = styled.span`
 export const RowMeta = styled.span`
   display: block;
   margin-top: 3px;
-  color: rgba(255, 255, 255, .5);
-  font-size: 13px;
+  color: rgba(255, 255, 255, .62);
+  font-size: 14px;
   line-height: 1.5;
-
-  @media ${(props) => props.theme.breakpoints.sm} { font-size: 12px; }
 `;
 
 // Small type label ("TALK", "MEDIA", ...) in front of the organisation.
@@ -63,7 +61,7 @@ export const RowType = styled.span`
   border-radius: 999px;
   color: var(--c-accent-soft);
   background: var(--c-chip-bg);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;

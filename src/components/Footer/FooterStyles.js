@@ -1,16 +1,13 @@
 import styled from "styled-components"
 
-export const FooterWrapper = styled.section`
-	width: calc(100vw - 96px);
-  max-width: 1040px;
+export const FooterWrapper = styled.footer`
+  width: 100%;
+  max-width: calc(1040px + 96px);
   padding: 2rem 48px 40px;
   margin: 1rem auto;
-  box-sizing: content-box;
-
 
   @media ${props => props.theme.breakpoints.sm} {
     padding: 0 16px 48px;
-    width: calc(100vw - 32px);
   }
 `
 
@@ -155,8 +152,7 @@ export const LinkTitle = styled.p`
 	margin-bottom: 16px;
 
 	@media ${props => props.theme.breakpoints.sm} {
-		font-size: 10px;
-		line-height: 12px;
+		line-height: 16px;
 		margin-bottom: 8px;
 	}
 `

@@ -21,7 +21,6 @@ export const PERSON = {
     'https://github.com/d0nu7',
     'https://www.linkedin.com/in/radomir-dinic-830507a0/',
     'https://www.researchgate.net/profile/Radomir-Dinic',
-    'http://portfolio.multimediatechnology.at/users/radomir-dinic',
   ],
   knowsAbout: [
     'Game development',

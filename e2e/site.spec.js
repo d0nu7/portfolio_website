@@ -1,10 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
-// A normal desktop Chrome UA for the redirect tests. Note that Playwright's
-// device presets already send non-headless UAs, so the first-visit redirect
-// is live in every test: pages are visited with a browser locale that
-// matches their language unless a test is about the redirect itself.
-const HUMAN_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36';
+// Pages are visited with a browser locale that matches their language, so
+// the language hint stays hidden unless a test is about the hint itself.
 
 // Collects console errors/warnings and uncaught exceptions for a page.
 const watchConsole = (page) => {
@@ -110,41 +107,48 @@ test('exposes the console easter egg', async ({ page }) => {
   expect(commands).toEqual(expect.arrayContaining(['help', 'hire', 'takeover', 'whoami']));
 });
 
-test.describe('first-visit language redirect', () => {
-  test.describe('German browser', () => {
-    test.use({ locale: 'de-AT', userAgent: HUMAN_UA });
+test.describe('language hint (no redirects)', () => {
+  const hint = (page) => page.getByRole('complementary', { name: /Sprache|Language/ });
 
-    test('is sent from the English page to the German one', async ({ page }) => {
+  test.describe('German browser', () => {
+    test.use({ locale: 'de-AT' });
+
+    test('keeps the English URL and offers German', async ({ page }) => {
       await page.goto('/ai-training/');
+      await expect(page).toHaveURL(/\/ai-training\/$/);
+      await expect(hint(page)).toContainText('auch auf Deutsch');
+      await hint(page).getByRole('link', { name: 'Auf Deutsch lesen' }).click();
       await expect(page).toHaveURL(/\/de\/ki-schulungen\/$/);
+      await expect(hint(page)).toHaveCount(0);
     });
 
-    test('a saved English choice wins and sticks across pages', async ({ page }) => {
+    test('dismissing it sticks', async ({ page }) => {
+      await page.goto('/');
+      await hint(page).getByRole('button', { name: 'Hinweis schließen' }).click();
+      await expect(hint(page)).toHaveCount(0);
+      await page.goto('/ai-training/');
+      await expect(page.locator('h1')).toBeVisible();
+      await expect(hint(page)).toHaveCount(0);
+    });
+
+    test('a saved English choice never redirects a German URL', async ({ page }) => {
       await page.goto('/de/');
       await page.getByRole('link', { name: 'EN', exact: true }).click();
       await expect(page).toHaveURL(/\/$/);
-      await expect(page.locator('h1')).toHaveText('Games, AI & interactive systems.');
       await page.goto('/de/ki-schulungen/');
-      await expect(page).toHaveURL(/\/ai-training\/$/);
+      await expect(page).toHaveURL(/\/de\/ki-schulungen\/$/);
+      await expect(hint(page)).toContainText('also available in English');
     });
   });
 
   test.describe('other browser languages', () => {
-    test.use({ locale: 'fr-FR', userAgent: HUMAN_UA });
+    test.use({ locale: 'fr-FR' });
 
-    test('fall back to English', async ({ page }) => {
+    test('get no hint and no redirect', async ({ page }) => {
       await page.goto('/de/');
-      await expect(page).toHaveURL(/\/$/);
-      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    });
-  });
-
-  test.describe('crawlers', () => {
-    test.use({ locale: 'en-US', userAgent: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' });
-
-    test('are never redirected', async ({ page }) => {
-      await page.goto('/de/ki-schulungen/');
-      await expect(page).toHaveURL(/\/de\/ki-schulungen\/$/);
+      await expect(page.locator('h1')).toHaveText('Games, KI & interaktive Systeme.');
+      await expect(page).toHaveURL(/\/de\/$/);
+      await expect(hint(page)).toHaveCount(0);
     });
   });
 });

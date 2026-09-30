@@ -30,8 +30,8 @@ export const Section = styled.section.attrs((props) => ({ 'data-reveal': props.$
 
   @media ${(props) => props.theme.breakpoints.sm} {
     padding: ${(props) => props.nopadding ? "0" : "16px 16px 0" } ;
-
-    width: calc(100vw - 32px);
+    width: 100%;
+    box-sizing: border-box;
     flex-direction: column;
   }
 `
@@ -114,7 +114,7 @@ export const Eyebrow = styled.p`
   text-transform: uppercase;
 
   @media ${(props) => props.theme.breakpoints.sm} {
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 10px;
   }
 `
