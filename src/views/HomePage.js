@@ -50,7 +50,7 @@ const buildJsonLd = (lang) => {
         'Honorable Mention for Best Paper, ACM CHI 2022 (AirRes Mask)',
         'Austrian CG Award 2015, Best Game (Yokaisho)',
         'Austrian CG Award 2016, Best Game and Best Student Project (NIVA)',
-        'Medal for Disaster Relief (Katastrophenhilfe-Medaille), State of Salzburg',
+        'Medal for Disaster Relief (Katastrophenhilfe-Medaille), State of Salzburg, for flood relief in Hallein',
         'Science Award 2017, AK Salzburg',
       ],
     },

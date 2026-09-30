@@ -330,7 +330,7 @@ export const awards = [
   { year: "2017", title: { en: "Science Award", de: "Wissenschaftspreis" }, org: "AK Salzburg" },
   { year: "2016", title: { en: "Austrian CG Award: Best Game & Best Student Project", de: "Austrian CG Award: Bestes Spiel & Bestes Studierendenprojekt" }, org: "NIVA" },
   { year: "2015", title: { en: "Austrian CG Award: Best Game", de: "Austrian CG Award: Bestes Spiel" }, org: "Yokaisho" },
-  { title: { en: "Medal for Disaster Relief", de: "Katastrophenhilfe-Medaille" }, org: { en: "State of Salzburg", de: "Land Salzburg" } },
+  { title: { en: "Medal for Disaster Relief", de: "Katastrophenhilfe-Medaille" }, org: { en: "State of Salzburg, for flood relief in Hallein", de: "Land Salzburg, für die Hilfe beim Hochwasser in Hallein" } },
 ];
 
 export const TimeLineData = [
