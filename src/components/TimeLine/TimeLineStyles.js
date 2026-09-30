@@ -49,8 +49,9 @@ export const CarouselItem = styled.div`
   }
   
   @media ${props => props.theme.breakpoints.sm} {
-    margin-left: 32px;
-    min-width: 120px;
+    margin-left: 24px;
+    min-width: 168px;
+    max-width: 168px;
     background: var(--c-bg-deep);
     padding: 4px;
     align-content: start;
@@ -108,9 +109,10 @@ export const CarouselItemText = styled.p`
     padding-right: 32px;
   }
   @media ${props => props.theme.breakpoints.sm} {
-    font-size: 14px;
-    line-height: 21px;
+    font-size: 13px;
+    line-height: 19px;
     padding-right: 0;
+    overflow-wrap: break-word;
   }
 `
 export const CarouselButtons = styled.div`

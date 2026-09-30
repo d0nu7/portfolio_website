@@ -104,6 +104,12 @@ export const Div3 = styled.div`
     height: 3rem;
   }
 
+  /* Very narrow phones: the profile links stay in the footer, so the
+     name, language switch and menu button keep enough room. */
+  @media screen and (max-width: 400px) {
+    > a { display: none; }
+  }
+
   @media ${(props) => props.theme.breakpoints.sm} {
     a {
       padding: 6px;

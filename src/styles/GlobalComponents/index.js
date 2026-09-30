@@ -24,15 +24,17 @@ export const Section = styled.section.attrs((props) => ({ 'data-reveal': props.$
   grid-template-columns: 1fr 1fr;
 
   @media ${(props) => props.theme.breakpoints.md} {
-    padding: 24px 48px 0;
+    padding: ${(props) => props.nopadding ? "0" : "24px 48px 0" };
+    width: 100%;
+    box-sizing: border-box;
     flex-direction: column;
+    /* The hero grid stacks: text full width, decorative animation hidden. */
+    grid-template-columns: minmax(0, 1fr);
+    ${(props) => props.grid && '> :nth-child(2) { display: none; }'}
   }
 
   @media ${(props) => props.theme.breakpoints.sm} {
     padding: ${(props) => props.nopadding ? "0" : "16px 16px 0" } ;
-    width: 100%;
-    box-sizing: border-box;
-    flex-direction: column;
   }
 `
 
