@@ -36,7 +36,7 @@ import {
 const copy = {
   de: {
     title: "KI-Schulungen für Unternehmen und öffentliche Organisationen",
-    description: "Praxisnahe Inhouse-Schulungen zu generativer KI, sicherer Anwendung und KI-Kompetenz nach Art. 4 EU AI Act.",
+    description: "KI-Schulungen in Salzburg und online für Unternehmen, Verwaltung und Führungskräfte: praxisnah, sicher und mit KI-Kompetenz nach Art. 4 EU AI Act. Fixpreise.",
     eyebrow: "KI-SCHULUNGEN · SALZBURG · INHOUSE & ONLINE",
     heroTitle: "KI verstehen. Sicher anwenden. Arbeit erleichtern.",
     heroCopy: "Praxisnahe Schulungen für Teams, die generative KI nicht nur ausprobieren, sondern reflektiert, transparent und produktiv in ihren Arbeitsalltag integrieren möchten.",
@@ -114,7 +114,7 @@ const copy = {
   },
   en: {
     title: "AI training for companies and public organisations",
-    description: "Practical in-house training on generative AI, responsible use and AI literacy under Article 4 of the EU AI Act.",
+    description: "AI training in Salzburg and online for companies, public administration and leaders: practical, responsible generative AI and AI literacy under the EU AI Act.",
     eyebrow: "AI TRAINING · SALZBURG · IN-HOUSE & ONLINE",
     heroTitle: "Understand AI. Use it responsibly. Make work easier.",
     heroCopy: "Practical training for teams that want to move beyond experimentation and integrate generative AI into daily work in a productive, transparent and responsible way.",
@@ -295,7 +295,7 @@ export default function KiSchulungen() {
               ))}
             </PriceGrid>
             <AddOnGrid>{t.addons.map(([title, description]) => <div key={title}><strong>{title}</strong><span>{description}</span></div>)}</AddOnGrid>
-            <PricingNote>{t.pricingNote}</PricingNote>
+            <PricingNote data-nosnippet>{t.pricingNote}</PricingNote>
           </Section>
 
           <Section id="module">
@@ -312,7 +312,7 @@ export default function KiSchulungen() {
             <ActPanel>
               <div><Eyebrow>{t.actEyebrow}</Eyebrow><h2>{t.actTitle}</h2><p>{t.actCopy}</p></div>
               <ActChecklist>{t.actItems.map(([title, description]) => <div key={title}><strong>{title}</strong><span>{description}</span></div>)}</ActChecklist>
-              <LegalNote>{t.legal} <a href="https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers" target="_blank" rel="noreferrer">{t.actSource}</a></LegalNote>
+              <LegalNote data-nosnippet>{t.legal} <a href="https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers" target="_blank" rel="noreferrer">{t.actSource}</a></LegalNote>
             </ActPanel>
           </Section>
 
@@ -333,7 +333,8 @@ export default function KiSchulungen() {
             <p>{t.ctaCopy}</p>
             <PrimaryAction href={contactHref}>{t.ctaButton}</PrimaryAction>
           </FinalCta>
-          <Transparency>{t.transparency}</Transparency>
+          {/* data-nosnippet: keep fine print out of Google's result snippets. */}
+          <Transparency data-nosnippet>{t.transparency}</Transparency>
         </Shell>
       </Page>
     </Layout>
