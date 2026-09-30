@@ -37,7 +37,7 @@ const home = {
       recognition: 'Awards & Publications', about: 'About', contact: 'Contact', training: 'AI training',
       menu: 'Menu', close: 'Close menu', skip: 'Skip to content',
     },
-    footer: { legal: 'Legal notice', email: 'Email', services: 'Services', training: 'AI training' },
+    footer: { legal: 'Legal', imprint: 'Legal notice', privacy: 'Privacy', email: 'Email', services: 'Services', training: 'AI training' },
   },
   de: {
     hero: {
@@ -74,7 +74,7 @@ const home = {
       recognition: 'Auszeichnungen & Publikationen', about: 'Über mich', contact: 'Kontakt', training: 'KI-Schulungen',
       menu: 'Menü', close: 'Menü schließen', skip: 'Zum Inhalt springen',
     },
-    footer: { legal: 'Impressum', email: 'E-Mail', services: 'Angebot', training: 'KI-Schulungen' },
+    footer: { legal: 'Rechtliches', imprint: 'Impressum', privacy: 'Datenschutz', email: 'E-Mail', services: 'Angebot', training: 'KI-Schulungen' },
   },
 };
 

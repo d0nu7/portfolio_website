@@ -55,17 +55,47 @@ for (const p of PAGES) {
   });
 }
 
-test('English footer labels', async ({ page }) => {
+test('English footer links to the legal pages', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Legal notice')).toBeVisible();
+  const footer = page.locator('footer, section').filter({ hasText: 'Legal notice' }).last();
+  await expect(footer.getByRole('link', { name: 'Legal notice' })).toHaveAttribute('href', '/legal-notice/');
+  await expect(footer.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy/');
 });
+
+const LEGAL = [
+  { path: '/legal-notice/', lang: 'en', h1: 'Legal notice', other: '/de/impressum/', locale: 'en-US' },
+  { path: '/de/impressum/', lang: 'de', h1: 'Impressum', other: '/legal-notice/', locale: 'de-AT' },
+  { path: '/privacy/', lang: 'en', h1: 'Privacy policy', other: '/de/datenschutz/', locale: 'en-US' },
+  { path: '/de/datenschutz/', lang: 'de', h1: 'Datenschutzerklärung', other: '/privacy/', locale: 'de-AT' },
+];
+
+for (const p of LEGAL) {
+  test.describe(p.path, () => {
+    test.use({ locale: p.locale });
+
+    test('renders in its language with hreflang and the right contact', async ({ page }) => {
+      const problems = watchConsole(page);
+      await page.goto(p.path);
+      await expect(page.locator('html')).toHaveAttribute('lang', p.lang);
+      await expect(page.locator('h1')).toHaveText(p.h1);
+      const [en, de] = p.lang === 'en' ? [p.path, p.other] : [p.other, p.path];
+      await expect(hreflang(page, 'en')).toHaveAttribute('href', `https://radi.solutions${en}`);
+      await expect(hreflang(page, 'de')).toHaveAttribute('href', `https://radi.solutions${de}`);
+      await expect(page.locator('main').getByRole('link', { name: 'contact@radi.solutions' })).toBeVisible();
+      // Only the contact address is published: no phone number, no bank details.
+      await expect(page.locator('main')).not.toContainText(/\+43|IBAN|AT16/);
+      expect(problems).toEqual([]);
+    });
+  });
+}
 
 test.describe('German pages', () => {
   test.use({ locale: 'de-AT' });
 
-  test('German footer labels', async ({ page }) => {
+  test('German footer links to the legal pages', async ({ page }) => {
     await page.goto('/de/ki-schulungen/');
-    await expect(page.getByText('Impressum')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Impressum', exact: true })).toHaveAttribute('href', '/de/impressum/');
+    await expect(page.getByRole('link', { name: 'Datenschutz', exact: true })).toHaveAttribute('href', '/de/datenschutz/');
   });
 
   test('fine print is excluded from search snippets', async ({ page }) => {

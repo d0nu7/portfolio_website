@@ -6,7 +6,7 @@ import useHomeCopy from '../../i18n/useHomeCopy';
 import { ROUTES } from '../../i18n/routes';
 import { FaResearchgate } from "react-icons/fa";
 
-import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer, SpanItem } from './FooterStyles';
+import { CompanyContainer, FooterWrapper, LinkColumn, LinkItem, LinkList, LinkTitle, Slogan, SocialContainer, SocialIconsContainer } from './FooterStyles';
 
 const Footer = () => {
   const { lang, t: copy } = useHomeCopy();
@@ -17,12 +17,8 @@ const Footer = () => {
       <LinkList>
         <LinkColumn>
           <LinkTitle>{t.legal}</LinkTitle>
-          <SpanItem>
-            Radomir Dinic BSc MSc <br/>
-            Pingitzzerkai 6a/6<br/>
-            A-5400 Hallein<br/>
-            AUSTRIA
-          </SpanItem>
+          <LinkItem href={ROUTES.legal[lang]}>{t.imprint}</LinkItem>
+          <LinkItem href={ROUTES.privacy[lang]}>{t.privacy}</LinkItem>
         </LinkColumn>    
         <LinkColumn>
           <LinkTitle>{t.email}</LinkTitle>

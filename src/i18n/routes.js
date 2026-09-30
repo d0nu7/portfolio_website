@@ -11,6 +11,8 @@
 export const ROUTES = {
   home: { en: '/', de: '/de/' },
   training: { en: '/ai-training/', de: '/de/ki-schulungen/' },
+  legal: { en: '/legal-notice/', de: '/de/impressum/' },
+  privacy: { en: '/privacy/', de: '/de/datenschutz/' },
 };
 
 export const PAGE_TO_ROUTE = {
@@ -18,6 +20,10 @@ export const PAGE_TO_ROUTE = {
   '/de': { route: 'home', lang: 'de' },
   '/ai-training': { route: 'training', lang: 'en' },
   '/de/ki-schulungen': { route: 'training', lang: 'de' },
+  '/legal-notice': { route: 'legal', lang: 'en' },
+  '/de/impressum': { route: 'legal', lang: 'de' },
+  '/privacy': { route: 'privacy', lang: 'en' },
+  '/de/datenschutz': { route: 'privacy', lang: 'de' },
 };
 
 export const pathFor = (route, lang) => (ROUTES[route] ? ROUTES[route][lang] : null);
